@@ -29,22 +29,32 @@ devices to be able to display song artists and titles somewhat correctly,
 instead of displaying weird or blank symbols. It's an attempt to do a little
 better than Musicbrainz's native "Replace non-ASCII characters" option.
 
-Currently replaces characters on "album", "artist", and "title" tags.'''
+Currently replaces characters on "album", "albumartist", "albumartists", "albumartistsort", "albumsort", "artist", "artists", "artistsort" and "title" tags.'''
 
 CHAR_TABLE = {
-    # Acute     # Grave     # Umlaut    # Circumflex
-    "Á": "A",  "À": "A",  "Ä": "A",  "Â": "A",
-    "É": "E",  "È": "E",  "Ë": "E",  "Ê": "E",
+    # Acute     # Grave     # Umlaut    # Circumflex    # Ogonek    # Overdot    # Slash
+    "Á": "A",  "À": "A",  "Ä": "A",  "Â": "A",   "Ą": "A",
+    "Ć": "C",
+    "É": "E",  "È": "E",  "Ë": "E",  "Ê": "E",   "Ę": "E",
     "Í": "I",  "Ì": "I",  "Ï": "I",  "Î": "I",
+                                                                        "Ł": "L",
+    "Ń": "N",
     "Ó": "O",  "Ò": "O",  "Ö": "O",  "Ô": "O",
+    "Ś": "S",
     "Ú": "U",  "Ù": "U",  "Ü": "U",  "Û": "U",
     "Ý": "Y",  "Ỳ": "Y",  "Ÿ": "Y",  "Ŷ": "Y",
-    "á": "a",  "à": "a",  "ä": "a",  "â": "a",
-    "é": "e",  "è": "e",  "ë": "e",  "ê": "e",
+    "Ź": "Z",                                               "Ż": "Z",
+    "á": "a",  "à": "a",  "ä": "a",  "â": "a",   "ą": "a",
+    "ć": "c",
+    "é": "e",  "è": "e",  "ë": "e",  "ê": "e",   "ę": "e",
     "í": "i",  "ì": "i",  "ï": "i",  "î": "i",
+                                                                        "ł": "l",
+    "ń": "n",
     "ó": "o",  "ò": "o",  "ö": "o",  "ô": "o",
+    "ś": "s",
     "ú": "u",  "ù": "u",  "ü": "u",  "û": "u",
     "ý": "y",  "ỳ": "y",  "ÿ": "y",  "ŷ": "y",
+    "ź": "z",                                               "ż": "z",
 
     # Misc Letters
     "Å": "AA",
@@ -126,7 +136,13 @@ CHAR_TABLE = {
 
 FILTER_TAGS = [
     "album",
+    "albumartist",
+    "albumartists",
+    "albumartistsort",
+    "albumsort",
     "artist",
+    "artists",
+    "artistsort",
     "title",
 ]
 
