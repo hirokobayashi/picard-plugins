@@ -42,8 +42,8 @@ URL = "https://lrclib.net/api/get"
 REQUESTS_DELAY = 100
 
 # Options
-ADD_LYRICS = "add_lyrics"
-ADD_SYNCEDLYRICS = "add_syncedlyrics"
+ADD_UNSYNCED_LYRICS = "add_unsynced_lyrics"
+ADD_SYNCED_LYRICS = "add_synced_lyrics"
 NEVER_REPLACE_LYRICS = "never_replace_lyrics"
 LRC_FILENAME = "exported_lrc_filename"
 EXPORT_LRC = "exported_lrc"
@@ -64,13 +64,13 @@ extra_file_variables = {
 def get_lyrics(track, file):
     album = track.album
     metadata = file.metadata
-    if not (config.setting[ADD_LYRICS] or config.setting[ADD_SYNCEDLYRICS]):
+    if not (config.setting[ADD_UNSYNCED_LYRICS] or config.setting[ADD_SYNCED_LYRICS]):
         return
     if not (metadata.get("title") and metadata.get("artist")):
         log.debug(f"Skipping fetching lyrics for track in {album} as both title and artist are required")
         return
     if config.setting[NEVER_REPLACE_LYRICS] and metadata.get("lyrics"):
-        log.debug(f"Skipping fetching lyrics for {metadata["title"]} as lyrics are already embedded")
+        log.debug(f"Skipping fetching lyrics for {metadata['title']} as lyrics are already embedded")
         return
     args = {
         "track_name": metadata["title"],
@@ -78,8 +78,7 @@ def get_lyrics(track, file):
     }
     if metadata.get("album"):
         args["album_name"] = metadata["album"]
-    handler = partial(response_handler, album, metadata)
-    album._requests += 1
+    handler = partial(response_handler, metadata)
     album.tagger.webservice.get_url(
         method="GET",
         handler=handler,
@@ -89,31 +88,29 @@ def get_lyrics(track, file):
     )
 
 
-def response_handler(album, metadata, document, reply, error):
+def response_handler(metadata, document, reply, error):
     if document and not error:
-        lyrics = document.get("plainLyrics")
-        syncedlyrics = document.get("syncedLyrics")
-        if lyrics:
-            lyrics_cache[metadata["title"]] = lyrics
-            if ((not config.setting[ADD_LYRICS]) or
+        unsynced_lyrics = document.get("plainLyrics")
+        synced_lyrics = document.get("syncedLyrics")
+        if unsynced_lyrics:
+            lyrics_cache[metadata["title"]] = unsynced_lyrics
+            if ((not config.setting[ADD_UNSYNCED_LYRICS]) or
                     (config.setting[NEVER_REPLACE_LYRICS] and metadata.get("lyrics"))):
                 return
-            metadata["lyrics"] = lyrics
-        if syncedlyrics:
-            lyrics_cache[metadata["title"]] = syncedlyrics
+            metadata["lyrics"] = unsynced_lyrics
+        if synced_lyrics:
+            lyrics_cache[metadata["title"]] = synced_lyrics
             # Support for the syncedlyrics tag is not available yet
-            # if (not config.setting[ADD_SYNCEDLYRICS] or
+            # if (not config.setting[ADD_SYNCED_LYRICS] or
             #         (config.setting[NEVER_REPLACE_LYRICS] and metadata.get("syncedlyrics"))):
             #     return
             # metadata["syncedlyrics"] = syncedlyrics
     else:
-        log.debug(f"Could not fetch lyrics for {metadata["title"]}")
-    album._requests -= 1
-    album._finalize_loading(None)
+        log.debug(f"Could not fetch lyrics for {metadata['title']}")
 
 
 def get_lrc_file_name(file):
-    filename = f"{tags_pattern.sub("{}", config.setting[LRC_FILENAME])}"
+    filename = f"{tags_pattern.sub('{}', config.setting[LRC_FILENAME])}"
     tags = tags_pattern.findall(config.setting[LRC_FILENAME])
     values = []
     for tag in tags:
@@ -138,9 +135,9 @@ def export_lrc_file(file):
                     file.write(lyrics)
                 log.debug(f"Created new lyrics file at {filename}")
             except OSError:
-                log.debug(f"Could not create the lrc file for {metadata["title"]}")
+                log.debug(f"Could not create the lrc file for {metadata['title']}")
         else:
-            log.debug(f"Could not export any lyrics for {metadata["title"]}")
+            log.debug(f"Could not export any lyrics for {metadata['title']}")
 
 
 class ImportLrc(BaseAction):
@@ -161,7 +158,7 @@ class ImportLrc(BaseAction):
                         else:
                             file.metadata["lyrics"] = lyrics
                 except FileNotFoundError:
-                    log.debug(f"Could not find matching lrc file for {file.metadata["title"]}")
+                    log.debug(f"Could not find matching lrc file for {file.metadata['title']}")
 
 
 class LrclibLyricsOptions(OptionsPage):
@@ -173,8 +170,8 @@ class LrclibLyricsOptions(OptionsPage):
     __default_naming = "%filename%.lrc"
 
     options = [
-        config.BoolOption("setting", ADD_LYRICS, True),
-        config.BoolOption("setting", ADD_SYNCEDLYRICS, False),
+        config.BoolOption("setting", ADD_UNSYNCED_LYRICS, True),
+        config.BoolOption("setting", ADD_SYNCED_LYRICS, False),
         config.BoolOption("setting", NEVER_REPLACE_LYRICS, False),
         config.TextOption("setting", LRC_FILENAME, __default_naming),
         config.BoolOption("setting", EXPORT_LRC, False),
@@ -187,16 +184,16 @@ class LrclibLyricsOptions(OptionsPage):
         self.ui.setupUi(self)
 
     def load(self):
-        self.ui.lyrics.setChecked(config.setting[ADD_LYRICS])
-        self.ui.syncedlyrics.setChecked(config.setting[ADD_SYNCEDLYRICS])
+        self.ui.lyrics.setChecked(config.setting[ADD_UNSYNCED_LYRICS])
+        self.ui.syncedlyrics.setChecked(config.setting[ADD_SYNCED_LYRICS])
         self.ui.replace_embedded.setChecked(config.setting[NEVER_REPLACE_LYRICS])
         self.ui.lrc_name.setText(config.setting[LRC_FILENAME])
         self.ui.export_lyrics.setChecked(config.setting[EXPORT_LRC])
         self.ui.replace_exported.setChecked(config.setting[NEVER_REPLACE_LRC])
 
     def save(self):
-        config.setting[ADD_LYRICS] = self.ui.lyrics.isChecked()
-        config.setting[ADD_SYNCEDLYRICS] = self.ui.syncedlyrics.isChecked()
+        config.setting[ADD_UNSYNCED_LYRICS] = self.ui.lyrics.isChecked()
+        config.setting[ADD_SYNCED_LYRICS] = self.ui.syncedlyrics.isChecked()
         config.setting[NEVER_REPLACE_LYRICS] = self.ui.replace_embedded.isChecked()
         config.setting[LRC_FILENAME] = self.ui.lrc_name.text()
         config.setting[EXPORT_LRC] = self.ui.export_lyrics.isChecked()
