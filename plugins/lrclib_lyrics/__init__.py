@@ -54,9 +54,9 @@ synced_lyrics_pattern = re.compile(r"(\[\d\d:\d\d\.\d\d\d]|<\d\d:\d\d\.\d\d\d>)"
 tags_pattern = re.compile(r"%(\w+)%")
 extra_file_variables = {
     "filepath": lambda file: file,
-    "folderpath": lambda file: os.path.dirname(file),
+    "folderpath": lambda file: os.path.dirname(file),  # pylint: disable=unnecessary-lambda
     "filename": lambda file: os.path.splitext(os.path.basename(file))[0],
-    "filename_ext": lambda file: os.path.basename(file),
+    "filename_ext": lambda file: os.path.basename(file),  # pylint: disable=unnecessary-lambda
     "directory": lambda file: os.path.basename(os.path.dirname(file))
 }
 
