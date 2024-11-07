@@ -16,10 +16,11 @@
 # this program. If not, see <http://www.gnu.org/licenses/>.
 
 from picard import metadata
+from picard.util.textencoding import unaccent
 
 PLUGIN_NAME = "Non-ASCII Equivalents"
-PLUGIN_AUTHOR = "Anderson Mesquita <andersonvom@trysometinghere>"
-PLUGIN_VERSION = "0.4"
+PLUGIN_AUTHOR = "Anderson Mesquita <andersonvom@trysometinghere>, Konrad Marciniak"
+PLUGIN_VERSION = "0.5"
 PLUGIN_API_VERSIONS = ["0.9", "0.10", "0.11", "0.15", "2.0"]
 PLUGIN_LICENSE = "GPL-3.0-or-later"
 PLUGIN_LICENSE_URL = "https://gnu.org/licenses/gpl.html"
@@ -32,45 +33,17 @@ better than Musicbrainz's native "Replace non-ASCII characters" option.
 Currently replaces characters on "album", "albumartist", "albumartists", "albumartistsort", "albumsort", "artist", "artists", "artistsort" and "title" tags.'''
 
 CHAR_TABLE = {
-    # Acute     # Grave     # Umlaut    # Circumflex    # Ogonek    # Overdot    # Slash
-    "Á": "A",  "À": "A",  "Ä": "A",  "Â": "A",   "Ą": "A",
-    "Ć": "C",
-    "É": "E",  "È": "E",  "Ë": "E",  "Ê": "E",   "Ę": "E",
-    "Í": "I",  "Ì": "I",  "Ï": "I",  "Î": "I",
-                                                                        "Ł": "L",
-    "Ń": "N",
-    "Ó": "O",  "Ò": "O",  "Ö": "O",  "Ô": "O",
-    "Ś": "S",
-    "Ú": "U",  "Ù": "U",  "Ü": "U",  "Û": "U",
-    "Ý": "Y",  "Ỳ": "Y",  "Ÿ": "Y",  "Ŷ": "Y",
-    "Ź": "Z",                                               "Ż": "Z",
-    "á": "a",  "à": "a",  "ä": "a",  "â": "a",   "ą": "a",
-    "ć": "c",
-    "é": "e",  "è": "e",  "ë": "e",  "ê": "e",   "ę": "e",
-    "í": "i",  "ì": "i",  "ï": "i",  "î": "i",
-                                                                        "ł": "l",
-    "ń": "n",
-    "ó": "o",  "ò": "o",  "ö": "o",  "ô": "o",
-    "ś": "s",
-    "ú": "u",  "ù": "u",  "ü": "u",  "û": "u",
-    "ý": "y",  "ỳ": "y",  "ÿ": "y",  "ŷ": "y",
-    "ź": "z",                                               "ż": "z",
-
     # Misc Letters
-    "Å": "AA",
-    "å": "aa",
     "Æ": "AE",
     "æ": "ae",
     "Œ": "OE",
     "œ": "oe",
     "ẞ": "ss",
     "ß": "ss",
-    "Ç": "C",
-    "ç": "c",
-    "Ñ": "N",
-    "ñ": "n",
     "Ø": "O",
     "ø": "o",
+    "Ł": "L",
+    "ł": "l",
 
     # Punctuation
     "¡": "!",
@@ -102,8 +75,6 @@ CHAR_TABLE = {
     "﹂": "|-",
     "﹃": "-|",
     "﹄": "|-",
-    "＂": '"',
-    "＇": "'",
     "｢": "|-",
     "｣": "-|",
 
@@ -122,16 +93,12 @@ CHAR_TABLE = {
     "≫": ">>", # from the quotation marks
 
     # Misc
-    "ª": "a",
-    "º": "o",
     "°": "o",
     "µ": "u",
     "ı": "i",
     "†": "t",
     "©": "(c)",
     "®": "(R)",
-    "℠": "(SM)",
-    "™": "(TM)",
 }
 
 FILTER_TAGS = [
@@ -150,17 +117,17 @@ FILTER_TAGS = [
 def sanitize(char):
     if char in CHAR_TABLE:
         return CHAR_TABLE[char]
-    return char
+    return unaccent(char)
 
 
-def ascii(word):
+def to_ascii(word):
     return "".join(sanitize(char) for char in word)
 
 
 def main(tagger, metadata, *args):
     for name, value in metadata.rawitems():
         if name in FILTER_TAGS:
-            metadata[name] = [ascii(x) for x in value]
+            metadata[name] = [to_ascii(x) for x in value]
 
 
 metadata.register_track_metadata_processor(main)
