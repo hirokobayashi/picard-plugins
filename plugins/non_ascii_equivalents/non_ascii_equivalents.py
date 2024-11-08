@@ -45,10 +45,9 @@ CHAR_TABLE = {
     "Ł": "L",
     "ł": "l",
     "Þ": "Th", # Thorn
-    "þ": "th", 
+    "þ": "th",
     "Ð": "D", # Eth
     "ð": "d",
-   
 
     # Punctuation
     "¡": "!",
