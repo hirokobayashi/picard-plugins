@@ -34,6 +34,8 @@ Currently replaces characters on "album", "albumartist", "albumartists", "albuma
 
 CHAR_TABLE = {
     # Misc Letters
+    "Å": "AA",
+    "å": "aa",
     "Æ": "AE",
     "æ": "ae",
     "Œ": "OE",
