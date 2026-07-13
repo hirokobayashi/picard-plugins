@@ -3548,6 +3548,35 @@ text-decoration: underline;</string>
                    </layout>
                   </widget>
                  </item>
+                 <item>
+                  <widget class="QGroupBox" name="excluded_works_box">
+                   <property name="whatsThis">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Comma- or newline-separated list of MusicBrainz work ids to be excluded from the work list (e.g. placeholder or generic works such as &amp;quot;Fantasia&amp;quot;). Matching works are removed together with their titles, so the two lists stay in sync.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="title">
+                    <string>Excluded works</string>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_16">
+                    <item>
+                     <widget class="QLabel" name="excluded_works_label">
+                      <property name="text">
+                       <string>Work ids to exclude (comma or newline separated):</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="cwp_excluded_works">
+                      <property name="enabled">
+                       <bool>true</bool>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color: rgb(250, 250, 250);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
                 </layout>
                </widget>
               </item>
