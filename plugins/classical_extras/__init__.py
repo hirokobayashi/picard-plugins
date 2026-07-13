@@ -1546,9 +1546,10 @@ def set_work_artists(self, release_id, album, track, writerList, tm, count):
             # fix cyrillic names if not already fixed
             if options['cea_cyrillic']:
                 if not only_roman_chars(name):
-                    name = remove_middle(unsort(sort_name))
-                    # Only remove middle name where the existing
-                    # performer is in non-latin script
+                    # Replace a non-Latin name with a Latin one, derived from
+                    # the sort-name (patronymic removed); transliterate if the
+                    # sort-name is itself non-Latin (see Readme section 2).
+                    name = cyrillic_to_latin(name, sort_name)
             annotated_name = name
             write_log(
                     release_id,
@@ -1651,12 +1652,33 @@ def get_roman(string):
             char = const.CYRILLIC_LOWER[char]
         elif char in const.CYRILLIC_UPPER.keys():
             char = const.CYRILLIC_UPPER[char]
-            if string[index + 1] not in const.CYRILLIC_LOWER.keys():
+            # Capitalise the whole transliteration when the cyrillic upper
+            # letter is not followed by a lowercase cyrillic letter (i.e. it
+            # is a standalone initial or ends an all-caps run). Guard against
+            # index+1 being out of range when the upper letter is last.
+            if (index + 1 >= len(string)
+                    or string[index + 1] not in const.CYRILLIC_LOWER.keys()):
                 char = char.upper()
         translit_string += char
     # fix multi-chars
     translit_string = translit_string.replace('ks', 'x').replace('iy ', 'i ')
     return translit_string
+
+
+def cyrillic_to_latin(name, sort_name):
+    """Return a Latin-script version of a non-Latin ``name``.
+
+    The sort-name is used wherever possible (it is often already in Latin and
+    carries the conventional spelling, e.g. "Tchaikovsky" rather than the
+    transliterated "Chaykovskiy"); the patronymic (middle) name is removed as
+    documented for the ``cea_cyrillic`` option (Readme section 2). If the
+    sort-name is itself non-Latin (e.g. a cyrillic sort-name) the result is
+    transliterated to Latin via :func:`get_roman`.
+    """
+    candidate = remove_middle(unsort(sort_name))
+    if not only_roman_chars(candidate):
+        candidate = get_roman(candidate)
+    return candidate
 
 
 def remove_middle(performer):
@@ -1971,6 +1993,16 @@ def map_tags(options, release_id, album, tm):
         del tm['genre']
     else:
         candidate_genres = []
+        if 'genre' in tm:
+            # Picard may store genres as a single joined string (e.g. when its
+            # "join_genres" option is set, or via other delivery paths).
+            # Normalise to a proper multi-value list so the genres are written
+            # as SEPARATE tag values rather than preserved as one joined value
+            # (e.g. "Classical; Symphony"). This mirrors the folksonomy branch
+            # above, which splits via str_to_list; without it the genre is
+            # left untouched when "apply filter to genres" is off and folksonomy
+            # tags are not used.
+            tm['genre'] = str_to_list(tm['genre'])
     is_classical = False
     composers_not_found = []
     composer_found = False
@@ -2585,10 +2617,24 @@ def append_tag(release_id, tm, tag, source, separators=None):
                                 for i, t in enumerate(tag_list):
                                     tag_list[i] = t.strip()
                             else:
-                                tag_list = [tm[tag]]
+                                # A pre-existing string value may itself be a
+                                # joined multi-value string (e.g. "Classical;
+                                # Avant-garde" as delivered by some MusicBrainz /
+                                # Picard paths when folksonomy_tags is off and so
+                                # the genre is not split/deleted at line ~1990).
+                                # Split it on the standard '; ' multi-value
+                                # separator (Picard's CONFIG_JOIN) so the genres
+                                # are written as SEPARATE tag values rather than
+                                # preserved as one joined value. str_to_list
+                                # already uses '; ' as the separator throughout.
+                                tag_list = str_to_list(tm[tag])
                         else:
                             tag_list = tm[tag]
-                        if source_item not in tm[tag]:
+                        # Dedup against the normalised list, not against tm[tag]
+                        # (which may still be a joined string: `in` on a string is
+                        # a substring match and would wrongly suppress a value
+                        # that is merely a substring of the joined string).
+                        if source_item not in tag_list:
                             tag_list.append(source_item)
                             tm[tag] = tag_list
                     # NB tag_list is used as metadata object will convert single-item lists to strings
@@ -3908,9 +3954,10 @@ class ExtraArtists():
                 # fix cyrillic names if not already fixed
                 if options['cea_cyrillic']:
                     if not only_roman_chars(name):
-                        name = remove_middle(unsort(sort_name))
-                        # Only remove middle name where the existing
-                        # performer is in non-latin script
+                        # Replace a non-Latin name with a Latin one, derived from
+                        # the sort-name (patronymic removed); transliterate if
+                        # the sort-name is itself non-Latin (see Readme sec 2).
+                        name = cyrillic_to_latin(name, sort_name)
                 annotated_name = name
                 if instrument:
                     instrumented_name = name + ' (' + instrument + ')'
@@ -5110,7 +5157,8 @@ class PartLevels():
                             # so we remember we looked it up and found none
                             self.parts[wid]['no_parent'] = True
                             self.top_works[(track, album)]['workId'] = wid
-                            self.top[album].append(wid)
+                            if wid not in self.top[album]:
+                                self.top[album].append(wid)
 
                 write_log(
                         release_id,
@@ -5164,8 +5212,17 @@ class PartLevels():
         write_log(release_id, 'debug', "In work_process_metadata")
         all_tags = parse_data(release_id, response, [], 'tags', 'name')
         self.parts[wid]['folks_genres'] = all_tags
-        self.parts[wid]['worktype_genres'] = parse_data(
-            release_id, response, [], 'type')
+        # Accumulate work types across all constituent works of a merged wid
+        # tuple (work_process_metadata is called once per constituent workId),
+        # de-duplicating so a type shared by several constituents is not
+        # written multiple times into the genre tag.
+        worktype = parse_data(release_id, response, [], 'type')
+        existing = self.parts[wid].get('worktype_genres')
+        if existing is not None:
+            self.parts[wid]['worktype_genres'] = add_list_uniquely(existing, worktype)
+        else:
+            self.parts[wid]['worktype_genres'] = worktype
+        write_log(release_id, 'debug', "workId genre %s type %s", wid, self.parts[wid]['worktype_genres'])
         key = parse_data(
             release_id,
             response,
@@ -5344,6 +5401,38 @@ class PartLevels():
                     release_id,
                     'info',
                     'Not getting parent work because relationship is "part of collection" and option not selected')
+        # Flag collection status per individual parent work id. self.top[album]
+        # stores individual top ids (e.g. ('d801c361',)), but is_collection used
+        # to be stored only on the combined-parents tuple (tuple(parentIds)),
+        # so a top that was one of several parents was never recognised as a
+        # collection - e.g. an overture that is part of both an opera and an
+        # "Ouverture and Venusberg" collection was reported as two top works.
+        # Walk the matching backward parts-relations one by one and flag the
+        # specific parent that carries the "part of collection" attribute, so
+        # _is_collection_top() can detect collection tops and prune them.
+        matching_relations = parse_data(
+                release_id,
+                relations,
+                [],
+                'target-type:work',
+                'type:parts',
+                'direction:backward')
+        collection_parent_ids = set()
+        for relation in matching_relations:
+            attrs = parse_data(release_id, relation, [], 'attributes')
+            attr_list = attrs[0] if attrs else []
+            if isinstance(attr_list, str):
+                attr_list = [attr_list]
+            if 'part of collection' in attr_list:
+                pids = parse_data(release_id, relation, [], 'work', 'id')
+                collection_parent_ids.update(pids)
+        for pid in collection_parent_ids:
+            self.parts[(pid,)]['is_collection'] = True
+            write_log(
+                    release_id,
+                    'debug',
+                    "Flagged collection parent: "
+                    "self.parts[('%s',)]['is_collection'] = True", pid)
         if new_work_list:
             write_log(
                     release_id,
@@ -5352,6 +5441,33 @@ class PartLevels():
                     new_work_list)
             new_workIds = parse_data(release_id, new_work_list, [], 'id')
             new_works = parse_data(release_id, new_work_list, [], 'title')
+            # Remove user-configured excluded works (by MusicBrainz work id).
+            # NB remove by index (descending) so new_workIds and new_works
+            # stay in sync, unlike a title-string match which desyncs the two
+            # lists when a title recurs or a work id appears more than once.
+            # The option may be missing if a track is reprocessed with an
+            # options blob saved by an older plugin version - fall back to ''.
+            try:
+                excluded_setting = options['cwp_excluded_works']
+            except KeyError:
+                excluded_setting = ''
+            excluded = {
+                uid.strip()
+                for uid in re.split(r'[,\n]', excluded_setting or '')
+                if uid.strip()
+            }
+            if excluded:
+                write_log(
+                    release_id,
+                    'info',
+                    'Removing excluded works (ids = %s) from new_workIds = %s, new_works = %s',
+                    excluded, new_workIds, new_works)
+                for i in range(len(new_workIds) - 1, -1, -1):
+                    if new_workIds[i] in excluded:
+                        del new_workIds[i]
+                        if i < len(new_works):
+                            del new_works[i]
+
         else:
             arrangement_of = parse_data(
                 release_id,
@@ -5457,6 +5573,231 @@ class PartLevels():
     # SECTION 3 - Organise tracks and works in album #
     ##################################################
 
+    def _part_name(self, part_id):
+        """Return a printable name for a work/part id.
+
+        self.parts[id]['name'] may be a string, a list of strings, or (for ids
+        that were never populated) an empty defaultdict. This returns a plain
+        string in all cases so it is safe to use in log messages and as a dict
+        key without risking an unhashable-type error.
+        """
+        if part_id is None:
+            return None
+        try:
+            name = self.parts[part_id]['name']
+        except Exception:
+            return str(part_id)
+        if isinstance(name, list):
+            return ' / '.join(str(n) for n in name)
+        if isinstance(name, dict) and not name:
+            return str(part_id)
+        if not name and name != 0:
+            return str(part_id)
+        return str(name)
+
+    def _is_collection_top(self, top):
+        """Whether a top-level work id is a collection (e.g. an overture
+        collection) rather than a genuine parent work."""
+        part = self.parts.get(top)
+        return bool(part and part.get('is_collection'))
+
+    def _prune_collection_tops(self, release_id, album, track_tops):
+        """Prune redundant collection tops so an album reports its genuine top
+        work(s) rather than also listing a grouping collection.
+
+        A collection (a work reached via a "part of collection" relation, e.g.
+        "Tannhauser: Ouverture and Venusberg Music") is a grouping container,
+        not a work, so per the README it is not a legitimate "top work". When a
+        track is part of both a collection and a genuine work (e.g. the
+        overture is part of both the opera and the collection) the collection
+        is redundant and is pruned, leaving the genuine work as the top.
+
+        A collection is only pruned when it is redundant - i.e. every track
+        under it is also under a non-collection top. A collection that is the
+        only top for some track (the track is not part of any genuine work on
+        this album) is kept, since it is that track's real top. Tied
+        non-collection tops are never pruned here.
+
+        :param track_tops: ``{track: {top_id, ...}}`` mapping (tracks to the
+            top-work trees they appear in), as built in ``process_album``.
+        :return: ``True`` if any collection top was pruned.
+        """
+        tops = list(self.top[album])
+        non_collection_tops = [t for t in tops
+                               if not self._is_collection_top(t)]
+        collection_tops = [t for t in tops if self._is_collection_top(t)]
+        if not collection_tops or not non_collection_tops:
+            return False
+        non_collection_set = set(non_collection_tops)
+        redundant = []
+        for c in collection_tops:
+            exclusive = False
+            for t, t_tops in track_tops.items():
+                if c in t_tops and not (t_tops & non_collection_set):
+                    exclusive = True
+                    break
+            if not exclusive:
+                redundant.append(c)
+        if not redundant:
+            return False
+        redundant_set = set(redundant)
+        write_log(
+                release_id,
+                'info',
+                "Pruning redundant collection tops: %s -> keeping %s",
+                [self._part_name(c) for c in redundant],
+                [self._part_name(t) for t in tops
+                 if t not in redundant_set])
+        self.top[album] = [t for t in tops if t not in redundant_set]
+        return True
+
+    def _merge_duplicate_tops(self, release_id, album, tracks_in_top):
+        """Merge top-level works that are the same work tree into one.
+
+        MusicBrainz can reach the same work via two different parent chains, so
+        ``self.top[album]`` can hold two ids that are the same work reported
+        twice. The real-world case: an overture track's work is part of both the
+        opera (``9b1bd955``) and an overture-grouping (``d801c361``) that is
+        itself part of the opera, so its top is recorded as the merged tuple
+        ``(9b1bd955, d801c361)``; the opera scenes reach the opera directly, so
+        their top is ``(9b1bd955,)``. The two tops share the opera id - they are
+        one work, not two.
+
+        Two tops are merged when their id-sets are not disjoint (one shares at
+        least one work id with the other, i.e. one is a subset of or overlaps
+        the other). Genuine distinct works (a concerto and a symphony on one
+        album) share no work ids and are never merged, so real multi-work
+        albums are preserved. Within each connected group the most-selected top
+        (the one chosen by the most tracks, ties broken by order in
+        ``self.top[album]``) becomes the representative; the rest are dropped and
+        their tracks are re-pointed at the representative (in ``process_album``)
+        so they are still tagged under that work.
+
+        :param tracks_in_top: ``{top_id: {track, ...}}`` mapping, as built in
+            ``process_album``.
+        :return: ``True`` if any duplicate tops were merged.
+        """
+        tops = list(self.top[album])
+        if len(tops) <= 1:
+            return False
+        order = {top: i for i, top in enumerate(tops)}
+        id_sets = {top: set(top) for top in tops}
+        # Union-find: connect two tops whose id-sets share at least one id.
+        parent = {top: top for top in tops}
+
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+
+        def union(a, b):
+            ra, rb = find(a), find(b)
+            if ra != rb:
+                parent[ra] = rb
+
+        for i in range(len(tops)):
+            for j in range(i + 1, len(tops)):
+                if id_sets[tops[i]] & id_sets[tops[j]]:
+                    union(tops[i], tops[j])
+        components = collections.defaultdict(list)
+        for top in tops:
+            components[find(top)].append(top)
+        merged_any = False
+        survivors = set(tops)
+        for comp in components.values():
+            if len(comp) <= 1:
+                continue
+
+            def _score(top):
+                return (sum(1 for t in tracks_in_top.get(top, ())
+                            if t[1] == album), -order[top])
+            representative = max(comp, key=_score)
+            dropped = [t for t in comp if t != representative]
+            for d in dropped:
+                survivors.discard(d)
+            merged_any = True
+            write_log(
+                    release_id,
+                    'info',
+                    "Merging duplicate top works (shared work id): keeping %r "
+                    "(%s), dropping %r",
+                    representative, self._part_name(representative), dropped)
+        if merged_any:
+            # Preserve original discovery order of the survivors.
+            self.top[album] = [t for t in tops if t in survivors]
+        return merged_any
+
+    @staticmethod
+    def _normalise_name(name):
+        """Normalise a work name for duplicate comparison: lower-case, collapse
+        whitespace, drop surrounding punctuation."""
+        if name is None:
+            return ''
+        return re.sub(r'\s+', ' ', str(name).strip().lower()).strip('.,;:"\'')
+
+    def _resolve_chosen_tops(self, release_id, album, track_tops):
+        """Decide the single top work each track is tagged with.
+
+        For a track shared between several top works the chosen top is:
+          1. the single non-collection candidate, if exactly one of its
+             candidates is not a collection (per README: "the parent work is
+             the highest level work ... which is not a collection"); else
+          2. the "most selected" top (the one chosen by the most unambiguous
+             tracks, ties broken by order in ``self.top[album]``); else
+          3. the first candidate in discovery order.
+
+        Tracks absent from every tree fall back to the top previously recorded
+        for them in ``self.top_works`` (else the most-selected top).
+
+        :return: ``(most_selected, chosen_top)`` where ``chosen_top`` maps
+            ``(track, album)`` -> top work id.
+        """
+        # Tally only unambiguous tracks (those under exactly one top) so that
+        # shared tracks do not bias the "most selected" result.
+        top_tally = collections.Counter()
+        for t, tops in track_tops.items():
+            if len(tops) == 1:
+                top_tally[next(iter(tops))] += 1
+        # Most selected top: highest unambiguous tally, ties broken by the
+        # order in which tops appear in self.top[album].
+        most_selected = None
+        best = -1
+        for topId in self.top[album]:
+            c = top_tally.get(topId, 0)
+            if c > best:
+                best = c
+                most_selected = topId
+        write_log(
+                release_id,
+                'info',
+                "Top tally (unambiguous) = %s, most selected = %s",
+                [(self._part_name(k), v) for k, v in top_tally.items()],
+                self._part_name(most_selected) if most_selected else None)
+        chosen_top = {}
+        for t, tops in track_tops.items():
+            if len(tops) == 1:
+                chosen_top[t] = next(iter(tops))
+            else:
+                non_collection = [top for top in tops
+                                  if not self._is_collection_top(top)]
+                if len(non_collection) == 1:
+                    chosen_top[t] = non_collection[0]
+                elif most_selected is not None:
+                    chosen_top[t] = most_selected
+                else:
+                    chosen_top[t] = next(iter(tops))
+        # Fall back for tracks not found in any tree (e.g. a work with no_parent
+        # that was not recorded in self.top): use the top previously determined
+        # for that track, else the most selected top.
+        for (track_key, al), info in self.top_works.items():
+            t = (track_key, al)
+            if al != album or t in chosen_top:
+                continue
+            wid = info.get('workId') if isinstance(info, dict) else None
+            chosen_top[t] = tuple(wid) if wid else most_selected
+        return most_selected, chosen_top
+
     def process_album(self, release_id, album):
         """
         Top routine to run end-of-album processes
@@ -5559,12 +5900,167 @@ class PartLevels():
                 self.top,
                 album,
                 self.top[album])
+        # De-duplicate top-level works so each is processed exactly once in the
+        # loop below (and so the single-work-album check stays accurate). The
+        # insertion points guard against duplicates, but this makes certain.
+        self.top[album] = list(dict.fromkeys(self.top[album]))
         if len(self.top[album]) > 1:
             single_work_album = 0
         else:
             single_work_album = 1
+        # Build the inverse-hierarchy tree for every top-level work up front so
+        # that, for tracks whose work is shared between several top works, a
+        # single "chosen" top work can be decided for each track before any
+        # metadata is written. Otherwise such a track appears in every top-work
+        # tree that contains it and ends up tagged with whichever top work is
+        # processed last. The chosen top for a shared track is the one selected
+        # by the most tracks on the album.
+        def _collect_tracks(node, acc):
+            if 'meta' in node:
+                for t in node['meta']:
+                    acc.add(t)
+            for child in node.get('children', []):
+                _collect_tracks(child, acc)
+        tracks_in_top = {}
         for topId in self.top[album]:
             self.create_trackback(release_id, album, topId)
+            collected = set()
+            if topId in self.trackback[album]:
+                _collect_tracks(self.trackback[album][topId], collected)
+            tracks_in_top[topId] = collected
+            write_log(
+                    release_id,
+                    'debug',
+                    "Tracks under top %s (%s): %s",
+                    topId,
+                    self.parts[topId]['name'],
+                    collected)
+        track_tops = collections.defaultdict(set)
+        for topId, tracks in tracks_in_top.items():
+            for t in tracks:
+                track_tops[t].add(topId)
+        most_selected, self.chosen_top = self._resolve_chosen_tops(
+            release_id, album, track_tops)
+        # Snapshot the top ids before any pruning/merging/collapsing so the
+        # chosen_top remap below knows whether anything was dropped.
+        pre_top_ids = set(self.top[album])
+        # Prune redundant collection tops before the empty-top pruning below.
+        # A collection (a work reached via a "part of collection" relation) is a
+        # grouping container, not a genuine work, so it is not a legitimate top
+        # work and is removed when every track under it is also under a genuine
+        # top. This runs regardless of whether the album has a "clear winner",
+        # so it also fixes albums where the only track is shared between an
+        # opera and its overture collection (no unambiguous tracks): the
+        # collection is pruned leaving the opera, instead of reporting two top
+        # works. Tied non-collection tops are kept (handled by the helper).
+        if self._prune_collection_tops(release_id, album, track_tops):
+            single_work_album = 1 if len(self.top[album]) <= 1 else 0
+        # Merge tops that name the *same* work (the same work can appear under
+        # two ids via different parent chains or as a merged work-tuple plus one
+        # of its constituents). These are duplicates, not distinct works, so
+        # fold them into the most-selected representative; the chosen_top
+        # remap below re-points affected tracks at the surviving id so they are
+        # still tagged. This must run before the most-selected collapse so the
+        # collapse compares distinct works, not the same work twice.
+        if self._merge_duplicate_tops(release_id, album, tracks_in_top):
+            single_work_album = 1 if len(self.top[album]) <= 1 else 0
+        # Collapse the album down to its "most selected" top work(s). Each track
+        # has already been assigned a single chosen top (above), so the natural
+        # album-level winner is the top that the most tracks are tagged with.
+        #
+        # This fixes the reported "two top_works" bug: an album may accumulate
+        # several top-level works (e.g. the genuine work plus a duplicate or a
+        # collection that survived pruning), where one is chosen by more tracks
+        # than another. The previous logic only dropped tops that *no* track was
+        # tagged with, so any top with even one chosen track survived - leaving the
+        # album reporting two top works. Instead we now keep only the top(s) tied
+        # for the highest chosen-track count, with one guard against data loss:
+        #   * a unique winner collapses the album to a single top work;
+        #   * a tie at the maximum keeps every tied leader (genuine multi-work
+        #     albums are preserved - we never break a real tie arbitrarily); and
+        #   * any top that owns "exclusive" tracks (tracks under no other top) is
+        #     always kept, even if it is not the most-selected, so its tracks are
+        #     still tagged - pruning such a top would silently drop their work
+        #     metadata. Only tops whose every track is shared (pure duplicates /
+        #     containers) may be collapsed away.
+        top_choice = collections.Counter()
+        for (t, al), v in self.chosen_top.items():
+            if al == album and v is not None:
+                top_choice[tuple(v)] += 1
+        exclusive = collections.Counter()
+        for t, tops in track_tops.items():
+            if t[1] == album and len(tops) == 1:
+                exclusive[next(iter(tops))] += 1
+        if self.top[album] and top_choice:
+            best = max(
+                top_choice.get(tuple(topId), 0) for topId in self.top[album])
+            if best > 0:
+                winners = [
+                    topId for topId in self.top[album]
+                    if top_choice.get(tuple(topId), 0) == best
+                    or exclusive.get(topId, 0) > 0
+                ]
+                if len(winners) < len(self.top[album]):
+                    write_log(
+                            release_id,
+                            'info',
+                            "Collapsing to most-selected top work(s): %s -> %s "
+                            "(chosen counts: %s, exclusive: %s)",
+                            self.top[album], winners,
+                            {self._part_name(k): v
+                             for k, v in top_choice.items()},
+                            {self._part_name(k): v
+                             for k, v in exclusive.items()})
+                    self.top[album] = winners
+                    single_work_album = 1 if len(self.top[album]) <= 1 else 0
+        # Re-point any track whose chosen top was removed (by collection pruning,
+        # duplicate merging, or the most-selected collapse) at a surviving top so
+        # the track is still tagged with a work. The per-track tagging loop skips
+        # a track under any top whose id != its chosen_top, so a track left
+        # pointing at a dropped top would be skipped under every survivor and
+        # get no work metadata. Prefer a survivor that actually contains the
+        # track (its trackback tree lists it); otherwise fall back to the
+        # same-named survivor (the track was under a duplicate of that work).
+        survivors = {tuple(w) for w in self.top[album]}
+        if survivors and set(map(tuple, self.top[album])) != pre_top_ids:
+            for (t, al), v in list(self.chosen_top.items()):
+                if al != album or v is None:
+                    continue
+                if tuple(v) in survivors:
+                    continue
+                new_top = None
+                for w in self.top[album]:
+                    if t in tracks_in_top.get(w, ()):
+                        new_top = w
+                        break
+                if new_top is None:
+                    # Track not listed under any survivor's tree: fall back to a
+                    # survivor that shares a work id with the dropped top (the
+                    # track was under a different parent chain of the same work,
+                    # e.g. an overture top ``(9b1bd955, d801c361)`` re-pointed to
+                    # the opera-only top ``(9b1bd955,)``).
+                    dropped_ids = set(tuple(v))
+                    for w in self.top[album]:
+                        if set(tuple(w)) & dropped_ids:
+                            new_top = w
+                            break
+                if new_top is None:
+                    # Final fallback: a survivor with the same work name.
+                    dropped_name = self._normalise_name(self._part_name(v))
+                    for w in self.top[album]:
+                        if self._normalise_name(
+                                self._part_name(w)) == dropped_name:
+                            new_top = w
+                            break
+                if new_top is not None:
+                    self.chosen_top[(t, al)] = new_top
+                    write_log(
+                            release_id,
+                            'debug',
+                            "Re-pointing track %r from dropped top %r to "
+                            "surviving top %r",
+                            t, v, new_top)
+        for topId in self.top[album]:
             write_log(
                     release_id,
                     'info',
@@ -5836,7 +6332,18 @@ class PartLevels():
                     if 'children' in trackback:
                         child_response = self.process_trackback_children(
                             release_id, album_req, trackback, ref_height, top_info, tracks)
-                        tracks = child_response[1]
+                        # process_trackback_children returns None when none of
+                        # the child subtrees carry tracks for this album (e.g.
+                        # the tracks are attached directly to this top work,
+                        # not to any of its parts). In that case keep the empty
+                        # ``tracks`` dict and fall through to the depth-0 loop
+                        # below so this top's own tracks are still processed and
+                        # published. Previously ``tracks = child_response[1]``
+                        # raised TypeError here, which -- process_album calling
+                        # this without a guard -- aborted the whole album loop
+                        # and dropped every subsequent top's tracks too.
+                        if child_response is not None:
+                            tracks = child_response[1]
                     write_log(
                             release_id,
                             'info',
@@ -5845,6 +6352,16 @@ class PartLevels():
                 write_log(release_id, 'info', "WorkId: %s, Work name: %s", workId, self.parts[workId]['name'])
                 for track, album in trackback['meta']:
                     if album == album_req:
+                        # A work shared between several top works appears (by
+                        # reference) in each of those top-work trees. Process
+                        # the track only under its chosen top work (the one
+                        # selected by the most tracks on the album, decided in
+                        # process_album) so it is not written under every top
+                        # work and left tagged with whichever is processed last.
+                        chosen = self.chosen_top.get((track, album))
+                        if chosen is not None and tuple(chosen) != tuple(
+                                top_info['id']):
+                            continue
                         write_log(release_id, 'info', "Track: %s", track)
                         tm = track.metadata
                         write_log(
@@ -5878,7 +6395,37 @@ class PartLevels():
                             tracks['track'].append((track, height))
                         else:
                             tracks['track'] = [(track, height)]
-                        tracks['tracknumber'] = [int(tm['discnumber']) + (int(tm['tracknumber']) / 1000)]
+                        # Keep the parallel lists (track / title / work /
+                        # tracknumber) the same length. The depth-0 tracks are
+                        # appended *after* process_trackback_children has already
+                        # populated these for any child tracks, so they must be
+                        # appended here too -- previously tracknumber was
+                        # reassigned (overwriting earlier entries) and title/work
+                        # were not added at all, which left track longer than
+                        # tracknumber. The caller zips the two lists, so the
+                        # mismatch truncated the result to one track per top
+                        # work, dropping the rest from publishing.
+                        title = tm['~cwp_title'] or tm['title']
+                        if 'title' in tracks:
+                            tracks['title'].append(title)
+                        else:
+                            tracks['title'] = [title]
+                        # to make sure we get it as a list
+                        work = tm.getall('~cwp_work_0')
+                        if 'work' in tracks:
+                            tracks['work'].append(work)
+                        else:
+                            tracks['work'] = [work]
+                        if 'tracknumber' not in tm:
+                            tm['tracknumber'] = 0
+                        if 'discnumber' not in tm:
+                            tm['discnumber'] = 0
+                        if 'tracknumber' in tracks:
+                            tracks['tracknumber'].append(
+                                int(tm['discnumber']) + (int(tm['tracknumber']) / 1000))
+                        else:
+                            tracks['tracknumber'] = [
+                                int(tm['discnumber']) + (int(tm['tracknumber']) / 1000)]
                         # Hopefully no more than 999 tracks per disc!
                         write_log(release_id, 'info', "Tracks: %s", tracks)
 
@@ -5944,17 +6491,30 @@ class PartLevels():
                         track_meta = track[0]
                         track_height = track[1]
                         part_level = track_height - height
-                        write_log(
-                                release_id,
-                                'debug',
-                                "Calling set metadata %s",
-                                (part_level,
-                                 workId,
-                                 parentId,
-                                 parent,
-                                 track_meta))
-                        self.set_metadata(
-                            release_id, part_level, workId, parentId, parent, track_meta)
+                        # A work shared between several top works appears (by
+                        # reference) in each top-work tree. Apply the per-track
+                        # chosen-top decision (from process_album) here too, not
+                        # only at depth 0 in process_trackback: this call sets
+                        # the parent-level work/part names AND ~cwp_work_top for
+                        # the track, so without this guard a shared track would
+                        # be written under every top that contains it and end up
+                        # with multiple top_work values (e.g. an overture that is
+                        # part of both an "overture" collection and the opera is
+                        # assigned to the opera, so skip it under the collection).
+                        chosen = self.chosen_top.get((track_meta, album_req))
+                        if chosen is None or tuple(chosen) == tuple(
+                                top_info['id']):
+                            write_log(
+                                    release_id,
+                                    'debug',
+                                    "Calling set metadata %s",
+                                    (part_level,
+                                     workId,
+                                     parentId,
+                                     parent,
+                                     track_meta))
+                            self.set_metadata(
+                                release_id, part_level, workId, parentId, parent, track_meta)
                         if 'track' in tracks:
                             tracks['track'].append(
                                 (track_meta, track_height))

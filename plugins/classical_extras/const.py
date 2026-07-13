@@ -568,6 +568,11 @@ WORKPARTS_OPTIONS = [
      'name': 'medley text',
      'type': 'Text',
      'default': 'Medley'
+     },
+    {'option': 'cwp_excluded_works',
+     'name': 'excluded works',
+     'type': 'Text',
+     'default': ''
      }
 ]
 # Options on "Genres etc." tab
