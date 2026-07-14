@@ -784,6 +784,31 @@ class RecordingSessionTagsTestCase(ClassicalExtrasTestCase):
         self.assertEqual(len(tags["recordingsessions"]), 2)
         self.assertEqual(tags["recordingdate"], "2024-09-11 - 2024-09-12")
 
+    def test_parse_data_relations_boundary(self):
+        """Integration: parse_data() on the FULL /recording response yields the
+        relations list in the exact shape recording_session_tags expects. This
+        locks the response->tags seam that recording_process relies on (the
+        callback does parse_data(response, 'relations') then hands it to the
+        pure function)."""
+        import json
+        import os
+        path = os.path.join(os.path.dirname(__file__), "fixtures",
+                            "rec_791581ad_bruckner6.json")
+        with open(path, encoding="utf-8") as f:
+            full_response = json.load(f)  # WHOLE response, not just ["relations"]
+        # exactly what recording_process must do with the webservice response:
+        # parse_data always returns a list and wraps the matched value, so
+        # parse_data(response, 'relations') -> [[rel, rel, ...]]. Unwrap one
+        # level to get the raw relations list the pure function iterates.
+        wrapped = self.mod.parse_data("test", full_response, [], 'relations')
+        relations = wrapped[0] if wrapped else []
+        tags = self.mod.recording_session_tags(relations)
+        self.assertEqual(tags["recordingplace"],
+                         ["サントリーホール", "横浜みなとみらいホール"])
+        self.assertEqual(tags["recordingcity"], ["Akasaka", "Minato-Mirai"])
+        self.assertEqual(tags["recordingdate"], "2018-04-19 - 2018-04-22")
+        self.assertEqual(len(tags["recordingsessions"]), 2)
+
     def test_dateless_place_with_dated_conductor_no_crash(self):
         """Regression: a recorded-at place with NO date, plus a dated conductor.
         The place session has no date, so the conductor date is NOT covered and
