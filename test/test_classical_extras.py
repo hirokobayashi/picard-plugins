@@ -856,16 +856,19 @@ class RecordingLookupCallbackTestCase(ClassicalExtrasTestCase):
         with open(path, encoding="utf-8") as f:
             return json.load(f)
 
-    def _make(self, release_id):
+    def _make(self, release_id, work_parts=True):
         from picard.metadata import Metadata
         pl = self.mod.PartLevels()
-        pl.process_album = lambda rid, alb: self._process_calls.append(rid)
         self._process_calls = []
+        pl.process_album = lambda rid, alb: self._process_calls.append(rid)
         tm = Metadata()
         tm['musicbrainz_albumid'] = release_id
         track = self._FakeTrack(tm)
         album = self._FakeAlbum()
         album._requests = 1
+        # recording_process consults the track's options to decide whether to
+        # run end-of-album works processing.
+        pl.options[track] = {'classical_work_parts': work_parts}
         return pl, tm, track, album
 
     def test_success_writes_tags_and_finalizes(self):
@@ -892,6 +895,21 @@ class RecordingLookupCallbackTestCase(ClassicalExtrasTestCase):
         self.assertEqual(album._requests, 0)
         self.assertTrue(album.finalized)
         self.assertEqual(self._process_calls, ['rel2'])
+
+    def test_work_parts_off_skips_process_album(self):
+        # crr lookup on but classical_work_parts OFF: tags are still written and
+        # the album still finalizes, but process_album must NOT run -- its state
+        # (track_listing/top/parts) was never built, so calling it would crash.
+        pl, tm, track, album = self._make('rel3', work_parts=False)
+        pl.recordings_queue.append('ridA', (track, album))
+        full = self._load_full("rec_92ab0819_fanfare.json")
+        pl.recording_process('ridA', 0, full, None, None)
+        self.assertEqual(list(tm.getall('recording_place')),
+                         ['Atlanta Symphony Hall'])
+        self.assertEqual(tm['recording_date'], '1982-05-24')
+        self.assertEqual(album._requests, 0)
+        self.assertTrue(album.finalized)        # still finalizes
+        self.assertEqual(self._process_calls, [])   # but process_album NOT called
 
 
 if __name__ == "__main__":
