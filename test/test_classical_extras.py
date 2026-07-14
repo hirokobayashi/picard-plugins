@@ -832,5 +832,67 @@ class RecordingSessionTagsTestCase(ClassicalExtrasTestCase):
                          ["Abbey Road Studios, London", "(1970-01-01)"])
 
 
+class RecordingLookupCallbackTestCase(ClassicalExtrasTestCase):
+    """The async recording lookup callback (PartLevels.recording_process):
+    tag writing, request accounting, and album finalization. Uses fake
+    album/track objects so no real webservice or album state is needed."""
+
+    class _FakeAlbum:
+        def __init__(self):
+            self._requests = 0
+            self.finalized = False
+
+        def _finalize_loading(self, _arg):
+            self.finalized = True
+
+    class _FakeTrack:
+        def __init__(self, metadata):
+            self.metadata = metadata
+
+    def _load_full(self, name):
+        import json
+        import os
+        path = os.path.join(os.path.dirname(__file__), "fixtures", name)
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+
+    def _make(self, release_id):
+        from picard.metadata import Metadata
+        pl = self.mod.PartLevels()
+        pl.process_album = lambda rid, alb: self._process_calls.append(rid)
+        self._process_calls = []
+        tm = Metadata()
+        tm['musicbrainz_albumid'] = release_id
+        track = self._FakeTrack(tm)
+        album = self._FakeAlbum()
+        album._requests = 1
+        return pl, tm, track, album
+
+    def test_success_writes_tags_and_finalizes(self):
+        pl, tm, track, album = self._make('rel1')
+        pl.recordings_queue.append('rid1', (track, album))
+        full = self._load_full("rec_791581ad_bruckner6.json")   # full response
+        pl.recording_process('rid1', 0, full, None, None)
+        self.assertEqual(list(tm.getall('recording_place')),
+                         ['サントリーホール', '横浜みなとみらいホール'])
+        self.assertEqual(list(tm.getall('recording_city')),
+                         ['Akasaka', 'Minato-Mirai'])
+        self.assertEqual(tm['recording_date'], '2018-04-19 - 2018-04-22')
+        # request released exactly once and album finalized once
+        self.assertEqual(album._requests, 0)
+        self.assertTrue(album.finalized)
+        self.assertEqual(self._process_calls, ['rel1'])
+
+    def test_error_give_up_still_releases_and_finalizes(self):
+        # tries above MAX_RETRIES -> no requeue; must STILL release + finalize
+        # (otherwise the album hangs forever).
+        pl, tm, track, album = self._make('rel2')
+        pl.recordings_queue.append('ridX', (track, album))
+        pl.recording_process('ridX', 99, None, None, "503")
+        self.assertEqual(album._requests, 0)
+        self.assertTrue(album.finalized)
+        self.assertEqual(self._process_calls, ['rel2'])
+
+
 if __name__ == "__main__":
     unittest.main()

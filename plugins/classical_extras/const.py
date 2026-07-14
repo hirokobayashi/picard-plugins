@@ -573,6 +573,31 @@ WORKPARTS_OPTIONS = [
      'name': 'excluded works',
      'type': 'Text',
      'default': ''
+     },
+    {'option': 'crr_recording_lookup',
+     'name': 'recording lookup',
+     'type': 'Boolean',
+     'default': False
+     },
+    {'option': 'crr_place_tag',
+     'name': 'recording place tag',
+     'type': 'Text',
+     'default': 'recording_place'
+     },
+    {'option': 'crr_city_tag',
+     'name': 'recording city tag',
+     'type': 'Text',
+     'default': 'recording_city'
+     },
+    {'option': 'crr_date_tag',
+     'name': 'recording date tag',
+     'type': 'Text',
+     'default': 'recording_date'
+     },
+    {'option': 'crr_sessions_tag',
+     'name': 'recording sessions tag',
+     'type': 'Text',
+     'default': 'recording_session'
      }
 ]
 # Options on "Genres etc." tab
