@@ -43,6 +43,36 @@
   versions. UI added to `options_classical_extras.ui` +
   `ui_options_classical_extras.py`.
 
+### Recording place/date tags (pure core only)
+- `recording_session_tags(relations)` is a module-level pure function (near
+  line 2990, after `blank_if_none`). It takes a recording's already-parsed
+  `relations` list (as from `/recording?inc=place-rels+artist-rels`) and
+  returns a dict: `recordingsessions`, `recordingplace`, `recordingcity`,
+  `recordingdate`. It does NO web lookups and writes NO tags — the caller wires
+  the fetch and hands the relations in. Do NOT touch webservice/RecordingQueue
+  for this feature.
+- Place/date are PAIRED per `target-type:place` + `type:"recorded at"` rel; the
+  begin/end live on each place relation. Sessions are sorted by begin date and
+  formatted `"<Venue>, <City> (<date>)"`. `recordingplace`/`recordingcity` are
+  deduped canonical names (first-seen order).
+- Date fallback: dated artist rels (`conductor`/`orchestra`/`ensemble`/
+  `performer`) give a date-only `"(<date>)"` session ONLY when its span is NOT
+  covered by a place session (see `_RECORDING_DATE_FALLBACK_TYPES`,
+  `covered` logic). Case (b) proves the conductor span 2018-04-19..04-22 is
+  covered by the two place sessions -> no third session.
+- `_format_recording_date(begin, end)`: ISO 8601, single value when begin==end
+  (precision-match; month precision -> `"2024-09"` not a range), else
+  `"<begin> - <end>"` with SPACED ASCII hyphen (`_RECORDING_DATE_RANGE_SEP`).
+- `recordingcountry` is deferred (TODO in the function); needs area-hierarchy
+  lookups. `target-credit` (credited-as venue in the display tag) is also a
+  TODO; v1 uses canonical `place.name` everywhere because no fixture has a
+  populated target-credit.
+- Tests: `RecordingSessionTagsTestCase` in test_classical_extras.py loads
+  real MB JSON fixtures from `test/fixtures/` (captured once). 3 real-recording
+  tests + 2 synthetic edge-case tests (precision-match month, duplicate-venue
+  dedup). Each was proved RED first (function absent -> AttributeError; edge
+  tests proved via targeted mutation showing failure, then reverted).
+
 ### `process_trackback` crashes / regressions (Alina album investigation)
 - The `depth != 0` branch of `process_trackback` previously did
   `tracks = child_response[1]` unconditionally. When a top work has children
