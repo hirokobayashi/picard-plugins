@@ -3047,7 +3047,10 @@ def recording_session_tags(relations):
     sessions = []
     for begin, end, venue, city in place_sessions:
         date = _format_recording_date(begin, end)
-        label = "%s, %s (%s)" % (venue, city, date)
+        if date:
+            label = "%s, %s (%s)" % (venue, city, date)
+        else:
+            label = "%s, %s" % (venue, city)
         sessions.append(label)
 
     # Date-only fallback from dated artist relationships, emitted only for
@@ -3068,18 +3071,23 @@ def recording_session_tags(relations):
         if not fallback_end or (end and end > fallback_end):
             fallback_end = end
 
-    covered = bool(place_sessions) and bool(fallback_begin) and bool(
-        fallback_end) and fallback_begin >= min(
-            s[0] for s in place_sessions if s[0]) and fallback_end <= max(
-            s[1] for s in place_sessions if s[1])
+    place_begins = [s[0] for s in place_sessions if s[0]]
+    place_ends = [s[1] for s in place_sessions if s[1]]
+    # A dated fallback is "covered" only when the place sessions carry dates
+    # that span it. Guard min()/max() against a place that has a venue but no
+    # date (else min() over an empty sequence raises ValueError).
+    covered = bool(
+        fallback_begin and fallback_end and place_begins and place_ends
+        and fallback_begin >= min(place_begins)
+        and fallback_end <= max(place_ends))
 
     if (fallback_begin or fallback_end) and not covered:
         sessions.append("(%s)" % _format_recording_date(
             fallback_begin, fallback_end))
 
     # Aggregate span across all sessions (place + any fallback).
-    all_begins = [s[0] for s in place_sessions if s[0]]
-    all_ends = [s[1] for s in place_sessions if s[1]]
+    all_begins = list(place_begins)
+    all_ends = list(place_ends)
     if not covered:
         if fallback_begin:
             all_begins.append(fallback_begin)
