@@ -910,6 +910,37 @@ class RecordingLookupCallbackTestCase(ClassicalExtrasTestCase):
         self.assertTrue(album.finalized)
         self.assertEqual(self._process_calls, ['rel2'])
 
+    def test_duplicate_recording_id_balances_request_count(self):
+        """Two tracks sharing one recording id: album_add_request fires per
+        track (+2, unconditional, as in work_add_track), one lookup is queued,
+        and its single callback fans out to BOTH queued tuples (-2). Net zero ->
+        album finalizes, no hang. (Verifies the fan-out accounting on the
+        duplicate-recording path, which no other test exercises.)"""
+        from picard.metadata import Metadata
+        pl = self.mod.PartLevels()
+        self._process_calls = []
+        pl.process_album = lambda rid, alb: self._process_calls.append(rid)
+        album = self._FakeAlbum()
+        album._requests = 0
+        tracks = []
+        for _ in range(2):
+            tm = Metadata()
+            tm['musicbrainz_albumid'] = 'reldup'
+            t = self._FakeTrack(tm)
+            pl.options[t] = {'classical_work_parts': True}
+            tracks.append(t)
+        # Replicate what add_work_info -> recording_add_track does to the
+        # counter + queue for each track (unconditional add_request + append).
+        for t in tracks:
+            self.mod.PartLevels.album_add_request('reldup', album)   # +1 each
+            pl.recordings_queue.append('shared', (t, album))         # True, then False
+        self.assertEqual(album._requests, 2)
+        full = self._load_full("rec_92ab0819_fanfare.json")
+        pl.recording_process('shared', 0, full, None, None)          # single callback
+        self.assertEqual(album._requests, 0)      # +2 then -2 -> balanced (no hang)
+        self.assertTrue(album.finalized)
+        self.assertEqual(self._process_calls, ['reldup'])            # finalized once
+
     def test_work_parts_off_skips_process_album(self):
         # crr lookup on but classical_work_parts OFF: tags are still written and
         # the album still finalizes, but process_album must NOT run -- its state
