@@ -888,6 +888,40 @@ class ClassicalExtrasTestCase(PluginTestCase):
         self.assertEqual(select(["A", "B"], {}), "A")
         self.assertEqual(select(["A", "B"], None), "A")
 
+    def test_collapse_multiparent_top_name(self):
+        """The fused top's name is reduced to the vote winner in self.parts, so
+        every tag derived from it (work, top_work, ~cwp_work_N) is single. This
+        is the release 6ced4363 'work has two values' regression: the parent
+        name list ['Ballet ...', 'Suite from The Bolt'] must become just the
+        most-voted ballet."""
+        pl = self._make_trackback_partlevels()
+        fused = ("4aeb", "17f")
+        pl.parts[fused] = {"name": [self._BOLT_BALLET, self._BOLT_SUITE]}
+        votes = {self._BOLT_BALLET: 8, self._BOLT_SUITE: 6}
+        changed = pl._collapse_multiparent_top_name(fused, votes)
+        self.assertTrue(changed)
+        self.assertEqual(pl.parts[fused]["name"], [self._BOLT_BALLET])
+
+    def test_collapse_multiparent_top_name_tie_keeps_all(self):
+        """A tie keeps the tied names (several top works acceptable)."""
+        pl = self._make_trackback_partlevels()
+        fused = ("a", "b")
+        pl.parts[fused] = {"name": [self._BOLT_BALLET, self._BOLT_SUITE]}
+        votes = {self._BOLT_BALLET: 6, self._BOLT_SUITE: 6}
+        pl._collapse_multiparent_top_name(fused, votes)
+        self.assertEqual(pl.parts[fused]["name"],
+                         [self._BOLT_BALLET, self._BOLT_SUITE])
+
+    def test_collapse_multiparent_top_name_single_untouched(self):
+        """Single-name and plain-string tops are left alone."""
+        pl = self._make_trackback_partlevels()
+        pl.parts[("s",)] = {"name": ["Only Work"]}
+        pl.parts[("t",)] = {"name": "String Work"}
+        self.assertFalse(pl._collapse_multiparent_top_name(("s",), {"Only Work": 3}))
+        self.assertFalse(pl._collapse_multiparent_top_name(("t",), {}))
+        self.assertEqual(pl.parts[("s",)]["name"], ["Only Work"])
+        self.assertEqual(pl.parts[("t",)]["name"], "String Work")
+
     def test_top_work_string_name_unchanged(self):
         """A normal single-work top (name is a plain string) is untouched."""
         pl = self._make_trackback_partlevels()
