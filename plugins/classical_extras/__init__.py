@@ -5784,7 +5784,14 @@ class PartLevels():
             # Always release THIS request (a retry added its own) so no hang.
             self.album_remove_request(release_id, album)
             if album._requests == 0:
-                self.process_album(release_id, album)
+                # Only run end-of-album works processing if work parts were
+                # actually processed for this album. When classical_work_parts
+                # is off, add_work_info returned early and never built the
+                # track_listing/top/parts state process_album depends on, so
+                # calling it would misbehave. Always finalize either way.
+                opts = self.options.get(track)
+                if opts and opts.get('classical_work_parts'):
+                    self.process_album(release_id, album)
                 album._finalize_loading(None)
 
     def _write_recording_tags(self, tm, tags):
