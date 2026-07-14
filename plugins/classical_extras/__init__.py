@@ -5957,6 +5957,17 @@ class PartLevels():
             dropped = [t for t in comp if t != representative]
             for d in dropped:
                 survivors.discard(d)
+                # Graft the dropped top's tracks onto the representative's
+                # trackback tree so they are still walked (and tagged) under the
+                # surviving top. The tracks are also re-pointed at the
+                # representative in process_album, but re-pointing only fixes
+                # chosen_top: if the track is not in the survivor's tree it is
+                # never processed and gets no work/top_work tags. This is the
+                # ballet-only movements case: their top ('4aeb',) is folded into
+                # the fused ('4aeb','17f') top, but the fused tree lists only the
+                # shared movements, so without grafting the ballet-only movements
+                # vanish from tagging entirely.
+                self._graft_trackback_children(release_id, album, representative, d)
             merged_any = True
             write_log(
                     release_id,
@@ -5968,6 +5979,37 @@ class PartLevels():
             # Preserve original discovery order of the survivors.
             self.top[album] = [t for t in tops if t in survivors]
         return merged_any
+
+    def _graft_trackback_children(self, release_id, album, keep, drop):
+        """Move the ``drop`` top's tracks/subtree into the ``keep`` top's
+        trackback tree, so tracks that were only under ``drop`` (now merged away)
+        are still processed under the surviving ``keep`` top.
+
+        ``drop``'s children (its movements/sub-works) are appended to ``keep``'s
+        children; if ``drop`` is itself a leaf holding tracks, the leaf node
+        itself is grafted. Nodes already present are skipped so a re-run does not
+        duplicate them. No-op if either tree is absent (e.g. a unit test that
+        exercises the merge without building trackback trees).
+        """
+        trees = getattr(self, 'trackback', None)
+        album_trees = trees.get(album) if trees else None
+        if not album_trees:
+            return
+        keep_tree = album_trees.get(keep)
+        drop_tree = album_trees.get(drop)
+        if keep_tree is None or drop_tree is None:
+            return
+        keep_children = keep_tree.setdefault('children', [])
+        donors = drop_tree.get('children') or [drop_tree]
+        for child in donors:
+            if child not in keep_children:
+                keep_children.append(child)
+                write_log(
+                        release_id,
+                        'info',
+                        "Grafted %s onto surviving top %s",
+                        child.get('id') if isinstance(child, dict) else child,
+                        keep)
 
     @staticmethod
     def _normalise_name(name):

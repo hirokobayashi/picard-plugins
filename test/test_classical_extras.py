@@ -406,6 +406,55 @@ class ClassicalExtrasTestCase(PluginTestCase):
         self.assertFalse(merged)
         self.assertEqual(pl.top["alb"], [topA])
 
+    def test_merge_grafts_dropped_top_tracks_into_survivor(self):
+        """Regression for release 6ced4363, tracks 16 & 17 (the ballet-only Bolt
+        movements got NO top_work). When _merge_duplicate_tops folds the dropped
+        top's id into the survivor, the dropped top's tracks must be grafted onto
+        the survivor's trackback tree -- otherwise they are only re-pointed (in
+        chosen_top) but never walked by process_trackback, so they get no tags."""
+        fused = ("4aeb", "17f")     # ballet+suite fused top (shared movements)
+        dropped = ("4aeb",)         # ballet-only top (exclusive movements 16,17)
+        pl = self._make_partlevels(
+            [fused, dropped],
+            {fused: {"name": ["Ballet", "Suite"]}, dropped: {"name": ["Ballet"]}})
+        # leaf trackback nodes (one per movement), as create_trackback builds them
+        shared = [{"id": ["m%d" % i], "meta": [("t%d" % i, "alb")]}
+                  for i in (11, 12, 13)]
+        excl16 = {"id": ["m16"], "meta": [("t16", "alb")]}
+        excl17 = {"id": ["m17"], "meta": [("t17", "alb")]}
+        pl.trackback = {"alb": {
+            fused: {"id": list(fused), "children": list(shared)},
+            dropped: {"id": list(dropped), "children": [excl16, excl17]}}}
+        # fused has more tracks -> it is the representative that survives
+        tracks_in_top = {
+            fused: {("t%d" % i, "alb") for i in (11, 12, 13)},
+            dropped: {("t16", "alb"), ("t17", "alb")}}
+        merged = pl._merge_duplicate_tops("test", "alb", tracks_in_top)
+        self.assertTrue(merged)
+        self.assertEqual(pl.top["alb"], [fused])          # dropped folded away
+        fused_children = pl.trackback["alb"][fused]["children"]
+        # the ballet-only movements are now under the surviving fused top ...
+        self.assertIn(excl16, fused_children)
+        self.assertIn(excl17, fused_children)
+        # ... and the shared movements are still there (not lost or duplicated)
+        for leaf in shared:
+            self.assertEqual(fused_children.count(leaf), 1)
+
+    def test_merge_graft_no_trackback_no_crash(self):
+        """The graft is a no-op when no trackback trees are wired (e.g. the
+        other merge unit tests), never raising on the missing attribute."""
+        fused = ("4aeb", "17f")
+        dropped = ("4aeb",)
+        pl = self._make_partlevels(
+            [fused, dropped],
+            {fused: {"name": ["Ballet", "Suite"]}, dropped: {"name": ["Ballet"]}})
+        tracks_in_top = {fused: {("t1", "alb"), ("t2", "alb")},
+                         dropped: {("t3", "alb")}}
+        # no pl.trackback set at all -> must not raise
+        merged = pl._merge_duplicate_tops("test", "alb", tracks_in_top)
+        self.assertTrue(merged)
+        self.assertEqual(pl.top["alb"], [fused])
+
     def test_normalise_name(self):
         """Names are compared case/whitespace/punctuation-insensitively (used by
         the remap fallback) so the same work stored with different casing or
