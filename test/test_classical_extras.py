@@ -809,6 +809,20 @@ class RecordingSessionTagsTestCase(ClassicalExtrasTestCase):
         self.assertEqual(tags["recordingdate"], "2018-04-19 - 2018-04-22")
         self.assertEqual(len(tags["recordingsessions"]), 2)
 
+    def test_place_without_city_omits_stray_comma(self):
+        """A recorded-at place whose area has no name must not leave a stray
+        ", " in the session label (recordingcity is simply empty)."""
+        relations = [
+            {"target-type": "place", "type": "recorded at",
+             "begin": "2000-06-01", "end": "2000-06-01",
+             "place": {"name": "Studio X", "area": {}}},
+        ]
+        tags = self.mod.recording_session_tags(relations)
+        self.assertEqual(tags["recordingplace"], ["Studio X"])
+        self.assertEqual(tags["recordingcity"], [])
+        self.assertEqual(tags["recordingsessions"], ["Studio X (2000-06-01)"])
+        self.assertEqual(tags["recordingdate"], "2000-06-01")
+
     def test_dateless_place_with_dated_conductor_no_crash(self):
         """Regression: a recorded-at place with NO date, plus a dated conductor.
         The place session has no date, so the conductor date is NOT covered and

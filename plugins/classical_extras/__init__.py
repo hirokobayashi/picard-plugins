@@ -3047,10 +3047,13 @@ def recording_session_tags(relations):
     sessions = []
     for begin, end, venue, city in place_sessions:
         date = _format_recording_date(begin, end)
+        # Join only the non-empty parts so a venue with no city doesn't leave a
+        # stray ", " (and vice versa).
+        where = ", ".join(p for p in (venue, city) if p)
         if date:
-            label = "%s, %s (%s)" % (venue, city, date)
+            label = "%s (%s)" % (where, date) if where else "(%s)" % date
         else:
-            label = "%s, %s" % (venue, city)
+            label = where
         sessions.append(label)
 
     # Date-only fallback from dated artist relationships, emitted only for
@@ -5775,7 +5778,8 @@ class PartLevels():
                     # parse_data wraps the matched value ([[rel, ...]]); unwrap
                     # one level to the raw relations list the pure fn iterates.
                     wrapped = parse_data(release_id, response, [], 'relations')
-                    relations = wrapped[0] if wrapped else []
+                    relations = wrapped[0] if (
+                        wrapped and isinstance(wrapped[0], list)) else []
                     self._write_recording_tags(
                         track.metadata, recording_session_tags(relations))
                 except Exception as ex:
