@@ -6067,6 +6067,94 @@ class PartLevels():
             [selected] if isinstance(selected, str) else list(selected))
         return self.parts[topId]['name'] != name
 
+    def _collapse_fused_top_ids(self, release_id, album, track_tops):
+        """Reduce each surviving fused multi-parent top's id tuple to the
+        constituent parent id(s) common to ALL of its tracks - the version of
+        the work this release actually is.
+
+        A movement that MusicBrainz lists under several parent works gets a
+        *fused* top whose id tuple holds every one of those parents. When the
+        parents share the identical title (two versions of the same suite, an
+        original ballet and a derived concert suite, ...) the name collapse
+        cannot separate them, so the whole id tuple otherwise leaks into
+        ``~cwp_workid_top`` and, at the top level, ``musicbrainz_workid``. If
+        some track under the top belongs to only a subset of those parents
+        (e.g. the movement that exists only in the 6-movement version, or a
+        ballet-only movement absent from the derived suite) that subset is the
+        release's genuine top work; the other parents are not top works of this
+        release.
+
+        For every surviving top whose id tuple has more than one constituent,
+        the ids common to every track under it are computed from each track's
+        own candidate parent ids (the pre-merge ``track_tops``). If that
+        intersection is a non-empty proper subset, the top is re-indexed to it
+        (constituent order preserved), so every tag derived from the top uses
+        the collapsed id. An empty intersection (tracks genuinely span disjoint
+        parents) leaves the fused top unchanged.
+
+        :param track_tops: pre-merge ``{(track, album): {top_id, ...}}`` map.
+        :return: ``True`` if any top was collapsed.
+        """
+        changed = False
+        for old_id in list(self.top[album]):
+            if len(old_id) <= 1:
+                continue
+            members = [key for key, chosen in self.chosen_top.items()
+                       if key[1] == album and tuple(chosen) == tuple(old_id)]
+            if not members:
+                continue
+            common = None
+            for key in members:
+                ids = set()
+                for cand in track_tops.get(key, ()):
+                    ids |= set(cand)
+                common = ids if common is None else (common & ids)
+            if not common or len(common) >= len(old_id):
+                continue
+            new_id = tuple(x for x in old_id if x in common)
+            if not new_id or new_id == old_id:
+                continue
+            write_log(
+                    release_id,
+                    'info',
+                    "Collapsing fused top %r -> %r (ids common to all its "
+                    "tracks; %r is not a top work of this release)",
+                    old_id, new_id,
+                    tuple(x for x in old_id if x not in common))
+            self._reindex_top(release_id, album, old_id, new_id)
+            changed = True
+        return changed
+
+    def _reindex_top(self, release_id, album, old_id, new_id):
+        """Re-key a top work from ``old_id`` to ``new_id`` across the album
+        structures a tag is derived from: self.top, self.trackback (including
+        the tree node's own ``id``), self.parts and self.chosen_top. Used by
+        _collapse_fused_top_ids; ``new_id`` is a subset of ``old_id`` so the
+        collapsed-name value carries over unchanged."""
+        # parts: keep the fused top's accumulated data (genres, dates, ...)
+        # under the new key; its name has already been collapsed to a single
+        # value by _merge/dedup so it is correct for the surviving id.
+        old_part = self.parts.get(old_id)
+        if old_part is not None:
+            self.parts[new_id] = old_part
+        # trackback: move the (grafted) tree and correct its node id so
+        # process_trackback / set_metadata read the collapsed id.
+        album_trees = self.trackback.get(album)
+        if album_trees and old_id in album_trees:
+            tree = album_trees[old_id]
+            tree['id'] = list(new_id)
+            album_trees[new_id] = tree
+            if new_id != old_id:
+                del album_trees[old_id]
+        # top list: swap in place, then drop any duplicate the swap created.
+        self.top[album] = list(dict.fromkeys(
+            new_id if tuple(t) == tuple(old_id) else t
+            for t in self.top[album]))
+        # chosen_top: re-point every track that was under the fused top.
+        for key, chosen in list(self.chosen_top.items()):
+            if key[1] == album and tuple(chosen) == tuple(old_id):
+                self.chosen_top[key] = new_id
+
     def _resolve_chosen_tops(self, release_id, album, track_tops):
         """Decide the single top work each track is tagged with.
 
@@ -6421,6 +6509,17 @@ class PartLevels():
                             "Re-pointing track %r from dropped top %r to "
                             "surviving top %r",
                             t, v, new_top)
+        # Collapse a fused multi-parent top's id tuple to the constituent
+        # parent id(s) shared by ALL of its tracks - the version this release
+        # actually is. A movement listed by MusicBrainz under several parents
+        # of the SAME name (e.g. "Version A - 6 movements" and "Version B - 8
+        # movements" of a suite, which are indistinguishable by name so the
+        # name collapse above cannot separate them) leaves a fused id tuple.
+        # If some track belongs to only a subset of those parents (e.g. the
+        # 6th movement that exists only in Version A), that subset is the
+        # album's real top work; the other parents are not top works of this
+        # release and must not leak into ~cwp_workid_top / musicbrainz_workid.
+        self._collapse_fused_top_ids(release_id, album, track_tops)
         for topId in self.top[album]:
             # Collapse a fused multi-parent top's name to the voted winner(s)
             # BEFORE any tag is derived from it. A movement that belongs to

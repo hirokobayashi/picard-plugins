@@ -11,6 +11,7 @@ Covers the three approved tasks:
 """
 import collections
 import copy
+import json
 import unittest
 
 from test.plugin_test_case import PluginTestCase
@@ -454,6 +455,98 @@ class ClassicalExtrasTestCase(PluginTestCase):
         merged = pl._merge_duplicate_tops("test", "alb", tracks_in_top)
         self.assertTrue(merged)
         self.assertEqual(pl.top["alb"], [fused])
+
+    # ----- fused top id collapse (release d907bb03, Swan Lake track 6) -----
+    #
+    # The 6 movements on the release are Swan Lake suite movements I-VI.
+    # Movements I-V are each part of BOTH "Version A - 6 movements" (topA) and
+    # "Version B - 8 movements" (topB), which have the IDENTICAL title (only
+    # their disambiguation differs), so the name collapse cannot separate them.
+    # Movement VI exists ONLY in Version A. After the merge folds the two into
+    # the fused top (topA, topB), the id tuple still names both versions, so
+    # ~cwp_workid_top / musicbrainz_workid wrongly claim every track (incl. the
+    # VI. Scene that is not in Version B) belongs to Version B. The collapse
+    # reduces the fused top to the id(s) common to all its tracks: Version A.
+
+    _SWAN_A = "c72715f3"   # Version A - 6 movements (parent of all 6)
+    _SWAN_B = "570f3852"   # Version B - 8 movements (parent of I-V only)
+    _SWAN_NAME = "The Swan Lake (suite from the ballet), op. 20a"
+
+    def _make_swan_partlevels(self):
+        """A PartLevels wired with the post-merge Swan Lake state: a single
+        fused top (A, B), all six tracks re-pointed onto it, and the pre-merge
+        track_tops candidates (I-V under the fused (A, B), VI under (A,))."""
+        fused = (self._SWAN_A, self._SWAN_B)
+        pl = self._make_partlevels(
+            [fused], {fused: {"name": [self._SWAN_NAME]}})
+        pl.chosen_top = {}
+        # leaf trackback nodes (one per movement) under the fused top
+        leaves = [{"id": ["m%d" % i], "meta": [("t%d" % i, "alb")]}
+                  for i in range(1, 7)]
+        pl.trackback = {"alb": {fused: {"id": list(fused), "children": leaves}}}
+        track_tops = collections.defaultdict(set)
+        for i in range(1, 6):                       # I-V: both versions
+            track_tops[("t%d" % i, "alb")] = {fused}
+            pl.chosen_top[("t%d" % i, "alb")] = fused
+        track_tops[("t6", "alb")] = {(self._SWAN_A,)}   # VI: Version A only
+        pl.chosen_top[("t6", "alb")] = fused            # re-pointed by merge
+        return pl, fused, track_tops
+
+    def test_collapse_fused_top_ids_drops_unsupported_version(self):
+        """The reported bug: the fused (Version A, Version B) top collapses to
+        Version A - the only version that contains all six movements - so no
+        track (least of all VI. Scene, absent from Version B) is tagged with a
+        version the release does not contain."""
+        pl, fused, track_tops = self._make_swan_partlevels()
+        changed = pl._collapse_fused_top_ids("test", "alb", track_tops)
+        self.assertTrue(changed)
+        self.assertEqual(pl.top["alb"], [(self._SWAN_A,)])
+        # every track (all six) now points at the Version A top
+        self.assertTrue(all(v == (self._SWAN_A,)
+                            for v in pl.chosen_top.values()))
+        # the trackback tree moved to the collapsed id and its node id fixed
+        self.assertIn((self._SWAN_A,), pl.trackback["alb"])
+        self.assertNotIn(fused, pl.trackback["alb"])
+        self.assertEqual(pl.trackback["alb"][(self._SWAN_A,)]["id"],
+                         [self._SWAN_A])
+        # all six leaves carried across, none lost
+        self.assertEqual(
+            len(pl.trackback["alb"][(self._SWAN_A,)]["children"]), 6)
+
+    def test_collapse_fused_top_ids_ambiguous_kept(self):
+        """When EVERY track belongs to both versions (no distinguishing track),
+        the release is genuinely ambiguous: the intersection is the whole id
+        tuple, so the fused top is left untouched (both ids kept)."""
+        pl, fused, track_tops = self._make_swan_partlevels()
+        # make VI also a member of both versions -> nothing distinguishes them
+        track_tops[("t6", "alb")] = {fused}
+        changed = pl._collapse_fused_top_ids("test", "alb", track_tops)
+        self.assertFalse(changed)
+        self.assertEqual(pl.top["alb"], [fused])
+
+    def test_collapse_fused_top_ids_disjoint_kept(self):
+        """If the tracks' candidate parents share NO common id (they genuinely
+        span disjoint versions), the intersection is empty and the fused top is
+        left unchanged rather than collapsed to nothing."""
+        pl, fused, track_tops = self._make_swan_partlevels()
+        # one track only under A, another only under B -> empty intersection
+        track_tops[("t1", "alb")] = {(self._SWAN_A,)}
+        track_tops[("t2", "alb")] = {(self._SWAN_B,)}
+        changed = pl._collapse_fused_top_ids("test", "alb", track_tops)
+        self.assertFalse(changed)
+        self.assertEqual(pl.top["alb"], [fused])
+
+    def test_collapse_fused_top_ids_single_top_noop(self):
+        """A plain single-work top has nothing to collapse."""
+        pl = self._make_partlevels(
+            [("wA",)], {("wA",): {"name": ["Solo Work"]}})
+        pl.chosen_top = {("t1", "alb"): ("wA",)}
+        pl.trackback = {"alb": {}}
+        track_tops = collections.defaultdict(set)
+        track_tops[("t1", "alb")] = {("wA",)}
+        self.assertFalse(
+            pl._collapse_fused_top_ids("test", "alb", track_tops))
+        self.assertEqual(pl.top["alb"], [("wA",)])
 
     def test_normalise_name(self):
         """Names are compared case/whitespace/punctuation-insensitively (used by
@@ -1235,6 +1328,143 @@ class RecordingLookupCallbackTestCase(ClassicalExtrasTestCase):
         self.assertEqual(album._requests, 0)
         self.assertTrue(album.finalized)        # still finalizes
         self.assertEqual(self._process_calls, [])   # but process_album NOT called
+
+
+class SwanLakeFusedTopIntegrationTestCase(ClassicalExtrasTestCase):
+    """End-to-end guard for release d907bb03 (Tchaikovsky ballet suites),
+    Swan Lake movements I-VI. Drives the REAL add_work_info -> work_process ->
+    process_album pipeline with a webservice mock that serves the actual
+    MusicBrainz work/recording fixtures, deferring responses so all six tracks
+    queue their lookups before process_album runs once (as Picard does). Locks
+    the fix: the fused (Version A, Version B) top collapses to Version A, so
+    track 6 (VI. Scene, absent from Version B) is tagged with the same single
+    top work as the other five, not a two-id tuple naming a version this
+    release does not contain."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "swanlake")
+    _REL = "d907bb03-a08d-4328-ad8c-eaecdb61b4e6"
+    _A = "c72715f3-6a26-48a8-9ed5-1c29493b90fb"   # Version A - 6 movements
+    _B = "570f3852-ca39-4db2-aafd-4e818af725fd"   # Version B - 8 movements
+    # (track number, recording id, movement work id)
+    _TRACKS = [
+        (1, "705e6e53-aaa2-43c6-909a-c856254c38f8", "3b8a46af-749e-484d-93c3-cb67166663b6"),
+        (2, "e04b71f3-bece-4830-9e64-0c55ca77eaf4", "bb3e1076-d8dd-4389-91e7-b740fb0fa07e"),
+        (3, "7afa3446-0768-457c-9263-3357f3984219", "7c12ba63-bd80-485c-b8df-32c2611d7c82"),
+        (4, "ede4cc1d-7f25-4970-af10-0f299f760cc2", "ca393bf5-9c20-46ed-ad1f-1bec6d133a43"),
+        (5, "26beafbe-2fdc-417b-b401-5f31ec07f5e0", "558b3a4c-6e0d-4ba9-a237-40d500b0d1ee"),
+        (6, "841d29b7-d61d-4c7c-b3a3-2537e19996fd", "0d6344f4-e750-45ce-b17b-ce4aebe0e808"),
+    ]
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        cfg = {
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": False, "cwp_arrangements": False,
+            "cwp_medley": False, "cwp_collections": False,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        }
+        self.set_config_values(setting=cfg)
+
+    def _make_track(self, num, rec_id, work_id, opts):
+        class _FakeMeta(dict):
+            def __getitem__(self, key):
+                return self.get(key, '')
+
+            def getall(self, key):
+                v = self.get(key)
+                if v is None:
+                    return []
+                return v if isinstance(v, list) else [v]
+        tm = _FakeMeta(musicbrainz_albumid=self._REL,
+                       musicbrainz_recordingid=rec_id,
+                       musicbrainz_workid=work_id,
+                       album="Tchaikovsky Ballet Suites",
+                       title="track %d" % num,
+                       tracknumber=str(num), discnumber="1")
+        tm['~ce_options'] = repr(opts)
+        from unittest.mock import Mock
+        t = Mock(name="track%d" % num)
+        t.metadata = tm
+        t._id = work_id
+        t.__hash__ = lambda self: hash(self._id)
+        t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+        return t
+
+    def test_track6_collapses_to_version_a(self):
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        # focus on the top-work resolution; skip the heavy extension/publish
+        pl.extend_metadata = lambda *a, **k: None
+        pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        # get_aliases needs a full release node (track 1 triggers it) and
+        # close_log needs the artists-side release_status; neither is relevant.
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+
+        def fake_get(host, port, path, callback, **kwargs):
+            wid = path.rsplit("/", 1)[-1]
+            pending.append((callback, self._load("work_%s.json" % wid)))
+        tagger.webservice.get = fake_get
+
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _arg: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": False, "cwp_arrangements": False,
+            "cwp_medley": False, "cwp_collections": False,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        tracks = {}
+        for num, rec_id, work_id in self._TRACKS:
+            track = self._make_track(num, rec_id, work_id, opts)
+            tracks[num] = track
+            album._new_tracks.append(track)
+            trackXmlNode = {'recording': self._load("rec_track%d.json" % num)}
+            pl.add_work_info(album, track.metadata, trackXmlNode, {})
+
+        # deliver deferred responses (each may queue more parent lookups)
+        while pending:
+            callback, resp = pending.pop(0)
+            callback(resp, None, None)
+
+        version_a = (self._A,)
+        for num, track in tracks.items():
+            tm = track.metadata
+            self.assertEqual(
+                tuple(self.mod.str_to_list(tm['~cwp_workid_top'])), version_a,
+                "track %d top work id should be Version A only" % num)
+        # and specifically track 6 (the movement absent from Version B)
+        self.assertEqual(
+            tuple(self.mod.str_to_list(tracks[6].metadata['~cwp_workid_top'])),
+            version_a)
 
 
 if __name__ == "__main__":
