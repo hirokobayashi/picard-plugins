@@ -784,6 +784,28 @@ class RecordingSessionTagsTestCase(ClassicalExtrasTestCase):
         self.assertEqual(len(tags["recordingsessions"]), 2)
         self.assertEqual(tags["recordingdate"], "2024-09-11 - 2024-09-12")
 
+    def test_dateless_place_with_dated_conductor_no_crash(self):
+        """Regression: a recorded-at place with NO date, plus a dated conductor.
+        The place session has no date, so the conductor date is NOT covered and
+        must surface as a date-only fallback session -- and must not raise
+        (previously min() over the empty place-date sequence crashed with
+        ValueError)."""
+        relations = [
+            {"target-type": "place", "type": "recorded at",
+             "begin": "", "end": "",
+             "place": {"name": "Abbey Road Studios",
+                       "area": {"name": "London"}}},
+            {"target-type": "artist", "type": "conductor",
+             "begin": "1970-01-01", "end": "1970-01-01",
+             "artist": {"name": "George Martin"}},
+        ]
+        tags = self.mod.recording_session_tags(relations)
+        self.assertEqual(tags["recordingplace"], ["Abbey Road Studios"])
+        self.assertEqual(tags["recordingcity"], ["London"])
+        self.assertEqual(tags["recordingdate"], "1970-01-01")
+        self.assertEqual(tags["recordingsessions"],
+                         ["Abbey Road Studios, London", "(1970-01-01)"])
+
 
 if __name__ == "__main__":
     unittest.main()
