@@ -4281,6 +4281,10 @@ class PartLevels():
         # lookup queue - holds track/album pairs for each queued workid (may be
         # more than one pair per id, especially for higher-level parts)
 
+        self.recordings_queue = self.WorksQueue()
+        # lookup queue for per-recording place/date relationships; holds
+        # track/album pairs for each queued recording id
+
         self.parts = collections.defaultdict(
             lambda: collections.defaultdict(dict))
         # metadata collection for all parts - structure is {workid: {name: ,
@@ -4411,6 +4415,18 @@ class PartLevels():
                     tm['~ce_options'])
             options = option_settings(config.setting)
         self.options[track] = options
+
+        # Recording place/date lookup (independent of work parts): fire the
+        # per-recording web-service lookup here, BEFORE the classical_work_parts
+        # early-return below, so it runs for every track. Gated on the option
+        # and on at least one target tag being configured.
+        if (options.get('crr_recording_lookup')
+                and (options.get('crr_place_tag') or options.get('crr_city_tag')
+                     or options.get('crr_date_tag')
+                     or options.get('crr_sessions_tag'))):
+            rec_id = track_metadata['musicbrainz_recordingid']
+            if rec_id:
+                self.recording_add_track(album, track, rec_id)
 
         # CONSTANTS
         write_log(release_id, 'basic', 'Options: %s' ,options)
@@ -5716,6 +5732,72 @@ class PartLevels():
                 'debug',
                 "Removed album request - requests: %s",
                 album._requests)
+
+    def recording_add_track(self, album, track, rec_id, tries=0):
+        """Queue a /recording lookup for place/date tags (mirrors work_add_track).
+        The "recorded at" place and the relationship begin/end dates are not in
+        the release data, so a direct recording lookup is required."""
+        release_id = track.metadata['musicbrainz_albumid']
+        self.album_add_request(release_id, album)   # delay album finalize
+        if self.recordings_queue.append(rec_id, (track, album)):
+            host = config.setting["server_host"]
+            port = config.setting["server_port"]
+            path = "/ws/2/recording/%s" % rec_id
+            if release_id in release_status and 'lookups' in release_status[release_id]:
+                release_status[release_id]['lookups'] += 1
+            return album.tagger.webservice.get(
+                host,
+                port,
+                path,
+                partial(self.recording_process, rec_id, tries),
+                priority=True,
+                important=False,
+                mblogin=False,
+                queryargs={"inc": "place-rels+artist-rels"})
+
+    def recording_process(self, rec_id, tries, response, reply, error):
+        """Callback for a /recording lookup: derive the place/date tags and
+        write them, then release the album request. Mirrors work_process'
+        accounting: ALWAYS removes the request (even on error/retry) so the
+        album can never hang, and finalizes the album (works + Picard) when this
+        is the last outstanding request."""
+        for track, album in (self.recordings_queue.remove(rec_id) or []):
+            release_id = track.metadata['musicbrainz_albumid']
+            if error:
+                write_log(release_id, 'warning',
+                          "recording %s lookup error %r", rec_id, error)
+                if tries < getattr(self, 'MAX_RETRIES', 3):
+                    write_log(release_id, 'debug',
+                              "REQUEUEING recording %s", rec_id)
+                    self.recording_add_track(album, track, rec_id, tries + 1)
+            else:
+                try:
+                    # parse_data wraps the matched value ([[rel, ...]]); unwrap
+                    # one level to the raw relations list the pure fn iterates.
+                    wrapped = parse_data(release_id, response, [], 'relations')
+                    relations = wrapped[0] if wrapped else []
+                    self._write_recording_tags(
+                        track.metadata, recording_session_tags(relations))
+                except Exception as ex:
+                    write_log(release_id, 'error',
+                              "recording %s processing failed: %r", rec_id, ex)
+            # Always release THIS request (a retry added its own) so no hang.
+            self.album_remove_request(release_id, album)
+            if album._requests == 0:
+                self.process_album(release_id, album)
+                album._finalize_loading(None)
+
+    def _write_recording_tags(self, tm, tags):
+        """Write recording_session_tags output to the user-configured tag names.
+        List values become multi-value tags; empty values are skipped."""
+        for opt, key in (('crr_place_tag', 'recordingplace'),
+                         ('crr_city_tag', 'recordingcity'),
+                         ('crr_date_tag', 'recordingdate'),
+                         ('crr_sessions_tag', 'recordingsessions')):
+            name = config.setting[opt]
+            value = tags.get(key)
+            if name and value:
+                tm[name] = value
 
     ##################################################
     # SECTION 3 - Organise tracks and works in album #
@@ -9330,6 +9412,9 @@ class ClassicalExtrasOptionsPage(OptionsPage):
                 ui_name = 'use_cea'
             else:
                 ui_name = opt['option']
+            if ui_name not in self.ui.__dict__:
+                # option registered without a GUI widget (e.g. crr_*) - skip
+                continue
             if ui_name in toggle_list:
                 not_setting = not self.config.setting[opt['option']]
                 self.ui.__dict__[ui_name].setChecked(not_setting)
@@ -9370,6 +9455,9 @@ class ClassicalExtrasOptionsPage(OptionsPage):
                 ui_name = 'use_cea'
             else:
                 ui_name = opt['option']
+            if ui_name not in self.ui.__dict__:
+                # option registered without a GUI widget (e.g. crr_*) - skip
+                continue
             if opt['type'] == 'Boolean':
                 self.config.setting[opt['option']] = self.ui.__dict__[
                     ui_name].isChecked()
