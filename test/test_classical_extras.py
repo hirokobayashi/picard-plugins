@@ -695,5 +695,95 @@ class ClassicalExtrasTestCase(PluginTestCase):
         self.assertEqual(track_ids, {"9547dfb8", "617387c5"})
 
 
+class RecordingSessionTagsTestCase(ClassicalExtrasTestCase):
+    """Recording place/date tag derivation (recording_session_tags).
+
+    Fixtures are the real MusicBrainz JSON captured once from
+    /recording/<id>?inc=place-rels+artist-rels (see test/fixtures/). The pure
+    function takes the recording's `relations` list and returns the four tag
+    values per the task spec.
+    """
+
+    def _load_relations(self, fixture_name):
+        import json
+        import os
+        path = os.path.join(os.path.dirname(__file__), "fixtures", fixture_name)
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)["relations"]
+
+    def test_one_place_single_date(self):
+        """(a) rec 92ab0819: Atlanta Symphony Hall / Atlanta / 1982-05-24."""
+        relations = self._load_relations("rec_92ab0819_fanfare.json")
+        tags = self.mod.recording_session_tags(relations)
+        self.assertEqual(tags["recordingplace"], ["Atlanta Symphony Hall"])
+        self.assertEqual(tags["recordingcity"], ["Atlanta"])
+        self.assertEqual(tags["recordingdate"], "1982-05-24")
+        self.assertEqual(tags["recordingsessions"],
+                         ["Atlanta Symphony Hall, Atlanta (1982-05-24)"])
+
+    def test_two_places_conductor_span_no_extra_session(self):
+        """(b) rec 791581ad: two venues on different dates; the conductor/
+        orchestra span 2018-04-19..04-22 is already covered by the place
+        sessions and must NOT add a third date-only session. UTF-8 survives."""
+        relations = self._load_relations("rec_791581ad_bruckner6.json")
+        tags = self.mod.recording_session_tags(relations)
+        self.assertEqual(tags["recordingsessions"],
+                         ["サントリーホール, Akasaka (2018-04-19)",
+                          "横浜みなとみらいホール, Minato-Mirai (2018-04-22)"])
+        self.assertEqual(tags["recordingplace"],
+                         ["サントリーホール", "横浜みなとみらいホール"])
+        self.assertEqual(tags["recordingcity"], ["Akasaka", "Minato-Mirai"])
+        self.assertEqual(tags["recordingdate"], "2018-04-19 - 2018-04-22")
+        # DEDUP CHECK: exactly two sessions (no conductor/orchestra fallback).
+        self.assertEqual(len(tags["recordingsessions"]), 2)
+
+    def test_no_place_date_only_fallback(self):
+        """(c) rec 9dcd4293 (Red Pony): no recorded-at place; Previn/St.Louis SO
+        1963-03-25 -> one date-only session "(1963-03-25)"."""
+        relations = self._load_relations("rec_9dcd4293_redpony.json")
+        tags = self.mod.recording_session_tags(relations)
+        self.assertEqual(tags["recordingplace"], [])
+        self.assertEqual(tags["recordingcity"], [])
+        self.assertEqual(tags["recordingdate"], "1963-03-25")
+        self.assertEqual(tags["recordingsessions"], ["(1963-03-25)"])
+
+    def test_precision_match_month_collapse_to_single(self):
+        """Spec: equal begin/end at month precision emit a single "YYYY-MM",
+        not a range "YYYY-MM - YYYY-MM"."""
+        relations = [
+            {"target-type": "place", "type": "recorded at",
+             "begin": "1981-03", "end": "1981-03",
+             "place": {"name": "Symphony Hall", "area": {"name": "Boston"}}},
+            {"target-type": "artist", "type": "conductor",
+             "begin": "1981-03", "end": "1981-03",
+             "artist": {"name": "Ozawa"}},
+        ]
+        tags = self.mod.recording_session_tags(relations)
+        # date collapses to single month (precision-match), not a range.
+        self.assertEqual(tags["recordingdate"], "1981-03")
+        self.assertEqual(tags["recordingsessions"],
+                         ["Symphony Hall, Boston (1981-03)"])
+        # conductor span (1981-03..1981-03) is covered by the place session ->
+        # no date-only fallback session.
+        self.assertEqual(len(tags["recordingsessions"]), 1)
+
+    def test_duplicate_venue_dedup_in_flat_tags(self):
+        """The same venue recorded on two dates: recordingplace/city dedup in
+        the flat tags, but recordingsessions keeps one entry per date."""
+        relations = [
+            {"target-type": "place", "type": "recorded at",
+             "begin": "2024-09-11", "end": "2024-09-11",
+             "place": {"name": "Suntory Hall", "area": {"name": "Tokyo"}}},
+            {"target-type": "place", "type": "recorded at",
+             "begin": "2024-09-12", "end": "2024-09-12",
+             "place": {"name": "Suntory Hall", "area": {"name": "Tokyo"}}},
+        ]
+        tags = self.mod.recording_session_tags(relations)
+        self.assertEqual(tags["recordingplace"], ["Suntory Hall"])
+        self.assertEqual(tags["recordingcity"], ["Tokyo"])
+        self.assertEqual(len(tags["recordingsessions"]), 2)
+        self.assertEqual(tags["recordingdate"], "2024-09-11 - 2024-09-12")
+
+
 if __name__ == "__main__":
     unittest.main()
