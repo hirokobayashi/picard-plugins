@@ -5977,6 +5977,38 @@ class PartLevels():
             return ''
         return re.sub(r'\s+', ' ', str(name).strip().lower()).strip('.,;:"\'')
 
+    @staticmethod
+    def _select_top_work_names(names, votes):
+        """Choose the ``top_work`` value for a (possibly fused multi-parent) top
+        node: the candidate name(s) voted for by the most tracks on the album.
+
+        ``names`` is the top node's parent-name list; ``votes`` maps a stripped
+        work name to the number of album tracks that have it as a candidate top
+        work (built in ``process_album`` -- see ``top_name_votes``). A unique
+        winner returns a single string; a tie returns the list of tied names, so
+        several ``top_work`` values are kept and every track sharing those
+        candidates keeps the same set (e.g. an overture that is part of several
+        equally-represented translations of an opera). Names, not ids, are used
+        because ``process_album`` re-orders the name list independently of the id
+        tuple, so the two are not reliably parallel.
+
+        With no vote information (e.g. a direct call outside ``process_album``)
+        it falls back to the primary (first) name, so the tag is still a single
+        value rather than the raw multi-parent list.
+        """
+        stripped = [n.strip() if isinstance(n, str) else n for n in names]
+        ordered = []
+        for n in stripped:   # de-duplicate, preserving order
+            if n not in ordered:
+                ordered.append(n)
+        if not ordered:
+            return ''
+        if not votes:
+            return ordered[0]
+        best = max(votes.get(n, 0) for n in ordered)
+        winners = [n for n in ordered if votes.get(n, 0) == best]
+        return winners[0] if len(winners) == 1 else winners
+
     def _resolve_chosen_tops(self, release_id, album, track_tops):
         """Decide the single top work each track is tagged with.
 
@@ -6180,6 +6212,36 @@ class PartLevels():
         for topId, tracks in tracks_in_top.items():
             for t in tracks:
                 track_tops[t].add(topId)
+        # Vote for each candidate top-work NAME so a track shared between several
+        # top works is tagged with the same ``top_work`` as the album's other
+        # tracks. Each track votes once for every top-work name it is a candidate
+        # for -- the names of every top whose tree contains it, including EACH
+        # name of a fused multi-parent top (a movement fused under
+        # "(ballet, suite)" votes for both the ballet and the suite; an overture
+        # fused under several opera translations votes for each translation). At
+        # tag time (process_trackback) the track takes the highest-voted of its
+        # own candidate names, so e.g. all of "The Bolt" resolves to the ballet
+        # (voted by the 2 suite-less movements too) and an opera's tracks all
+        # resolve to the one translation the album actually uses. Computed here,
+        # before the tuple-level collapse, so the fused candidates are still
+        # visible; passed to each top via top_info['votes'].
+        top_name_votes = collections.Counter()
+        for t, tops in track_tops.items():
+            cand_names = set()
+            for top in tops:
+                nm = self.parts[top]['name'] if top in self.parts else []
+                if isinstance(nm, str):
+                    nm = [nm]
+                for n in nm:
+                    if isinstance(n, str):
+                        cand_names.add(n.strip())
+            for n in cand_names:
+                top_name_votes[n] += 1
+        write_log(
+                release_id,
+                'info',
+                "Top-work name votes = %s",
+                dict(top_name_votes))
         most_selected, self.chosen_top = self._resolve_chosen_tops(
             release_id, album, track_tops)
         # Snapshot the top ids before any pruning/merging/collapsing so the
@@ -6332,7 +6394,8 @@ class PartLevels():
                 'levels': work_part_levels,
                 'id': topId,
                 'name': self.parts[topId]['name'],
-                'single': single_work_album}
+                'single': single_work_album,
+                'votes': top_name_votes}
             # set the metadata in sequence defined by the work structure
             answer = self.process_trackback(
                 release_id,
@@ -6621,9 +6684,24 @@ class PartLevels():
                         if isinstance(top_info['name'], str):
                             toptemp = top_info['name'].strip()
                         else:
+                            # A work that belongs to several parent works has a
+                            # fused parent node whose ``name`` is the list of ALL
+                            # those parent names (e.g. a movement of "The Bolt"
+                            # that is part of both the full ballet suite and the
+                            # derived concert "Suite from The Bolt", or an overture
+                            # that appears in several translations of an opera).
+                            # ``~cwp_work_top`` -- and the ``top_work`` tag derived
+                            # from it -- must be consistent across the album's
+                            # tracks, so pick the candidate name(s) that the most
+                            # tracks voted for (votes computed in process_album and
+                            # passed in top_info). A unique winner gives one
+                            # top_work; a tie keeps every tied name (several
+                            # top_works are acceptable and every shared track keeps
+                            # the same set, so they stay consistent).
                             for index, it in enumerate(top_info['name']):
                                 top_info['name'][index] = it.strip()
-                            toptemp = top_info['name']
+                            toptemp = self._select_top_work_names(
+                                top_info['name'], top_info.get('votes'))
                         tm['~cwp_work_' + str(depth)] = worktemp
                         tm['~cwp_part_levels'] = str(height)
                         tm['~cwp_work_part_levels'] = str(top_info['levels'])
@@ -6715,6 +6793,16 @@ class PartLevels():
             height = trackback['height']
             parentId = tuple(trackback['id'])
             parent = self.parts[parentId]['name']
+            # Pre-resolve the single most-voted top_work for a fused multi-parent
+            # top so set_metadata does not overwrite ~cwp_work_top with the joined
+            # list of all parent names (which is how "Ballet ...; Suite from The
+            # Bolt" leaked into top_work). None for ordinary single-work tops,
+            # whose top name is a plain string -- set_metadata keeps its old path.
+            if isinstance(top_info.get('name'), str):
+                top_name = None
+            else:
+                top_name = self._select_top_work_names(
+                    top_info['name'], top_info.get('votes'))
             width = 0
             for child in trackback['children']:
                 width += 1
@@ -6755,7 +6843,8 @@ class PartLevels():
                                      parent,
                                      track_meta))
                             self.set_metadata(
-                                release_id, part_level, workId, parentId, parent, track_meta)
+                                release_id, part_level, workId, parentId, parent,
+                                track_meta, top_name)
                         if 'track' in tracks:
                             tracks['track'].append(
                                 (track_meta, track_height))
@@ -7171,7 +7260,8 @@ class PartLevels():
             workId,
             parentId,
             parent,
-            track):
+            track,
+            top_name=None):
         """
         Set the names of works and parts
         :param release_id: name for log file - usually =musicbrainz_albumid
@@ -7181,6 +7271,12 @@ class PartLevels():
         :param parentId:
         :param parent:
         :param track:
+        :param top_name: pre-resolved ``top_work`` value for a fused
+            multi-parent top (the vote winner from process_trackback_children).
+            When given it is written to ``~cwp_work_top`` instead of the joined
+            multi-parent name, so this method does not undo the single-value
+            selection made at depth 0. ``None`` for ordinary single-work tops,
+            which keep the previous behaviour.
         :return:
         """
         write_log(
@@ -7240,7 +7336,17 @@ class PartLevels():
                     self.parts[parentId]['name'] = full_parent
                     if 'no_parent' in self.parts[parentId]:
                         if self.parts[parentId]['no_parent']:
-                            tm['~cwp_work_top'] = full_parent.strip()
+                            # For a fused multi-parent top, ``full_parent`` is the
+                            # joined list of every parent name (e.g. "Ballet Suite
+                            # no. 5, op. 27a; Suite from The Bolt"). Writing that
+                            # here would clobber the single most-voted top_work
+                            # already chosen at depth 0. Use the pre-resolved
+                            # winner instead; fall back to full_parent for
+                            # ordinary single-work tops (top_name is None).
+                            if top_name is not None:
+                                tm['~cwp_work_top'] = top_name
+                            else:
+                                tm['~cwp_work_top'] = full_parent.strip()
             tm['~cwp_part_' + str(part_level - 1)] = stripped_works
             self.parts[workId]['stripped_name'] = stripped_works
         write_log(release_id, 'debug', "GOT TO END OF SET_METADATA")

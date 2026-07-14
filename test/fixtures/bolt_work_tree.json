@@ -1,0 +1,310 @@
+{
+ "5ce3404c-5cf1-43c0-935a-967773c80009": {
+  "id": "5ce3404c-5cf1-43c0-935a-967773c80009",
+  "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": I. Overture",
+  "relations": [
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "4aeb233b-9b52-4264-b1af-3129b86e4c6c",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\""
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "17f5d3dc-a138-4449-ba6c-6095edeeff89",
+     "title": "Suite from The Bolt"
+    }
+   }
+  ]
+ },
+ "84375317-5adf-4355-b03c-13554c701302": {
+  "id": "84375317-5adf-4355-b03c-13554c701302",
+  "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": II. The Bureaucrat",
+  "relations": [
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "4aeb233b-9b52-4264-b1af-3129b86e4c6c",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\""
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "17f5d3dc-a138-4449-ba6c-6095edeeff89",
+     "title": "Suite from The Bolt"
+    }
+   }
+  ]
+ },
+ "d8dfca75-0237-4c2d-8a8b-67f61b8d29d1": {
+  "id": "d8dfca75-0237-4c2d-8a8b-67f61b8d29d1",
+  "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": III. The Dance of the Drayman",
+  "relations": [
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "4aeb233b-9b52-4264-b1af-3129b86e4c6c",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\""
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "17f5d3dc-a138-4449-ba6c-6095edeeff89",
+     "title": "Suite from The Bolt"
+    }
+   }
+  ]
+ },
+ "b3128724-46ef-41db-9b1c-a032283bb43d": {
+  "id": "b3128724-46ef-41db-9b1c-a032283bb43d",
+  "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": IV. Kozelkov's Dance with Friends",
+  "relations": [
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "4aeb233b-9b52-4264-b1af-3129b86e4c6c",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\""
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "17f5d3dc-a138-4449-ba6c-6095edeeff89",
+     "title": "Suite from The Bolt"
+    }
+   }
+  ]
+ },
+ "26bb027d-65c0-4518-9929-cd38dd35de0e": {
+  "id": "26bb027d-65c0-4518-9929-cd38dd35de0e",
+  "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": V. Intermezzo",
+  "relations": [
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "4aeb233b-9b52-4264-b1af-3129b86e4c6c",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\""
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "17f5d3dc-a138-4449-ba6c-6095edeeff89",
+     "title": "Suite from The Bolt"
+    }
+   }
+  ]
+ },
+ "da32f335-d098-4522-8a31-179c3ff5dafe": {
+  "id": "da32f335-d098-4522-8a31-179c3ff5dafe",
+  "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": VI. Dance of Colonial Woman Slave",
+  "relations": [
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "4aeb233b-9b52-4264-b1af-3129b86e4c6c",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\""
+    }
+   }
+  ]
+ },
+ "5bc74147-f54b-4656-a0b2-2a4ed747b659": {
+  "id": "5bc74147-f54b-4656-a0b2-2a4ed747b659",
+  "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": VII. The Appeaser",
+  "relations": [
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "4aeb233b-9b52-4264-b1af-3129b86e4c6c",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\""
+    }
+   }
+  ]
+ },
+ "77c1f35d-7e72-4791-8401-f6eb25a0c728": {
+  "id": "77c1f35d-7e72-4791-8401-f6eb25a0c728",
+  "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": VIII. General Dance and Apotheosis",
+  "relations": [
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "4aeb233b-9b52-4264-b1af-3129b86e4c6c",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\""
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "backward",
+    "work": {
+     "id": "17f5d3dc-a138-4449-ba6c-6095edeeff89",
+     "title": "Suite from The Bolt"
+    }
+   }
+  ]
+ },
+ "17f5d3dc-a138-4449-ba6c-6095edeeff89": {
+  "id": "17f5d3dc-a138-4449-ba6c-6095edeeff89",
+  "title": "Suite from The Bolt",
+  "relations": [
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "5ce3404c-5cf1-43c0-935a-967773c80009",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": I. Overture"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "84375317-5adf-4355-b03c-13554c701302",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": II. The Bureaucrat"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "d8dfca75-0237-4c2d-8a8b-67f61b8d29d1",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": III. The Dance of the Drayman"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "b3128724-46ef-41db-9b1c-a032283bb43d",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": IV. Kozelkov's Dance with Friends"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "26bb027d-65c0-4518-9929-cd38dd35de0e",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": V. Intermezzo"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "77c1f35d-7e72-4791-8401-f6eb25a0c728",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": VIII. General Dance and Apotheosis"
+    }
+   },
+   {
+    "type": "revision of",
+    "direction": "backward",
+    "work": {
+     "id": "4aeb233b-9b52-4264-b1af-3129b86e4c6c",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\""
+    }
+   }
+  ]
+ },
+ "4aeb233b-9b52-4264-b1af-3129b86e4c6c": {
+  "id": "4aeb233b-9b52-4264-b1af-3129b86e4c6c",
+  "title": "Ballet Suite no. 5, op. 27a \"The Bolt\"",
+  "relations": [
+   {
+    "type": "based on",
+    "direction": "backward",
+    "work": {
+     "id": "18238908-6f59-47f0-909f-b9e489c63edf",
+     "title": "The Bolt, op. 27"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "5ce3404c-5cf1-43c0-935a-967773c80009",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": I. Overture"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "84375317-5adf-4355-b03c-13554c701302",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": II. The Bureaucrat"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "d8dfca75-0237-4c2d-8a8b-67f61b8d29d1",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": III. The Dance of the Drayman"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "b3128724-46ef-41db-9b1c-a032283bb43d",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": IV. Kozelkov's Dance with Friends"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "26bb027d-65c0-4518-9929-cd38dd35de0e",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": V. Intermezzo"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "da32f335-d098-4522-8a31-179c3ff5dafe",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": VI. Dance of Colonial Woman Slave"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "5bc74147-f54b-4656-a0b2-2a4ed747b659",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": VII. The Appeaser"
+    }
+   },
+   {
+    "type": "parts",
+    "direction": "forward",
+    "work": {
+     "id": "77c1f35d-7e72-4791-8401-f6eb25a0c728",
+     "title": "Ballet Suite no. 5, op. 27a \"The Bolt\": VIII. General Dance and Apotheosis"
+    }
+   },
+   {
+    "type": "revision of",
+    "direction": "forward",
+    "work": {
+     "id": "17f5d3dc-a138-4449-ba6c-6095edeeff89",
+     "title": "Suite from The Bolt"
+    }
+   }
+  ]
+ }
+}
