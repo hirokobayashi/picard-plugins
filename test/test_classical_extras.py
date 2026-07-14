@@ -694,6 +694,203 @@ class ClassicalExtrasTestCase(PluginTestCase):
         track_ids = {t[0]._id for t in tracks['track']}
         self.assertEqual(track_ids, {"9547dfb8", "617387c5"})
 
+    # ----- Top work: most-voted selection for multi-parent (fused) tops -----
+
+    _BOLT_BALLET = 'Ballet Suite no. 5, op. 27a "The Bolt"'
+    _BOLT_SUITE = "Suite from The Bolt"
+
+    def _bolt_parent_titles(self, work_id):
+        """Ordered backward 'parts' parent (id, title) pairs for a work id in
+        the real bolt_work_tree.json fixture. Mirrors how the plugin's
+        work_process_relations builds the fused parent node's ``name`` list: one
+        entry per parent work, in MusicBrainz relation order."""
+        import json
+        import os
+        path = os.path.join(os.path.dirname(__file__), "fixtures",
+                            "bolt_work_tree.json")
+        with open(path, encoding="utf-8") as f:
+            tree = json.load(f)
+        parents = []
+        for rel in tree[work_id]["relations"]:
+            if rel.get("type") == "parts" and rel.get("direction") == "backward":
+                parents.append((rel["work"]["id"], rel["work"]["title"]))
+        return parents
+
+    def _bolt_name_votes(self):
+        """Album-wide top-work NAME votes for the Bolt album, computed from the
+        real fixtures exactly as process_album does: every track votes once for
+        each of its movement's parent (candidate top) names. The ballet is a
+        parent of all 8 movements; the suite of the 6 shared ones."""
+        import json
+        import os
+        path = os.path.join(os.path.dirname(__file__), "fixtures",
+                            "bolt_track_work_map.json")
+        with open(path, encoding="utf-8") as f:
+            track_map = json.load(f)
+        votes = collections.Counter()
+        for work_id in track_map.values():
+            for title in {t for _, t in self._bolt_parent_titles(work_id)}:
+                votes[title] += 1
+        return votes
+
+    def _run_top_for_movement(self, pl, work_id, tracknumber, votes):
+        """Drive process_trackback for one Bolt movement leaf under its (real)
+        fused parent node, with the album's name votes attached, and return the
+        resulting ~cwp_work_top value.
+
+        Reproduces the leak point: a movement leaf (depth 0) is processed with
+        ``top_info`` being its parent node, whose ``name`` is the list of parent
+        titles (two for a shared movement, one for an exclusive movement)."""
+        parents = self._bolt_parent_titles(work_id)
+        top_info = {"id": tuple(pid for pid, _ in parents),
+                    "name": [title for _, title in parents],  # a LIST, as stored
+                    "levels": 1, "single": False, "votes": votes}
+        workId = (work_id,)
+        # the movement's own name is unimportant to ~cwp_work_top; give it a str.
+        pl.parts[workId] = {"name": work_id}
+        track = self._make_fake_track(work_id, "movement", tracknumber)
+        trackback = {"id": list(workId), "depth": 0, "height": 1,
+                     "meta": [(track, "alb")]}
+        pl.process_trackback("test", "alb", trackback, 0, top_info)
+        return track.metadata.get("~cwp_work_top")
+
+    def test_bolt_name_votes_from_fixtures(self):
+        """Sanity-check the vote counts derived from the real fixtures: the
+        ballet is a candidate top for all 8 movements, the suite for 6."""
+        votes = self._bolt_name_votes()
+        self.assertEqual(votes[self._BOLT_BALLET], 8)
+        self.assertEqual(votes[self._BOLT_SUITE], 6)
+
+    def test_top_work_shared_movement_picks_most_voted(self):
+        """Regression for the Bolt 'two top_work values' bug. A movement part of
+        BOTH the ballet and the suite (tracks 11-15,18) has a fused parent node
+        whose ``name`` is a two-item list. Previously process_trackback wrote the
+        whole list into ~cwp_work_top (two tag values). It must now be the single
+        most-voted candidate -- the ballet (8 votes vs the suite's 6)."""
+        pl = self._make_trackback_partlevels()
+        shared_id = "5ce3404c-5cf1-43c0-935a-967773c80009"   # track 11, 2 parents
+        self.assertEqual(len(self._bolt_parent_titles(shared_id)), 2)
+        top = self._run_top_for_movement(pl, shared_id, 11, self._bolt_name_votes())
+        self.assertIsInstance(top, str)     # not a list -> not two tag values
+        self.assertEqual(top, self._BOLT_BALLET)
+
+    def test_top_work_shared_and_exclusive_movements_agree(self):
+        """The other half of the bug: shared movements (two parents) 'resolved
+        differently' from exclusive movements (one parent). With most-voted
+        selection every movement resolves to the same top_work (the ballet), so
+        the album is consistent regardless of which movements are shared."""
+        pl = self._make_trackback_partlevels()
+        votes = self._bolt_name_votes()
+        shared_id = "5ce3404c-5cf1-43c0-935a-967773c80009"     # track 11, 2 parents
+        exclusive_id = "da32f335-d098-4522-8a31-179c3ff5dafe"  # track 16, 1 parent
+        self.assertEqual(len(self._bolt_parent_titles(exclusive_id)), 1)
+        shared_top = self._run_top_for_movement(pl, shared_id, 11, votes)
+        exclusive_top = self._run_top_for_movement(pl, exclusive_id, 16, votes)
+        self.assertEqual(shared_top, exclusive_top)
+        self.assertEqual(shared_top, self._BOLT_BALLET)
+
+    def test_top_work_vote_overrides_list_order(self):
+        """The choice is by votes, NOT by position in the name list. Here the
+        suite is listed FIRST but the ballet has more votes, so the ballet wins.
+        This is the opera case: an overture whose fused parent list happens to
+        put a rarely-used translation first still resolves to the translation the
+        rest of the album voted for."""
+        pl = self._make_trackback_partlevels()
+        votes = {self._BOLT_BALLET: 8, self._BOLT_SUITE: 6}
+        workId = ("mov",)
+        pl.parts[workId] = {"name": "mov"}
+        top_info = {"id": ("suite_id", "ballet_id"),
+                    "name": [self._BOLT_SUITE, self._BOLT_BALLET],  # suite first
+                    "levels": 1, "single": False, "votes": votes}
+        track = self._make_fake_track("mov", "movement", 11)
+        trackback = {"id": list(workId), "depth": 0, "height": 1,
+                     "meta": [(track, "alb")]}
+        pl.process_trackback("test", "alb", trackback, 0, top_info)
+        self.assertEqual(track.metadata.get("~cwp_work_top"), self._BOLT_BALLET)
+
+    def test_top_work_tie_keeps_several(self):
+        """When candidate tops tie on votes, several top_work values are kept
+        (per spec) -- so shared tracks still all carry the same set and stay
+        consistent."""
+        pl = self._make_trackback_partlevels()
+        votes = {self._BOLT_BALLET: 6, self._BOLT_SUITE: 6}
+        workId = ("mov",)
+        pl.parts[workId] = {"name": "mov"}
+        top_info = {"id": ("ballet_id", "suite_id"),
+                    "name": [self._BOLT_BALLET, self._BOLT_SUITE],
+                    "levels": 1, "single": False, "votes": votes}
+        track = self._make_fake_track("mov", "movement", 11)
+        trackback = {"id": list(workId), "depth": 0, "height": 1,
+                     "meta": [(track, "alb")]}
+        pl.process_trackback("test", "alb", trackback, 0, top_info)
+        self.assertEqual(track.metadata.get("~cwp_work_top"),
+                         [self._BOLT_BALLET, self._BOLT_SUITE])
+
+    def test_select_top_work_names_unit(self):
+        """Unit-level coverage of the selection helper."""
+        select = self.mod.PartLevels._select_top_work_names
+        # unique winner -> single string
+        self.assertEqual(select(["A", "B"], {"A": 3, "B": 1}), "A")
+        # winner regardless of order
+        self.assertEqual(select(["B", "A"], {"A": 3, "B": 1}), "A")
+        # tie -> list of tied names, de-duplicated, order preserved
+        self.assertEqual(select(["A", "B"], {"A": 2, "B": 2}), ["A", "B"])
+        # no votes -> fall back to the first name (never the raw list)
+        self.assertEqual(select(["A", "B"], {}), "A")
+        self.assertEqual(select(["A", "B"], None), "A")
+
+    def test_top_work_string_name_unchanged(self):
+        """A normal single-work top (name is a plain string) is untouched."""
+        pl = self._make_trackback_partlevels()
+        workId = ("83e63350",)
+        pl.parts[workId] = {"name": "Spiegel im Spiegel"}
+        top_info = {"id": workId, "name": "Spiegel im Spiegel",
+                    "levels": 1, "single": True}
+        track = self._make_fake_track("9547dfb8", "Spiegel im Spiegel", 1)
+        trackback = {"id": list(workId), "depth": 0, "height": 1,
+                     "meta": [(track, "alb")]}
+        pl.process_trackback("test", "alb", trackback, 0, top_info)
+        self.assertEqual(track.metadata.get("~cwp_work_top"), "Spiegel im Spiegel")
+
+    # ----- set_metadata must not clobber ~cwp_work_top with the joined list ---
+    # (regression for release 6ced4363: process_trackback picked the ballet at
+    #  depth 0, then set_metadata overwrote ~cwp_work_top with the "; "-joined
+    #  "Ballet ...; Suite from The Bolt".)
+
+    def test_set_metadata_fused_top_uses_resolved_name(self):
+        """When a resolved top_name is supplied for a fused multi-parent top,
+        set_metadata writes THAT to ~cwp_work_top, not the joined parent list."""
+        pl = self._make_trackback_partlevels()
+        joined = self._BOLT_BALLET + "; " + self._BOLT_SUITE
+        # strip_parent_from_work returns (stripped_work, full_parent); the real
+        # code joins a multi-parent name into full_parent -- mimic that.
+        pl.strip_parent_from_work = lambda *a, **k: ("stripped", joined)
+        workId = ("mov",)
+        parentId = ("ballet_id", "suite_id")   # a fused multi-parent top
+        pl.parts[workId] = {"name": "mov"}
+        pl.parts[parentId] = {"name": [self._BOLT_BALLET, self._BOLT_SUITE],
+                              "no_parent": True}
+        track = self._make_fake_track("mov", "movement", 11)
+        pl.set_metadata("test", 1, workId, parentId,
+                        [self._BOLT_BALLET, self._BOLT_SUITE], track,
+                        self._BOLT_BALLET)
+        self.assertEqual(track.metadata.get("~cwp_work_top"), self._BOLT_BALLET)
+        self.assertNotIn("Suite from The Bolt",
+                         track.metadata.get("~cwp_work_top"))
+
+    def test_set_metadata_single_top_keeps_full_parent(self):
+        """With no resolved top_name (ordinary single-work top) set_metadata
+        keeps its previous behaviour: ~cwp_work_top = full_parent."""
+        pl = self._make_trackback_partlevels()
+        pl.strip_parent_from_work = lambda *a, **k: ("stripped", "Full Work Name")
+        workId = ("w",)
+        parentId = ("p",)
+        pl.parts[workId] = {"name": "w"}
+        pl.parts[parentId] = {"name": "Some Work", "no_parent": True}
+        track = self._make_fake_track("w", "movement", 1)
+        pl.set_metadata("test", 1, workId, parentId, "Some Work", track, None)
+        self.assertEqual(track.metadata.get("~cwp_work_top"), "Full Work Name")
+
 
 class RecordingSessionTagsTestCase(ClassicalExtrasTestCase):
     """Recording place/date tag derivation (recording_session_tags).
