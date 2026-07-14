@@ -6051,6 +6051,22 @@ class PartLevels():
         winners = [n for n in ordered if votes.get(n, 0) == best]
         return winners[0] if len(winners) == 1 else winners
 
+    def _collapse_multiparent_top_name(self, topId, votes):
+        """Collapse a fused multi-parent top's name to the voted winner(s), in
+        place in self.parts, so every tag derived from the top (top_work, the
+        principal work, ~cwp_work_N) uses the single chosen work instead of the
+        whole parent list. Stored as a list (one element for a unique winner,
+        the tied names for a tie). A plain-string or single-name top is left
+        untouched. Returns True if the name changed.
+        """
+        name = self.parts[topId]['name']
+        if isinstance(name, str) or len(name) <= 1:
+            return False
+        selected = self._select_top_work_names(name, votes)
+        self.parts[topId]['name'] = (
+            [selected] if isinstance(selected, str) else list(selected))
+        return self.parts[topId]['name'] != name
+
     def _resolve_chosen_tops(self, release_id, album, track_tops):
         """Decide the single top work each track is tagged with.
 
@@ -6406,6 +6422,17 @@ class PartLevels():
                             "surviving top %r",
                             t, v, new_top)
         for topId in self.top[album]:
+            # Collapse a fused multi-parent top's name to the voted winner(s)
+            # BEFORE any tag is derived from it. A movement that belongs to
+            # several parent works has a top whose name is the list of all those
+            # parents (e.g. ['Ballet Suite no. 5, op. 27a "The Bolt"', 'Suite
+            # from The Bolt']); that list otherwise leaks into every tag taken
+            # from the top -- top_work, the principal work, and ~cwp_work_N (as a
+            # two-value tag or an "A; B" join). Reducing it here, at the single
+            # point the album commits to this top, fixes them all at once: a
+            # unique winner gives one name, a tie keeps the tied names (several
+            # are acceptable). A plain-string (single-work) top is left as-is.
+            self._collapse_multiparent_top_name(topId, top_name_votes)
             write_log(
                     release_id,
                     'info',
