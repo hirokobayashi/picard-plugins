@@ -6067,6 +6067,41 @@ class PartLevels():
             [selected] if isinstance(selected, str) else list(selected))
         return self.parts[topId]['name'] != name
 
+    def _reduce_redundant_parents(self, parentIds):
+        """Return ``parentIds`` with any id that is merely an ancestor of
+        another id in the tuple removed, so a work keeps only its most-specific
+        direct parent(s).
+
+        A movement linked directly to both a broad grouping work and a specific
+        sub-work that is itself part of that grouping has the grouping as a
+        *redundant* direct parent (it is already reached transitively via the
+        sub-work). Ancestry is read from ``self.works_cache`` (each id's direct
+        parents), whose chains are fully populated by the time process_album
+        runs. A single parent, or parents none of which is an ancestor of
+        another (genuine sibling multi-parents, e.g. two same-named versions of
+        a suite), are returned unchanged.
+        """
+        if len(parentIds) <= 1:
+            return parentIds
+
+        def ancestors(wid):
+            seen = set()
+            stack = list(self.works_cache.get((wid,), []))
+            while stack:
+                p = stack.pop()
+                if p in seen:
+                    continue
+                seen.add(p)
+                stack.extend(self.works_cache.get((p,), []))
+            return seen
+
+        anc = {x: ancestors(x) for x in parentIds}
+        keep = [x for x in parentIds
+                if not any(x in anc[y] for y in parentIds if y != x)]
+        # Never reduce to nothing (e.g. a mutual-ancestry data cycle); keep the
+        # original tuple in that degenerate case.
+        return tuple(keep) if keep else parentIds
+
     def _collapse_fused_top_ids(self, release_id, album, track_tops):
         """Reduce each surviving fused multi-parent top's id tuple to the
         constituent parent id(s) common to ALL of its tracks - the version of
@@ -6283,6 +6318,24 @@ class PartLevels():
                         self.works_cache)
                 if workId in self.works_cache:
                     parentIds = tuple(self.works_cache[workId])
+                    # Drop redundant direct parents that are only an ANCESTOR
+                    # of another of this work's parents. MusicBrainz sometimes
+                    # links a movement directly to a broad grouping work AND to
+                    # the specific sub-work that is itself part of that grouping
+                    # (e.g. "Au lac de Wallenstadt" is part of both "Annees de
+                    # pelerinage" and "...: Premiere annee: Suisse, S. 160",
+                    # the latter being part of the former). The direct edge to
+                    # the grouping is redundant: keeping it fuses two hierarchy
+                    # levels into the movement's parent tuple, so the movement
+                    # is tagged one level flatter than its siblings that only
+                    # carry the specific sub-work (the intermediate work level
+                    # vanishes). Reducing to the most-specific parent(s) here,
+                    # where the whole ancestry is known, restores the shared
+                    # hierarchy. (parentIds are individual ids at this point, so
+                    # this never touches genuine sibling multi-parents such as
+                    # two same-named suite versions, where neither is an
+                    # ancestor of the other.)
+                    parentIds = self._reduce_redundant_parents(parentIds)
                     # for parentId in parentIds:
                     write_log(
                             release_id,
