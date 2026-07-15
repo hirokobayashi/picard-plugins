@@ -604,6 +604,33 @@ class ClassicalExtrasTestCase(PluginTestCase):
         pl = self._make_reduce_pl({("X",): ["Y"], ("Y",): ["X"]})
         self.assertEqual(pl._reduce_redundant_parents(("X", "Y")), ("X", "Y"))
 
+    # Don Giovanni (release 510944a2): a movement is part of both a standalone
+    # work (a top) and a movement of the bigger opera (embedded, i.e. having a
+    # parent of its own). Prefer the embedded parent so the release of the opera
+    # keeps the movement in the opera's hierarchy instead of fusing the
+    # standalone grouping into the intermediate work level.
+    _DG_ATTO2 = "18a0544b"   # "Atto II", embedded (part of the opera)
+    _DG_K540C = "fc146a29"   # "Recitative and Aria, K. 540c", standalone top
+    _DG_OPERA = "b3b1e2b3"   # the opera (top)
+
+    def test_reduce_redundant_parents_drops_standalone_for_embedded(self):
+        """The standalone top work is dropped in favour of the parent that is
+        embedded in a larger work. Independent of tuple order."""
+        pl = self._make_reduce_pl({(self._DG_ATTO2,): [self._DG_OPERA]})
+        self.assertEqual(
+            pl._reduce_redundant_parents((self._DG_ATTO2, self._DG_K540C)),
+            (self._DG_ATTO2,))
+        self.assertEqual(
+            pl._reduce_redundant_parents((self._DG_K540C, self._DG_ATTO2)),
+            (self._DG_ATTO2,))
+
+    def test_reduce_redundant_parents_keeps_two_embedded(self):
+        """Two parents each embedded in a (different) larger work, neither an
+        ancestor of the other, are genuine multi-parents and both kept."""
+        pl = self._make_reduce_pl({("P1",): ["T1"], ("P2",): ["T2"]})
+        self.assertEqual(
+            pl._reduce_redundant_parents(("P1", "P2")), ("P1", "P2"))
+
     def test_normalise_name(self):
         """Names are compared case/whitespace/punctuation-insensitively (used by
         the remap fallback) so the same work stored with different casing or
@@ -1651,6 +1678,133 @@ class LisztRedundantParentIntegrationTestCase(ClassicalExtrasTestCase):
             self.assertEqual(
                 tuple(self.mod.str_to_list(tm['~cwp_workid_2'])), (self._COLL,),
                 "%s top work should be Annees de pelerinage" % label)
+
+
+class DonGiovanniStandaloneParentIntegrationTestCase(ClassicalExtrasTestCase):
+    """End-to-end guard for release 510944a2 ("The Da Ponte Operas"), Don
+    Giovanni disc 6. Tracks 6-3 ("In quali eccessi") and 6-4 ("Mi tradi") are
+    each part of BOTH the opera's "Atto II" (embedded, itself part of the opera
+    K. 527) AND the standalone "Recitative and Aria, K. 540c" (its own top);
+    their neighbours 6-2 and 6-5 have only "Atto II". Without the fix the two
+    parents fuse into the intermediate work level, so 6-3/6-4 get a two-value
+    ~cwp_work_1 ("Atto II; Recitative and Aria, K. 540c") while their neighbours
+    get a single "Atto II". The reduction drops the standalone parent so every
+    Atto II track shares the same intermediate work."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "dongiovanni")
+    _REL = "dg-rel"
+    _ATTO2 = "18a0544b-89c1-4510-a673-c1b1728fd742"
+    _OPERA = "b3b1e2b3-cbb8-4b46-a7d0-0031ec13492c"
+    # (label, disc, track, recording id, movement work id); 6-3 and 6-4 carry
+    # the extra standalone K.540c parent.
+    _TRACKS = [
+        ("d6t2", 6, 2, "b40c272a-bc2a-4d49-b95b-b211f4cec6fa", "e6c6d039-d3c0-31b5-b3c2-f58a68dfcada"),
+        ("d6t3", 6, 3, "7c9830c3-e465-4c35-975c-4904a2433789", "c1b48770-4e0c-3b69-9e6a-6f6f01da863d"),
+        ("d6t4", 6, 4, "047f17e3-5b5c-42ec-ac0e-2dc07dd4dbfe", "395f28e7-6594-3d8c-b03f-46e4121830ce"),
+        ("d6t5", 6, 5, "1b7a064f-5661-42a0-bcd8-005d3387e493", "28ac8c6c-e6e8-3f78-90b2-9133ddcbf12a"),
+    ]
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": False, "cwp_arrangements": False,
+            "cwp_medley": False, "cwp_collections": True,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    def _make_track(self, label, disc, track, rec_id, work_id, opts):
+        class _M(dict):
+            def __getitem__(self, k):
+                return self.get(k, '')
+
+            def getall(self, k):
+                v = self.get(k)
+                return [] if v is None else (v if isinstance(v, list) else [v])
+        tm = _M(musicbrainz_albumid=self._REL, musicbrainz_recordingid=rec_id,
+                musicbrainz_workid=work_id, album="The Da Ponte Operas",
+                title=label, tracknumber=str(track), discnumber=str(disc))
+        tm['~ce_options'] = repr(opts)
+        from unittest.mock import Mock
+        t = Mock(name=label)
+        t.metadata = tm
+        t._id = label
+        t.__hash__ = lambda self: hash(self._id)
+        t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+        return t
+
+    def test_standalone_parent_dropped_movements_share_intermediate(self):
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        pl.extend_metadata = lambda *a, **k: None
+        pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": False, "cwp_arrangements": False,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        tracks = {}
+        for label, disc, track, rec_id, work_id in self._TRACKS:
+            t = self._make_track(label, disc, track, rec_id, work_id, opts)
+            tracks[label] = t
+            album._new_tracks.append(t)
+            node = {'recording': self._load("rec_%s.json" % label)}
+            pl.add_work_info(album, t.metadata, node, {})
+
+        while pending:
+            cb, resp = pending.pop(0)
+            cb(resp, None, None)
+
+        # Every Atto II track -- the recit+aria pair included -- must share the
+        # same single intermediate work (Atto II) and the opera as top; the
+        # standalone K.540c must not leak into the intermediate work level.
+        for label in ("d6t2", "d6t3", "d6t4", "d6t5"):
+            tm = tracks[label].metadata
+            self.assertEqual(tm['~cwp_part_levels'], '2', label)
+            self.assertEqual(
+                tuple(self.mod.str_to_list(tm['~cwp_workid_1'])),
+                (self._ATTO2,),
+                "%s intermediate work should be Atto II only" % label)
+            self.assertEqual(
+                tuple(self.mod.str_to_list(tm['~cwp_workid_2'])),
+                (self._OPERA,), label)
 
 
 if __name__ == "__main__":

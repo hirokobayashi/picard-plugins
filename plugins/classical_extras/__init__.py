@@ -6068,18 +6068,34 @@ class PartLevels():
         return self.parts[topId]['name'] != name
 
     def _reduce_redundant_parents(self, parentIds):
-        """Return ``parentIds`` with any id that is merely an ancestor of
-        another id in the tuple removed, so a work keeps only its most-specific
-        direct parent(s).
+        """Return ``parentIds`` keeping only a work's most-specific,
+        best-embedded direct parent(s); drop parents that are redundant given
+        the others.
 
-        A movement linked directly to both a broad grouping work and a specific
-        sub-work that is itself part of that grouping has the grouping as a
-        *redundant* direct parent (it is already reached transitively via the
-        sub-work). Ancestry is read from ``self.works_cache`` (each id's direct
-        parents), whose chains are fully populated by the time process_album
-        runs. A single parent, or parents none of which is an ancestor of
-        another (genuine sibling multi-parents, e.g. two same-named versions of
-        a suite), are returned unchanged.
+        A parent ``x`` is dropped when another parent ``y`` is a better
+        placement for the work, in either of two ways:
+
+        * ``x`` is an *ancestor* of ``y`` -- the movement is linked directly to
+          both a broad grouping work and a specific sub-work that is itself part
+          of that grouping (e.g. Liszt "Annees de pelerinage" and its "Premiere
+          annee: Suisse" suite). The grouping is already reached transitively
+          via the sub-work, so the direct edge is redundant.
+
+        * ``x`` is a *top-level* work (no parent of its own) while ``y`` is
+          *embedded* in a larger work (has a parent). The movement is linked
+          both to a standalone work and to a movement of a bigger work that
+          contains it (e.g. Don Giovanni's "In quali eccessi / Mi tradi", part
+          of both the standalone "Recitative and Aria, K. 540c" and the opera's
+          "Atto II"). On a release of the bigger work the standalone grouping
+          would otherwise fuse into the intermediate work level as a spurious
+          second value; the embedded parent is the one that fits the hierarchy.
+
+        Ancestry and parenthood are read from ``self.works_cache`` (each id's
+        direct parents), whose chains are fully populated by the time
+        process_album runs. A single parent, or parents that are all top-level
+        with none an ancestor of another (genuine sibling multi-parents, e.g.
+        two same-named versions of a suite, a ballet and its derived concert
+        suite), are returned unchanged.
         """
         if len(parentIds) <= 1:
             return parentIds
@@ -6096,8 +6112,19 @@ class PartLevels():
             return seen
 
         anc = {x: ancestors(x) for x in parentIds}
-        keep = [x for x in parentIds
-                if not any(x in anc[y] for y in parentIds if y != x)]
+        embedded = {x: bool(self.works_cache.get((x,))) for x in parentIds}
+
+        def redundant(x):
+            for y in parentIds:
+                if y == x:
+                    continue
+                if x in anc[y]:
+                    return True          # x is an ancestor of another parent
+                if not embedded[x] and embedded[y]:
+                    return True          # x is standalone, y is embedded
+            return False
+
+        keep = [x for x in parentIds if not redundant(x)]
         # Never reduce to nothing (e.g. a mutual-ancestry data cycle); keep the
         # original tuple in that degenerate case.
         return tuple(keep) if keep else parentIds
