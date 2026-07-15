@@ -548,6 +548,62 @@ class ClassicalExtrasTestCase(PluginTestCase):
             pl._collapse_fused_top_ids("test", "alb", track_tops))
         self.assertEqual(pl.top["alb"], [("wA",)])
 
+    # ----- redundant-ancestor parent reduction (release-group 652df93a) -----
+    #
+    # Liszt "Annees de pelerinage" Year 1 movements: MusicBrainz links some
+    # movements (Au lac de Wallenstadt, Eglogue) directly to BOTH the broad
+    # grouping work "Annees de pelerinage" (COLL) and the specific sub-work
+    # "Premiere annee: Suisse, S.160" (SPEC) that is itself part of COLL; other
+    # movements carry only SPEC. The direct COLL edge is redundant and fuses two
+    # levels into the parent tuple, flattening those movements one level below
+    # their siblings. _reduce_redundant_parents drops a parent that is only an
+    # ancestor of another parent, keeping the most-specific one(s).
+
+    _LZ_SPEC = "d5800420"   # "...: Premiere annee: Suisse, S.160"
+    _LZ_COLL = "29954628"   # "Annees de pelerinage" (SPEC is part of COLL)
+
+    def _make_reduce_pl(self, works_cache):
+        PartLevels = self.mod.PartLevels
+        pl = PartLevels.__new__(PartLevels)
+        pl.works_cache = works_cache
+        return pl
+
+    def test_reduce_redundant_parents_drops_grandparent(self):
+        """A movement whose parents are the specific sub-work AND the broad
+        grouping it belongs to keeps only the sub-work (the grouping is reached
+        transitively). Independent of tuple order."""
+        pl = self._make_reduce_pl({(self._LZ_SPEC,): [self._LZ_COLL]})
+        self.assertEqual(
+            pl._reduce_redundant_parents((self._LZ_SPEC, self._LZ_COLL)),
+            (self._LZ_SPEC,))
+        self.assertEqual(
+            pl._reduce_redundant_parents((self._LZ_COLL, self._LZ_SPEC)),
+            (self._LZ_SPEC,))
+
+    def test_reduce_redundant_parents_keeps_siblings(self):
+        """Genuine sibling multi-parents (neither an ancestor of the other,
+        e.g. two same-named versions of a suite) are left untouched."""
+        pl = self._make_reduce_pl({})
+        self.assertEqual(pl._reduce_redundant_parents(("A", "B")), ("A", "B"))
+
+    def test_reduce_redundant_parents_single_noop(self):
+        """A lone parent is returned unchanged."""
+        pl = self._make_reduce_pl({})
+        self.assertEqual(pl._reduce_redundant_parents(("only",)), ("only",))
+
+    def test_reduce_redundant_parents_deep_chain(self):
+        """Both a grandparent and a great-grandparent are dropped, leaving only
+        the most-specific parent, when the whole chain appears in the tuple."""
+        pl = self._make_reduce_pl({("S",): ["M"], ("M",): ["C"]})
+        self.assertEqual(
+            pl._reduce_redundant_parents(("S", "M", "C")), ("S",))
+
+    def test_reduce_redundant_parents_cycle_falls_back(self):
+        """A degenerate mutual-ancestry cycle would drop everything; the
+        original tuple is kept instead of collapsing to nothing."""
+        pl = self._make_reduce_pl({("X",): ["Y"], ("Y",): ["X"]})
+        self.assertEqual(pl._reduce_redundant_parents(("X", "Y")), ("X", "Y"))
+
     def test_normalise_name(self):
         """Names are compared case/whitespace/punctuation-insensitively (used by
         the remap fallback) so the same work stored with different casing or
@@ -1465,6 +1521,136 @@ class SwanLakeFusedTopIntegrationTestCase(ClassicalExtrasTestCase):
         self.assertEqual(
             tuple(self.mod.str_to_list(tracks[6].metadata['~cwp_workid_top'])),
             version_a)
+
+
+class LisztRedundantParentIntegrationTestCase(ClassicalExtrasTestCase):
+    """End-to-end guard for release-group 652df93a ("A Liszt Portrait"),
+    Annees de pelerinage Year 1 movements. Drives the REAL add_work_info ->
+    work_process -> process_album pipeline against the actual MusicBrainz
+    fixtures. Movements 21-2 (Au lac de Wallenstadt) and 28-1 (Eglogue) each
+    carry an extra DIRECT parent, the broad "Annees de pelerinage" (COLL),
+    which is really the grandparent of the specific "Premiere annee: Suisse,
+    S.160" (SPEC). Without the redundant-parent reduction those two movements
+    are tagged one level flatter than their siblings (SPEC vanishes); the fix
+    gives every Year-1 movement the same three-level hierarchy."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "liszt")
+    _REL = "liszt-rel"
+    _SPEC = "d5800420-373c-46b3-af4c-173295812817"   # Premiere annee: Suisse
+    _COLL = "29954628-3a98-41f9-87a1-14dc00bcfbe6"   # Annees de pelerinage
+    # (label, disc, track, recording id, movement work id); the two problem
+    # movements (Au lac, Eglogue) carry both SPEC and COLL as direct parents.
+    _TRACKS = [
+        ("d21t1", 21, 1, "9ca51ec9-6bcd-487e-810e-a1e55bb8e716", "5804701d-54a6-4c9d-afb9-3e01d6704e5a"),
+        ("d21t2", 21, 2, "109533a6-ac39-4a53-8f79-0accf2d724fa", "67bb0266-41c3-4a0a-86ff-9735b608bfa2"),
+        ("d21t3", 21, 3, "f1de8c74-57a9-45df-af4d-e895971ab537", "b428b55c-1f68-4a34-a643-a65a6b791b65"),
+        ("d21t4", 21, 4, "e1ef7480-8d3b-41c9-9d4e-2ce585ce09fc", "c8a09f21-a7cd-49e5-aac7-60f0e427a7ce"),
+        ("d21t5", 21, 5, "d494af57-15c0-45c2-861f-d8c0f4582c51", "676f6953-af37-465e-8af6-711cf727567c"),
+        ("d28t1", 28, 1, "d5ebbb0c-abce-437c-96e0-2fa1152215e1", "3a47f337-9e3b-44d0-b36d-2d59293b633f"),
+    ]
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": False, "cwp_arrangements": False,
+            "cwp_medley": False, "cwp_collections": True,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    def _make_track(self, label, disc, track, rec_id, work_id, opts):
+        class _M(dict):
+            def __getitem__(self, k):
+                return self.get(k, '')
+
+            def getall(self, k):
+                v = self.get(k)
+                return [] if v is None else (v if isinstance(v, list) else [v])
+        tm = _M(musicbrainz_albumid=self._REL, musicbrainz_recordingid=rec_id,
+                musicbrainz_workid=work_id, album="A Liszt Portrait",
+                title=label, tracknumber=str(track), discnumber=str(disc))
+        tm['~ce_options'] = repr(opts)
+        from unittest.mock import Mock
+        t = Mock(name=label)
+        t.metadata = tm
+        t._id = label
+        t.__hash__ = lambda self: hash(self._id)
+        t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+        return t
+
+    def test_year1_movements_share_three_level_hierarchy(self):
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        # the hierarchy tags (~cwp_workid_N / ~cwp_part_levels) are set before
+        # extend_metadata, so stub it (and publish) and read them directly.
+        pl.extend_metadata = lambda *a, **k: None
+        pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": False, "cwp_arrangements": False,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        tracks = {}
+        for label, disc, track, rec_id, work_id in self._TRACKS:
+            t = self._make_track(label, disc, track, rec_id, work_id, opts)
+            tracks[label] = t
+            album._new_tracks.append(t)
+            node = {'recording': self._load("rec_%s.json" % label)}
+            pl.add_work_info(album, t.metadata, node, {})
+
+        while pending:
+            cb, resp = pending.pop(0)
+            cb(resp, None, None)
+
+        # Every Year-1 movement -- the two problem tracks included -- must have
+        # the same three-level hierarchy: movement / SPEC / COLL.
+        for label in ("d21t1", "d21t2", "d21t3", "d21t4", "d21t5", "d28t1"):
+            tm = tracks[label].metadata
+            self.assertEqual(tm['~cwp_part_levels'], '2',
+                             "%s should be 3 levels deep" % label)
+            self.assertEqual(
+                tuple(self.mod.str_to_list(tm['~cwp_workid_1'])), (self._SPEC,),
+                "%s middle work should be Premiere annee: Suisse" % label)
+            self.assertEqual(
+                tuple(self.mod.str_to_list(tm['~cwp_workid_2'])), (self._COLL,),
+                "%s top work should be Annees de pelerinage" % label)
 
 
 if __name__ == "__main__":
