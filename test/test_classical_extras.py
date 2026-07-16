@@ -1807,5 +1807,149 @@ class DonGiovanniStandaloneParentIntegrationTestCase(ClassicalExtrasTestCase):
                 (self._OPERA,), label)
 
 
+class TristanFullAlbumIntegrationTestCase(ClassicalExtrasTestCase):
+    """End-to-end guard for release 20a3b3d6 (Wesendonck-Lieder / Orchestral
+    Music). Track 2 ("Tristan und Isolde: Prelude and Liebestod") spans two
+    acts, whose overlapping tops _merge_duplicate_tops folds into one survivor,
+    grafting the track onto it. The whole 11-track album is run so the collapse,
+    graft and top-processing all execute against the real hierarchy (which
+    includes a circular work reference in the Tristan tree)."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "tristan")
+    _REL = "tristan-rel"
+    _TRACKS = [
+        ("t1", 1, 1, "73f24ed7-2edb-4649-9986-a64f535120f8", "b3d13ed3-5cb8-338c-815e-a33432d8981a"),
+        ("t2", 1, 2, "05cc6415-4943-4592-b184-6fdfec280330", "7b4b0ef2-7928-3c37-8107-1355eb043855"),
+        ("t3", 1, 3, "18b35e45-7eb8-4017-acfa-46d910308111", "e9ffb0e1-f26a-3420-ac12-6bc062042989"),
+        ("t4", 1, 4, "f065fa2e-177a-49ea-891a-c0b753105bb3", "43424ee0-ea55-4a39-b2f4-722c0517efbb"),
+        ("t5", 1, 5, "c93127b5-1549-4ded-8089-7ac7ca13e401", "82fcb2f7-355f-4585-ada5-d5d4bc629cde"),
+        ("t6", 1, 6, "953f7003-181c-430a-9fc8-b240d5b0d6fc", "74563ddf-4a42-4c83-8ce8-19a84a75ee7b"),
+        ("t7", 1, 7, "c56ff364-4be9-4fa0-b899-2ad3ff9caa6d", "1388e737-1c44-413e-b617-73ba771b2918"),
+        ("t8", 1, 8, "9486e32a-35ed-4059-a346-fd2ab188e95f", "fef6ff04-822f-49d8-9add-04f6c82e4e95"),
+        ("t9", 1, 9, "e14a9c92-939b-4287-acba-8c6d00fcf21e", "f5b6994d-98ed-43c5-a891-ae1a23c8ea6e"),
+        ("t10", 1, 10, "5f5f1f2a-bf05-4168-aa87-0b3a262edb2a", "6b198406-4fbf-3d61-82db-0b7ef195a7fe"),
+        ("t11", 1, 11, "0446b58a-6e81-4403-a53e-98babe20211c", "6996fc77-b5dc-48ca-a7d5-3434f541f87a"),
+    ]
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": False, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    def _make_track(self, label, disc, track, rec_id, work_id, opts):
+        class _M(dict):
+            def __getitem__(self, k):
+                return self.get(k, '')
+
+            def getall(self, k):
+                v = self.get(k)
+                return [] if v is None else (v if isinstance(v, list) else [v])
+        tm = _M(musicbrainz_albumid=self._REL, musicbrainz_recordingid=rec_id,
+                musicbrainz_workid=work_id, album="Wesendonck-Lieder / Orchestral Music",
+                title=label, tracknumber=str(track), discnumber=str(disc))
+        tm['~ce_options'] = repr(opts)
+        from unittest.mock import Mock
+        t = Mock(name=label)
+        t.metadata = tm
+        t._id = label
+        t.__hash__ = lambda self: hash(self._id)
+        t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+        return t
+
+    _OPERA = "ae217ba8-0b07-4b0b-aed6-c80535dcd94b"   # Tristan und Isolde, WWV 90
+
+    def test_track2_resolves_to_opera_top(self):
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        pl.extend_metadata = lambda *a, **k: None
+        pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": False, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        tracks = {}
+        for label, disc, track, rec_id, work_id in self._TRACKS:
+            t = self._make_track(label, disc, track, rec_id, work_id, opts)
+            tracks[label] = t
+            album._new_tracks.append(t)
+            node = {'recording': self._load("rec_%s.json" % label)}
+            pl.add_work_info(album, t.metadata, node, {})
+
+        while pending:
+            cb, resp = pending.pop(0)
+            cb(resp, None, None)
+
+        # Track 2's work is an arrangement that reaches the opera "Tristan und
+        # Isolde, WWV 90" by two independent parent paths (Akt I Vorspiel and
+        # Akt III Liebestod). Both terminate at that opera, so it is the single
+        # correct top work. Before the fix the two convergent paths were traced
+        # together, manufacturing a false cycle that (a) made build_parts strip
+        # the opera as a "descendant of child", orphaning the track, and (b)
+        # could send the trackback walkers into unbounded recursion. The track
+        # must resolve cleanly to the opera as its top and be fully tagged.
+        t2 = tracks["t2"].metadata
+        self.assertTrue(t2['~cwp_workid_top'],
+                        "track 2 (Tristan) lost its top work entirely")
+        self.assertEqual(
+            tuple(self.mod.str_to_list(t2['~cwp_workid_top'])),
+            (self._OPERA,),
+            "track 2 should resolve to the opera Tristan und Isolde as top")
+        # top_work must be single-valued (the id reduction must carry the name
+        # with it) -- a two-value "Akt III; Tristan und Isolde" would break a
+        # single-valued top_work used as a shuffle-group key.
+        self.assertEqual(
+            self.mod.str_to_list(t2['~cwp_work_top']),
+            ["Tristan und Isolde, WWV 90"],
+            "track 2 top_work must be the single opera name")
+        # No track on the album may be orphaned: every one keeps a top work,
+        # so every track is published and its artist rewritten from the composer.
+        for label in tracks:
+            self.assertTrue(
+                tracks[label].metadata['~cwp_workid_top'],
+                "%s lost its top work" % label)
+
+
 if __name__ == "__main__":
     unittest.main()
