@@ -1693,24 +1693,20 @@ def cyrillic_to_latin(name, sort_name):
     sort-name is itself non-Latin (e.g. a cyrillic sort-name) the result is
     transliterated to Latin via :func:`get_roman`.
 
-    The patronymic-removal heuristic only makes sense for Cyrillic-script
-    (Russian-style) names; other non-Latin scripts (e.g. Japanese) are left
-    untouched rather than having a meaningful word stripped out, per the
-    Readme's note that this option "does not deal fully with other non-Latin
-    scripts".
-
-    The patronymic is only stripped when ``sort_name`` is actually in
-    personal "Surname, Given Names" form (i.e. contains a comma) - by MB
-    convention, groups/choirs/orchestras use their plain name as the
-    sort-name (no comma), so a group with an incidentally 3-word name (e.g.
-    a Russian choir) is not treated as "First Patronymic Last" and mangled.
+    The patronymic is only stripped when ``name`` is Cyrillic script AND
+    ``sort_name`` is in personal "Surname, Given Names" form (i.e. contains
+    a comma; the sort-name itself is often already Latin, e.g.
+    "Tchaikovsky, Pyotr Ilyich") - by MB convention, groups/choirs/
+    orchestras use their plain name as the sort-name (no comma), so a group
+    with an incidentally 3-word name (e.g. a Russian choir) is not treated
+    as "First Patronymic Last" and mangled. Non-Cyrillic scripts (e.g.
+    Japanese, Greek) are never subject to patronymic removal, but are still
+    romanized from the sort-name like before, in full.
     """
-    if not (is_cyrillic(name) or is_cyrillic(sort_name)):
-        return name
-    if ', ' in sort_name:
+    if is_cyrillic(name) and ', ' in sort_name:
         candidate = remove_middle(unsort(sort_name))
     else:
-        candidate = sort_name
+        candidate = unsort(sort_name)
     if not only_roman_chars(candidate):
         candidate = get_roman(candidate)
     return candidate
