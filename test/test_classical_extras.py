@@ -129,21 +129,25 @@ class ClassicalExtrasTestCase(PluginTestCase):
         self.assertEqual(remove_middle("Pyotr Ilyich Tchaikovsky"),
                          "Pyotr Tchaikovsky")
 
-    def test_cyrillic_to_latin_leaves_non_cyrillic_script_untouched(self):
-        """Regression: a Japanese ensemble name must not have a word
+    def test_cyrillic_to_latin_romanizes_non_cyrillic_script_in_full(self):
+        """Regression: a Japanese ensemble name must be romanized from its
 
-        stripped out by the Cyrillic patronymic-removal heuristic. Bug
-        report: 'Tokyo Konsei Gasshoudan' (Tokyo Mixed-Voice Choir) was
-        being mangled to 'Tokyo Gasshoudan' because cyrillic_to_latin
-        treated any non-Latin-script 3-word name as "First Patronymic
-        Last" and dropped the middle word, even though the name is
-        Japanese, not Cyrillic.
+        sort-name in full, not have a word dropped. Bug report: 'Tokyo
+        Konsei Gasshoudan' (Tokyo Mixed-Voice Choir) was being mangled to
+        'Tokyo Gasshoudan' because cyrillic_to_latin treated any non-Latin
+        -script 3-word name as "First Patronymic Last" and dropped the
+        middle word, even though the name is Japanese, not Cyrillic.
+        Patronymic removal must stay off for non-Cyrillic scripts, but the
+        name must still be romanized (as it always has been), not left in
+        its native script.
         """
         cyrillic_to_latin = self.mod.cyrillic_to_latin
         name = "東京混声合唱団"  # Tokyo Konsei Gasshodan (Tokyo Mixed-Voice Choir)
         result = cyrillic_to_latin(name, "Tōkyō Konsei Gasshōdan")
-        # left untouched (not silently mangled to "Tokyo Gasshoudan")
-        self.assertEqual(result, name)
+        # romanized via the (already-Latin) sort-name, with all three words
+        # intact - not silently mangled to "Tokyo Gasshoudan", and not left
+        # untranslated in kanji either.
+        self.assertEqual(result, "Tōkyō Konsei Gasshōdan")
 
     def test_cyrillic_to_latin_keeps_three_word_group_name(self):
         """Regression: a Cyrillic-script *group* (not a person) whose
