@@ -5213,12 +5213,29 @@ class PartLevels():
                             parentIds = list(
                                 collections.OrderedDict.fromkeys(parentIds))
 
-                            # add descendants to checklist to prevent recursion
+                            # add descendants to checklist to prevent recursion.
+                            # A work is never its own descendant: filter self-
+                            # references out. Otherwise a work that reaches the
+                            # same absolute parent by two convergent paths -- an
+                            # arrangement that bridges two acts of one opera,
+                            # each act being part of that opera (Tristan's
+                            # "Prelude and Liebestod", drawn from the Akt I
+                            # Vorspiel and the Akt III Liebestod) -- records the
+                            # shared parent as its own descendant. The circular-
+                            # reference guard above would then strip that
+                            # legitimate parent and orphan the whole subtree, so
+                            # the track loses its top work and every tag (its
+                            # artist is never rewritten from the composer). Both
+                            # paths in fact terminate at the opera; keeping the
+                            # parent lets the track resolve to it as its top.
                             for p in parentIds:
                                 for w in wid:
-                                    self.child_listing[p].append(w)
+                                    if w != p:
+                                        self.child_listing[p].append(w)
                                     if w in self.child_listing:
-                                        self.child_listing[p] += self.child_listing[w]
+                                        self.child_listing[p] += [
+                                            d for d in self.child_listing[w]
+                                            if d != p]
 
                             if parentIds:
                                 if wid in self.works_cache:
@@ -5987,9 +6004,18 @@ class PartLevels():
 
         ``drop``'s children (its movements/sub-works) are appended to ``keep``'s
         children; if ``drop`` is itself a leaf holding tracks, the leaf node
-        itself is grafted. Nodes already present are skipped so a re-run does not
-        duplicate them. No-op if either tree is absent (e.g. a unit test that
+        itself is grafted. No-op if either tree is absent (e.g. a unit test that
         exercises the merge without building trackback trees).
+
+        A donor is skipped when it would make ``keep``'s tree CYCLIC -- either
+        the donor node is already reachable from ``keep`` (grafting it again
+        would duplicate or self-loop it), or the donor's own subtree reaches back
+        to ``keep``'s root. This happens for real when merging a top into a
+        superset top that already contains it (the opera top ``('ae217ba8',)``
+        folded into the fused act+opera top ``('ad177d02','ae217ba8')``): the
+        naive graft splices the surviving root in as its own child. A cyclic
+        trackback sends every recursive walker (level_calc, process_trackback,
+        ...) into unbounded recursion and aborts the whole album.
         """
         trees = getattr(self, 'trackback', None)
         album_trees = trees.get(album) if trees else None
@@ -5999,17 +6025,33 @@ class PartLevels():
         drop_tree = album_trees.get(drop)
         if keep_tree is None or drop_tree is None:
             return
+
+        def _reachable(node, acc):
+            if id(node) in acc:
+                return
+            acc.add(id(node))
+            for c in node.get('children', []):
+                _reachable(c, acc)
+
         keep_children = keep_tree.setdefault('children', [])
+        keep_reachable = set()
+        _reachable(keep_tree, keep_reachable)
         donors = drop_tree.get('children') or [drop_tree]
         for child in donors:
-            if child not in keep_children:
-                keep_children.append(child)
-                write_log(
-                        release_id,
-                        'info',
-                        "Grafted %s onto surviving top %s",
-                        child.get('id') if isinstance(child, dict) else child,
-                        keep)
+            if id(child) in keep_reachable:
+                continue   # already in keep's tree (or is keep's root)
+            child_reachable = set()
+            _reachable(child, child_reachable)
+            if id(keep_tree) in child_reachable:
+                continue   # donor subtree loops back to keep's root
+            keep_children.append(child)
+            keep_reachable |= child_reachable
+            write_log(
+                    release_id,
+                    'info',
+                    "Grafted %s onto surviving top %s",
+                    child.get('id') if isinstance(child, dict) else child,
+                    keep)
 
     @staticmethod
     def _normalise_name(name):
@@ -6187,6 +6229,53 @@ class PartLevels():
             changed = True
         return changed
 
+    def _reduce_fused_top_to_highest(self, release_id, album):
+        """Drop, from any fused top id tuple, a constituent that is a DESCENDANT
+        of another constituent - keeping only the highest-level work(s).
+
+        A top work is by definition the highest-level work. But a work reached by
+        two convergent parent paths that share an absolute parent (Tristan's
+        "Prelude and Liebestod", drawn from the Akt I Vorspiel and the Akt III
+        Liebestod, both part of the opera) can fuse an intermediate act id into
+        the opera top, giving e.g. ``('ad177d02', 'ae217ba8')`` -- Akt III fused
+        with the opera it is part of. That leaks the act into ``~cwp_workid_top``
+        and produces a two-valued ``top_work`` ("Akt III; Tristan und Isolde")
+        where the release actually has one top work, the opera. Since Akt III is
+        a descendant of the opera (``self.child_listing``), drop it and keep the
+        opera, yielding a single clean top work.
+        """
+        changed = False
+        for old_id in list(self.top[album]):
+            if len(old_id) <= 1:
+                continue
+            keep = tuple(
+                x for x in old_id
+                if not any(y != x and x in self.child_listing.get(y, ())
+                           for y in old_id))
+            if keep and len(keep) < len(old_id):
+                # Capture the kept constituents' own names before _reindex_top
+                # carries the fused name list over unchanged: the name must drop
+                # in step with the id, otherwise ~cwp_work_top keeps the dropped
+                # act's name and top_work stays multi-valued.
+                kept_names = []
+                for kid in keep:
+                    kp = self.parts.get((kid,))
+                    nm = kp.get('name') if isinstance(kp, dict) else None
+                    for n in (nm if isinstance(nm, list) else [nm] if nm else []):
+                        if n not in kept_names:
+                            kept_names.append(n)
+                write_log(
+                        release_id,
+                        'info',
+                        "Reducing fused top %r -> %r (dropped constituents that "
+                        "are descendants of another - a top is the highest work)",
+                        old_id, keep)
+                self._reindex_top(release_id, album, old_id, keep)
+                if kept_names and isinstance(self.parts.get(keep), dict):
+                    self.parts[keep]['name'] = kept_names
+                changed = True
+        return changed
+
     def _reindex_top(self, release_id, album, old_id, new_id):
         """Re-key a top work from ``old_id`` to ``new_id`` across the album
         structures a tag is derived from: self.top, self.trackback (including
@@ -6264,10 +6353,30 @@ class PartLevels():
                                   if not self._is_collection_top(top)]
                 if len(non_collection) == 1:
                     chosen_top[t] = non_collection[0]
-                elif most_selected is not None:
-                    chosen_top[t] = most_selected
                 else:
-                    chosen_top[t] = next(iter(tops))
+                    # Choose from the track's OWN candidate tops. Never assign
+                    # the global most_selected when the track is not actually
+                    # under it: that tags the track with an unrelated work, and
+                    # when that top is later collapsed the track is orphaned and
+                    # loses every tag (its artist is never rewritten from the
+                    # composer). This is the convergent-paths case -- a work
+                    # reached by several parent chains that share one absolute
+                    # parent (Tristan's "Prelude and Liebestod", drawn from the
+                    # Akt I Vorspiel and the Akt III Liebestod, both part of the
+                    # opera): its candidates all belong to that work, and the
+                    # merge/re-point below consolidates them to the shared top.
+                    # Prefer most_selected only if it is a candidate, else the
+                    # candidate chosen by the most unambiguous tracks, ties
+                    # broken by discovery order.
+                    candidates = non_collection or list(tops)
+                    if most_selected is not None and most_selected in candidates:
+                        chosen_top[t] = most_selected
+                    else:
+                        chosen_top[t] = max(
+                            (top for top in self.top[album]
+                             if top in candidates),
+                            key=lambda top: top_tally.get(top, 0),
+                            default=next(iter(tops)))
         # Fall back for tracks not found in any tree (e.g. a work with no_parent
         # that was not recorded in self.top): use the top previously determined
         # for that track, else the most selected top.
@@ -6278,6 +6387,38 @@ class PartLevels():
             wid = info.get('workId') if isinstance(info, dict) else None
             chosen_top[t] = tuple(wid) if wid else most_selected
         return most_selected, chosen_top
+
+    def _track_membership_from_trackback(self, album):
+        """Return ``{track_meta: {top_id, ...}}`` -- for each track on ``album``,
+        the set of surviving tops in ``self.top[album]`` whose CURRENT trackback
+        tree contains it.
+
+        Computed from the live (post-merge) trackback rather than the pre-merge
+        ``track_tops`` map: _merge_duplicate_tops folds a duplicate top into a
+        survivor and grafts its tracks onto the survivor's tree, so only the live
+        trees reflect where a track really lives now. The collapse uses this to
+        avoid dropping a top that is the sole surviving home of a track. The walk
+        is cycle-safe as a defensive measure (the source work hierarchy can be
+        circular).
+        """
+        def _collect(node, acc, seen):
+            if id(node) in seen:
+                return
+            seen.add(id(node))
+            if 'meta' in node:
+                for t in node['meta']:
+                    acc.add(t)
+            for child in node.get('children', []):
+                _collect(child, acc, seen)
+        track_tops = collections.defaultdict(set)
+        for topId in self.top[album]:
+            collected = set()
+            if album in self.trackback and topId in self.trackback[album]:
+                _collect(self.trackback[album][topId], collected, set())
+            for t in collected:
+                if t[1] == album:
+                    track_tops[t].add(topId)
+        return track_tops
 
     def process_album(self, release_id, album):
         """
@@ -6507,19 +6648,17 @@ class PartLevels():
         #   * a unique winner collapses the album to a single top work;
         #   * a tie at the maximum keeps every tied leader (genuine multi-work
         #     albums are preserved - we never break a real tie arbitrarily); and
-        #   * any top that owns "exclusive" tracks (tracks under no other top) is
-        #     always kept, even if it is not the most-selected, so its tracks are
-        #     still tagged - pruning such a top would silently drop their work
-        #     metadata. Only tops whose every track is shared (pure duplicates /
-        #     containers) may be collapsed away.
+        #   * the orphan guard below adds back the fewest extra tops needed so
+        #     that EVERY track still has a surviving top it lives under (from the
+        #     live post-merge trackback). Pruning a track's only home would skip
+        #     it in the tagging loop and silently drop all its work metadata, so
+        #     only tops whose every track is also covered elsewhere are dropped.
         top_choice = collections.Counter()
         for (t, al), v in self.chosen_top.items():
             if al == album and v is not None:
                 top_choice[tuple(v)] += 1
-        exclusive = collections.Counter()
-        for t, tops in track_tops.items():
-            if t[1] == album and len(tops) == 1:
-                exclusive[next(iter(tops))] += 1
+        # Per-track top membership from the CURRENT (post-merge) trackback.
+        membership = self._track_membership_from_trackback(album)
         if self.top[album] and top_choice:
             best = max(
                 top_choice.get(tuple(topId), 0) for topId in self.top[album])
@@ -6527,19 +6666,53 @@ class PartLevels():
                 winners = [
                     topId for topId in self.top[album]
                     if top_choice.get(tuple(topId), 0) == best
-                    or exclusive.get(topId, 0) > 0
                 ]
+                # Orphan guard: never drop a top if that would leave one of its
+                # tracks with NO surviving top -- the track would then be skipped
+                # by the tagging loop and lose all work/top_work metadata (and,
+                # with it, the artist rewrite from the composer default). A track
+                # shared across several non-most-selected tops (a "Prelude and
+                # Liebestod" whose arrangement converges on one opera via several
+                # act-paths) is exclusive to none, so "keep tops with exclusive
+                # tracks" is not enough. Greedily add back the best remaining home
+                # for any still-uncovered track until every track is covered,
+                # preferring the most-selected top, then the one covering the most
+                # uncovered tracks, then discovery order.
+                order = {tuple(w): i for i, w in enumerate(self.top[album])}
+                covered = set()
+                for w in winners:
+                    covered |= {t for t, tops in membership.items() if w in tops}
+                all_tracks = set(membership)
+                while all_tracks - covered:
+                    uncovered = all_tracks - covered
+                    best_top = None
+                    best_key = None
+                    for w in self.top[album]:
+                        if w in winners:
+                            continue
+                        gain = sum(
+                            1 for t in uncovered if w in membership.get(t, ()))
+                        if gain == 0:
+                            continue
+                        key = (top_choice.get(tuple(w), 0), gain,
+                               -order.get(tuple(w), 0))
+                        if best_key is None or key > best_key:
+                            best_key, best_top = key, w
+                    if best_top is None:
+                        break   # no remaining top covers any orphan
+                    winners.append(best_top)
+                    covered |= {t for t, tops in membership.items()
+                                if best_top in tops}
+                winners = [w for w in self.top[album] if w in winners]
                 if len(winners) < len(self.top[album]):
                     write_log(
                             release_id,
                             'info',
                             "Collapsing to most-selected top work(s): %s -> %s "
-                            "(chosen counts: %s, exclusive: %s)",
+                            "(chosen counts: %s)",
                             self.top[album], winners,
                             {self._part_name(k): v
-                             for k, v in top_choice.items()},
-                            {self._part_name(k): v
-                             for k, v in exclusive.items()})
+                             for k, v in top_choice.items()})
                     self.top[album] = winners
                     single_work_album = 1 if len(self.top[album]) <= 1 else 0
         # Re-point any track whose chosen top was removed (by collection pruning,
@@ -6600,6 +6773,10 @@ class PartLevels():
         # album's real top work; the other parents are not top works of this
         # release and must not leak into ~cwp_workid_top / musicbrainz_workid.
         self._collapse_fused_top_ids(release_id, album, track_tops)
+        # Drop any act/movement id fused into a top alongside the work it is part
+        # of, so a convergent-arrangement top (opera fused with one of its acts)
+        # reduces to the single highest work - see _reduce_fused_top_to_highest.
+        self._reduce_fused_top_to_highest(release_id, album)
         for topId in self.top[album]:
             # Collapse a fused multi-parent top's name to the voted winner(s)
             # BEFORE any tag is derived from it. A movement that belongs to
