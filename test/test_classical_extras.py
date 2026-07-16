@@ -129,6 +129,41 @@ class ClassicalExtrasTestCase(PluginTestCase):
         self.assertEqual(remove_middle("Pyotr Ilyich Tchaikovsky"),
                          "Pyotr Tchaikovsky")
 
+    def test_cyrillic_to_latin_leaves_non_cyrillic_script_untouched(self):
+        """Regression: a Japanese ensemble name must not have a word
+
+        stripped out by the Cyrillic patronymic-removal heuristic. Bug
+        report: 'Tokyo Konsei Gasshoudan' (Tokyo Mixed-Voice Choir) was
+        being mangled to 'Tokyo Gasshoudan' because cyrillic_to_latin
+        treated any non-Latin-script 3-word name as "First Patronymic
+        Last" and dropped the middle word, even though the name is
+        Japanese, not Cyrillic.
+        """
+        cyrillic_to_latin = self.mod.cyrillic_to_latin
+        name = "東京混声合唱団"  # Tokyo Konsei Gasshodan (Tokyo Mixed-Voice Choir)
+        result = cyrillic_to_latin(name, "Tōkyō Konsei Gasshōdan")
+        # left untouched (not silently mangled to "Tokyo Gasshoudan")
+        self.assertEqual(result, name)
+
+    def test_cyrillic_to_latin_keeps_three_word_group_name(self):
+        """Regression: a Cyrillic-script *group* (not a person) whose
+
+        plain, uninverted sort-name happens to have three words must not
+        have the middle word stripped - remove_middle's "First Patronymic
+        Last" heuristic only applies to personal "Surname, Given Names"
+        sort-names (which contain a comma); groups/choirs/orchestras use
+        their plain name as the sort-name by MB convention.
+        """
+        cyrillic_to_latin = self.mod.cyrillic_to_latin
+        # A hypothetical Russian choir; sort-name equals the plain name
+        # (no comma) as MB convention dictates for groups.
+        result = cyrillic_to_latin(
+            "Государственный Академический Хор",
+            "Государственный Академический Хор")
+        self.assertTrue(self.mod.only_roman_chars(result), msg=result)
+        # all three words survive - none dropped as a "patronymic"
+        self.assertEqual(len(result.split()), 3, msg=result)
+
     # ----- Task D: cwp_excluded_works option registered -----
 
     def test_excluded_works_option_registered(self):
