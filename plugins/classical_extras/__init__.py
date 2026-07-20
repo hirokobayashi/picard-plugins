@@ -1998,14 +1998,14 @@ def map_tags(options, release_id, album, tm):
     if tm['~cea_album_composer_lastnames']:
         last_names = str_to_list(tm['~cea_album_composer_lastnames'])
         if options['cea_composer_album']:
-            # save it as a list to prevent splitting when appending tag
-            tm['~cea_release'] = [tm['album']]
-            new_last_names = []
-            for last_name in last_names:
-                last_name = last_name.strip()
-                new_last_names.append(last_name)
-            if len(new_last_names) > 0:
-                tm['album'] = "; ".join(new_last_names) + ": " + tm['album']
+            prefixed = composer_album_prefix(
+                tm['album'],
+                last_names,
+                options['cea_composer_album_omit_if_titled'])
+            if prefixed != tm['album']:
+                # save it as a list to prevent splitting when appending tag
+                tm['~cea_release'] = [tm['album']]
+                tm['album'] = prefixed
 
     # remove lyricists if no vocals, according to option set
     if options['cea_no_lyricists'] and not any(
@@ -2965,6 +2965,36 @@ def seq_last_names(self, album):
         ln = sorted(ln, key=lambda a: a[1])
         ln = ln[::-1]
     return [a[0] for a in ln]
+
+
+def composer_album_prefix(album_title, last_names, omit_multi_if_titled=False):
+    """
+    Build the "Composer Last Name(s): Album Name" album title.
+
+    :param album_title: current album title (string)
+    :param last_names: composer last names in prefix order (list or '; '-string)
+    :param omit_multi_if_titled: if True and there is more than one composer,
+        suppress the prefix entirely when the album title already names one of
+        the composers in the classical "Composer: Work" style - i.e. a last
+        name immediately followed by a colon (e.g. "Bruckner: ... /
+        Mendelssohn: ..."). Matching requires the colon form and a word
+        boundary before the name, so a bare mention ("Music by Bruckner") or a
+        name embedded in another word ("Offenbach:" for "Bach") does not
+        trigger omission. Single-composer releases are never suppressed by this
+        flag.
+    :return: the (possibly prefixed) album title
+    """
+    names = [n.strip() for n in str_to_list(last_names) if n and n.strip()]
+    if not names:
+        return album_title
+    if omit_multi_if_titled and len(names) > 1:
+        for name in names:
+            # classical "Composer: Work" style - name then an optional space
+            # then a colon, not preceded by a word character
+            if re.search(r'(?<!\w)' + re.escape(name) + r'\s*:',
+                         album_title, re.IGNORECASE):
+                return album_title
+    return "; ".join(names) + ": " + album_title
 
 
 def year(date):

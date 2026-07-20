@@ -1349,6 +1349,16 @@
                      </widget>
                     </item>
                     <item>
+                     <widget class="QCheckBox" name="cea_composer_album_omit_if_titled">
+                      <property name="whatsThis">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Only relevant when the option above is set. For albums with more than one composer, this suppresses the &amp;quot;Composer Last Name(s): &amp;quot; prefix entirely if the album title already names one of the composers in the classical &amp;quot;Composer: Work&amp;quot; style, i.e. a last name immediately followed by a colon (e.g. &amp;quot;Bruckner: ... / Mendelssohn: ...&amp;quot;), avoiding a redundant prefix. A bare mention of the name without a colon does not count. Albums with a single composer are unaffected.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="text">
+                       <string>... but not if multi-composer album title already names a composer</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <widget class="QCheckBox" name="cea_no_lyricists">
                       <property name="whatsThis">
                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This applies to both the Picard 'lyricist' tag and the related internal plugin hidden variables '_cwp_lyricists' etc.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>

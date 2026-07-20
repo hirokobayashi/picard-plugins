@@ -150,6 +150,11 @@ ARTISTS_OPTIONS = [
      'type': 'Boolean',
      'default': True
      },
+    {'option': 'cea_composer_album_omit_if_titled',
+     'name': 'Omit album prefix for multi-composer albums already naming a composer',
+     'type': 'Boolean',
+     'default': False
+     },
     {'option': 'cea_arrangers',
      'name': 'include arrangers',
      'type': 'Boolean',
