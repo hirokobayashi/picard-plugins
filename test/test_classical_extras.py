@@ -681,6 +681,90 @@ class ClassicalExtrasTestCase(PluginTestCase):
                          pl._normalise_name("mass  in b minor"))
         self.assertEqual(pl._normalise_name(None), '')
 
+    # ----- Album prefix: composer_album_prefix -----
+
+    def test_composer_album_prefix_single_composer(self):
+        """A single composer is prefixed onto the album title (the original
+        composer-omitted use case)."""
+        prefix = self.mod.composer_album_prefix
+        self.assertEqual(
+            prefix("Symphony no. 8", ["Bruckner"], False),
+            "Bruckner: Symphony no. 8")
+
+    def test_composer_album_prefix_multi_composer_default(self):
+        """With the omit option off, all composers are prefixed (legacy
+        behaviour), joined with '; ' in the order given."""
+        prefix = self.mod.composer_album_prefix
+        self.assertEqual(
+            prefix("Great Symphonies", ["Bruckner", "Mahler"], False),
+            "Bruckner; Mahler: Great Symphonies")
+
+    def test_composer_album_prefix_omit_when_title_names_composer(self):
+        """With the omit option on and >1 composer, the prefix is suppressed
+        entirely when the title already names a composer."""
+        prefix = self.mod.composer_album_prefix
+        title = "Bruckner: Symphony no. 8 / Mendelssohn: Symphony no. 4"
+        self.assertEqual(
+            prefix(title, ["Bruckner", "Mendelssohn"], True),
+            title)
+
+    def test_composer_album_prefix_omit_any_composer_suppresses_all(self):
+        """All-or-nothing: if any one composer already appears in the title,
+        the whole prefix is dropped (so a missing composer is not prefixed
+        alone)."""
+        prefix = self.mod.composer_album_prefix
+        title = "Bruckner: Symphony no. 8 & other works"
+        self.assertEqual(
+            prefix(title, ["Bruckner", "Wagner"], True),
+            title)
+
+    def test_composer_album_prefix_omit_but_title_has_no_composer(self):
+        """With the omit option on but no composer named in the title, fall
+        back to the standard prefixed format."""
+        prefix = self.mod.composer_album_prefix
+        self.assertEqual(
+            prefix("Romantic Symphonies", ["Bruckner", "Mahler"], True),
+            "Bruckner; Mahler: Romantic Symphonies")
+
+    def test_composer_album_prefix_requires_colon_form(self):
+        """A bare mention of a composer (no 'Composer:' colon form) does not
+        count as the title naming the composer, so the prefix is still added."""
+        prefix = self.mod.composer_album_prefix
+        self.assertEqual(
+            prefix("Music by Bruckner and Mahler", ["Bruckner", "Mahler"],
+                   True),
+            "Bruckner; Mahler: Music by Bruckner and Mahler")
+
+    def test_composer_album_prefix_no_false_substring_match(self):
+        """A last name embedded in another word before a colon (e.g. 'Bach' in
+        'Offenbach:') does not trigger omission - the word boundary is
+        required."""
+        prefix = self.mod.composer_album_prefix
+        self.assertEqual(
+            prefix("Offenbach: Gaite parisienne", ["Bach", "Mahler"], True),
+            "Bach; Mahler: Offenbach: Gaite parisienne")
+
+    def test_composer_album_prefix_omit_ignores_single_composer(self):
+        """The omit option only applies to multi-composer albums; a single
+        composer is still prefixed even if named in the title."""
+        prefix = self.mod.composer_album_prefix
+        self.assertEqual(
+            prefix("Bruckner: Symphony no. 8", ["Bruckner"], True),
+            "Bruckner: Bruckner: Symphony no. 8")
+
+    def test_composer_album_prefix_match_is_case_insensitive(self):
+        """Composer detection in the title is case-insensitive."""
+        prefix = self.mod.composer_album_prefix
+        title = "BRUCKNER: Symphony / mendelssohn: Symphony"
+        self.assertEqual(
+            prefix(title, ["Bruckner", "Mendelssohn"], True),
+            title)
+
+    def test_composer_album_prefix_no_names_unchanged(self):
+        """With no composer last names, the title is returned unchanged."""
+        prefix = self.mod.composer_album_prefix
+        self.assertEqual(prefix("Some Album", [], True), "Some Album")
+
     # ----- Top work fix: _prune_collection_tops -----
 
     def test_prune_redundant_collection_overture_album(self):
