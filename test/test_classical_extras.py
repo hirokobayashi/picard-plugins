@@ -1536,6 +1536,260 @@ class RecordingLookupCallbackTestCase(ClassicalExtrasTestCase):
         self.assertEqual(self._process_calls, [])   # but process_album NOT called
 
 
+class PlaceRomanizeTestCase(ClassicalExtrasTestCase):
+    """Phase 1 romanization of non-Latin recording places (crr_romanize_place):
+    the pure alias-resolution helpers, the recording_session_tags name-override
+    hook, and the async place-alias lookup wired through recording_process."""
+
+    # ----- pure helpers: _locale_matches / pick_alias_name -----
+
+    def test_locale_matches_exact_and_regional(self):
+        m = self.mod._locale_matches
+        self.assertTrue(m("en", "en"))
+        self.assertTrue(m("en_US", "en"))
+        self.assertTrue(m("en-GB", "en"))     # hyphen normalised
+        self.assertFalse(m("eng", "en"))      # not a regional variant
+        self.assertFalse(m(None, "en"))
+        self.assertFalse(m("en", ""))
+
+    def test_pick_alias_prefers_primary(self):
+        aliases = [
+            {"locale": "en", "primary": False, "name": "Secondary"},
+            {"locale": "en", "primary": True, "name": "Primary"},
+        ]
+        self.assertEqual(self.mod.pick_alias_name(aliases, ["en"]), "Primary")
+
+    def test_pick_alias_no_primary_takes_first(self):
+        """Several English aliases, none primary -> first in MB order."""
+        aliases = [
+            {"locale": "en", "name": "First"},
+            {"locale": "en", "name": "Second"},
+        ]
+        self.assertEqual(self.mod.pick_alias_name(aliases, ["en"]), "First")
+
+    def test_pick_alias_skips_ended_and_respects_locale_order(self):
+        aliases = [
+            {"locale": "en", "ended": True, "name": "OldEnglish"},
+            {"locale": "de", "primary": True, "name": "Deutsch"},
+            {"locale": "en", "primary": True, "name": "English"},
+        ]
+        # preferred de wins over en
+        self.assertEqual(self.mod.pick_alias_name(aliases, ["de", "en"]),
+                         "Deutsch")
+        # with only en wanted, the ended en alias is skipped -> the live one
+        self.assertEqual(self.mod.pick_alias_name(aliases, ["en"]), "English")
+
+    def test_pick_alias_none_when_no_match(self):
+        aliases = [{"locale": "fr", "name": "French"}]
+        self.assertIsNone(self.mod.pick_alias_name(aliases, ["en"]))
+
+    # ----- pure resolver: resolve_place_name -----
+
+    def test_resolve_latin_unchanged(self):
+        r = self.mod.resolve_place_name
+        self.assertEqual(r("Atlanta Symphony Hall", [], ["en"]),
+                         "Atlanta Symphony Hall")
+
+    def test_resolve_cyrillic_prefers_english_alias(self):
+        r = self.mod.resolve_place_name
+        aliases = [{"locale": "en", "primary": True,
+                    "name": "Great Hall of the Moscow Conservatory"}]
+        self.assertEqual(r("Большой зал", aliases, ["en"]),
+                         "Great Hall of the Moscow Conservatory")
+
+    def test_resolve_cyrillic_transliterates_without_alias(self):
+        r = self.mod.resolve_place_name
+        # no alias -> get_roman transliteration (still readable Latin)
+        out = r("Москва", [], ["en"])
+        self.assertTrue(self.mod.only_roman_chars(out), msg=out)
+        self.assertNotEqual(out, "Москва")
+
+    def test_resolve_japanese_kept_without_alias(self):
+        """Japanese (non-Cyrillic) with no alias stays as-is: get_roman cannot
+        transliterate it, and we must not mangle it."""
+        r = self.mod.resolve_place_name
+        self.assertEqual(r("サントリーホール", [], ["en"]), "サントリーホール")
+
+    def test_resolve_japanese_uses_english_alias_when_present(self):
+        r = self.mod.resolve_place_name
+        aliases = [{"locale": "en", "primary": True, "name": "Suntory Hall"},
+                   {"locale": "ja", "primary": True, "name": "サントリーホール"}]
+        self.assertEqual(r("サントリーホール", aliases, ["en"]), "Suntory Hall")
+
+    def test_resolve_greek_without_alias_kept(self):
+        """Greek has no transliterator here; with no alias it stays original."""
+        r = self.mod.resolve_place_name
+        self.assertEqual(r("Ηρώδειο", [], ["en"]), "Ηρώδειο")
+
+    # ----- recording_session_tags name_overrides hook -----
+
+    def test_session_tags_name_overrides_by_id(self):
+        relations = [
+            {"target-type": "place", "type": "recorded at",
+             "begin": "1979-01-01", "end": "1979-01-01",
+             "place": {"id": "P1", "name": "Большой зал",
+                       "area": {"id": "A1", "name": "Москва"}}},
+        ]
+        overrides = {"P1": "Great Hall", "A1": "Moscow"}
+        tags = self.mod.recording_session_tags(relations, overrides)
+        self.assertEqual(tags["recordingplace"], ["Great Hall"])
+        self.assertEqual(tags["recordingcity"], ["Moscow"])
+        self.assertEqual(tags["recordingsessions"],
+                         ["Great Hall, Moscow (1979-01-01)"])
+
+    def test_session_tags_without_overrides_unchanged(self):
+        """The new param defaults to None -> byte-for-byte legacy behaviour."""
+        relations = [
+            {"target-type": "place", "type": "recorded at",
+             "begin": "1979-01-01", "end": "1979-01-01",
+             "place": {"id": "P1", "name": "Большой зал",
+                       "area": {"id": "A1", "name": "Москва"}}},
+        ]
+        tags = self.mod.recording_session_tags(relations)
+        self.assertEqual(tags["recordingplace"], ["Большой зал"])
+        self.assertEqual(tags["recordingcity"], ["Москва"])
+
+    def test_collect_place_ids_only_non_latin(self):
+        relations = [
+            {"target-type": "place", "type": "recorded at",
+             "place": {"id": "P1", "name": "Большой зал",
+                       "area": {"id": "A1", "name": "Moscow"}}},   # Latin city
+            {"target-type": "place", "type": "recorded at",
+             "place": {"id": "P2", "name": "Symphony Hall",        # Latin venue
+                       "area": {"id": "A2", "name": "サントリー"}}},
+        ]
+        ids = self.mod.PartLevels._collect_place_ids(relations)
+        # only the non-Latin entities, unique, order preserved
+        self.assertEqual(ids, [("place", "P1", "Большой зал"),
+                               ("area", "A2", "サントリー")])
+
+    # ----- async: place lookup wired through recording_process -----
+
+    class _FakeWS:
+        def __init__(self):
+            self.calls = []
+
+        def get(self, host, port, path, handler, **kw):
+            self.calls.append({"path": path, "handler": handler, "kw": kw})
+
+    class _FakeTagger:
+        def __init__(self, ws):
+            self.webservice = ws
+
+    class _FakeAlbum:
+        def __init__(self, ws):
+            self._requests = 0
+            self.finalized = False
+            self.tagger = PlaceRomanizeTestCase._FakeTagger(ws)
+
+        def _finalize_loading(self, _arg):
+            self.finalized = True
+
+    class _FakeTrack:
+        def __init__(self, metadata):
+            self.metadata = metadata
+
+    def _romanize_env(self):
+        from picard.metadata import Metadata
+        self.set_config_values(setting={
+            "crr_romanize_place": True,
+            "artist_locales": [],
+            "artist_locale": "en",
+            "server_host": "musicbrainz.org",
+            "server_port": 443,
+        })
+        pl = self.mod.PartLevels()
+        self._process_calls = []
+        pl.process_album = lambda rid, alb: self._process_calls.append(rid)
+        ws = self._FakeWS()
+        album = self._FakeAlbum(ws)
+        album._requests = 1
+        tm = Metadata()
+        tm['musicbrainz_albumid'] = 'relR'
+        track = self._FakeTrack(tm)
+        pl.options[track] = {'classical_work_parts': True,
+                             'crr_romanize_place': True}
+        return pl, tm, track, album, ws
+
+    def test_romanize_defers_then_writes_after_lookups(self):
+        pl, tm, track, album, ws = self._romanize_env()
+        pl.recordings_queue.append('rec1', (track, album))
+        full = {"relations": [
+            {"target-type": "place", "type": "recorded at",
+             "begin": "1979-05-01", "end": "1979-05-01",
+             "place": {"id": "P1", "name": "Большой зал",
+                       "area": {"id": "A1", "name": "Москва"}}},
+        ]}
+        pl.recording_process('rec1', 0, full, None, None)
+        # deferred: nothing written yet, request still held, two lookups queued
+        self.assertEqual(tm.getall('recording_place'), [])
+        self.assertEqual(album._requests, 1)
+        self.assertFalse(album.finalized)
+        self.assertEqual(len(ws.calls), 2)
+        paths = sorted(c['path'] for c in ws.calls)
+        self.assertEqual(paths, ['/ws/2/area/A1', '/ws/2/place/P1'])
+
+        # resolve the place lookup first (job still waits on the area)
+        for c in ws.calls:
+            if c['path'] == '/ws/2/place/P1':
+                c['handler']({"aliases": [
+                    {"locale": "en", "primary": True,
+                     "name": "Great Hall of the Moscow Conservatory"}]},
+                    None, None)
+        self.assertEqual(tm.getall('recording_place'), [])   # not yet complete
+        self.assertEqual(album._requests, 1)
+
+        # resolve the area lookup -> job completes, tags written, finalized
+        for c in ws.calls:
+            if c['path'] == '/ws/2/area/A1':
+                c['handler']({"aliases": [
+                    {"locale": "en", "primary": True, "name": "Moscow"}]},
+                    None, None)
+        self.assertEqual(list(tm.getall('recording_place')),
+                         ["Great Hall of the Moscow Conservatory"])
+        self.assertEqual(list(tm.getall('recording_city')), ["Moscow"])
+        self.assertEqual(tm['recording_session'],
+                         "Great Hall of the Moscow Conservatory, Moscow "
+                         "(1979-05-01)")
+        self.assertEqual(album._requests, 0)
+        self.assertTrue(album.finalized)
+        self.assertEqual(self._process_calls, ['relR'])
+
+    def test_romanize_lookup_error_falls_back_to_original(self):
+        """A failed place lookup must not hang: it falls back to the original
+        name and the album still finalizes."""
+        pl, tm, track, album, ws = self._romanize_env()
+        pl.recordings_queue.append('rec2', (track, album))
+        full = {"relations": [
+            {"target-type": "place", "type": "recorded at",
+             "begin": "1979-05-01", "end": "1979-05-01",
+             "place": {"id": "P9", "name": "Ηρώδειο", "area": {}}},
+        ]}
+        pl.recording_process('rec2', 0, full, None, None)
+        self.assertEqual(len(ws.calls), 1)
+        ws.calls[0]['handler'](None, None, "503")   # lookup fails
+        self.assertEqual(list(tm.getall('recording_place')), ["Ηρώδειο"])
+        self.assertEqual(album._requests, 0)
+        self.assertTrue(album.finalized)
+
+    def test_romanize_uses_cache_no_duplicate_lookup(self):
+        """A venue already resolved on an earlier track is reused from cache
+        with no new web request, and the recording completes immediately."""
+        pl, tm, track, album, ws = self._romanize_env()
+        pl.place_alias_cache[('place', 'P1')] = "Great Hall"
+        pl.recordings_queue.append('rec3', (track, album))
+        full = {"relations": [
+            {"target-type": "place", "type": "recorded at",
+             "begin": "1979-05-01", "end": "1979-05-01",
+             "place": {"id": "P1", "name": "Большой зал", "area": {}}},
+        ]}
+        pl.recording_process('rec3', 0, full, None, None)
+        self.assertEqual(len(ws.calls), 0)                 # no lookup fired
+        self.assertEqual(list(tm.getall('recording_place')), ["Great Hall"])
+        self.assertEqual(album._requests, 0)
+        self.assertTrue(album.finalized)
+
+
 class SwanLakeFusedTopIntegrationTestCase(ClassicalExtrasTestCase):
     """End-to-end guard for release d907bb03 (Tchaikovsky ballet suites),
     Swan Lake movements I-VI. Drives the REAL add_work_info -> work_process ->

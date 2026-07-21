@@ -3048,7 +3048,72 @@ def _format_recording_date(begin, end):
     return begin or end
 
 
-def recording_session_tags(relations):
+def _locale_matches(alias_locale, want):
+    """Whether a MusicBrainz alias locale matches a wanted language code.
+
+    Matches the exact locale ("en") or any regional variant ("en_US",
+    "en-GB"); comparison is case-insensitive.
+    """
+    if not alias_locale or not want:
+        return False
+    alias_locale = alias_locale.lower().replace('-', '_')
+    want = want.lower().replace('-', '_')
+    return alias_locale == want or alias_locale.startswith(want + '_')
+
+
+def pick_alias_name(aliases, locales):
+    """Pick the best alias name for an ordered list of preferred locales.
+
+    :param aliases: list of MusicBrainz alias dicts (each may carry ``locale``,
+        ``primary``, ``ended`` and ``name``).
+    :param locales: language codes to try in priority order (e.g.
+        ``['en']`` or ``['de', 'en']``).
+    :return: the chosen alias name, or ``None`` if no non-ended alias matches
+        any of the locales.
+
+    For each locale in turn, considers the non-ended aliases in that locale,
+    prefers the one flagged ``primary``, and otherwise takes the first in the
+    order MusicBrainz returned them (a stable, deterministic tie-break).
+    """
+    for want in locales:
+        candidates = [a for a in aliases
+                      if not a.get('ended')
+                      and _locale_matches(a.get('locale'), want)]
+        if not candidates:
+            continue
+        primary = [a for a in candidates if a.get('primary')]
+        chosen = (primary or candidates)[0]
+        name = chosen.get('name')
+        if name:
+            return name
+    return None
+
+
+def resolve_place_name(name, aliases, locales):
+    """Resolve a (possibly non-Latin) place/area name to a readable form.
+
+    :param name: the canonical MusicBrainz place or area name.
+    :param aliases: the entity's alias dicts (empty list if none).
+    :param locales: preferred language codes in priority order.
+    :return: the resolved name.
+
+    Latin-script names are returned unchanged. For a non-Latin name the
+    resolution order is: (1) an alias in one of the preferred locales; then
+    (2) a Cyrillic transliteration via :func:`get_roman`; then (3) the
+    original name (e.g. Greek/Hebrew/Chinese with no suitable alias, which
+    this plugin cannot transliterate).
+    """
+    if not name or only_roman_chars(name):
+        return name
+    picked = pick_alias_name(aliases or [], locales)
+    if picked:
+        return picked
+    if is_cyrillic(name):
+        return get_roman(name)
+    return name
+
+
+def recording_session_tags(relations, name_overrides=None):
     """Derive recording place/date tags from a recording's relationships.
 
     Takes the ``relations`` list exactly as returned by the MusicBrainz web
@@ -3091,6 +3156,16 @@ def recording_session_tags(relations):
         venue = place.get('name', '')
         area = place.get('area') or {}
         city = area.get('name', '')
+        # Optionally substitute a romanized/localized name for a non-Latin
+        # venue or city, keyed by the entity's MusicBrainz id (see
+        # crr_romanize_place; overrides resolved asynchronously in
+        # recording_process). Keyed by id so the same-named canonical value in
+        # the filter and display tags stay consistent.
+        if name_overrides:
+            if place.get('id') in name_overrides:
+                venue = name_overrides[place.get('id')]
+            if area.get('id') in name_overrides:
+                city = name_overrides[area.get('id')]
         # v1: always canonical place.name for the filter tag; the display tag
         # also uses canonical (target-credit deferred, see TODO above).
         begin = rel.get('begin', '')
@@ -4348,6 +4423,14 @@ class PartLevels():
         self.recordings_queue = self.WorksQueue()
         # lookup queue for per-recording place/date relationships; holds
         # track/album pairs for each queued recording id
+
+        self.place_queue = self.WorksQueue()
+        # lookup queue for place/area alias lookups (crr_romanize_place); keyed
+        # by (entity_type, id), holds the recording jobs awaiting each lookup
+
+        self.place_alias_cache = {}
+        # resolved place/area names keyed by (entity_type, id) so a venue that
+        # recurs across tracks/albums is only looked up once
 
         self.parts = collections.defaultdict(
             lambda: collections.defaultdict(dict))
@@ -5851,30 +5934,150 @@ class PartLevels():
                     write_log(release_id, 'debug',
                               "REQUEUEING recording %s", rec_id)
                     self.recording_add_track(album, track, rec_id, tries + 1)
-            else:
-                try:
-                    # parse_data wraps the matched value ([[rel, ...]]); unwrap
-                    # one level to the raw relations list the pure fn iterates.
-                    wrapped = parse_data(release_id, response, [], 'relations')
-                    relations = wrapped[0] if (
-                        wrapped and isinstance(wrapped[0], list)) else []
-                    self._write_recording_tags(
-                        track.metadata, recording_session_tags(relations))
-                except Exception as ex:
-                    write_log(release_id, 'error',
-                              "recording %s processing failed: %r", rec_id, ex)
-            # Always release THIS request (a retry added its own) so no hang.
-            self.album_remove_request(release_id, album)
-            if album._requests == 0:
-                # Only run end-of-album works processing if work parts were
-                # actually processed for this album. When classical_work_parts
-                # is off, add_work_info returned early and never built the
-                # track_listing/top/parts state process_album depends on, so
-                # calling it would misbehave. Always finalize either way.
-                opts = self.options.get(track)
-                if opts and opts.get('classical_work_parts'):
-                    self.process_album(release_id, album)
-                album._finalize_loading(None)
+                # Always release THIS request (a retry added its own) so no hang.
+                self._finish_recording(release_id, album, track)
+                continue
+            try:
+                # parse_data wraps the matched value ([[rel, ...]]); unwrap
+                # one level to the raw relations list the pure fn iterates.
+                wrapped = parse_data(release_id, response, [], 'relations')
+                relations = wrapped[0] if (
+                    wrapped and isinstance(wrapped[0], list)) else []
+                opts = self.options.get(track) or {}
+                place_ids = (self._collect_place_ids(relations)
+                             if opts.get('crr_romanize_place') else [])
+                if place_ids:
+                    # Non-Latin venues/cities need alias lookups before the
+                    # tags can be composed; defer the write and keep THIS
+                    # request held so the album stays alive until they resolve.
+                    self._romanize_recording(
+                        release_id, album, track, relations, place_ids)
+                    continue
+                self._write_recording_tags(
+                    track.metadata, recording_session_tags(relations))
+            except Exception as ex:
+                write_log(release_id, 'error',
+                          "recording %s processing failed: %r", rec_id, ex)
+            self._finish_recording(release_id, album, track)
+
+    def _finish_recording(self, release_id, album, track):
+        """Release the album request for one recording lookup and finalize the
+        album when it was the last outstanding request. Factored out so both the
+        immediate path and the deferred romanize path finish identically."""
+        self.album_remove_request(release_id, album)
+        if album._requests == 0:
+            # Only run end-of-album works processing if work parts were
+            # actually processed for this album. When classical_work_parts
+            # is off, add_work_info returned early and never built the
+            # track_listing/top/parts state process_album depends on, so
+            # calling it would misbehave. Always finalize either way.
+            opts = self.options.get(track)
+            if opts and opts.get('classical_work_parts'):
+                self.process_album(release_id, album)
+            album._finalize_loading(None)
+
+    @staticmethod
+    def _collect_place_ids(relations):
+        """Collect the non-Latin place/area entities referenced by a recording's
+        "recorded at" relations, as ``(entity_type, id, name)`` tuples (unique,
+        order preserved). Latin-named entities need no lookup and are skipped."""
+        out = []
+        seen = set()
+        for rel in relations:
+            if rel.get('target-type') != 'place':
+                continue
+            if rel.get('type') != 'recorded at':
+                continue
+            place = rel.get('place') or {}
+            for etype, entity in (('place', place), ('area', place.get('area') or {})):
+                eid = entity.get('id')
+                ename = entity.get('name', '')
+                if (eid and ename and not only_roman_chars(ename)
+                        and (etype, eid) not in seen):
+                    seen.add((etype, eid))
+                    out.append((etype, eid, ename))
+        return out
+
+    def _place_locales(self):
+        """Preferred locales for place aliases: the user's preferred artist
+        language first, then English as a universal fallback (de-duplicated)."""
+        locales = []
+        preferred = get_preferred_artist_language(config)
+        if preferred:
+            locales.append(preferred)
+        if 'en' not in locales:
+            locales.append('en')
+        return locales
+
+    def _romanize_recording(self, release_id, album, track, relations, place_ids):
+        """Ensure aliases for the given non-Latin places are resolved, then
+        write the recording tags with romanized names. Fires an alias lookup
+        for each uncached entity and waits (via place_queue) for all of them."""
+        to_fetch = [(etype, eid, ename) for (etype, eid, ename) in place_ids
+                    if (etype, eid) not in self.place_alias_cache]
+        job = {'track': track, 'album': album, 'release_id': release_id,
+               'relations': relations, 'ids': place_ids,
+               'remaining': set((etype, eid) for (etype, eid, _n) in to_fetch)}
+        if not job['remaining']:
+            # everything already cached from an earlier track/album
+            self._complete_recording_job(job)
+            return
+        for etype, eid, ename in to_fetch:
+            if self.place_queue.append((etype, eid), job):
+                self._place_lookup(album, etype, eid, ename)
+
+    def _place_lookup(self, album, etype, eid, ename):
+        """Queue a /place or /area alias lookup. Its callback resolves the
+        readable name and unblocks any recording jobs waiting on this entity."""
+        host = config.setting["server_host"]
+        port = config.setting["server_port"]
+        path = "/ws/2/%s/%s" % (etype, eid)
+        return album.tagger.webservice.get(
+            host,
+            port,
+            path,
+            partial(self._place_process, etype, eid, ename),
+            priority=True,
+            important=False,
+            mblogin=False,
+            queryargs={"inc": "aliases"})
+
+    def _place_process(self, etype, eid, ename, response, reply, error):
+        """Callback for a place/area alias lookup: resolve the readable name,
+        cache it, and complete any recording jobs no longer waiting on anything.
+        A failed lookup falls back to the original name (never hangs)."""
+        jobs = self.place_queue.remove((etype, eid)) or []
+        if error:
+            resolved = ename
+        else:
+            try:
+                wrapped = parse_data('session', response, [], 'aliases')
+                aliases = wrapped[0] if (
+                    wrapped and isinstance(wrapped[0], list)) else []
+                resolved = resolve_place_name(
+                    ename, aliases, self._place_locales())
+            except Exception:
+                resolved = ename
+        self.place_alias_cache[(etype, eid)] = resolved
+        for job in jobs:
+            job['remaining'].discard((etype, eid))
+            if not job['remaining']:
+                self._complete_recording_job(job)
+
+    def _complete_recording_job(self, job):
+        """Compose and write the recording tags for a deferred romanize job
+        using the resolved names, then release its album request."""
+        overrides = {}
+        for etype, eid, ename in job['ids']:
+            overrides[eid] = self.place_alias_cache.get((etype, eid), ename)
+        try:
+            self._write_recording_tags(
+                job['track'].metadata,
+                recording_session_tags(job['relations'], overrides))
+        except Exception as ex:
+            write_log(job['release_id'], 'error',
+                      "recording place romanization failed: %r", ex)
+        self._finish_recording(job['release_id'], job['album'], job['track'])
 
     def _write_recording_tags(self, tm, tags):
         """Write recording_session_tags output to the user-configured tag names.
