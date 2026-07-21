@@ -1273,6 +1273,143 @@ class ClassicalExtrasTestCase(PluginTestCase):
         pl.set_metadata("test", 1, workId, parentId, "Some Work", track, None)
         self.assertEqual(track.metadata.get("~cwp_work_top"), "Full Work Name")
 
+    # ----- work_group: single-valued deterministic grouping/shuffle key -------
+    # top_work stays faithful (multi-valued on a genuine tie); work_group takes
+    # over the single-value role foobar2000's shuffle pattern needs.
+
+    def test_select_work_group_name_unit(self):
+        """Unit-level coverage of the work_group selection helper: always one
+        value, deterministic on a tie."""
+        select = self.mod.PartLevels._select_work_group_name
+        # unique winner -> that name (== top_work)
+        self.assertEqual(select(["A", "B"], {"A": 3, "B": 1}), "A")
+        self.assertEqual(select(["B", "A"], {"A": 3, "B": 1}), "A")
+        # tie -> exactly ONE value, lowest by normalised name (not a list)
+        self.assertEqual(select(["B", "A"], {"A": 2, "B": 2}), "A")
+        self.assertEqual(select(["A", "B"], {"A": 2, "B": 2}), "A")
+        # tie with equal normalised names -> first in discovery order
+        self.assertEqual(select(["work", "Work"], {"work": 2, "Work": 2}),
+                         "work")
+        # no votes -> single first name (never the raw list)
+        self.assertEqual(select(["A", "B"], {}), "A")
+        # single-name list -> that name
+        self.assertEqual(select(["Only Work"], {"Only Work": 3}), "Only Work")
+
+    def test_work_group_unique_winner_equals_top_work(self):
+        """Unique vote winner: work_group is a single value equal to top_work
+        (drop-in for the old single-valued top_work usage)."""
+        pl = self._make_trackback_partlevels()
+        votes = {self._BOLT_BALLET: 8, self._BOLT_SUITE: 6}
+        workId = ("mov",)
+        pl.parts[workId] = {"name": "mov"}
+        top_info = {"id": ("suite_id", "ballet_id"),
+                    "name": [self._BOLT_SUITE, self._BOLT_BALLET],
+                    "levels": 1, "single": False, "votes": votes}
+        track = self._make_fake_track("mov", "movement", 11)
+        trackback = {"id": list(workId), "depth": 0, "height": 1,
+                     "meta": [(track, "alb")]}
+        pl.process_trackback("test", "alb", trackback, 0, top_info)
+        self.assertEqual(track.metadata.get("~cwp_work_group"), self._BOLT_BALLET)
+        self.assertEqual(track.metadata.get("~cwp_work_group"),
+                         track.metadata.get("~cwp_work_top"))
+
+    def test_work_group_tie_single_while_top_work_multi(self):
+        """The core of the feature: on a genuine tie top_work keeps BOTH names
+        (faithful) while work_group is reduced to exactly one deterministic
+        value, so tracks of the group are never split by the shuffle key."""
+        pl = self._make_trackback_partlevels()
+        votes = {self._BOLT_BALLET: 6, self._BOLT_SUITE: 6}
+        workId = ("mov",)
+        pl.parts[workId] = {"name": "mov"}
+        top_info = {"id": ("ballet_id", "suite_id"),
+                    "name": [self._BOLT_BALLET, self._BOLT_SUITE],
+                    "levels": 1, "single": False, "votes": votes}
+        track = self._make_fake_track("mov", "movement", 11)
+        trackback = {"id": list(workId), "depth": 0, "height": 1,
+                     "meta": [(track, "alb")]}
+        pl.process_trackback("test", "alb", trackback, 0, top_info)
+        # top_work faithful: both tied names kept
+        self.assertEqual(track.metadata.get("~cwp_work_top"),
+                         [self._BOLT_BALLET, self._BOLT_SUITE])
+        # work_group: a single string, deterministic (lowest normalised name)
+        group = track.metadata.get("~cwp_work_group")
+        self.assertIsInstance(group, str)
+        self.assertEqual(group, min([self._BOLT_BALLET, self._BOLT_SUITE],
+                                    key=pl._normalise_name))
+
+    def test_work_group_tie_consistent_across_shared_tracks(self):
+        """Every track sharing a tied top yields the identical single
+        work_group value regardless of the order its parent list happens to be
+        stored in -- so foobar2000 groups them as one unit."""
+        pl = self._make_trackback_partlevels()
+        votes = {self._BOLT_BALLET: 6, self._BOLT_SUITE: 6}
+        groups = []
+        for order in ([self._BOLT_BALLET, self._BOLT_SUITE],
+                      [self._BOLT_SUITE, self._BOLT_BALLET]):
+            workId = ("mov" + str(len(groups)),)
+            pl.parts[workId] = {"name": "mov"}
+            top_info = {"id": tuple("id" + n[:3] for n in order),
+                        "name": list(order), "levels": 1, "single": False,
+                        "votes": votes}
+            track = self._make_fake_track(workId[0], "movement", 11)
+            trackback = {"id": list(workId), "depth": 0, "height": 1,
+                         "meta": [(track, "alb")]}
+            pl.process_trackback("test", "alb", trackback, 0, top_info)
+            groups.append(track.metadata.get("~cwp_work_group"))
+        self.assertEqual(groups[0], groups[1])
+
+    def test_work_group_string_top_equals_top_work(self):
+        """A single-work top (plain-string name): work_group == top_work."""
+        pl = self._make_trackback_partlevels()
+        workId = ("83e63350",)
+        pl.parts[workId] = {"name": "Spiegel im Spiegel"}
+        top_info = {"id": workId, "name": "Spiegel im Spiegel",
+                    "levels": 1, "single": True}
+        track = self._make_fake_track("9547dfb8", "Spiegel im Spiegel", 1)
+        trackback = {"id": list(workId), "depth": 0, "height": 1,
+                     "meta": [(track, "alb")]}
+        pl.process_trackback("test", "alb", trackback, 0, top_info)
+        self.assertEqual(track.metadata.get("~cwp_work_group"),
+                         "Spiegel im Spiegel")
+        self.assertEqual(track.metadata.get("~cwp_work_group"),
+                         track.metadata.get("~cwp_work_top"))
+
+    def test_set_metadata_fused_top_work_group_single(self):
+        """For a fused multi-parent top, set_metadata writes the pre-resolved
+        single work_group (not the joined parent list), staying in step with the
+        resolved top_name."""
+        pl = self._make_trackback_partlevels()
+        joined = self._BOLT_BALLET + "; " + self._BOLT_SUITE
+        pl.strip_parent_from_work = lambda *a, **k: ("stripped", joined)
+        workId = ("mov",)
+        parentId = ("ballet_id", "suite_id")
+        pl.parts[workId] = {"name": "mov"}
+        pl.parts[parentId] = {"name": [self._BOLT_BALLET, self._BOLT_SUITE],
+                              "no_parent": True}
+        track = self._make_fake_track("mov", "movement", 11)
+        pl.set_metadata("test", 1, workId, parentId,
+                        [self._BOLT_BALLET, self._BOLT_SUITE], track,
+                        [self._BOLT_BALLET, self._BOLT_SUITE], self._BOLT_BALLET)
+        self.assertEqual(track.metadata.get("~cwp_work_group"), self._BOLT_BALLET)
+        self.assertNotIn("Suite from The Bolt",
+                         track.metadata.get("~cwp_work_group"))
+
+    def test_set_metadata_single_top_work_group_matches_top(self):
+        """Single-work top (no resolved names): work_group == work_top =
+        full_parent."""
+        pl = self._make_trackback_partlevels()
+        pl.strip_parent_from_work = lambda *a, **k: ("stripped", "Full Work Name")
+        workId = ("w",)
+        parentId = ("p",)
+        pl.parts[workId] = {"name": "w"}
+        pl.parts[parentId] = {"name": "Some Work", "no_parent": True}
+        track = self._make_fake_track("w", "movement", 1)
+        pl.set_metadata("test", 1, workId, parentId, "Some Work", track,
+                        None, None)
+        self.assertEqual(track.metadata.get("~cwp_work_group"), "Full Work Name")
+        self.assertEqual(track.metadata.get("~cwp_work_group"),
+                         track.metadata.get("~cwp_work_top"))
+
 
 class RecordingSessionTagsTestCase(ClassicalExtrasTestCase):
     """Recording place/date tag derivation (recording_session_tags).
@@ -2350,7 +2487,11 @@ class TristanFullAlbumIntegrationTestCase(ClassicalExtrasTestCase):
 
     _OPERA = "ae217ba8-0b07-4b0b-aed6-c80535dcd94b"   # Tristan und Isolde, WWV 90
 
-    def test_track2_resolves_to_opera_top(self):
+    def _run_full_album(self):
+        """Drive the whole 11-track album through the real Picard flow (build
+        every track, then drain the webservice callbacks FIFO so process_album
+        runs once at the end) against the on-disk fixtures. Returns the dict of
+        label -> track so callers can assert on the resulting metadata."""
         from unittest.mock import Mock
         mod = self.mod
         pl = mod.PartLevels()
@@ -2398,6 +2539,10 @@ class TristanFullAlbumIntegrationTestCase(ClassicalExtrasTestCase):
         while pending:
             cb, resp = pending.pop(0)
             cb(resp, None, None)
+        return tracks
+
+    def test_track2_resolves_to_opera_top(self):
+        tracks = self._run_full_album()
 
         # Track 2's work is an arrangement that reaches the opera "Tristan und
         # Isolde, WWV 90" by two independent parent paths (Akt I Vorspiel and
@@ -2427,6 +2572,41 @@ class TristanFullAlbumIntegrationTestCase(ClassicalExtrasTestCase):
             self.assertTrue(
                 tracks[label].metadata['~cwp_workid_top'],
                 "%s lost its top work" % label)
+
+    def test_work_group_single_valued_across_real_album(self):
+        """End-to-end: ~cwp_work_group is written for every track of the real
+        album, is ALWAYS a single value (the foobar2000 shuffle-key guarantee),
+        and equals ~cwp_work_top wherever top_work is itself single-valued (this
+        album resolves each track to one top, so they match everywhere)."""
+        tracks = self._run_full_album()
+        for label in tracks:
+            tm = tracks[label].metadata
+            group = self.mod.str_to_list(tm['~cwp_work_group'])
+            self.assertEqual(
+                len(group), 1,
+                "%s: work_group must be single-valued, got %r" % (label, group))
+            top = self.mod.str_to_list(tm['~cwp_work_top'])
+            if len(top) == 1:
+                self.assertEqual(
+                    group, top,
+                    "%s: work_group should equal single-valued top_work" % label)
+            else:
+                # a genuine multi-valued top_work: work_group must be one of them
+                self.assertIn(group[0], top,
+                              "%s: work_group must be a top_work value" % label)
+
+    def test_track2_work_group_is_single_opera(self):
+        """Track 2's top_work is the single opera name; its work_group (the
+        shuffle key) is the identical single value."""
+        tracks = self._run_full_album()
+        t2 = tracks["t2"].metadata
+        self.assertEqual(
+            self.mod.str_to_list(t2['~cwp_work_group']),
+            ["Tristan und Isolde, WWV 90"],
+            "track 2 work_group must be the single opera name")
+        self.assertEqual(
+            self.mod.str_to_list(t2['~cwp_work_group']),
+            self.mod.str_to_list(t2['~cwp_work_top']))
 
 
 if __name__ == "__main__":
