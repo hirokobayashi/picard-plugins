@@ -1659,9 +1659,11 @@ class PlaceRomanizeTestCase(ClassicalExtrasTestCase):
                        "area": {"id": "A2", "name": "サントリー"}}},
         ]
         ids = self.mod.PartLevels._collect_place_ids(relations)
-        # only the non-Latin entities, unique, order preserved
-        self.assertEqual(ids, [("place", "P1", "Большой зал"),
-                               ("area", "A2", "サントリー")])
+        # only the non-Latin entities, unique, order preserved; each carries the
+        # governing area id used for the country walk (venue -> its area; area
+        # entity -> itself)
+        self.assertEqual(ids, [("place", "P1", "Большой зал", "A1"),
+                               ("area", "A2", "サントリー", "A2")])
 
     # ----- async: place lookup wired through recording_process -----
 
@@ -1786,6 +1788,105 @@ class PlaceRomanizeTestCase(ClassicalExtrasTestCase):
         pl.recording_process('rec3', 0, full, None, None)
         self.assertEqual(len(ws.calls), 0)                 # no lookup fired
         self.assertEqual(list(tm.getall('recording_place')), ["Great Hall"])
+        self.assertEqual(album._requests, 0)
+        self.assertTrue(album.finalized)
+
+    # ----- Phase 2: keep venues from chosen countries as-is -----
+
+    def test_keep_countries_parsing(self):
+        pl = self.mod.PartLevels()
+        t1, t2, t3 = object(), object(), object()
+        pl.options[t1] = {'crr_keep_place_countries': 'jp, gr ; us'}
+        self.assertEqual(pl._keep_countries(t1), {'JP', 'GR', 'US'})
+        pl.options[t2] = {'crr_keep_place_countries': ''}
+        self.assertEqual(pl._keep_countries(t2), set())
+        pl.options[t3] = {}                     # option absent -> empty
+        self.assertEqual(pl._keep_countries(t3), set())
+
+    def test_area_parent_id(self):
+        parent = {"relations": [
+            {"target-type": "area", "type": "part of", "direction": "backward",
+             "area": {"id": "PARENT"}}]}
+        self.assertEqual(self.mod.PartLevels._area_parent_id(parent), "PARENT")
+        # a forward part-of (this area contains another) is NOT the parent
+        fwd = {"relations": [
+            {"target-type": "area", "type": "part of", "direction": "forward",
+             "area": {"id": "CHILD"}}]}
+        self.assertIsNone(self.mod.PartLevels._area_parent_id(fwd))
+        self.assertIsNone(self.mod.PartLevels._area_parent_id({"relations": []}))
+
+    def _serve(self, ws, path, inc, response, error=None):
+        """Invoke the captured handler for the ws call matching path+inc."""
+        for c in ws.calls:
+            if (c['path'] == path
+                    and c['kw'].get('queryargs', {}).get('inc') == inc):
+                c['handler'](response, None, error)
+                return True
+        return False
+
+    def test_phase2_keeps_venue_in_listed_country(self):
+        """Venue+city in Japan (keep-list JP): the country walk resolves to JP,
+        so both names are kept in original script and NO alias lookup fires."""
+        pl, tm, track, album, ws = self._romanize_env()
+        pl.options[track]['crr_keep_place_countries'] = 'JP'
+        pl.recordings_queue.append('recJP', (track, album))
+        full = {"relations": [
+            {"target-type": "place", "type": "recorded at",
+             "begin": "2018-04-19", "end": "2018-04-19",
+             "place": {"id": "P1", "name": "サントリーホール",
+                       "area": {"id": "A1", "name": "赤坂"}}},
+        ]}
+        pl.recording_process('recJP', 0, full, None, None)
+        # one area lookup fired for A1 (deduped across the two entities)
+        self.assertTrue(self._serve(
+            ws, '/ws/2/area/A1', 'area-rels',
+            {"name": "赤坂", "relations": [
+                {"target-type": "area", "type": "part of",
+                 "direction": "backward", "area": {"id": "A2"}}]}))
+        # walk recurses into the parent, which carries the country code
+        self.assertTrue(self._serve(
+            ws, '/ws/2/area/A2', 'area-rels',
+            {"name": "Japan", "iso-3166-1-codes": ["JP"], "relations": []}))
+        # kept in original script; no /place or /area aliases lookup happened
+        self.assertEqual(list(tm.getall('recording_place')), ["サントリーホール"])
+        self.assertEqual(list(tm.getall('recording_city')), ["赤坂"])
+        alias_calls = [c for c in ws.calls
+                       if c['kw'].get('queryargs', {}).get('inc') == 'aliases']
+        self.assertEqual(alias_calls, [])
+        self.assertEqual(album._requests, 0)
+        self.assertTrue(album.finalized)
+        # country cached at both walked levels
+        self.assertEqual(pl.area_country_cache['A1'], 'JP')
+        self.assertEqual(pl.area_country_cache['A2'], 'JP')
+
+    def test_phase2_romanizes_venue_outside_listed_country(self):
+        """Venue in Russia while keep-list is JP: country resolves to RU (not
+        kept), so the venue is romanized via an alias lookup after the walk."""
+        pl, tm, track, album, ws = self._romanize_env()
+        pl.options[track]['crr_keep_place_countries'] = 'JP'
+        pl.recordings_queue.append('recRU', (track, album))
+        full = {"relations": [
+            {"target-type": "place", "type": "recorded at",
+             "begin": "1979-05-01", "end": "1979-05-01",
+             "place": {"id": "P1", "name": "Большой зал",
+                       "area": {"id": "A1", "name": "Москва"}}},
+        ]}
+        pl.recording_process('recRU', 0, full, None, None)
+        # country walk: A1 -> country RU
+        self.assertTrue(self._serve(
+            ws, '/ws/2/area/A1', 'area-rels',
+            {"name": "Москва", "iso-3166-1-codes": ["RU"], "relations": []}))
+        # RU not kept -> alias lookups now fire for the venue and the city
+        self.assertTrue(self._serve(
+            ws, '/ws/2/place/P1', 'aliases',
+            {"aliases": [{"locale": "en", "primary": True,
+                          "name": "Great Hall of the Moscow Conservatory"}]}))
+        self.assertTrue(self._serve(
+            ws, '/ws/2/area/A1', 'aliases',
+            {"aliases": [{"locale": "en", "primary": True, "name": "Moscow"}]}))
+        self.assertEqual(list(tm.getall('recording_place')),
+                         ["Great Hall of the Moscow Conservatory"])
+        self.assertEqual(list(tm.getall('recording_city')), ["Moscow"])
         self.assertEqual(album._requests, 0)
         self.assertTrue(album.finalized)
 

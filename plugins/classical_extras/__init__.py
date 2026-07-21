@@ -4432,6 +4432,14 @@ class PartLevels():
         # resolved place/area names keyed by (entity_type, id) so a venue that
         # recurs across tracks/albums is only looked up once
 
+        self.country_queue = self.WorksQueue()
+        # lookup queue for area->country walks (crr_keep_place_countries); keyed
+        # by area id, holds the callbacks waiting on each area's country
+
+        self.area_country_cache = {}
+        # resolved ISO 3166-1 country code (or None) keyed by area id, filled at
+        # every level of the part-of walk so ancestors are only walked once
+
         self.parts = collections.defaultdict(
             lambda: collections.defaultdict(dict))
         # metadata collection for all parts - structure is {workid: {name: ,
@@ -5979,8 +5987,11 @@ class PartLevels():
     @staticmethod
     def _collect_place_ids(relations):
         """Collect the non-Latin place/area entities referenced by a recording's
-        "recorded at" relations, as ``(entity_type, id, name)`` tuples (unique,
-        order preserved). Latin-named entities need no lookup and are skipped."""
+        "recorded at" relations, as ``(entity_type, id, name, area_id)`` tuples
+        (unique, order preserved). ``area_id`` is the area to walk for the
+        entity's country (crr_keep_place_countries): a venue's own area, or an
+        area entity itself. Latin-named entities need no lookup and are skipped.
+        """
         out = []
         seen = set()
         for rel in relations:
@@ -5989,13 +6000,16 @@ class PartLevels():
             if rel.get('type') != 'recorded at':
                 continue
             place = rel.get('place') or {}
-            for etype, entity in (('place', place), ('area', place.get('area') or {})):
+            area = place.get('area') or {}
+            area_id = area.get('id')
+            for etype, entity, govern in (('place', place, area_id),
+                                          ('area', area, area.get('id'))):
                 eid = entity.get('id')
                 ename = entity.get('name', '')
                 if (eid and ename and not only_roman_chars(ename)
                         and (etype, eid) not in seen):
                     seen.add((etype, eid))
-                    out.append((etype, eid, ename))
+                    out.append((etype, eid, ename, govern))
         return out
 
     def _place_locales(self):
@@ -6009,22 +6023,60 @@ class PartLevels():
             locales.append('en')
         return locales
 
-    def _romanize_recording(self, release_id, album, track, relations, place_ids):
-        """Ensure aliases for the given non-Latin places are resolved, then
-        write the recording tags with romanized names. Fires an alias lookup
-        for each uncached entity and waits (via place_queue) for all of them."""
-        to_fetch = [(etype, eid, ename) for (etype, eid, ename) in place_ids
-                    if (etype, eid) not in self.place_alias_cache]
+    def _keep_countries(self, track):
+        """The set of ISO 3166-1 country codes whose recording place names the
+        user wants kept in their original script (crr_keep_place_countries).
+        Empty set means Phase 2 is inactive and every non-Latin place is
+        romanized."""
+        opts = self.options.get(track) or {}
+        raw = opts.get('crr_keep_place_countries', '') or ''
+        return set(c.strip().upper() for c in re.split(r'[,;\s]+', raw)
+                   if c.strip())
+
+    def _romanize_recording(self, release_id, album, track, relations, entries):
+        """Resolve readable names for the given non-Latin place/area entities
+        and write the recording tags. Each entity is resolved independently
+        (country walk if a keep-list is set, then alias lookup unless kept); the
+        job's pending counter completes the write once all entities resolve.
+
+        A pending counter (rather than a set of ids) is used because an entity
+        may fan out into a country walk *and* an alias lookup - the counter
+        stays correct under that nesting."""
+        keep = self._keep_countries(track)
         job = {'track': track, 'album': album, 'release_id': release_id,
-               'relations': relations, 'ids': place_ids,
-               'remaining': set((etype, eid) for (etype, eid, _n) in to_fetch)}
-        if not job['remaining']:
-            # everything already cached from an earlier track/album
-            self._complete_recording_job(job)
+               'relations': relations, 'keep': keep, 'overrides': {},
+               'pending': 1}   # initial hold released after the loop
+        for etype, eid, ename, area_id in entries:
+            job['pending'] += 1
+            if keep and area_id:
+                self._resolve_country(
+                    album, area_id,
+                    partial(self._on_entry_country, job, etype, eid, ename))
+            else:
+                self._on_entry_country(job, etype, eid, ename, None)
+        self._job_tick(job)
+
+    def _on_entry_country(self, job, etype, eid, ename, country):
+        """Given an entity's country, decide its final name: keep the original
+        when the country is in the keep-list, else romanize via an alias lookup
+        (using the cache when possible)."""
+        if country and country in job['keep']:
+            job['overrides'][eid] = ename       # keep original script
+            self._job_tick(job)
             return
-        for etype, eid, ename in to_fetch:
-            if self.place_queue.append((etype, eid), job):
-                self._place_lookup(album, etype, eid, ename)
+        cached = self.place_alias_cache.get((etype, eid))
+        if cached is not None:
+            job['overrides'][eid] = cached
+            self._job_tick(job)
+            return
+        if self.place_queue.append((etype, eid), (job, eid)):
+            self._place_lookup(job['album'], etype, eid, ename)
+
+    def _job_tick(self, job):
+        """Decrement a romanize job's pending counter; complete it at zero."""
+        job['pending'] -= 1
+        if job['pending'] == 0:
+            self._complete_recording_job(job)
 
     def _place_lookup(self, album, etype, eid, ename):
         """Queue a /place or /area alias lookup. Its callback resolves the
@@ -6044,9 +6096,9 @@ class PartLevels():
 
     def _place_process(self, etype, eid, ename, response, reply, error):
         """Callback for a place/area alias lookup: resolve the readable name,
-        cache it, and complete any recording jobs no longer waiting on anything.
+        cache it, and advance any recording jobs waiting on this entity.
         A failed lookup falls back to the original name (never hangs)."""
-        jobs = self.place_queue.remove((etype, eid)) or []
+        waiters = self.place_queue.remove((etype, eid)) or []
         if error:
             resolved = ename
         else:
@@ -6059,21 +6111,95 @@ class PartLevels():
             except Exception:
                 resolved = ename
         self.place_alias_cache[(etype, eid)] = resolved
-        for job in jobs:
-            job['remaining'].discard((etype, eid))
-            if not job['remaining']:
-                self._complete_recording_job(job)
+        for job, weid in waiters:
+            job['overrides'][weid] = resolved
+            self._job_tick(job)
+
+    def _resolve_country(self, album, area_id, callback):
+        """Resolve an area's ISO 3166-1 country code (or None), calling
+        ``callback(country)`` when known. Walks the part-of hierarchy, caching
+        the result at every level so ancestors are only walked once and
+        concurrent walks share in-flight lookups."""
+        if area_id in self.area_country_cache:
+            callback(self.area_country_cache[area_id])
+            return
+        if self.country_queue.append(area_id, callback):
+            self._area_lookup(album, area_id)
+
+    def _area_lookup(self, album, area_id):
+        """Fetch an area with its part-of relationships to determine country."""
+        host = config.setting["server_host"]
+        port = config.setting["server_port"]
+        path = "/ws/2/area/%s" % area_id
+        return album.tagger.webservice.get(
+            host,
+            port,
+            path,
+            partial(self._area_process, album, area_id),
+            priority=True,
+            important=False,
+            mblogin=False,
+            queryargs={"inc": "area-rels"})
+
+    @staticmethod
+    def _area_parent_id(response):
+        """Return the id of the area this one is 'part of' (the backward part-of
+        relation), or None if there is no parent."""
+        wrapped = parse_data('session', response, [], 'relations')
+        rels = wrapped[0] if (wrapped and isinstance(wrapped[0], list)) else []
+        for r in rels:
+            if (r.get('target-type') == 'area'
+                    and r.get('type') == 'part of'
+                    and r.get('direction') == 'backward'):
+                parent = r.get('area') or {}
+                if parent.get('id'):
+                    return parent.get('id')
+        return None
+
+    def _area_process(self, album, area_id, response, reply, error):
+        """Callback for an area lookup: if the area carries an ISO 3166-1 code
+        it *is* the country; otherwise recurse into its parent. A failed lookup
+        or a dead-end (no parent) resolves the country as None (unknown)."""
+        country = None
+        parent_id = None
+        if not error:
+            try:
+                wrapped = parse_data('session', response, [],
+                                     'iso-3166-1-codes')
+                codes = wrapped[0] if wrapped else None
+                if codes:
+                    country = (codes[0] if isinstance(codes, list) else codes)
+                    country = country.upper() if country else None
+                if not country:
+                    parent_id = self._area_parent_id(response)
+            except Exception:
+                pass
+        if country or not parent_id:
+            self.area_country_cache[area_id] = country
+            for cb in (self.country_queue.remove(area_id) or []):
+                cb(country)
+        else:
+            # This area's country is its parent's country; walk up, then cache
+            # and dispatch this level's waiters with the parent's result.
+            waiters = self.country_queue.remove(area_id) or []
+            self._resolve_country(
+                album, parent_id,
+                partial(self._cache_and_dispatch, area_id, waiters))
+
+    def _cache_and_dispatch(self, area_id, waiters, country):
+        """Cache a walked-up country for an intermediate area and hand it to the
+        callbacks that were waiting on that area."""
+        self.area_country_cache[area_id] = country
+        for cb in waiters:
+            cb(country)
 
     def _complete_recording_job(self, job):
         """Compose and write the recording tags for a deferred romanize job
         using the resolved names, then release its album request."""
-        overrides = {}
-        for etype, eid, ename in job['ids']:
-            overrides[eid] = self.place_alias_cache.get((etype, eid), ename)
         try:
             self._write_recording_tags(
                 job['track'].metadata,
-                recording_session_tags(job['relations'], overrides))
+                recording_session_tags(job['relations'], job['overrides']))
         except Exception as ex:
             write_log(job['release_id'], 'error',
                       "recording place romanization failed: %r", ex)

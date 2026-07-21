@@ -608,6 +608,11 @@ WORKPARTS_OPTIONS = [
      'name': 'romanize non-latin recording places',
      'type': 'Boolean',
      'default': False
+     },
+    {'option': 'crr_keep_place_countries',
+     'name': 'keep recording place names for these countries',
+     'type': 'Text',
+     'default': ''
      }
 ]
 # Options on "Genres etc." tab
