@@ -6483,6 +6483,31 @@ class PartLevels():
         winners = [n for n in ordered if votes.get(n, 0) == best]
         return winners[0] if len(winners) == 1 else winners
 
+    @staticmethod
+    def _select_work_group_name(names, votes):
+        """Return a single, deterministic grouping key for ``~cwp_work_group``.
+
+        ``work_group`` is used purely as a grouping/shuffle key (the user's
+        foobar2000 pattern groups tracks by exact string equality on a compound
+        pattern), so it must NEVER be multi-valued. It reuses the ``top_work``
+        vote winner from ``_select_top_work_names`` but, where several names tie
+        on votes, breaks the tie deterministically -- lowest by
+        ``_normalise_name``, then discovery order -- so every track of the same
+        group yields the identical single string and sibling tracks are never
+        split apart. This is strictly safer than ``top_work``, which is allowed
+        to keep every tied name (faithful metadata) and so could leak several
+        values into the shuffle key.
+        """
+        selected = PartLevels._select_top_work_names(names, votes)
+        if isinstance(selected, str):
+            return selected
+        if not selected:
+            return ''
+        # ``selected`` is already de-duplicated in discovery order; min() keeps
+        # the first of any names sharing the lowest normalised form, giving the
+        # discovery-order fallback for free.
+        return min(selected, key=PartLevels._normalise_name)
+
     def _collapse_multiparent_top_name(self, topId, votes):
         """Collapse a fused multi-parent top's name to the voted winner(s), in
         place in self.parts, so every tag derived from the top (top_work, the
@@ -7498,6 +7523,7 @@ class PartLevels():
                             worktemp = self.parts[workId]['name']
                         if isinstance(top_info['name'], str):
                             toptemp = top_info['name'].strip()
+                            grouptemp = toptemp
                         else:
                             # A work that belongs to several parent works has a
                             # fused parent node whose ``name`` is the list of ALL
@@ -7515,13 +7541,21 @@ class PartLevels():
                             # the same set, so they stay consistent).
                             for index, it in enumerate(top_info['name']):
                                 top_info['name'][index] = it.strip()
+                            votes = top_info.get('votes')
                             toptemp = self._select_top_work_names(
-                                top_info['name'], top_info.get('votes'))
+                                top_info['name'], votes)
+                            # ``~cwp_work_group`` is the single-valued shuffle key
+                            # (see _select_work_group_name): a unique winner gives
+                            # the same value as top_work, a tie is reduced to one
+                            # deterministic name so the group is never split.
+                            grouptemp = self._select_work_group_name(
+                                top_info['name'], votes)
                         tm['~cwp_work_' + str(depth)] = worktemp
                         tm['~cwp_part_levels'] = str(height)
                         tm['~cwp_work_part_levels'] = str(top_info['levels'])
                         tm['~cwp_workid_top'] = top_info['id']
                         tm['~cwp_work_top'] = toptemp
+                        tm['~cwp_work_group'] = grouptemp
                         tm['~cwp_single_work_album'] = top_info['single']
                         write_log(
                                 release_id, 'info', "Track metadata = %s", tm)
@@ -7615,8 +7649,13 @@ class PartLevels():
             # whose top name is a plain string -- set_metadata keeps its old path.
             if isinstance(top_info.get('name'), str):
                 top_name = None
+                top_group = None
             else:
                 top_name = self._select_top_work_names(
+                    top_info['name'], top_info.get('votes'))
+                # The single-valued shuffle key for ~cwp_work_group, resolved in
+                # step with top_name so set_metadata keeps the two consistent.
+                top_group = self._select_work_group_name(
                     top_info['name'], top_info.get('votes'))
             width = 0
             for child in trackback['children']:
@@ -7659,7 +7698,7 @@ class PartLevels():
                                      track_meta))
                             self.set_metadata(
                                 release_id, part_level, workId, parentId, parent,
-                                track_meta, top_name)
+                                track_meta, top_name, top_group)
                         if 'track' in tracks:
                             tracks['track'].append(
                                 (track_meta, track_height))
@@ -8076,7 +8115,8 @@ class PartLevels():
             parentId,
             parent,
             track,
-            top_name=None):
+            top_name=None,
+            top_group=None):
         """
         Set the names of works and parts
         :param release_id: name for log file - usually =musicbrainz_albumid
@@ -8092,6 +8132,10 @@ class PartLevels():
             multi-parent name, so this method does not undo the single-value
             selection made at depth 0. ``None`` for ordinary single-work tops,
             which keep the previous behaviour.
+        :param top_group: pre-resolved single-valued ``~cwp_work_group`` shuffle
+            key for a fused multi-parent top, resolved in step with ``top_name``.
+            ``None`` for ordinary single-work tops, where ``~cwp_work_group``
+            tracks ``~cwp_work_top`` (the full parent name).
         :return:
         """
         write_log(
@@ -8160,8 +8204,14 @@ class PartLevels():
                             # ordinary single-work tops (top_name is None).
                             if top_name is not None:
                                 tm['~cwp_work_top'] = top_name
+                                # Keep the single-valued shuffle key in step with
+                                # top_work: the pre-resolved deterministic winner
+                                # rather than the joined multi-parent list.
+                                tm['~cwp_work_group'] = top_group
                             else:
                                 tm['~cwp_work_top'] = full_parent.strip()
+                                # Single-work top: work_group == work_top.
+                                tm['~cwp_work_group'] = full_parent.strip()
             tm['~cwp_part_' + str(part_level - 1)] = stripped_works
             self.parts[workId]['stripped_name'] = stripped_works
         write_log(release_id, 'debug', "GOT TO END OF SET_METADATA")
@@ -8960,6 +9010,8 @@ class PartLevels():
         work_sep = options["cwp_single_work_sep"]
         top_tags = options["cwp_top_tag"].split(",")
         top_tags = [x.strip(' ') for x in top_tags]
+        work_group_tags = options["cwp_work_group_tag"].split(",")
+        work_group_tags = [x.strip(' ') for x in work_group_tags if x.strip(' ')]
 
         write_log(
                 release_id,
@@ -8997,6 +9049,12 @@ class PartLevels():
         for tag in top_tags:
             if '~cwp_work_top' in tm:
                 self.append_tag(release_id, tm, tag, tm['~cwp_work_top'])
+        # work_group: a single-valued grouping/shuffle key. Unlike top_work it is
+        # never multi-valued (a tie is reduced deterministically upstream), so it
+        # is safe as a foobar2000 shuffle-group key.
+        for tag in work_group_tags:
+            if '~cwp_work_group' in tm:
+                self.append_tag(release_id, tm, tag, tm['~cwp_work_group'])
 
         if '~cwp_movt_num' in tm and len(tm['~cwp_movt_num']) > 0:
             movt_num_punc = tm['~cwp_movt_num'] + movt_no_sep + ' '

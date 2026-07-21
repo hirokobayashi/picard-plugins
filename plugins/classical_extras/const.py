@@ -529,6 +529,11 @@ WORKPARTS_OPTIONS = [
      'type': 'Text',
      'default': 'top_work, style, grouping'
      },
+    {'option': 'cwp_work_group_tag',
+     'name': 'work group tag',
+     'type': 'Text',
+     'default': 'work_group'
+     },
     {'option': 'cwp_multi_work_sep',
      'name': 'multi-level work separator',
      'type': 'Combo',
