@@ -603,6 +603,11 @@ WORKPARTS_OPTIONS = [
      'name': 'recording sessions tag',
      'type': 'Text',
      'default': 'recording_session'
+     },
+    {'option': 'crr_romanize_place',
+     'name': 'romanize non-latin recording places',
+     'type': 'Boolean',
+     'default': False
      }
 ]
 # Options on "Genres etc." tab
