@@ -2959,6 +2959,46 @@ p, li { white-space: pre-wrap; }
                       </item>
                      </layout>
                     </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="_9a">
+                      <property name="spacing">
+                       <number>6</number>
+                      </property>
+                      <property name="margin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="label_work_group">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="whatsThis">
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A single-valued grouping/shuffle key derived from the top-level work. Unlike the top-level work tag above, this is guaranteed to hold exactly one value, chosen deterministically and identically for every track of the same top work. Use it in library managers that group by exact string equality (e.g. a foobar2000 shuffle pattern such as &lt;span style=&quot; font-style:italic;&quot;&gt;%album artist% | %date% | %album% | %work_group%&lt;/span&gt;) so that all movements of one work stay together. Leave blank to suppress the tag.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        </property>
+                        <property name="text">
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tags for single-valued work grouping / shuffle key&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="cwp_work_group_tag">
+                        <property name="styleSheet">
+                         <string notr="true">background-color: rgb(250, 250, 250);</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="label_work_group_na">
+                        <property name="text">
+                         <string>  N/A    </string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
                    </layout>
                   </widget>
                  </item>
