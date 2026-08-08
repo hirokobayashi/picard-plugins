@@ -2686,10 +2686,16 @@ class PlanetsBridgedTopsIntegrationTestCase(ClassicalExtrasTestCase):
         t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
         return t
 
-    def _run_full_album(self):
+    def _run_full_album(self, drain="fifo"):
         """Drive all 12 tracks through the real Picard flow (build every track,
-        then drain the webservice callbacks FIFO so process_album runs once at
-        the end). Returns {label: track}."""
+        then drain the webservice callbacks so process_album runs once at the
+        end). Returns {label: track}.
+
+        ``drain`` chooses the order the queued work lookups are answered in.
+        Real Picard answers them in network-completion order, which is
+        arbitrary, so "fifo" is only one of many orders the plugin must handle
+        identically -- see test_result_is_independent_of_lookup_order."""
+        import random
         from unittest.mock import Mock
         mod = self.mod
         pl = mod.PartLevels()
@@ -2734,8 +2740,15 @@ class PlanetsBridgedTopsIntegrationTestCase(ClassicalExtrasTestCase):
             node = {'recording': self._load("rec_%s.json" % label)}
             pl.add_work_info(album, t.metadata, node, {})
 
+        rng = random.Random(drain)
         while pending:
-            cb, resp = pending.pop(0)
+            if drain == "fifo":
+                i = 0
+            elif drain == "lifo":
+                i = len(pending) - 1
+            else:
+                i = rng.randrange(len(pending))
+            cb, resp = pending.pop(i)
             cb(resp, None, None)
         return tracks
 
@@ -2800,6 +2813,39 @@ class PlanetsBridgedTopsIntegrationTestCase(ClassicalExtrasTestCase):
             else:
                 self.assertIn(group[0], top,
                               "%s: work_group must be a top_work value" % label)
+
+    def test_result_is_independent_of_lookup_order(self):
+        """The tags must not depend on the order the async work lookups happen
+        to come back in. Picard answers them in network-completion order, so an
+        order-sensitive result means the same release tags differently from run
+        to run -- which is how this was reported: one run put all of tracks 1-8
+        under "The Planets Suite extension", the next run got it right.
+
+        The cause was work_process aliasing self.parts[new_ids] to the SAME dict
+        as self.parts[prev_ids] when fusing a second parent onto a work, so
+        writing the fused two-name list also overwrote the single-work top's
+        name. Whichever of the two suites happened to resolve first was the one
+        that got corrupted, so the vote between the two names flipped with
+        timing."""
+        orders = ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]
+        baseline = None
+        for order in orders:
+            tracks = self._run_full_album(drain=order)
+            result = {
+                label: (self.mod.str_to_list(tracks[label].metadata['~cwp_work_top']),
+                        self.mod.str_to_list(tracks[label].metadata['~cwp_work_group']))
+                for label, _d, _t, _r, _w in self._TRACKS}
+            if baseline is None:
+                baseline = result
+                # sanity: the baseline is the CORRECT answer, not just a stable
+                # wrong one
+                self.assertEqual(baseline["t8"][0],
+                                 ["The Planets Suite extension"])
+                self.assertEqual(baseline["t1"][0], ["The Planets, op. 32"])
+            else:
+                self.assertEqual(
+                    result, baseline,
+                    "drain order %r changed the tags" % order)
 
 
 class MergeDuplicateTopsTestCase(ClassicalExtrasTestCase):

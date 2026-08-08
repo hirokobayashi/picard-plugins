@@ -5398,7 +5398,13 @@ class PartLevels():
                                     if not (set(
                                             self.works_cache[wid]) >= set(parentIds)):
                                         prev_ids = tuple(self.works_cache[wid])
+                                        # Snapshot: add_list_uniquely appends to
+                                        # its first argument IN PLACE, so passing
+                                        # the live list would extend the old
+                                        # entry's name as well as the new one's.
                                         prev_name = self.parts[prev_ids]['name']
+                                        if isinstance(prev_name, list):
+                                            prev_name = prev_name[:]
                                         self.works_cache[wid] = add_list_uniquely(
                                             self.works_cache[wid], parentIds)
                                         self.parts[wid]['parent'] = add_list_uniquely(
@@ -5409,7 +5415,34 @@ class PartLevels():
                                             list(prev_ids), parentIds)
                                         new_ids = tuple(new_id_list)
                                         self.work_listing[album][index] = new_ids
-                                        self.parts[new_ids] = self.parts[prev_ids]
+                                        # COPY the old entry, do not alias it.
+                                        # ``prev_ids`` is deliberately left in
+                                        # self.parts (see the commented-out del
+                                        # below) because it can still be a top
+                                        # work in its own right -- so a plain
+                                        # ``self.parts[new_ids] = self.parts[prev_ids]``
+                                        # made both keys the SAME dict, and the
+                                        # 'name' assignment on the next line then
+                                        # rewrote the single-work top's name too.
+                                        # On Holst's "The Planets" that gave the
+                                        # op. 32 top (one id) the two-name list
+                                        # ['The Planets, op. 32', 'The Planets
+                                        # Suite extension'], so the vote-based
+                                        # name collapse could tag all of op. 32's
+                                        # movements as the extension. Which top
+                                        # got corrupted depended on the order the
+                                        # async work lookups came back in, making
+                                        # the tags differ from run to run.
+                                        # copy.copy (not a dict comprehension)
+                                        # keeps the defaultdict factory, which
+                                        # entries such as ['order'] rely on.
+                                        # Lists are copied too: they are appended
+                                        # to in place elsewhere.
+                                        new_part = copy.copy(self.parts[prev_ids])
+                                        for _k, _v in list(new_part.items()):
+                                            if isinstance(_v, list):
+                                                new_part[_k] = _v[:]
+                                        self.parts[new_ids] = new_part
                                         #del self.parts[prev_ids]  # Removed from here to deal with multi-parent parts. De-dup now takes place in process_albums.
                                         self.parts[new_ids]['name'] = add_list_uniquely(
                                             prev_name, parents)
