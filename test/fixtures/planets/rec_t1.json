@@ -1,0 +1,153 @@
+{
+ "aliases": [
+  {
+   "begin": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, op. 32: I. Mars, the Bringer of War (Allegro)",
+   "locale": null,
+   "sort-name": "The Planets, op. 32: I. Mars, the Bringer of War (Allegro)",
+   "ended": false,
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets: Mars, the Bringer of War",
+   "ended": false,
+   "locale": null,
+   "end": null,
+   "name": "The Planets: Mars, the Bringer of War",
+   "type": null,
+   "begin": null
+  }
+ ],
+ "relations": [
+  {
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "balance",
+   "ended": true,
+   "attributes": [],
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2",
+   "artist": {
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work",
+    "type": "Person",
+    "name": "Mike Clements",
+    "country": "GB",
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Clements, Mike"
+   },
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "end": "2006-03-18",
+   "attribute-ids": {}
+  },
+  {
+   "target-credit": "",
+   "type": "conductor",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "ended": true,
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597",
+    "sort-name": "Rattle, Simon",
+    "type": "Person",
+    "name": "Simon Rattle",
+    "disambiguation": "conductor",
+    "country": "GB"
+   },
+   "attributes": []
+  },
+  {
+   "attributes": [],
+   "artist": {
+    "country": "DE",
+    "type": "Orchestra",
+    "name": "Berliner Philharmoniker",
+    "disambiguation": "",
+    "sort-name": "Berliner Philharmoniker",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce"
+   },
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "ended": true,
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "performing orchestra",
+   "target-credit": ""
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "producer",
+   "target-credit": "",
+   "attributes": [],
+   "artist": {
+    "sort-name": "Johns, Stephen",
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": null,
+    "disambiguation": "producer",
+    "name": "Stephen Johns",
+    "type": "Person"
+   },
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "backward"
+  },
+  {
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "id": "9e00ce98-e460-4101-b2e3-8096a5c60c59",
+    "language": "zxx",
+    "attributes": [],
+    "title": "The Planets, op. 32: I. Mars, the Bringer of War",
+    "type-id": null,
+    "iswcs": [],
+    "languages": [
+     "zxx"
+    ]
+   },
+   "ended": true,
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "begin": "2006-03-15",
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "performance",
+   "target-credit": ""
+  }
+ ],
+ "length": 445280,
+ "disambiguation": "",
+ "title": "The Planets Suite for Orchestra, op. 32: Mars, the Bringer of War",
+ "first-release-date": "2006-07-28",
+ "id": "fedcd862-559e-479e-a565-5dddc21210ad",
+ "video": false
+}

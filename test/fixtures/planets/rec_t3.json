@@ -1,0 +1,140 @@
+{
+ "id": "5367bd55-5306-48d0-b71c-bc7a8730262d",
+ "first-release-date": "2006-07-28",
+ "title": "The Planets Suite for Orchestra, op. 32: Mercury, the Winged Messenger",
+ "video": false,
+ "relations": [
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "balance",
+   "ended": true,
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2",
+   "artist": {
+    "sort-name": "Clements, Mike",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d",
+    "country": "GB",
+    "name": "Mike Clements",
+    "type": "Person",
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work"
+   },
+   "attributes": [],
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "attribute-ids": {},
+   "end": "2006-03-18"
+  },
+  {
+   "attributes": [],
+   "artist": {
+    "country": "GB",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "name": "Simon Rattle",
+    "sort-name": "Rattle, Simon",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "ended": true,
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "conductor",
+   "target-credit": ""
+  },
+  {
+   "attributes": [],
+   "artist": {
+    "disambiguation": "",
+    "type": "Orchestra",
+    "name": "Berliner Philharmoniker",
+    "country": "DE",
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "sort-name": "Berliner Philharmoniker"
+   },
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "ended": true,
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "target-credit": ""
+  },
+  {
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928",
+    "sort-name": "Johns, Stephen",
+    "name": "Stephen Johns",
+    "type": "Person",
+    "disambiguation": "producer",
+    "country": null
+   },
+   "attributes": [],
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "direction": "backward",
+   "begin": null,
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "producer",
+   "target-credit": ""
+  },
+  {
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "begin": "2006-03-15",
+   "direction": "forward",
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "languages": [],
+    "attributes": [],
+    "language": null,
+    "title": "The Planets, op. 32: III. Mercury, the Winged Messenger",
+    "type-id": null,
+    "iswcs": [],
+    "id": "3efdc3db-5907-44fe-9639-68bcecaa6f0b",
+    "type": null,
+    "disambiguation": ""
+   },
+   "ended": true,
+   "type": "performance",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": ""
+  }
+ ],
+ "aliases": [
+  {
+   "sort-name": "The Planets, Op. 32: Mercury the Winged Messenger",
+   "ended": false,
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Mercury the Winged Messenger"
+  }
+ ],
+ "disambiguation": "",
+ "length": 242093
+}

@@ -6353,35 +6353,58 @@ class PartLevels():
             components[find(top)].append(top)
         merged_any = False
         survivors = set(tops)
+
+        def _score(top):
+            return (sum(1 for t in tracks_in_top.get(top, ())
+                        if t[1] == album), -order[top])
+
         for comp in components.values():
             if len(comp) <= 1:
                 continue
-
-            def _score(top):
-                return (sum(1 for t in tracks_in_top.get(top, ())
-                            if t[1] == album), -order[top])
-            representative = max(comp, key=_score)
-            dropped = [t for t in comp if t != representative]
-            for d in dropped:
-                survivors.discard(d)
-                # Graft the dropped top's tracks onto the representative's
-                # trackback tree so they are still walked (and tagged) under the
-                # surviving top. The tracks are also re-pointed at the
-                # representative in process_album, but re-pointing only fixes
-                # chosen_top: if the track is not in the survivor's tree it is
-                # never processed and gets no work/top_work tags. This is the
-                # ballet-only movements case: their top ('4aeb',) is folded into
-                # the fused ('4aeb','17f') top, but the fused tree lists only the
-                # shared movements, so without grafting the ballet-only movements
-                # vanish from tagging entirely.
-                self._graft_trackback_children(release_id, album, representative, d)
-            merged_any = True
-            write_log(
-                    release_id,
-                    'info',
-                    "Merging duplicate top works (shared work id): keeping %r "
-                    "(%s), dropping %r",
-                    representative, self._part_name(representative), dropped)
+            # Union-find connects a component TRANSITIVELY, but only tops that
+            # share an id with the survivor are duplicates of it. A fused top
+            # (a track whose work has parents in two genuinely different works)
+            # bridges those two works into one component without them being the
+            # same work: Holst's "The Planets" plus Matthews' "The Planets Suite
+            # extension" are linked only because the Neptune track is recorded
+            # as both suites' Neptune, giving it the fused top
+            # ('extension', 'op. 32'). Folding the whole component into one
+            # representative would delete the extension as a "duplicate" of
+            # op. 32 and orphan its exclusive track (Pluto). So merge in rounds:
+            # take the best-scoring top, absorb only the tops that overlap it,
+            # and re-run on whatever is left, which stays a top work in its own
+            # right.
+            remaining = list(comp)
+            while remaining:
+                representative = max(remaining, key=_score)
+                dropped = [t for t in remaining
+                           if t != representative
+                           and id_sets[t] & id_sets[representative]]
+                remaining = [t for t in remaining
+                             if t != representative and t not in dropped]
+                if not dropped:
+                    continue
+                for d in dropped:
+                    survivors.discard(d)
+                    # Graft the dropped top's tracks onto the representative's
+                    # trackback tree so they are still walked (and tagged) under
+                    # the surviving top. The tracks are also re-pointed at the
+                    # representative in process_album, but re-pointing only fixes
+                    # chosen_top: if the track is not in the survivor's tree it is
+                    # never processed and gets no work/top_work tags. This is the
+                    # ballet-only movements case: their top ('4aeb',) is folded
+                    # into the fused ('4aeb','17f') top, but the fused tree lists
+                    # only the shared movements, so without grafting the
+                    # ballet-only movements vanish from tagging entirely.
+                    self._graft_trackback_children(
+                        release_id, album, representative, d)
+                merged_any = True
+                write_log(
+                        release_id,
+                        'info',
+                        "Merging duplicate top works (shared work id): keeping "
+                        "%r (%s), dropping %r",
+                        representative, self._part_name(representative), dropped)
         if merged_any:
             # Preserve original discovery order of the survivors.
             self.top[album] = [t for t in tops if t in survivors]
@@ -7146,8 +7169,19 @@ class PartLevels():
                 if tuple(v) in survivors:
                     continue
                 new_top = None
+                # ``membership`` is keyed by the (track, album) pair and read
+                # from the LIVE trackback, so it sees tracks grafted onto a
+                # survivor by the duplicate merge. The pre-merge ``tracks_in_top``
+                # snapshot does not, and is keyed by the pair too -- testing the
+                # bare track against it never matched, so this preference was
+                # dead and a grafted track fell through to the id/name fallbacks
+                # below. When neither of those matched (a merged-away top that
+                # shares no id and no name with any survivor) the track kept
+                # pointing at a dropped top, was skipped under every survivor and
+                # lost all its work metadata.
+                homes = membership.get((t, al), ())
                 for w in self.top[album]:
-                    if t in tracks_in_top.get(w, ()):
+                    if w in homes:
                         new_top = w
                         break
                 if new_top is None:

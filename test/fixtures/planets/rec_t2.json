@@ -1,0 +1,128 @@
+{
+ "id": "2f97fba1-b1e7-4339-ace3-90dbcbd8cf7a",
+ "first-release-date": "2006-07-28",
+ "title": "The Planets Suite for Orchestra, op. 32: Venus, the Bringer of Peace",
+ "video": false,
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "balance",
+   "target-credit": "",
+   "attributes": [],
+   "artist": {
+    "country": "GB",
+    "name": "Mike Clements",
+    "type": "Person",
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work",
+    "sort-name": "Clements, Mike",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d"
+   },
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2",
+   "ended": true,
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "begin": "2006-03-15",
+   "direction": "backward"
+  },
+  {
+   "ended": true,
+   "artist": {
+    "type": "Person",
+    "name": "Simon Rattle",
+    "disambiguation": "conductor",
+    "country": "GB",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597",
+    "sort-name": "Rattle, Simon"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "conductor"
+  },
+  {
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "ended": true,
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "country": "DE",
+    "type": "Orchestra",
+    "name": "Berliner Philharmoniker",
+    "disambiguation": "",
+    "sort-name": "Berliner Philharmoniker",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce"
+   },
+   "attributes": [],
+   "target-credit": "",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "ended": false,
+   "attributes": [],
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "artist": {
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Johns, Stephen",
+    "disambiguation": "producer",
+    "type": "Person",
+    "name": "Stephen Johns",
+    "country": null
+   },
+   "begin": null,
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": null,
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "producer"
+  },
+  {
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "performance",
+   "ended": true,
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "languages": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: II. Venus, the Bringer of Peace",
+    "iswcs": [],
+    "language": null,
+    "attributes": [],
+    "id": "3f86e70e-e428-46b1-834b-738243d37432"
+   },
+   "attributes": [],
+   "direction": "forward",
+   "begin": "2006-03-15",
+   "attribute-ids": {},
+   "end": "2006-03-18"
+  }
+ ],
+ "aliases": [],
+ "disambiguation": "",
+ "length": 539240
+}

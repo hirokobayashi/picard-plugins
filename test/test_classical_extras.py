@@ -2608,6 +2608,240 @@ class TristanFullAlbumIntegrationTestCase(ClassicalExtrasTestCase):
             self.mod.str_to_list(t2['~cwp_work_group']),
             self.mod.str_to_list(t2['~cwp_work_top']))
 
+class PlanetsBridgedTopsIntegrationTestCase(ClassicalExtrasTestCase):
+    """End-to-end guard for release c26d65ae (Holst: The Planets, with Colin
+    Matthews' additions).
+
+    Disc 1 tracks 1-7 are Holst's suite "The Planets, op. 32"; track 8 ("Pluto,
+    the Renewer") is a movement of a DIFFERENT top work, "The Planets Suite
+    extension". Track 7 (Neptune) is recorded as both suites' Neptune, so its
+    top is the fused ('extension', 'op. 32') -- and that fusion is the only
+    thing linking the two suites. _merge_duplicate_tops used to treat a whole
+    transitively-connected component as one work, so the extension was folded
+    away as a "duplicate" of op. 32 even though they share no work id; track 8,
+    the extension's only exclusive track, was then left pointing at a dropped
+    top, skipped by the tagging loop, and emerged with NO ~cwp_workid_top,
+    ~cwp_work_top or ~cwp_work_group at all."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "planets")
+    _REL = "c26d65ae-b64f-484e-84af-224b7fc6e0ac"
+    _OP32 = "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"      # The Planets, op. 32
+    _EXT = "5a75e61c-a670-37a9-bf73-4e7e22bbb12a"       # The Planets Suite extension
+    # (label, disc, track, recording id, work id(s))
+    _TRACKS = [
+        ("t1", 1, 1, "fedcd862-559e-479e-a565-5dddc21210ad", "9e00ce98-e460-4101-b2e3-8096a5c60c59"),
+        ("t2", 1, 2, "2f97fba1-b1e7-4339-ace3-90dbcbd8cf7a", "3f86e70e-e428-46b1-834b-738243d37432"),
+        ("t3", 1, 3, "5367bd55-5306-48d0-b71c-bc7a8730262d", "3efdc3db-5907-44fe-9639-68bcecaa6f0b"),
+        ("t4", 1, 4, "81626a29-4147-4b23-9796-0ea6347c5606", "7b209915-be32-3f17-b2c5-b963964ed084"),
+        ("t5", 1, 5, "e5389445-56f2-4cd6-8b3c-e1231b50eed5", "07d9e46d-0847-43d3-89da-27eb304943b1"),
+        ("t6", 1, 6, "c213dd85-0641-4203-a75d-f1238cd35236", "e726a374-a823-436e-9afe-8f58d15eb547"),
+        # Neptune: one recording, two works -- the op. 32 movement and the
+        # extension's movement. This is the bridge between the two tops.
+        ("t7", 1, 7, "c9d436aa-283f-4fda-bfe7-6aa187e366e1",
+         ["254f397b-0d15-4812-aec4-02d0aa1d5898",
+          "4be2ad86-562d-4ef0-970a-cebf777fb8cb"]),
+        ("t8", 1, 8, "07be824f-0487-4e2e-bfc6-e184d0b60b04", "4477808e-cc63-3832-a884-d424e6df4363"),
+        ("t9", 2, 1, "2cb2962b-67e2-4912-becf-a703e63f2d39", "e42cce08-f3f1-4e9b-8bfe-11670ad22d52"),
+        ("t10", 2, 2, "6a6658b2-c3cf-4ca2-9b02-2fe85e79dbe0", "599168cc-8ca2-4685-9ef7-b178369a1ae0"),
+        ("t11", 2, 3, "21240859-4f72-4b90-8662-aebf218afce4", "5c0deb15-2bc8-4ea6-9825-d42fbc87d86f"),
+        ("t12", 2, 4, "04ee9933-7706-4d11-8b67-a749cc73f8b0", "570250af-fed3-4b19-9b9a-5ad42fbbad0f"),
+    ]
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": False, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    def _make_track(self, label, disc, track, rec_id, work_id, opts):
+        class _M(dict):
+            def __getitem__(self, k):
+                return self.get(k, '')
+
+            def getall(self, k):
+                v = self.get(k)
+                return [] if v is None else (v if isinstance(v, list) else [v])
+        tm = _M(musicbrainz_albumid=self._REL, musicbrainz_recordingid=rec_id,
+                musicbrainz_workid=work_id, album="The Planets",
+                title=label, tracknumber=str(track), discnumber=str(disc))
+        tm['~ce_options'] = repr(opts)
+        from unittest.mock import Mock
+        t = Mock(name=label)
+        t.metadata = tm
+        t._id = label
+        t.__hash__ = lambda self: hash(self._id)
+        t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+        return t
+
+    def _run_full_album(self):
+        """Drive all 12 tracks through the real Picard flow (build every track,
+        then drain the webservice callbacks FIFO so process_album runs once at
+        the end). Returns {label: track}."""
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        pl.extend_metadata = lambda *a, **k: None
+        pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": False, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        tracks = {}
+        for label, disc, track, rec_id, work_id in self._TRACKS:
+            t = self._make_track(label, disc, track, rec_id, work_id, opts)
+            tracks[label] = t
+            album._new_tracks.append(t)
+            node = {'recording': self._load("rec_%s.json" % label)}
+            pl.add_work_info(album, t.metadata, node, {})
+
+        while pending:
+            cb, resp = pending.pop(0)
+            cb(resp, None, None)
+        return tracks
+
+    def test_no_track_is_orphaned(self):
+        """Every track keeps a top work. Track 8 (Pluto) was the casualty: its
+        only top was merged away as a bogus duplicate, so it lost all work
+        metadata."""
+        tracks = self._run_full_album()
+        for label, _d, _t, _r, _w in self._TRACKS:
+            self.assertTrue(
+                tracks[label].metadata['~cwp_workid_top'],
+                "%s lost its top work" % label)
+
+    def test_pluto_keeps_the_extension_as_its_top_work(self):
+        """The two suites share no work id, so they are distinct top works:
+        Pluto stays under "The Planets Suite extension" rather than being
+        absorbed into "The Planets, op. 32"."""
+        t8 = self._run_full_album()["t8"].metadata
+        self.assertEqual(
+            tuple(self.mod.str_to_list(t8['~cwp_workid_top'])), (self._EXT,))
+        self.assertEqual(
+            self.mod.str_to_list(t8['~cwp_work_top']),
+            ["The Planets Suite extension"])
+        self.assertEqual(
+            self.mod.str_to_list(t8['~cwp_work_group']),
+            ["The Planets Suite extension"],
+            "work_group is the shuffle key and must follow the real top work")
+
+    def test_shared_neptune_resolves_to_the_voted_suite(self):
+        """Track 7's fused ('extension', 'op. 32') top IS a genuine duplicate of
+        op. 32 (it contains that id), so it is still merged in -- and op. 32,
+        with six other tracks, wins the vote. Tracks 1-7 all report the one
+        suite."""
+        tracks = self._run_full_album()
+        for label in ("t1", "t2", "t3", "t4", "t5", "t6", "t7"):
+            tm = tracks[label].metadata
+            self.assertEqual(
+                tuple(self.mod.str_to_list(tm['~cwp_workid_top'])),
+                (self._OP32,),
+                "%s should resolve to The Planets, op. 32" % label)
+            self.assertEqual(
+                self.mod.str_to_list(tm['~cwp_work_group']),
+                ["The Planets, op. 32"],
+                "%s work_group should be the op. 32 suite" % label)
+
+    def test_work_group_single_valued_across_real_album(self):
+        """The foobar2000 shuffle-key guarantee holds on this album: every
+        track has exactly one work_group value, matching a single-valued
+        top_work."""
+        tracks = self._run_full_album()
+        for label in tracks:
+            tm = tracks[label].metadata
+            group = self.mod.str_to_list(tm['~cwp_work_group'])
+            self.assertEqual(
+                len(group), 1,
+                "%s: work_group must be single-valued, got %r" % (label, group))
+            top = self.mod.str_to_list(tm['~cwp_work_top'])
+            if len(top) == 1:
+                self.assertEqual(
+                    group, top,
+                    "%s: work_group should equal single-valued top_work" % label)
+            else:
+                self.assertIn(group[0], top,
+                              "%s: work_group must be a top_work value" % label)
+
+
+class MergeDuplicateTopsTestCase(ClassicalExtrasTestCase):
+    """Unit-level cover for _merge_duplicate_tops: only tops that actually share
+    a work id with the survivor are folded into it."""
+
+    def _merge(self, tops, counts):
+        """Run the merge over ``tops`` with ``counts`` = {top: n tracks}.
+        Returns the surviving self.top[album] list."""
+        pl = self.mod.PartLevels()
+        album = "alb"
+        pl.top[album] = list(tops)
+        pl.parts = {t: {'name': ['w-%s' % t[0][:4]]} for t in tops}
+        tracks_in_top = {
+            t: {("trk%d-%s" % (i, t[0]), album) for i in range(counts[t])}
+            for t in tops}
+        pl.trackback[album] = {}          # no trees: grafting is a no-op
+        pl._merge_duplicate_tops("rel", album, tracks_in_top)
+        return pl.top[album]
+
+    def test_direct_duplicate_is_merged(self):
+        """A fused top and one of its own constituents are the same work."""
+        fused, part = ("a", "b"), ("a",)
+        self.assertEqual(
+            self._merge([fused, part], {fused: 1, part: 5}), [part])
+
+    def test_bridged_distinct_tops_both_survive(self):
+        """The Planets shape: ('ext',) and ('op32',) share no id and are only
+        connected through the fused ('ext','op32') top of a shared movement.
+        The fused top folds into the most-selected work; the other stays a top
+        work in its own right rather than being deleted as a duplicate."""
+        op32, fused, ext = ("op32",), ("ext", "op32"), ("ext",)
+        self.assertEqual(
+            self._merge([op32, fused, ext], {op32: 6, fused: 1, ext: 1}),
+            [op32, ext])
+
+    def test_unrelated_tops_untouched(self):
+        """A genuine multi-work album (a concerto and a symphony) is preserved."""
+        a, b = ("a",), ("b",)
+        self.assertEqual(self._merge([a, b], {a: 3, b: 4}), [a, b])
+
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,156 @@
+{
+ "video": false,
+ "id": "07be824f-0487-4e2e-bfc6-e184d0b60b04",
+ "first-release-date": "2006-07-28",
+ "title": "Pluto, the Renewer",
+ "aliases": [],
+ "relations": [
+  {
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "balance",
+   "target-credit": "",
+   "artist": {
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Clements, Mike",
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work",
+    "type": "Person",
+    "name": "Mike Clements",
+    "country": "GB"
+   },
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2",
+   "attributes": [],
+   "ended": true,
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "direction": "backward",
+   "begin": "2006-03-15"
+  },
+  {
+   "ended": true,
+   "artist": {
+    "country": "GB",
+    "name": "Simon Rattle",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "sort-name": "Rattle, Simon",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "conductor"
+  },
+  {
+   "type": "performing orchestra",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "name": "Berliner Philharmoniker",
+    "type": "Orchestra",
+    "disambiguation": "",
+    "country": "DE",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce",
+    "sort-name": "Berliner Philharmoniker"
+   },
+   "ended": true
+  },
+  {
+   "begin": null,
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": null,
+   "ended": false,
+   "attributes": [],
+   "artist": {
+    "country": null,
+    "name": "Stephen Johns",
+    "type": "Person",
+    "disambiguation": "producer",
+    "sort-name": "Johns, Stephen",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928"
+   },
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "target-credit": "",
+   "type": "producer",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {}
+  },
+  {
+   "artist": {
+    "country": "DE",
+    "disambiguation": "",
+    "name": "Rundfunkchor Berlin",
+    "type": "Choir",
+    "sort-name": "Rundfunkchor Berlin",
+    "id": "d0cbe60f-f919-4873-8c64-537fd600a4f5",
+    "type-id": "6124967d-7e3a-3eba-b642-c9a2ffb44d94"
+   },
+   "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa",
+   "attributes": [
+    "choir vocals"
+   ],
+   "ended": true,
+   "attribute-ids": {
+    "choir vocals": "43427f08-837b-46b8-bc77-483453af6a7b"
+   },
+   "end": "2006-03-18",
+   "attribute-credits": {},
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "vocal",
+   "target-credit": ""
+  },
+  {
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "languages": [],
+    "id": "4477808e-cc63-3832-a884-d424e6df4363",
+    "iswcs": [],
+    "type-id": null,
+    "title": "Pluto, the Renewer",
+    "language": null,
+    "attributes": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "ended": true,
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "begin": "2006-03-15",
+   "direction": "forward",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "performance",
+   "target-credit": ""
+  }
+ ],
+ "length": 372800,
+ "disambiguation": ""
+}

@@ -1,0 +1,445 @@
+{
+ "languages": [],
+ "id": "e726a374-a823-436e-9afe-8f58d15eb547",
+ "disambiguation": "",
+ "aliases": [
+  {
+   "sort-name": "Les Planetes, Op. 32: VI. Uranus, Le Magicien",
+   "ended": false,
+   "primary": true,
+   "type-id": null,
+   "begin": null,
+   "name": "Les Planetes, Op. 32: VI. Uranus, Le Magicien",
+   "end": null,
+   "type": null,
+   "locale": "fr"
+  },
+  {
+   "begin": null,
+   "type": null,
+   "name": "Los planetas, Op. 32: VI. Urano, el mago",
+   "end": null,
+   "locale": "es",
+   "ended": false,
+   "sort-name": "Los planetas, Op. 32: VI. Urano, el mago",
+   "primary": true,
+   "type-id": null
+  },
+  {
+   "begin": null,
+   "locale": "pt",
+   "name": "Os planetas, Op. 32: VI. Urano, o mágico",
+   "end": null,
+   "type": null,
+   "ended": false,
+   "sort-name": "Os planetas, Op. 32: VI. Urano, o mágico",
+   "primary": true,
+   "type-id": null
+  },
+  {
+   "sort-name": "The Planets Suite, Op. 32: VI. Uranus, the Magician",
+   "ended": false,
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "name": "The Planets Suite, Op. 32: VI. Uranus, the Magician",
+   "end": null
+  },
+  {
+   "begin": null,
+   "locale": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Uranus, the Magican",
+   "type": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Uranus, the Magican",
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "locale": null,
+   "name": "The Planets, Op. 32: Uranus, the Magician",
+   "end": null,
+   "type": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Uranus, the Magician"
+  },
+  {
+   "end": null,
+   "name": "The Planets, Op. 32: Uranus, the Magician",
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets, Op. 32: Uranus, the Magician",
+   "ended": false
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Uranus, the Magician. Allegro - Lento - Allegro - Largo",
+   "type": null,
+   "name": "The Planets, Op. 32: Uranus, the Magician. Allegro - Lento - Allegro - Largo",
+   "end": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: VI. Uranus, the Magician",
+   "locale": null,
+   "name": "The Planets, Op. 32: VI. Uranus, the Magician",
+   "end": null,
+   "type": null,
+   "begin": null
+  },
+  {
+   "end": null,
+   "name": "The Planets, Op. 32: VI. Uranus, the Magician",
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: VI. Uranus, the Magician"
+  },
+  {
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: VI. Uranus, the Magician (Allegro)",
+   "locale": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: VI. Uranus, the Magician (Allegro)"
+  },
+  {
+   "begin": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: VI. Uranus, the Magician: Allegro / Lento / Allegro / Largo",
+   "locale": null,
+   "sort-name": "The Planets, Op. 32: VI. Uranus, the Magician: Allegro / Lento / Allegro / Largo",
+   "ended": false,
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "sort-name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: VI. \"Uranus, the Magician\"",
+   "ended": false,
+   "type": null,
+   "name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: VI. \"Uranus, the Magician\"",
+   "end": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets: Uranus",
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets: Uranus",
+   "locale": null
+  },
+  {
+   "begin": null,
+   "end": null,
+   "name": "The Planets: Uranus, the Magician",
+   "type": null,
+   "locale": null,
+   "ended": false,
+   "sort-name": "The Planets: Uranus, the Magician",
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets: Uranus, the Magician",
+   "type": null,
+   "name": "The Planets: Uranus, the Magician",
+   "end": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets: Uranus, the Magician. Allegro - Lento - Allegro - Largo",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "name": "The Planets: Uranus, the Magician. Allegro - Lento - Allegro - Largo",
+   "end": null,
+   "type": null,
+   "locale": null
+  },
+  {
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets: VI. Uranus, the Magician",
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets: VI. Uranus, the Magician",
+   "ended": false
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "sort-name": "Uranus (The Magician)",
+   "ended": false,
+   "end": null,
+   "name": "Uranus (The Magician)",
+   "type": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "sort-name": "Uranus, le magicien",
+   "ended": false,
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "end": null,
+   "name": "Uranus, le magicien",
+   "type": null,
+   "locale": null
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "Uranus, the Magician",
+   "locale": null,
+   "end": null,
+   "name": "Uranus, the Magician",
+   "type": null,
+   "begin": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "Uranus, the Magician (Allegro)",
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "Uranus, the Magician (Allegro)",
+   "begin": null
+  }
+ ],
+ "type": null,
+ "attributes": [],
+ "language": null,
+ "type-id": null,
+ "iswcs": [],
+ "title": "The Planets, op. 32: VI. Uranus, the Magician",
+ "relations": [
+  {
+   "type": "composer",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "attribute-ids": {},
+   "end": "1916",
+   "direction": "backward",
+   "begin": "1914",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "3ba68671-e3b5-4263-81dc-76b16b29bbc6",
+    "sort-name": "Holst, Gustav",
+    "name": "Gustav Holst",
+    "type": "Person",
+    "disambiguation": "composer",
+    "country": "GB"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "attributes": [],
+   "ended": true
+  },
+  {
+   "direction": "forward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "921a7775-7ff6-4b69-873a-0c22742e4e5b",
+    "attributes": [],
+    "language": "zxx",
+    "type-id": null,
+    "title": "The Planets, op. 32: VI. Uranus, the Magician",
+    "iswcs": [],
+    "disambiguation": "for brass quintet and organ",
+    "type": null
+   },
+   "attributes": [],
+   "target-credit": "",
+   "type": "arrangement",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {}
+  },
+  {
+   "ended": false,
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "type": null,
+    "disambiguation": "for organ, Sykes",
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: VI. Uranus, the Magician",
+    "language": "zxx",
+    "attributes": [],
+    "id": "b3820312-1688-429e-b2c6-2baf62efbf70",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "begin": null,
+   "direction": "forward",
+   "attribute-ids": {},
+   "end": null,
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "arrangement"
+  },
+  {
+   "target-credit": "",
+   "type": "arrangement",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "direction": "forward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null,
+   "ended": false,
+   "work": {
+    "id": "f9a91d46-0702-4b8c-9ec2-c4ef88cd9eba",
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: VI. Uranus, the Magician",
+    "attributes": [],
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "disambiguation": "for organ, Challenger",
+    "type": null
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": []
+  },
+  {
+   "target-credit": "",
+   "type": "arrangement",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "begin": null,
+   "direction": "forward",
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "title": "The Planets, op. 32: VI. Uranus, the Magician",
+    "type-id": null,
+    "iswcs": [],
+    "attributes": [],
+    "language": null,
+    "id": "07a4fe61-ac84-4d26-b0cd-376882ca7035",
+    "languages": [],
+    "type": null,
+    "disambiguation": "catch‐all for arrangements"
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299"
+  },
+  {
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "type-id": null,
+    "title": "The Planets, op. 32: VI. Uranus, the Magician",
+    "iswcs": [],
+    "language": "zxx",
+    "attributes": [],
+    "id": "807c5edc-31a8-4fcc-83a7-6724590d1317",
+    "type": null,
+    "disambiguation": "for two pianos"
+   },
+   "type-id": "dd372cb2-5f4d-4dcd-868e-7564782f460b",
+   "begin": null,
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": null,
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "orchestration"
+  },
+  {
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "begin": null,
+   "direction": "backward",
+   "attributes": [
+    "movement"
+   ],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "iswcs": [],
+    "title": "The Planets, op. 32",
+    "language": "zxx",
+    "attributes": [],
+    "id": "439c1605-bf74-4e0c-b2d9-6f4f89619ec6",
+    "languages": [
+     "zxx"
+    ],
+    "type": "Suite",
+    "disambiguation": "Suite for Large Orchestra"
+   },
+   "ended": false,
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 6,
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": ""
+  }
+ ]
+}

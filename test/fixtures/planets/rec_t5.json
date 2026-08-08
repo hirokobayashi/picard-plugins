@@ -1,0 +1,128 @@
+{
+ "aliases": [],
+ "relations": [
+  {
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "attributes": [],
+   "artist": {
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Clements, Mike",
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work",
+    "name": "Mike Clements",
+    "type": "Person",
+    "country": "GB"
+   },
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2",
+   "ended": true,
+   "type": "balance",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": ""
+  },
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "conductor",
+   "ended": true,
+   "attributes": [],
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597",
+    "sort-name": "Rattle, Simon",
+    "type": "Person",
+    "name": "Simon Rattle",
+    "disambiguation": "conductor",
+    "country": "GB"
+   },
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": "2006-03-18"
+  },
+  {
+   "target-credit": "",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "ended": true,
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "sort-name": "Berliner Philharmoniker",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "name": "Berliner Philharmoniker",
+    "country": "DE"
+   },
+   "attributes": []
+  },
+  {
+   "target-credit": "",
+   "type": "producer",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "begin": null,
+   "direction": "backward",
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "attributes": [],
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "artist": {
+    "type": "Person",
+    "name": "Stephen Johns",
+    "disambiguation": "producer",
+    "country": null,
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928",
+    "sort-name": "Johns, Stephen"
+   }
+  },
+  {
+   "ended": true,
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "languages": [],
+    "attributes": [],
+    "language": null,
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: V. Saturn, the Bringer of Old Age",
+    "id": "07d9e46d-0847-43d3-89da-27eb304943b1"
+   },
+   "begin": "2006-03-15",
+   "direction": "forward",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "performance"
+  }
+ ],
+ "length": 575586,
+ "disambiguation": "",
+ "id": "e5389445-56f2-4cd6-8b3c-e1231b50eed5",
+ "first-release-date": "2006-07-28",
+ "title": "The Planets Suite for Orchestra, op. 32: Saturn, the Bringer of Old Age",
+ "video": false
+}

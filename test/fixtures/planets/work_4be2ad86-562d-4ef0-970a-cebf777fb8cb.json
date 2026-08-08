@@ -1,0 +1,483 @@
+{
+ "languages": [],
+ "id": "4be2ad86-562d-4ef0-970a-cebf777fb8cb",
+ "type": null,
+ "disambiguation": "",
+ "aliases": [
+  {
+   "sort-name": "Die Planeten: Neptun, der Mystiker",
+   "ended": false,
+   "primary": true,
+   "type-id": null,
+   "begin": null,
+   "locale": "de",
+   "type": null,
+   "name": "Die Planeten: Neptun, der Mystiker",
+   "end": null
+  },
+  {
+   "locale": "fr",
+   "name": "Les Planetes, Op. 32: VII. Neptune, Le Mystique",
+   "end": null,
+   "type": null,
+   "begin": null,
+   "type-id": null,
+   "primary": true,
+   "ended": false,
+   "sort-name": "Les Planetes, Op. 32: VII. Neptune, Le Mystique"
+  },
+  {
+   "begin": null,
+   "type": null,
+   "end": null,
+   "name": "Los planetas, Op. 32: VII. Neptuno, el místico",
+   "locale": "es",
+   "sort-name": "Los planetas, Op. 32: VII. Neptuno, el místico",
+   "ended": false,
+   "primary": true,
+   "type-id": null
+  },
+  {
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "Neptun, der Mystische (aus: Die Planeten)",
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "Neptun, der Mystische (aus: Die Planeten)"
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "sort-name": "Neptune, the Mystic",
+   "ended": false,
+   "end": null,
+   "name": "Neptune, the Mystic",
+   "type": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "sort-name": "Neptune, the Mystic (Andante)",
+   "ended": false,
+   "end": null,
+   "name": "Neptune, the Mystic (Andante)",
+   "type": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "end": null,
+   "name": "Neptune, the Mystic (original ending)",
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "sort-name": "Neptune, the Mystic (original ending)",
+   "ended": false
+  },
+  {
+   "locale": "pt",
+   "name": "Os planetas, Op. 32: VII. Netuno, o místico",
+   "end": null,
+   "type": null,
+   "begin": null,
+   "primary": true,
+   "type-id": null,
+   "sort-name": "Os planetas, Op. 32: VII. Netuno, o místico",
+   "ended": false
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets Suite for Orchestra, Op. 32: Neptune, the Mystic",
+   "end": null,
+   "name": "The Planets Suite for Orchestra, Op. 32: Neptune, the Mystic",
+   "type": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "locale": null,
+   "name": "The Planets Suite, Op. 32: VII. Neptune, the Mystic",
+   "end": null,
+   "type": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets Suite, Op. 32: VII. Neptune, the Mystic"
+  },
+  {
+   "begin": null,
+   "name": "The Planets, Op. 32: Neptune, the Mystic",
+   "end": null,
+   "type": null,
+   "locale": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Neptune, the Mystic",
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Neptune, the Mystic",
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Neptune, the Mystic"
+  },
+  {
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "name": "The Planets, Op. 32: Neptune, the Mystic. Andante - Allegretto",
+   "end": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Neptune, the Mystic. Andante - Allegretto",
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: VII. Neptune, the Mystic",
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: VII. Neptune, the Mystic",
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "locale": null,
+   "type": null,
+   "name": "The Planets, Op. 32: VII. Neptune, the Mystic",
+   "end": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: VII. Neptune, the Mystic"
+  },
+  {
+   "name": "The Planets, Op. 32: VII. Neptune, the Mystic",
+   "end": null,
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets, Op. 32: VII. Neptune, the Mystic",
+   "ended": false
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: VII. Neptune, the Mystic (Andante)",
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: VII. Neptune, the Mystic (Andante)"
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: VII. Neptune, the Mystic (with 6 part chorus of female voices)",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: VII. Neptune, the Mystic (with 6 part chorus of female voices)",
+   "locale": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: VII. Neptune, the Mystic: Andante / Allegretto",
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: VII. Neptune, the Mystic: Andante / Allegretto",
+   "begin": null
+  },
+  {
+   "begin": null,
+   "locale": null,
+   "name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: VII. \"Neptune, the Mystic\" (w/hidden 8-part female chorus)",
+   "end": null,
+   "type": null,
+   "sort-name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: VII. \"Neptune, the Mystic\" (w/hidden 8-part female chorus)",
+   "ended": false,
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "sort-name": "The Planets: Neptune, the Mystic",
+   "ended": false,
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "type": null,
+   "name": "The Planets: Neptune, the Mystic",
+   "end": null,
+   "locale": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets: Neptune, the Mystic. Andante - Allegretto",
+   "ended": false,
+   "locale": null,
+   "name": "The Planets: Neptune, the Mystic. Andante - Allegretto",
+   "end": null,
+   "type": null,
+   "begin": null
+  },
+  {
+   "end": null,
+   "name": "The Planets: VII. Neptune, the Mystic",
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets: VII. Neptune, the Mystic",
+   "ended": false
+  }
+ ],
+ "type-id": null,
+ "title": "The Planets, op. 32: VII. Neptune, the Mystic",
+ "iswcs": [],
+ "attributes": [],
+ "language": null,
+ "relations": [
+  {
+   "begin": "1914",
+   "direction": "backward",
+   "end": "1916",
+   "attribute-ids": {},
+   "ended": true,
+   "attributes": [],
+   "artist": {
+    "disambiguation": "composer",
+    "name": "Gustav Holst",
+    "type": "Person",
+    "country": "GB",
+    "id": "3ba68671-e3b5-4263-81dc-76b16b29bbc6",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Holst, Gustav"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "target-credit": "",
+   "type": "composer",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {}
+  },
+  {
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "forward",
+   "attributes": [],
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "attributes": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: VII. Neptune, the Mystic",
+    "iswcs": [],
+    "id": "9297b610-5e86-4dc4-8c4a-c22b25f11f1e",
+    "type": null,
+    "disambiguation": "for brass quintet and organ"
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "ended": false,
+   "type": "arrangement",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "type": "arrangement",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "forward",
+   "attributes": [],
+   "work": {
+    "disambiguation": "for organ, Sykes",
+    "type": null,
+    "languages": [
+     "zxx"
+    ],
+    "id": "77db9f71-0697-486d-a9c1-9c53897d08aa",
+    "attributes": [],
+    "language": "zxx",
+    "type-id": null,
+    "title": "The Planets, op. 32: VII. Neptune, the Mystic",
+    "iswcs": []
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "ended": false
+  },
+  {
+   "attribute-ids": {},
+   "end": null,
+   "direction": "forward",
+   "begin": null,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets Suite: II. Neptune, The Mystic",
+    "language": "zxx",
+    "attributes": [],
+    "id": "77f4e73f-06ec-44b0-a3c5-fd5b10302a12",
+    "type": null,
+    "disambiguation": "for five pianos, Anderson"
+   },
+   "attributes": [],
+   "ended": false,
+   "type": "arrangement",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": ""
+  },
+  {
+   "attribute-ids": {},
+   "end": null,
+   "direction": "forward",
+   "begin": null,
+   "work": {
+    "disambiguation": "for organ, Challenger",
+    "type": null,
+    "id": "4c0de880-60b5-44cd-8bff-49700f468a9b",
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: VII. Neptune, the Mystic",
+    "language": "zxx",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "ended": false,
+   "type": "arrangement",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "orchestration",
+   "target-credit": "",
+   "attributes": [],
+   "type-id": "dd372cb2-5f4d-4dcd-868e-7564782f460b",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "title": "The Planets, op. 32: VII. Neptune, the Mystic",
+    "type-id": null,
+    "iswcs": [],
+    "language": "zxx",
+    "attributes": [],
+    "id": "ffaad41a-4123-4519-8e8e-36a148073fd9",
+    "type": null,
+    "disambiguation": "for two pianos"
+   },
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "backward"
+  },
+  {
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "ordering-key": 7,
+   "target-credit": "",
+   "type": "parts",
+   "ended": false,
+   "work": {
+    "type": "Suite",
+    "disambiguation": "Suite for Large Orchestra",
+    "languages": [
+     "zxx"
+    ],
+    "attributes": [],
+    "language": "zxx",
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "iswcs": [],
+    "title": "The Planets, op. 32",
+    "id": "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [
+    "movement"
+   ],
+   "direction": "backward",
+   "begin": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null
+  },
+  {
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "forward",
+   "attributes": [],
+   "work": {
+    "disambiguation": "revised ending for transition to Pluto",
+    "type": null,
+    "languages": [],
+    "id": "254f397b-0d15-4812-aec4-02d0aa1d5898",
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: VII. Neptune, The Mystic",
+    "attributes": [],
+    "language": null
+   },
+   "type-id": "4d0d6491-3c41-42c6-883f-d6c7e825b052",
+   "ended": false,
+   "type": "revision of",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  }
+ ]
+}

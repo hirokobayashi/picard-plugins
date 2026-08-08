@@ -1,0 +1,162 @@
+{
+ "attributes": [],
+ "language": null,
+ "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+ "title": "The Planets Suite extension",
+ "iswcs": [],
+ "relations": [
+  {
+   "ended": true,
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "disambiguation": "composer",
+    "name": "Gustav Holst",
+    "type": "Person",
+    "country": "GB",
+    "id": "3ba68671-e3b5-4263-81dc-76b16b29bbc6",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Holst, Gustav"
+   },
+   "attributes": [],
+   "direction": "backward",
+   "begin": "1914",
+   "attribute-ids": {},
+   "end": "1916",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "composer"
+  },
+  {
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "composer",
+   "target-credit": "",
+   "attributes": [],
+   "artist": {
+    "country": "GB",
+    "disambiguation": "English composer",
+    "type": "Person",
+    "name": "Colin Matthews",
+    "sort-name": "Matthews, Colin",
+    "id": "1ebf6f25-cf08-4550-94cc-3cbf215106f0",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "backward"
+  },
+  {
+   "type": "other version",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "backward",
+   "attributes": [],
+   "type-id": "7440b539-19ab-4243-8c03-4f5942ca2218",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "iswcs": [],
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "title": "The Planets, op. 32",
+    "language": "zxx",
+    "attributes": [],
+    "id": "439c1605-bf74-4e0c-b2d9-6f4f89619ec6",
+    "type": "Suite",
+    "disambiguation": "Suite for Large Orchestra"
+   },
+   "ended": false
+  },
+  {
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "id": "4477808e-cc63-3832-a884-d424e6df4363",
+    "iswcs": [],
+    "type-id": null,
+    "title": "Pluto, the Renewer",
+    "language": null,
+    "attributes": [],
+    "languages": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "direction": "forward",
+   "end": null,
+   "attribute-ids": {},
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "ordering-key": 2,
+   "target-credit": "",
+   "type": "parts"
+  },
+  {
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 1,
+   "attributes": [],
+   "work": {
+    "languages": [],
+    "id": "254f397b-0d15-4812-aec4-02d0aa1d5898",
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: VII. Neptune, The Mystic",
+    "attributes": [],
+    "language": null,
+    "disambiguation": "revised ending for transition to Pluto",
+    "type": null
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "forward"
+  }
+ ],
+ "id": "5a75e61c-a670-37a9-bf73-4e7e22bbb12a",
+ "languages": [],
+ "type": "Suite",
+ "aliases": [
+  {
+   "end": null,
+   "name": "Die Planeten",
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "sort-name": "Die Planeten",
+   "ended": false
+  },
+  {
+   "locale": null,
+   "end": null,
+   "name": "The Planets",
+   "type": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets",
+   "ended": false
+  }
+ ],
+ "disambiguation": "with “Pluto” by Colin Matthews"
+}

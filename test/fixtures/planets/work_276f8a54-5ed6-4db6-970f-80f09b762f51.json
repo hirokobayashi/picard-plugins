@@ -1,0 +1,112 @@
+{
+ "relations": [
+  {
+   "type": "composer",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "attribute-ids": {},
+   "end": "2006",
+   "begin": null,
+   "direction": "backward",
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "sort-name": "Dean, Brett",
+    "id": "1e9efedb-eea2-4e33-800c-31494f4929ba",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "AU",
+    "disambiguation": "Australian composer, violist and conductor",
+    "name": "Brett Dean",
+    "type": "Person"
+   },
+   "ended": true
+  },
+  {
+   "target-credit": "",
+   "type": "parts",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "forward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null,
+   "ended": false,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "language": null,
+    "attributes": [],
+    "type-id": null,
+    "title": "3 Memorials: Dispersal",
+    "iswcs": [],
+    "id": "00fa864e-d0db-407b-bdef-ce7f62460a59",
+    "languages": [],
+    "type": null,
+    "disambiguation": ""
+   },
+   "attributes": []
+  },
+  {
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "parts",
+   "target-credit": "",
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "id": "c7d2edfb-041e-458f-a883-ca9b1433d887",
+    "type-id": null,
+    "iswcs": [],
+    "title": "3 Memorials: Ceremonial",
+    "attributes": [],
+    "language": null,
+    "languages": []
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "direction": "forward",
+   "begin": null
+  },
+  {
+   "begin": null,
+   "direction": "forward",
+   "attribute-ids": {},
+   "end": null,
+   "ended": false,
+   "attributes": [],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "id": "570250af-fed3-4b19-9b9a-5ad42fbbad0f",
+    "attributes": [],
+    "language": null,
+    "iswcs": [],
+    "type-id": null,
+    "title": "Komarov's Fall",
+    "languages": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "target-credit": "",
+   "type": "parts",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "language": null,
+ "attributes": [],
+ "type-id": null,
+ "title": "3 Memorials",
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "aliases": [],
+ "id": "276f8a54-5ed6-4db6-970f-80f09b762f51",
+ "languages": []
+}

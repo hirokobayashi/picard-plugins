@@ -1,0 +1,193 @@
+{
+ "video": false,
+ "title": "The Planets Suite for Orchestra, op. 32: Neptune, the Mystic",
+ "first-release-date": "2006-07-28",
+ "id": "c9d436aa-283f-4fda-bfe7-6aa187e366e1",
+ "aliases": [
+  {
+   "locale": null,
+   "type": null,
+   "name": "The Planets, Op. 32: Neptune the Mystic",
+   "end": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Neptune the Mystic"
+  }
+ ],
+ "relations": [
+  {
+   "type": "balance",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "artist": {
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work",
+    "type": "Person",
+    "name": "Mike Clements",
+    "country": "GB",
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Clements, Mike"
+   },
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2",
+   "attributes": [],
+   "ended": true
+  },
+  {
+   "attributes": [],
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597",
+    "sort-name": "Rattle, Simon",
+    "type": "Person",
+    "name": "Simon Rattle",
+    "disambiguation": "conductor",
+    "country": "GB"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "ended": true,
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "conductor",
+   "target-credit": ""
+  },
+  {
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "ended": true,
+   "artist": {
+    "sort-name": "Berliner Philharmoniker",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce",
+    "country": "DE",
+    "type": "Orchestra",
+    "name": "Berliner Philharmoniker",
+    "disambiguation": ""
+   },
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "target-credit": "",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {}
+  },
+  {
+   "begin": null,
+   "direction": "backward",
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "attributes": [],
+   "artist": {
+    "sort-name": "Johns, Stephen",
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": null,
+    "disambiguation": "producer",
+    "name": "Stephen Johns",
+    "type": "Person"
+   },
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "target-credit": "",
+   "type": "producer",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {}
+  },
+  {
+   "type": "vocal",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "attribute-ids": {
+    "choir vocals": "43427f08-837b-46b8-bc77-483453af6a7b"
+   },
+   "end": null,
+   "attribute-credits": {},
+   "direction": "backward",
+   "begin": null,
+   "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa",
+   "artist": {
+    "sort-name": "Rundfunkchor Berlin",
+    "id": "d0cbe60f-f919-4873-8c64-537fd600a4f5",
+    "type-id": "6124967d-7e3a-3eba-b642-c9a2ffb44d94",
+    "country": "DE",
+    "disambiguation": "",
+    "type": "Choir",
+    "name": "Rundfunkchor Berlin"
+   },
+   "attributes": [
+    "choir vocals"
+   ],
+   "ended": false
+  },
+  {
+   "type": "performance",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "direction": "forward",
+   "begin": "2006-03-15",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "languages": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: VII. Neptune, The Mystic",
+    "attributes": [],
+    "language": null,
+    "id": "254f397b-0d15-4812-aec4-02d0aa1d5898",
+    "type": null,
+    "disambiguation": "revised ending for transition to Pluto"
+   },
+   "attributes": [],
+   "ended": true
+  },
+  {
+   "ended": false,
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "id": "4be2ad86-562d-4ef0-970a-cebf777fb8cb",
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: VII. Neptune, the Mystic",
+    "attributes": [],
+    "language": null,
+    "languages": []
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "direction": "forward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null,
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "performance"
+  }
+ ],
+ "length": 422400,
+ "disambiguation": ""
+}

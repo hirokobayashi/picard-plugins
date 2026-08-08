@@ -1,0 +1,128 @@
+{
+ "title": "The Planets Suite for Orchestra, op. 32: Uranus, the Magician",
+ "id": "c213dd85-0641-4203-a75d-f1238cd35236",
+ "first-release-date": "2006-07-28",
+ "video": false,
+ "aliases": [],
+ "relations": [
+  {
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "balance",
+   "ended": true,
+   "attributes": [],
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d",
+    "sort-name": "Clements, Mike",
+    "name": "Mike Clements",
+    "type": "Person",
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work",
+    "country": "GB"
+   },
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2",
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": "2006-03-18"
+  },
+  {
+   "ended": true,
+   "attributes": [],
+   "artist": {
+    "disambiguation": "conductor",
+    "type": "Person",
+    "name": "Simon Rattle",
+    "country": "GB",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Rattle, Simon"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "conductor"
+  },
+  {
+   "ended": true,
+   "artist": {
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce",
+    "sort-name": "Berliner Philharmoniker",
+    "type": "Orchestra",
+    "name": "Berliner Philharmoniker",
+    "disambiguation": "",
+    "country": "DE"
+   },
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "performing orchestra"
+  },
+  {
+   "target-credit": "",
+   "type": "producer",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "begin": null,
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": null,
+   "ended": false,
+   "attributes": [],
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "artist": {
+    "sort-name": "Johns, Stephen",
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": null,
+    "disambiguation": "producer",
+    "name": "Stephen Johns",
+    "type": "Person"
+   }
+  },
+  {
+   "ended": true,
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "languages": [],
+    "id": "e726a374-a823-436e-9afe-8f58d15eb547",
+    "attributes": [],
+    "language": null,
+    "type-id": null,
+    "title": "The Planets, op. 32: VI. Uranus, the Magician",
+    "iswcs": []
+   },
+   "attributes": [],
+   "direction": "forward",
+   "begin": "2006-03-15",
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "performance"
+  }
+ ],
+ "disambiguation": "",
+ "length": 364013
+}

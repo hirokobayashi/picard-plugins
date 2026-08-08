@@ -1,0 +1,130 @@
+{
+ "aliases": [],
+ "relations": [
+  {
+   "target-credit": "",
+   "type": "balance",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "ended": true,
+   "attributes": [],
+   "artist": {
+    "name": "Mike Clements",
+    "type": "Person",
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work",
+    "country": "GB",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d",
+    "sort-name": "Clements, Mike"
+   },
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2"
+  },
+  {
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597",
+    "sort-name": "Rattle, Simon",
+    "type": "Person",
+    "name": "Simon Rattle",
+    "disambiguation": "conductor",
+    "country": "GB"
+   },
+   "attributes": [],
+   "ended": true,
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "conductor",
+   "target-credit": ""
+  },
+  {
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "target-credit": "",
+   "artist": {
+    "country": "DE",
+    "type": "Orchestra",
+    "name": "Berliner Philharmoniker",
+    "disambiguation": "",
+    "sort-name": "Berliner Philharmoniker",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce"
+   },
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "ended": true,
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "direction": "backward",
+   "begin": "2006-03-15"
+  },
+  {
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "producer",
+   "ended": false,
+   "attributes": [],
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "artist": {
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Johns, Stephen",
+    "disambiguation": "producer",
+    "type": "Person",
+    "name": "Stephen Johns",
+    "country": null
+   },
+   "begin": null,
+   "direction": "backward",
+   "end": null,
+   "attribute-ids": {}
+  },
+  {
+   "target-credit": "",
+   "type": "performance",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "begin": "2006-03-15",
+   "direction": "forward",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "ended": true,
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "id": "599168cc-8ca2-4685-9ef7-b178369a1ae0",
+    "language": "zxx",
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "towards Osiris",
+    "languages": [
+     "zxx"
+    ],
+    "disambiguation": "",
+    "type": null
+   }
+  }
+ ],
+ "length": 475520,
+ "disambiguation": "",
+ "title": "towards Osiris",
+ "id": "6a6658b2-c3cf-4ca2-9b02-2fe85e79dbe0",
+ "first-release-date": "2006-07-28",
+ "video": false
+}

@@ -1,0 +1,39 @@
+{
+ "type-id": null,
+ "iswcs": [],
+ "title": "towards Osiris",
+ "attributes": [],
+ "language": "zxx",
+ "relations": [
+  {
+   "ended": true,
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "sort-name": "Pintscher, Matthias",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "3998a0e5-bcf4-41ff-951d-cddafd51cbb9",
+    "country": "DE",
+    "name": "Matthias Pintscher",
+    "type": "Person",
+    "disambiguation": ""
+   },
+   "attributes": [],
+   "direction": "backward",
+   "begin": "2005",
+   "end": "2005",
+   "attribute-ids": {},
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "composer"
+  }
+ ],
+ "id": "599168cc-8ca2-4685-9ef7-b178369a1ae0",
+ "languages": [
+  "zxx"
+ ],
+ "aliases": [],
+ "disambiguation": "",
+ "type": null
+}
