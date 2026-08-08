@@ -2487,11 +2487,16 @@ class TristanFullAlbumIntegrationTestCase(ClassicalExtrasTestCase):
 
     _OPERA = "ae217ba8-0b07-4b0b-aed6-c80535dcd94b"   # Tristan und Isolde, WWV 90
 
-    def _run_full_album(self):
+    def _run_full_album(self, drain="fifo"):
         """Drive the whole 11-track album through the real Picard flow (build
-        every track, then drain the webservice callbacks FIFO so process_album
-        runs once at the end) against the on-disk fixtures. Returns the dict of
-        label -> track so callers can assert on the resulting metadata."""
+        every track, then drain the webservice callbacks so process_album runs
+        once at the end) against the on-disk fixtures. Returns the dict of
+        label -> track so callers can assert on the resulting metadata.
+
+        ``drain`` selects the order the queued lookups are answered in; real
+        Picard answers them in network-completion order -- see
+        test_result_is_independent_of_lookup_order."""
+        import random
         from unittest.mock import Mock
         mod = self.mod
         pl = mod.PartLevels()
@@ -2536,10 +2541,50 @@ class TristanFullAlbumIntegrationTestCase(ClassicalExtrasTestCase):
             node = {'recording': self._load("rec_%s.json" % label)}
             pl.add_work_info(album, t.metadata, node, {})
 
+        rng = random.Random(drain)
         while pending:
-            cb, resp = pending.pop(0)
+            if drain == "fifo":
+                i = 0
+            elif drain == "lifo":
+                i = len(pending) - 1
+            else:
+                i = rng.randrange(len(pending))
+            cb, resp = pending.pop(i)
             cb(resp, None, None)
         return tracks
+
+    def test_result_is_independent_of_lookup_order(self):
+        """Track 2's work is an arrangement reaching the opera by two act-paths
+        of different depths, so its parent chain is built from fused id tuples.
+        _reduce_redundant_parents could shorten one of those tuples to a key no
+        node was filed under; create_trackback then found no such parent, and
+        because self.trackback is a defaultdict it appended a freshly created
+        EMPTY node -- the whole subtree, and track 2 with it, dropped out of the
+        album, leaving it with no top work at all.
+
+        Whether the reduction fired depended on how much of the hierarchy had
+        resolved when process_album ran, i.e. on the order the async lookups
+        came back in: track 2 lost its top work in about two thirds of orders
+        while FIFO -- the only order the other tests exercise -- got it right."""
+        orders = ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]
+        baseline = None
+        for order in orders:
+            tracks = self._run_full_album(drain=order)
+            result = {
+                label: self.mod.str_to_list(
+                    tracks[label].metadata['~cwp_work_top'])
+                for label, _d, _t, _r, _w in self._TRACKS}
+            if baseline is None:
+                baseline = result
+                self.assertEqual(baseline["t2"], ["Tristan und Isolde, WWV 90"])
+            else:
+                self.assertEqual(
+                    result, baseline,
+                    "drain order %r changed the tags" % order)
+            for label, top in result.items():
+                self.assertTrue(
+                    top, "%s lost its top work under drain order %r"
+                    % (label, order))
 
     def test_track2_resolves_to_opera_top(self):
         tracks = self._run_full_album()

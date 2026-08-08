@@ -6974,7 +6974,33 @@ class PartLevels():
                     # this never touches genuine sibling multi-parents such as
                     # two same-named suite versions, where neither is an
                     # ancestor of the other.)
-                    parentIds = self._reduce_redundant_parents(parentIds)
+                    reduced = self._reduce_redundant_parents(parentIds)
+                    # Only accept the reduction if the shortened tuple is a node
+                    # that actually exists. A node is identified by its id
+                    # tuple, and reducing one produces a DIFFERENT key: where
+                    # that key is real (Don Giovanni's Atto II, which other
+                    # tracks reach directly, so ('Atto II',) is a node) the
+                    # reduction is what stops the standalone K. 540c leaking
+                    # into the intermediate work level. Where it is not real the
+                    # link dangles -- create_trackback finds no such parent,
+                    # appends a freshly defaulted EMPTY node, and the entire
+                    # subtree under it drops out of the album. That is how
+                    # Tristan track 2 lost its top work: ('Akt III',) pointed at
+                    # nothing while the node was keyed ('Akt III', 'Tristan und
+                    # Isolde'). Whether a reduction fired at all depended on how
+                    # much of the hierarchy had resolved, i.e. on the order the
+                    # async lookups came back in, so the album tagged
+                    # differently from run to run.
+                    if (tuple(reduced) == tuple(parentIds)
+                            or tuple(reduced) in self.work_listing[album]):
+                        parentIds = reduced
+                    else:
+                        write_log(
+                                release_id,
+                                'info',
+                                "Keeping unreduced parents %s: reduction to %s "
+                                "is not a known node",
+                                parentIds, reduced)
                     # for parentId in parentIds:
                     write_log(
                             release_id,
