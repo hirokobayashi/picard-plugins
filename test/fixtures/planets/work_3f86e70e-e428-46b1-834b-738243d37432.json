@@ -1,0 +1,521 @@
+{
+ "relations": [
+  {
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "composer",
+   "ended": true,
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "country": "GB",
+    "disambiguation": "composer",
+    "name": "Gustav Holst",
+    "type": "Person",
+    "sort-name": "Holst, Gustav",
+    "id": "3ba68671-e3b5-4263-81dc-76b16b29bbc6",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "begin": "1914",
+   "direction": "backward",
+   "end": "1916",
+   "attribute-ids": {}
+  },
+  {
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "arrangement",
+   "ended": false,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "id": "0a58d87c-8176-47db-87c2-e487d9a54ae8",
+    "language": "zxx",
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: II. Venus, the Bringer of Peace",
+    "languages": [
+     "zxx"
+    ],
+    "disambiguation": "for brass quintet and organ",
+    "type": null
+   },
+   "attributes": [],
+   "direction": "forward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "arrangement",
+   "target-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "id": "909468be-9b8c-4596-b20b-0e58cbf08602",
+    "attributes": [],
+    "language": "zxx",
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: II. Venus, the Bringer of Peace",
+    "languages": [
+     "zxx"
+    ],
+    "disambiguation": "for organ, Sykes",
+    "type": null
+   },
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "direction": "forward",
+   "begin": null
+  },
+  {
+   "ended": false,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "disambiguation": "",
+    "type": "Song",
+    "languages": [
+     "zxx"
+    ],
+    "id": "ae7b1949-4de0-4123-af5d-343c21d6edab",
+    "language": "zxx",
+    "attributes": [],
+    "iswcs": [],
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "title": "宇宙めぐり"
+   },
+   "attributes": [],
+   "direction": "forward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {},
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "arrangement"
+  },
+  {
+   "ended": false,
+   "work": {
+    "id": "c6604a25-dfc5-464d-abc3-51e7fbb62009",
+    "language": "zxx",
+    "attributes": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: II. Venus, the Bringer of Peace",
+    "iswcs": [],
+    "languages": [
+     "zxx"
+    ],
+    "disambiguation": "for organ, Challenger",
+    "type": null
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "direction": "forward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null,
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "arrangement"
+  },
+  {
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "forward",
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "disambiguation": "catch‐all for arrangements",
+    "type": null,
+    "languages": [],
+    "id": "bf971314-f155-4551-a9ae-d4eaad717789",
+    "attributes": [],
+    "language": null,
+    "title": "The Planets, op. 32: II. Venus, the Bringer of Peace",
+    "type-id": null,
+    "iswcs": []
+   },
+   "ended": false,
+   "type": "arrangement",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": ""
+  },
+  {
+   "target-credit": "",
+   "type": "arrangement",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "begin": null,
+   "direction": "forward",
+   "attribute-ids": {},
+   "end": null,
+   "ended": false,
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "type-id": null,
+    "title": "The Planets, op. 32: II. Venus, the Bringer of Peace",
+    "iswcs": [],
+    "attributes": [],
+    "language": "zxx",
+    "id": "eca7bed2-e9b4-4c11-9240-4b3443b33931",
+    "languages": [
+     "zxx"
+    ]
+   }
+  },
+  {
+   "work": {
+    "language": "zxx",
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: II. Venus, the Bringer of Peace",
+    "id": "ce008ef9-f12f-4dce-a8ba-1c022ee7e243",
+    "languages": [
+     "zxx"
+    ],
+    "type": null,
+    "disambiguation": "for two pianos"
+   },
+   "type-id": "dd372cb2-5f4d-4dcd-868e-7564782f460b",
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": null,
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "orchestration",
+   "target-credit": ""
+  },
+  {
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 2,
+   "work": {
+    "type": "Suite",
+    "disambiguation": "Suite for Large Orchestra",
+    "languages": [
+     "zxx"
+    ],
+    "attributes": [],
+    "language": "zxx",
+    "iswcs": [],
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "title": "The Planets, op. 32",
+    "id": "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [
+    "movement"
+   ],
+   "ended": false,
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "direction": "backward",
+   "begin": null
+  }
+ ],
+ "language": null,
+ "attributes": [],
+ "type-id": null,
+ "iswcs": [],
+ "title": "The Planets, op. 32: II. Venus, the Bringer of Peace",
+ "type": null,
+ "aliases": [
+  {
+   "sort-name": "Les Planetes, Op. 32: II. Venus, Porteuse de Paix",
+   "ended": false,
+   "primary": true,
+   "type-id": null,
+   "begin": null,
+   "locale": "fr",
+   "type": null,
+   "name": "Les Planetes, Op. 32: II. Venus, Porteuse de Paix",
+   "end": null
+  },
+  {
+   "ended": false,
+   "sort-name": "Los planetas, Op. 32: II. Venus, el portador de la Paz",
+   "primary": true,
+   "type-id": null,
+   "begin": null,
+   "locale": "es",
+   "type": null,
+   "name": "Los planetas, Op. 32: II. Venus, el portador de la Paz",
+   "end": null
+  },
+  {
+   "primary": true,
+   "type-id": null,
+   "sort-name": "Os planetas, Op. 32: II. Vênus, a mensageira da paz",
+   "ended": false,
+   "locale": "pt",
+   "type": null,
+   "end": null,
+   "name": "Os planetas, Op. 32: II. Vênus, a mensageira da paz",
+   "begin": null
+  },
+  {
+   "type": null,
+   "end": null,
+   "name": "The Planets Suite, Op. 32: II. Venus, the Bringer of Peace",
+   "locale": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "sort-name": "The Planets Suite, Op. 32: II. Venus, the Bringer of Peace",
+   "ended": false
+  },
+  {
+   "begin": null,
+   "type": null,
+   "name": "The Planets, Op. 32: II. Venus, the Bringer of Peace",
+   "end": null,
+   "locale": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: II. Venus, the Bringer of Peace",
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: II. Venus, the Bringer of Peace",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "end": null,
+   "name": "The Planets, Op. 32: II. Venus, the Bringer of Peace",
+   "type": null,
+   "locale": null
+  },
+  {
+   "locale": null,
+   "end": null,
+   "name": "The Planets, Op. 32: II. Venus, the Bringer of Peace (Adagio)",
+   "type": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "sort-name": "The Planets, Op. 32: II. Venus, the Bringer of Peace (Adagio)",
+   "ended": false
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "sort-name": "The Planets, Op. 32: II. Venus, the Bringer of Peace: Adagio / Andante / Animato / Tempo I",
+   "ended": false,
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: II. Venus, the Bringer of Peace: Adagio / Andante / Animato / Tempo I",
+   "begin": null
+  },
+  {
+   "sort-name": "The Planets, Op. 32: Venus, the Bringer of Peace",
+   "ended": false,
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "locale": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Venus, the Bringer of Peace",
+   "type": null
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Venus, the Bringer of Peace",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Venus, the Bringer of Peace",
+   "locale": null
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Venus, the Bringer of Peace. Adagio - Andante - Animato - Tempo I",
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Venus, the Bringer of Peace. Adagio - Andante - Animato - Tempo I",
+   "locale": null,
+   "begin": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets, Suite for Orchestra & Female Chorus, Op. 32, H. 125 \"Venus, the Bringer of Peace\"",
+   "ended": false,
+   "locale": null,
+   "type": null,
+   "name": "The Planets, Suite for Orchestra & Female Chorus, Op. 32, H. 125 \"Venus, the Bringer of Peace\"",
+   "end": null,
+   "begin": null
+  },
+  {
+   "begin": null,
+   "type": null,
+   "name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: II. \"Venus, the Bringer of Peace\"",
+   "end": null,
+   "locale": null,
+   "ended": false,
+   "sort-name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: II. \"Venus, the Bringer of Peace\"",
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "sort-name": "The Planets: II. Venus, the Bringer of Peace",
+   "ended": false,
+   "locale": null,
+   "name": "The Planets: II. Venus, the Bringer of Peace",
+   "end": null,
+   "type": null,
+   "begin": null
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets: II. Venus, the Bringer of Peace",
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "name": "The Planets: II. Venus, the Bringer of Peace",
+   "end": null,
+   "type": null,
+   "locale": null
+  },
+  {
+   "begin": null,
+   "end": null,
+   "name": "The Planets: Venus",
+   "type": null,
+   "locale": null,
+   "sort-name": "The Planets: Venus",
+   "ended": false,
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets: Venus, the Bringer of Love",
+   "ended": false,
+   "end": null,
+   "name": "The Planets: Venus, the Bringer of Love",
+   "type": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "locale": null,
+   "type": null,
+   "name": "The Planets: Venus, the Bringer of Peace",
+   "end": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets: Venus, the Bringer of Peace"
+  },
+  {
+   "end": null,
+   "name": "The Planets: Venus, the Bringer of Peace",
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets: Venus, the Bringer of Peace",
+   "ended": false
+  },
+  {
+   "begin": null,
+   "type": null,
+   "name": "The Planets: Venus, the Bringer of Peace. Adagio - Andante - Animato - Tempo I",
+   "end": null,
+   "locale": null,
+   "ended": false,
+   "sort-name": "The Planets: Venus, the Bringer of Peace. Adagio - Andante - Animato - Tempo I",
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "begin": null,
+   "type": null,
+   "name": "Venus (The Bringer Of Peace)",
+   "end": null,
+   "locale": null,
+   "ended": false,
+   "sort-name": "Venus (The Bringer Of Peace)",
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "begin": null,
+   "locale": null,
+   "name": "Venus, the Bringer of Peace",
+   "end": null,
+   "type": null,
+   "ended": false,
+   "sort-name": "Venus, the Bringer of Peace",
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "sort-name": "Venus, the Bringer of Peace",
+   "ended": false,
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "Venus, the Bringer of Peace",
+   "begin": null
+  },
+  {
+   "end": null,
+   "name": "Venus, the Bringer of Peace (Adagio)",
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "sort-name": "Venus, the Bringer of Peace (Adagio)",
+   "ended": false
+  }
+ ],
+ "disambiguation": "",
+ "languages": [],
+ "id": "3f86e70e-e428-46b1-834b-738243d37432"
+}

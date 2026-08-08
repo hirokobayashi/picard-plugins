@@ -1,0 +1,111 @@
+{
+ "languages": [],
+ "id": "254f397b-0d15-4812-aec4-02d0aa1d5898",
+ "type": null,
+ "aliases": [],
+ "disambiguation": "revised ending for transition to Pluto",
+ "type-id": null,
+ "iswcs": [],
+ "title": "The Planets, op. 32: VII. Neptune, The Mystic",
+ "attributes": [],
+ "language": null,
+ "relations": [
+  {
+   "target-credit": "",
+   "type": "composer",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null,
+   "ended": false,
+   "artist": {
+    "id": "3ba68671-e3b5-4263-81dc-76b16b29bbc6",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Holst, Gustav",
+    "disambiguation": "composer",
+    "type": "Person",
+    "name": "Gustav Holst",
+    "country": "GB"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "attributes": []
+  },
+  {
+   "type": "revised by",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "backward",
+   "attributes": [],
+   "type-id": "eeb9c319-9fde-4313-b76d-29db1576aad8",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "1ebf6f25-cf08-4550-94cc-3cbf215106f0",
+    "sort-name": "Matthews, Colin",
+    "name": "Colin Matthews",
+    "type": "Person",
+    "disambiguation": "English composer",
+    "country": "GB"
+   },
+   "ended": false
+  },
+  {
+   "attribute-ids": {},
+   "end": null,
+   "direction": "backward",
+   "begin": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "type": "Suite",
+    "disambiguation": "with “Pluto” by Colin Matthews",
+    "languages": [],
+    "attributes": [],
+    "language": null,
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "title": "The Planets Suite extension",
+    "iswcs": [],
+    "id": "5a75e61c-a670-37a9-bf73-4e7e22bbb12a"
+   },
+   "attributes": [],
+   "ended": false,
+   "type": "parts",
+   "ordering-key": 1,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "revision of",
+   "target-credit": "",
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "id": "4be2ad86-562d-4ef0-970a-cebf777fb8cb",
+    "language": null,
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: VII. Neptune, the Mystic",
+    "languages": []
+   },
+   "type-id": "4d0d6491-3c41-42c6-883f-d6c7e825b052",
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": null
+  }
+ ]
+}

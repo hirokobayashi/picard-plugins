@@ -1,0 +1,479 @@
+{
+ "aliases": [
+  {
+   "locale": "fr",
+   "name": "Les Planetes, op. 32: III. Mercure, le messager ailé",
+   "end": null,
+   "type": "Work name",
+   "begin": null,
+   "type-id": "a18cab3f-0ae2-3978-8f75-dd9c09702b25",
+   "primary": true,
+   "sort-name": "Planetes, les, op. 32: III. Mercure, le messager ailé",
+   "ended": false
+  },
+  {
+   "begin": null,
+   "locale": "es",
+   "type": "Work name",
+   "end": null,
+   "name": "Los planetas, op. 32: III. Mercurio, el mensajero alado",
+   "sort-name": "Planetas, los, op. 32: III. Mercurio, el mensajero alado",
+   "ended": false,
+   "primary": true,
+   "type-id": "a18cab3f-0ae2-3978-8f75-dd9c09702b25"
+  },
+  {
+   "ended": false,
+   "sort-name": "Mercurius, de gevleugelde bode uit The Planets",
+   "primary": true,
+   "type-id": null,
+   "begin": null,
+   "locale": "nl",
+   "end": null,
+   "name": "Mercurius, de gevleugelde bode uit The Planets",
+   "type": null
+  },
+  {
+   "end": null,
+   "name": "Mercury (The Winged Messenger)",
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "sort-name": "Mercury (The Winged Messenger)",
+   "ended": false
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "sort-name": "Mercury, the Winged Messenger",
+   "ended": false,
+   "locale": null,
+   "type": null,
+   "name": "Mercury, the Winged Messenger",
+   "end": null,
+   "begin": null
+  },
+  {
+   "ended": false,
+   "sort-name": "Mercury, the Winged Messenger (Vivace)",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "name": "Mercury, the Winged Messenger (Vivace)",
+   "end": null,
+   "type": null,
+   "locale": null
+  },
+  {
+   "locale": "pt",
+   "name": "Os planetas, op. 32: III. Mercúrio, o mensageiro alado",
+   "end": null,
+   "type": "Work name",
+   "begin": null,
+   "type-id": "a18cab3f-0ae2-3978-8f75-dd9c09702b25",
+   "primary": true,
+   "ended": false,
+   "sort-name": "Planetas, os, op. 32: III. Mercúrio, o mensageiro alado"
+  },
+  {
+   "begin": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets Suite, Op. 32: III. Mercury, the Winged Messenger",
+   "locale": null,
+   "ended": false,
+   "sort-name": "The Planets Suite, Op. 32: III. Mercury, the Winged Messenger",
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: III. Mercury, the Winged Messenger",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "locale": null,
+   "end": null,
+   "name": "The Planets, Op. 32: III. Mercury, the Winged Messenger",
+   "type": null
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: III. Mercury, the Winged Messenger (Vivace)",
+   "name": "The Planets, Op. 32: III. Mercury, the Winged Messenger (Vivace)",
+   "end": null,
+   "type": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "name": "The Planets, Op. 32: III. Mercury, the Winged Messenger: Vivace",
+   "end": null,
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: III. Mercury, the Winged Messenger: Vivace"
+  },
+  {
+   "begin": null,
+   "type": null,
+   "name": "The Planets, Op. 32: Mercury, the Winged Messenger",
+   "end": null,
+   "locale": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Mercury, the Winged Messenger",
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "name": "The Planets, Op. 32: Mercury, the Winged Messenger",
+   "end": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Mercury, the Winged Messenger",
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Mercury, the Winged Messenger. Vivace",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "name": "The Planets, Op. 32: Mercury, the Winged Messenger. Vivace",
+   "end": null
+  },
+  {
+   "begin": null,
+   "name": "The Planets, op. 32: III. Mercury, the Winged Messenger",
+   "end": null,
+   "type": "Work name",
+   "locale": "en",
+   "ended": false,
+   "sort-name": "Planets, The, op. 32: III. Mercury, the Winged Messenger",
+   "type-id": "a18cab3f-0ae2-3978-8f75-dd9c09702b25",
+   "primary": true
+  },
+  {
+   "begin": null,
+   "name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: III. \"Mercury, the Winged Messenger\"",
+   "end": null,
+   "type": null,
+   "locale": null,
+   "sort-name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: III. \"Mercury, the Winged Messenger\"",
+   "ended": false,
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets: III. Mercury, the Winged Messenger",
+   "locale": null,
+   "end": null,
+   "name": "The Planets: III. Mercury, the Winged Messenger",
+   "type": null,
+   "begin": null
+  },
+  {
+   "type": null,
+   "name": "The Planets: Mercury, the Winged Messenger",
+   "end": null,
+   "locale": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets: Mercury, the Winged Messenger"
+  },
+  {
+   "sort-name": "The Planets: Mercury, the Winged Messenger. Vivace",
+   "ended": false,
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "locale": null,
+   "name": "The Planets: Mercury, the Winged Messenger. Vivace",
+   "end": null,
+   "type": null
+  },
+  {
+   "begin": null,
+   "type": null,
+   "name": "The Planets: Merkur",
+   "end": null,
+   "locale": null,
+   "ended": false,
+   "sort-name": "The Planets: Merkur",
+   "primary": null,
+   "type-id": null
+  }
+ ],
+ "disambiguation": "",
+ "type": null,
+ "id": "3efdc3db-5907-44fe-9639-68bcecaa6f0b",
+ "languages": [],
+ "relations": [
+  {
+   "type": "composer",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "attribute-ids": {},
+   "end": "1916",
+   "begin": "1914",
+   "direction": "backward",
+   "attributes": [],
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "3ba68671-e3b5-4263-81dc-76b16b29bbc6",
+    "sort-name": "Holst, Gustav",
+    "name": "Gustav Holst",
+    "type": "Person",
+    "disambiguation": "composer",
+    "country": "GB"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "ended": true
+  },
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "arrangement",
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "attributes": [],
+    "language": "zxx",
+    "type-id": null,
+    "title": "The Planets, op. 32: III. Mercury, the Winged Messenger",
+    "iswcs": [],
+    "id": "359b1f38-bda3-4344-ba01-d80f148ec433",
+    "languages": [
+     "zxx"
+    ],
+    "type": null,
+    "disambiguation": "for brass quintet and organ"
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "begin": null,
+   "direction": "forward",
+   "attribute-ids": {},
+   "end": null
+  },
+  {
+   "type": "arrangement",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "forward",
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: III. Mercury, the Winged Messenger",
+    "language": "zxx",
+    "attributes": [],
+    "id": "837a86d3-81fa-45b2-9de0-61dc7490f6a6",
+    "type": null,
+    "disambiguation": "for organ, Sykes"
+   },
+   "ended": false
+  },
+  {
+   "end": null,
+   "attribute-ids": {},
+   "direction": "forward",
+   "begin": null,
+   "work": {
+    "type": null,
+    "disambiguation": "for wind ensemble, Romano",
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: III. Mercury, the Winged Messenger",
+    "attributes": [],
+    "language": "zxx",
+    "id": "b2400f59-c83a-4330-a76d-1748535aaec4",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "ended": false,
+   "type": "arrangement",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "arrangement",
+   "target-credit": "",
+   "attributes": [],
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "ae7b1949-4de0-4123-af5d-343c21d6edab",
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "title": "宇宙めぐり",
+    "iswcs": [],
+    "attributes": [],
+    "language": "zxx",
+    "disambiguation": "",
+    "type": "Song"
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "forward"
+  },
+  {
+   "direction": "forward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null,
+   "ended": false,
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: III. Mercury, the Winged Messenger",
+    "id": "40a38a77-570a-43c7-9273-5400e63d07ce",
+    "type": null,
+    "disambiguation": "for organ, Challenger"
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "target-credit": "",
+   "type": "arrangement",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "work": {
+    "disambiguation": "for guitar quartet, Burgess",
+    "type": null,
+    "languages": [
+     "zxx"
+    ],
+    "id": "2100bd09-a662-48bc-89e8-4734a2fd491b",
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: III. Mercury, the Winged Messenger",
+    "attributes": [],
+    "language": "zxx"
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "direction": "forward",
+   "begin": null,
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "arrangement",
+   "target-credit": ""
+  },
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "orchestration",
+   "ended": false,
+   "attributes": [],
+   "type-id": "dd372cb2-5f4d-4dcd-868e-7564782f460b",
+   "work": {
+    "disambiguation": "for two pianos",
+    "type": null,
+    "id": "fc26997c-9c66-4ac8-876b-f2a1c5ab54b9",
+    "attributes": [],
+    "language": "zxx",
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: III. Mercury, the Winged Messenger",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "begin": null,
+   "direction": "backward",
+   "end": null,
+   "attribute-ids": {}
+  },
+  {
+   "ended": false,
+   "attributes": [
+    "movement"
+   ],
+   "work": {
+    "disambiguation": "Suite for Large Orchestra",
+    "type": "Suite",
+    "languages": [
+     "zxx"
+    ],
+    "id": "439c1605-bf74-4e0c-b2d9-6f4f89619ec6",
+    "attributes": [],
+    "language": "zxx",
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "iswcs": [],
+    "title": "The Planets, op. 32"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "direction": "backward",
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "ordering-key": 3,
+   "type": "parts"
+  }
+ ],
+ "language": null,
+ "attributes": [],
+ "type-id": null,
+ "iswcs": [],
+ "title": "The Planets, op. 32: III. Mercury, the Winged Messenger"
+}

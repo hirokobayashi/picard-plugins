@@ -1,0 +1,786 @@
+{
+ "relations": [
+  {
+   "target-credit": "",
+   "type": "composer",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "begin": "1914",
+   "direction": "backward",
+   "end": "1916",
+   "attribute-ids": {},
+   "ended": true,
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "3ba68671-e3b5-4263-81dc-76b16b29bbc6",
+    "sort-name": "Holst, Gustav",
+    "type": "Person",
+    "name": "Gustav Holst",
+    "disambiguation": "composer",
+    "country": "GB"
+   }
+  },
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "arrangement",
+   "ended": false,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "attributes": [],
+    "language": "zxx",
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: I. Mars, the Bringer of War",
+    "id": "c524cc29-2532-4921-9abd-31230d44e401",
+    "type": null,
+    "disambiguation": "for brass quintet and organ"
+   },
+   "attributes": [],
+   "direction": "forward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null
+  },
+  {
+   "target-credit": "",
+   "type": "arrangement",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "begin": null,
+   "direction": "forward",
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: I. Mars, the Bringer of War",
+    "language": "zxx",
+    "attributes": [],
+    "id": "788b265f-74e8-45a5-8fd7-bfa35966de98",
+    "type": null,
+    "disambiguation": "for organ, Sykes"
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299"
+  },
+  {
+   "target-credit": "",
+   "type": "arrangement",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "begin": null,
+   "direction": "forward",
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "type-id": null,
+    "title": "Mars (from The Planets)",
+    "iswcs": [],
+    "attributes": [],
+    "language": "zxx",
+    "id": "da044151-bb0b-41a0-9c1e-c87b6ad6479e",
+    "languages": [
+     "zxx"
+    ],
+    "type": null,
+    "disambiguation": "for large brass ensemble, Sauer"
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299"
+  },
+  {
+   "attributes": [],
+   "work": {
+    "type": null,
+    "disambiguation": "for wind ensemble, Reed/McAlister",
+    "language": "zxx",
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: I. Mars, the Bringer of War",
+    "id": "fb4f1743-c84c-408b-8a88-e1e17842f529",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "forward",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "arrangement",
+   "target-credit": ""
+  },
+  {
+   "attributes": [],
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "type-id": null,
+    "title": "The Planets Suite: I. Mars, The Bringer of War",
+    "iswcs": [],
+    "language": "zxx",
+    "attributes": [],
+    "id": "6a30b0d9-e51b-41ec-8408-21c1c33a97a2",
+    "type": null,
+    "disambiguation": "for five pianos, Anderson"
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "arrangement",
+   "target-credit": ""
+  },
+  {
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "arrangement",
+   "target-credit": "",
+   "attributes": [],
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "attributes": [],
+    "type-id": null,
+    "title": "The Planets: I. Mars",
+    "iswcs": [],
+    "id": "c3a06b0f-10f8-42a2-af87-637684343a3e",
+    "type": null,
+    "disambiguation": "for brass"
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "forward"
+  },
+  {
+   "target-credit": "",
+   "type": "arrangement",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "begin": null,
+   "direction": "forward",
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "id": "ef4315cd-4913-4f68-91d5-7fd13faf1a42",
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: I. Mars, the Bringer of War",
+    "language": "zxx",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "disambiguation": "for organ, Challenger",
+    "type": null
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299"
+  },
+  {
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "forward",
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "attributes": [],
+    "language": "zxx",
+    "type-id": null,
+    "title": "The Planets, op. 32: I. Mars, the Bringer of War",
+    "iswcs": [],
+    "id": "aa275e83-6e30-4f94-a6ec-ca51fc9b03c2",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "ended": false,
+   "type": "arrangement",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "forward",
+   "attributes": [],
+   "type-id": "6bb1df6b-57f3-434d-8a39-5dc363d2eb78",
+   "work": {
+    "languages": [
+     "eng"
+    ],
+    "id": "7be53ecd-6400-4893-8999-80f130f09944",
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "iswcs": [
+     "T-901.823.702-0"
+    ],
+    "title": "Ramses Bringer of War",
+    "attributes": [],
+    "language": "eng",
+    "disambiguation": "",
+    "type": "Song"
+   },
+   "ended": false,
+   "type": "based on",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": ""
+  },
+  {
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "forward",
+   "attributes": [],
+   "type-id": "6bb1df6b-57f3-434d-8a39-5dc363d2eb78",
+   "work": {
+    "type": "Song",
+    "disambiguation": "",
+    "languages": [
+     "zxx"
+    ],
+    "attributes": [],
+    "language": "zxx",
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "iswcs": [],
+    "title": "The Devil’s Triangle",
+    "id": "2d9e7249-d9bd-4691-afed-5db624cf6a0f"
+   },
+   "ended": false,
+   "type": "based on",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": ""
+  },
+  {
+   "begin": null,
+   "direction": "backward",
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type-id": null,
+    "title": "Prelude to Madness",
+    "language": "zxx",
+    "attributes": [],
+    "id": "05325623-e6a6-4a54-be62-573b794218b7",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "c1dca2cd-194c-36dd-93f8-6a359167e992",
+   "target-credit": "",
+   "type": "medley",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {}
+  },
+  {
+   "target-credit": "",
+   "type": "musical quotation",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "direction": "backward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null,
+   "ended": false,
+   "type-id": "c5decae0-535c-4730-aa5f-ab78eadd98ba",
+   "work": {
+    "languages": [
+     "eng"
+    ],
+    "iswcs": [],
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "title": "Ragnarok III: Strange Meeting",
+    "attributes": [],
+    "language": "eng",
+    "id": "9ce5abfa-018e-47c2-b148-cdcd9df6242f",
+    "type": "Song",
+    "disambiguation": ""
+   },
+   "attributes": []
+  },
+  {
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "backward",
+   "attributes": [],
+   "work": {
+    "type": null,
+    "disambiguation": "for two pianos",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: I. Mars, the Bringer of War",
+    "id": "084f102a-96d5-4328-a40a-ef8fa17ec7dc"
+   },
+   "type-id": "dd372cb2-5f4d-4dcd-868e-7564782f460b",
+   "ended": false,
+   "type": "orchestration",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "languages": [],
+    "language": null,
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "Angelic Hymns: Mars",
+    "id": "4e095804-d7a4-3ddd-9756-074a0a8bc573"
+   },
+   "type-id": "7440b539-19ab-4243-8c03-4f5942ca2218",
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "direction": "forward",
+   "begin": null,
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "other version",
+   "target-credit": ""
+  },
+  {
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "begin": null,
+   "direction": "backward",
+   "attributes": [
+    "movement"
+   ],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "disambiguation": "Suite for Large Orchestra",
+    "type": "Suite",
+    "id": "439c1605-bf74-4e0c-b2d9-6f4f89619ec6",
+    "language": "zxx",
+    "attributes": [],
+    "title": "The Planets, op. 32",
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "iswcs": [],
+    "languages": [
+     "zxx"
+    ]
+   },
+   "ended": false,
+   "type": "parts",
+   "ordering-key": 1,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  }
+ ],
+ "title": "The Planets, op. 32: I. Mars, the Bringer of War",
+ "type-id": null,
+ "iswcs": [],
+ "attributes": [
+  {
+   "type-id": "31048fcc-3dbb-3979-8f85-805afb933e0c",
+   "type": "JASRAC ID",
+   "value": "0M1-4243-8"
+  }
+ ],
+ "language": "zxx",
+ "disambiguation": "",
+ "aliases": [
+  {
+   "locale": null,
+   "name": "Die Planeten: Mars, der Kriegsbringer",
+   "end": null,
+   "type": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "Die Planeten: Mars, der Kriegsbringer"
+  },
+  {
+   "ended": false,
+   "sort-name": "Les Planetes, Op. 32: I. Mars Le Belliqueux",
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "locale": null,
+   "name": "Les Planetes, Op. 32: I. Mars Le Belliqueux",
+   "end": null,
+   "type": null
+  },
+  {
+   "type": null,
+   "end": null,
+   "name": "Les Planetes, Op. 32: I. Mars, Qui apporte la guerre",
+   "locale": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "sort-name": "Les Planetes, Op. 32: I. Mars, Qui apporte la guerre",
+   "ended": false
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "sort-name": "Los planetas, Op. 32: I. Marte, el portador de la Guerra",
+   "ended": false,
+   "locale": null,
+   "type": null,
+   "name": "Los planetas, Op. 32: I. Marte, el portador de la Guerra",
+   "end": null,
+   "begin": null
+  },
+  {
+   "end": null,
+   "name": "Mars",
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "Mars"
+  },
+  {
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "Mars (The Bringer Of War)",
+   "ended": false,
+   "sort-name": "Mars (The Bringer Of War)",
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "type": null,
+   "end": null,
+   "name": "Mars, der Überbringer des Krieges aus \"Die Planeten\" Op. 32",
+   "locale": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "sort-name": "Mars, der Überbringer des Krieges aus \"Die Planeten\" Op. 32",
+   "ended": false
+  },
+  {
+   "ended": false,
+   "sort-name": "Mars, the Bringer of War",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "end": null,
+   "name": "Mars, the Bringer of War",
+   "type": null,
+   "locale": null
+  },
+  {
+   "begin": null,
+   "end": null,
+   "name": "Mars, the Bringer of War (Allegro)",
+   "type": null,
+   "locale": null,
+   "ended": false,
+   "sort-name": "Mars, the Bringer of War (Allegro)",
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "Mars, the Bringer of War (From 'The Planets')",
+   "locale": null,
+   "type": null,
+   "name": "Mars, the Bringer of War (From 'The Planets')",
+   "end": null,
+   "begin": null
+  },
+  {
+   "ended": false,
+   "sort-name": "Os planetas, Op. 32: I. Marte, o mensageiro da guerra",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "locale": null,
+   "end": null,
+   "name": "Os planetas, Op. 32: I. Marte, o mensageiro da guerra",
+   "type": null
+  },
+  {
+   "name": "The Planets Suite for Orchestra, Op. 32: Mars, the Bringer of War",
+   "end": null,
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "sort-name": "The Planets Suite for Orchestra, Op. 32: Mars, the Bringer of War",
+   "ended": false
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets Suite, Op. 32: I. Mars, the Bringer of War",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "end": null,
+   "name": "The Planets Suite, Op. 32: I. Mars, the Bringer of War",
+   "type": null,
+   "locale": null
+  },
+  {
+   "type": null,
+   "name": "The Planets Suite: Mars",
+   "end": null,
+   "locale": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets Suite: Mars"
+  },
+  {
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: I. Mars, the Bringer of War",
+   "sort-name": "The Planets, Op. 32: I. Mars, the Bringer of War",
+   "ended": false,
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: I. Mars, the Bringer of War",
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "locale": null,
+   "end": null,
+   "name": "The Planets, Op. 32: I. Mars, the Bringer of War",
+   "type": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: I. Mars, the Bringer of War (Allegro)",
+   "locale": null,
+   "type": null,
+   "name": "The Planets, Op. 32: I. Mars, the Bringer of War (Allegro)",
+   "end": null,
+   "begin": null
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets, Op. 32: I. Mars, the Bringer of War: Allegro",
+   "ended": false,
+   "locale": null,
+   "name": "The Planets, Op. 32: I. Mars, the Bringer of War: Allegro",
+   "end": null,
+   "type": null,
+   "begin": null
+  },
+  {
+   "begin": null,
+   "locale": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Mars, the Bringer of War",
+   "type": null,
+   "sort-name": "The Planets, Op. 32: Mars, the Bringer of War",
+   "ended": false,
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "sort-name": "The Planets, Op. 32: Mars, the Bringer of War",
+   "ended": false,
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "name": "The Planets, Op. 32: Mars, the Bringer of War",
+   "end": null
+  },
+  {
+   "sort-name": "The Planets, Op. 32: Mars, the Bringer of War",
+   "ended": false,
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Mars, the Bringer of War"
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Mars, the Bringer of War. Allegro",
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Mars, the Bringer of War. Allegro",
+   "locale": null,
+   "begin": null
+  },
+  {
+   "locale": null,
+   "type": null,
+   "name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: I. \"Mars, the Bringer of War\"",
+   "end": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: I. \"Mars, the Bringer of War\""
+  },
+  {
+   "sort-name": "The Planets: I. Mars, the Bringer of War",
+   "ended": false,
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "locale": null,
+   "end": null,
+   "name": "The Planets: I. Mars, the Bringer of War",
+   "type": null
+  },
+  {
+   "begin": null,
+   "type": null,
+   "name": "The Planets: Mars",
+   "end": null,
+   "locale": null,
+   "ended": false,
+   "sort-name": "The Planets: Mars",
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "type": null,
+   "name": "The Planets: Mars",
+   "end": null,
+   "locale": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets: Mars"
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets: Mars, the Bringer of War",
+   "end": null,
+   "name": "The Planets: Mars, the Bringer of War",
+   "type": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "name": "The Planets: Mars, the Bringer of War",
+   "end": null,
+   "ended": false,
+   "sort-name": "The Planets: Mars, the Bringer of War",
+   "primary": null,
+   "type-id": null
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets: Mars, the Bringer of War",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "locale": null,
+   "name": "The Planets: Mars, the Bringer of War",
+   "end": null,
+   "type": null
+  },
+  {
+   "locale": null,
+   "end": null,
+   "name": "The Planets: Mars, the Bringer of War. Allegro",
+   "type": null,
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets: Mars, the Bringer of War. Allegro"
+  }
+ ],
+ "type": null,
+ "id": "9e00ce98-e460-4101-b2e3-8096a5c60c59",
+ "languages": [
+  "zxx"
+ ]
+}

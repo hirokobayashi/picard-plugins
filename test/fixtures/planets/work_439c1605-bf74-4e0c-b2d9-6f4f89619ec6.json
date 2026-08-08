@@ -1,0 +1,438 @@
+{
+ "relations": [
+  {
+   "end": "1916",
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "1914",
+   "artist": {
+    "country": "GB",
+    "name": "Gustav Holst",
+    "type": "Person",
+    "disambiguation": "composer",
+    "sort-name": "Holst, Gustav",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "3ba68671-e3b5-4263-81dc-76b16b29bbc6"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "attributes": [],
+   "ended": true,
+   "type": "composer",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "begin": null,
+   "direction": "forward",
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "iswcs": [],
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "title": "The Planets, op. 32",
+    "language": "zxx",
+    "attributes": [],
+    "id": "9ad4f845-18fb-4e8e-8d35-58bfbbbc6a94",
+    "type": "Suite",
+    "disambiguation": "for brass quintet and organ"
+   },
+   "target-credit": "",
+   "type": "arrangement",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {}
+  },
+  {
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "type": "Suite",
+    "disambiguation": "for organ, Sykes",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "attributes": [],
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "iswcs": [],
+    "title": "The Planets, op. 32",
+    "id": "31692de7-f664-4887-84c5-cc4c0cbbc99f"
+   },
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "arrangement",
+   "target-credit": ""
+  },
+  {
+   "ended": false,
+   "work": {
+    "type": "Suite",
+    "disambiguation": "for five pianos, Anderson",
+    "languages": [
+     "zxx"
+    ],
+    "attributes": [],
+    "language": "zxx",
+    "iswcs": [],
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "title": "The Planets Suite",
+    "id": "c3e33275-09e7-4b33-87b8-e25cab272973"
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "direction": "forward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {},
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "arrangement"
+  },
+  {
+   "type": "arrangement",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "attribute-ids": {},
+   "end": null,
+   "direction": "forward",
+   "begin": null,
+   "work": {
+    "disambiguation": "for organ, Challenger",
+    "type": "Suite",
+    "id": "8c875cd9-c3b2-457d-878e-245400cf2444",
+    "attributes": [],
+    "language": "zxx",
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "title": "The Planets, op. 32",
+    "iswcs": [],
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "ended": false
+  },
+  {
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "type": "Suite",
+    "disambiguation": "for Organ, Arthur Wills",
+    "iswcs": [],
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "title": "The Planets, op. 32",
+    "attributes": [],
+    "language": "zxx",
+    "id": "8e8b4f79-222f-447b-99ef-2b7f14fa4bf1",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "begin": null,
+   "direction": "forward",
+   "end": null,
+   "attribute-ids": {},
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "arrangement"
+  },
+  {
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "orchestration",
+   "ended": false,
+   "type-id": "dd372cb2-5f4d-4dcd-868e-7564782f460b",
+   "work": {
+    "type": null,
+    "disambiguation": "for two pianos",
+    "language": "zxx",
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32",
+    "id": "5a01210f-0140-440a-98c7-0be594d32c21",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "attributes": [],
+   "direction": "backward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null
+  },
+  {
+   "target-credit": "",
+   "type": "other version",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "begin": null,
+   "direction": "forward",
+   "attribute-ids": {},
+   "end": null,
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "languages": [],
+    "id": "5a75e61c-a670-37a9-bf73-4e7e22bbb12a",
+    "attributes": [],
+    "language": null,
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "iswcs": [],
+    "title": "The Planets Suite extension",
+    "disambiguation": "with “Pluto” by Colin Matthews",
+    "type": "Suite"
+   },
+   "type-id": "7440b539-19ab-4243-8c03-4f5942ca2218"
+  },
+  {
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 1,
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "languages": [
+     "zxx"
+    ],
+    "attributes": [],
+    "language": "zxx",
+    "type-id": null,
+    "title": "The Planets, op. 32: I. Mars, the Bringer of War",
+    "iswcs": [],
+    "id": "9e00ce98-e460-4101-b2e3-8096a5c60c59"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [
+    "movement"
+   ],
+   "ended": false,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "direction": "forward",
+   "begin": null
+  },
+  {
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "begin": null,
+   "direction": "forward",
+   "attributes": [
+    "movement"
+   ],
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "title": "The Planets, op. 32: II. Venus, the Bringer of Peace",
+    "type-id": null,
+    "iswcs": [],
+    "language": null,
+    "attributes": [],
+    "id": "3f86e70e-e428-46b1-834b-738243d37432",
+    "languages": []
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ended": false,
+   "type": "parts",
+   "ordering-key": 2,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 3,
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "direction": "forward",
+   "begin": null,
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "languages": [],
+    "id": "3efdc3db-5907-44fe-9639-68bcecaa6f0b",
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: III. Mercury, the Winged Messenger",
+    "attributes": [],
+    "language": null
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [
+    "movement"
+   ],
+   "ended": false
+  },
+  {
+   "attributes": [
+    "movement"
+   ],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "id": "7b209915-be32-3f17-b2c5-b963964ed084",
+    "language": null,
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: IV. Jupiter, the Bringer of Jollity",
+    "languages": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "ended": false,
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "begin": null,
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 4
+  },
+  {
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 5,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "id": "07d9e46d-0847-43d3-89da-27eb304943b1",
+    "attributes": [],
+    "language": null,
+    "type-id": null,
+    "title": "The Planets, op. 32: V. Saturn, the Bringer of Old Age",
+    "iswcs": [],
+    "languages": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "attributes": [
+    "movement"
+   ],
+   "ended": false,
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "direction": "forward",
+   "begin": null
+  },
+  {
+   "ended": false,
+   "work": {
+    "languages": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: VI. Uranus, the Magician",
+    "language": null,
+    "attributes": [],
+    "id": "e726a374-a823-436e-9afe-8f58d15eb547",
+    "type": null,
+    "disambiguation": ""
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [
+    "movement"
+   ],
+   "direction": "forward",
+   "begin": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "ordering-key": 6,
+   "type": "parts"
+  },
+  {
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "direction": "forward",
+   "begin": null,
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "id": "4be2ad86-562d-4ef0-970a-cebf777fb8cb",
+    "iswcs": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: VII. Neptune, the Mystic",
+    "language": null,
+    "attributes": [],
+    "languages": []
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [
+    "movement"
+   ],
+   "ended": false,
+   "type": "parts",
+   "ordering-key": 7,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  }
+ ],
+ "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+ "iswcs": [],
+ "title": "The Planets, op. 32",
+ "attributes": [],
+ "language": "zxx",
+ "aliases": [],
+ "disambiguation": "Suite for Large Orchestra",
+ "type": "Suite",
+ "id": "439c1605-bf74-4e0c-b2d9-6f4f89619ec6",
+ "languages": [
+  "zxx"
+ ]
+}

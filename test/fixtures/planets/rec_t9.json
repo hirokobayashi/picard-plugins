@@ -1,0 +1,130 @@
+{
+ "aliases": [],
+ "relations": [
+  {
+   "artist": {
+    "type": "Person",
+    "name": "Mike Clements",
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work",
+    "country": "GB",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d",
+    "sort-name": "Clements, Mike"
+   },
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2",
+   "attributes": [],
+   "ended": true,
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "balance",
+   "target-credit": ""
+  },
+  {
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "ended": true,
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "artist": {
+    "name": "Simon Rattle",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "country": "GB",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597",
+    "sort-name": "Rattle, Simon"
+   },
+   "attributes": [],
+   "target-credit": "",
+   "type": "conductor",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "artist": {
+    "type": "Orchestra",
+    "name": "Berliner Philharmoniker",
+    "disambiguation": "",
+    "country": "DE",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce",
+    "sort-name": "Berliner Philharmoniker"
+   },
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "ended": true,
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "performing orchestra",
+   "target-credit": ""
+  },
+  {
+   "attributes": [],
+   "artist": {
+    "sort-name": "Johns, Stephen",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928",
+    "country": null,
+    "name": "Stephen Johns",
+    "type": "Person",
+    "disambiguation": "producer"
+   },
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "backward",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "producer",
+   "target-credit": ""
+  },
+  {
+   "ended": true,
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "attributes": [],
+    "type-id": null,
+    "title": "Asteroid 4179: Toutatis",
+    "iswcs": [],
+    "id": "e42cce08-f3f1-4e9b-8bfe-11670ad22d52",
+    "type": null,
+    "disambiguation": ""
+   },
+   "begin": "2006-03-15",
+   "direction": "forward",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "performance"
+  }
+ ],
+ "disambiguation": "",
+ "length": 276320,
+ "first-release-date": "2006-07-28",
+ "id": "2cb2962b-67e2-4912-becf-a703e63f2d39",
+ "title": "Asteroid 4179: Toutatis",
+ "video": false
+}

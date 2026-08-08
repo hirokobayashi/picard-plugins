@@ -1,0 +1,140 @@
+{
+ "aliases": [
+  {
+   "begin": null,
+   "name": "The Planets, Op. 32: IV. Jupiter, the Bringer of Jollity",
+   "end": null,
+   "type": null,
+   "locale": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: IV. Jupiter, the Bringer of Jollity",
+   "primary": null,
+   "type-id": null
+  }
+ ],
+ "relations": [
+  {
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "ended": true,
+   "artist": {
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Clements, Mike",
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work",
+    "name": "Mike Clements",
+    "type": "Person",
+    "country": "GB"
+   },
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2",
+   "attributes": [],
+   "target-credit": "",
+   "type": "balance",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "conductor",
+   "ended": true,
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "artist": {
+    "name": "Simon Rattle",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "country": "GB",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597",
+    "sort-name": "Rattle, Simon"
+   },
+   "attributes": [],
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "attribute-ids": {},
+   "end": "2006-03-18"
+  },
+  {
+   "type": "performing orchestra",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "sort-name": "Berliner Philharmoniker",
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "country": "DE",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "name": "Berliner Philharmoniker"
+   },
+   "attributes": [],
+   "ended": true
+  },
+  {
+   "ended": false,
+   "attributes": [],
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "artist": {
+    "disambiguation": "producer",
+    "name": "Stephen Johns",
+    "type": "Person",
+    "country": null,
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Johns, Stephen"
+   },
+   "begin": null,
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": null,
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "producer"
+  },
+  {
+   "begin": "2006-03-15",
+   "direction": "forward",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "ended": true,
+   "attributes": [],
+   "work": {
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: IV. Jupiter, the Bringer of Jollity",
+    "language": null,
+    "attributes": [],
+    "id": "7b209915-be32-3f17-b2c5-b963964ed084",
+    "languages": [],
+    "type": null,
+    "disambiguation": ""
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "target-credit": "",
+   "type": "performance",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {}
+  }
+ ],
+ "length": 482666,
+ "disambiguation": "",
+ "title": "The Planets Suite for Orchestra, op. 32: Jupiter, the Bringer of Jollity",
+ "first-release-date": "2006-07-28",
+ "id": "81626a29-4147-4b23-9796-0ea6347c5606",
+ "video": false
+}

@@ -1,0 +1,39 @@
+{
+ "aliases": [],
+ "disambiguation": "",
+ "type": null,
+ "languages": [
+  "zxx"
+ ],
+ "id": "5c0deb15-2bc8-4ea6-9825-d42fbc87d86f",
+ "relations": [
+  {
+   "direction": "backward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "sort-name": "Turnage, Mark‐Anthony",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "c5ed9685-423f-4fe5-bbf3-e31ad25002ae",
+    "country": "GB",
+    "name": "Mark‐Anthony Turnage",
+    "type": "Person",
+    "disambiguation": "English composer"
+   },
+   "attributes": [],
+   "target-credit": "",
+   "type": "composer",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {}
+  }
+ ],
+ "type-id": null,
+ "title": "Ceres",
+ "iswcs": [],
+ "attributes": [],
+ "language": "zxx"
+}

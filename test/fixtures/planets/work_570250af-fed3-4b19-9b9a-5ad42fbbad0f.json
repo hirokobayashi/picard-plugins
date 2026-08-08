@@ -1,0 +1,62 @@
+{
+ "id": "570250af-fed3-4b19-9b9a-5ad42fbbad0f",
+ "languages": [],
+ "type": null,
+ "aliases": [],
+ "disambiguation": "",
+ "type-id": null,
+ "title": "Komarov's Fall",
+ "iswcs": [],
+ "language": null,
+ "attributes": [],
+ "relations": [
+  {
+   "end": "2006",
+   "attribute-ids": {},
+   "begin": "2006",
+   "direction": "backward",
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "id": "1e9efedb-eea2-4e33-800c-31494f4929ba",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Dean, Brett",
+    "disambiguation": "Australian composer, violist and conductor",
+    "name": "Brett Dean",
+    "type": "Person",
+    "country": "AU"
+   },
+   "ended": true,
+   "type": "composer",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "parts",
+   "ended": false,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "id": "276f8a54-5ed6-4db6-970f-80f09b762f51",
+    "attributes": [],
+    "language": null,
+    "iswcs": [],
+    "type-id": null,
+    "title": "3 Memorials",
+    "languages": []
+   },
+   "attributes": [],
+   "direction": "backward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null
+  }
+ ]
+}

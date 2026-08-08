@@ -1,0 +1,130 @@
+{
+ "first-release-date": "2006-07-28",
+ "id": "21240859-4f72-4b90-8662-aebf218afce4",
+ "title": "Ceres",
+ "video": false,
+ "relations": [
+  {
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "artist": {
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work",
+    "type": "Person",
+    "name": "Mike Clements",
+    "country": "GB",
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Clements, Mike"
+   },
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2",
+   "attributes": [],
+   "ended": true,
+   "type": "balance",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": ""
+  },
+  {
+   "type": "conductor",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "attributes": [],
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597",
+    "sort-name": "Rattle, Simon",
+    "name": "Simon Rattle",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "country": "GB"
+   },
+   "ended": true
+  },
+  {
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "country": "DE",
+    "name": "Berliner Philharmoniker",
+    "type": "Orchestra",
+    "disambiguation": "",
+    "sort-name": "Berliner Philharmoniker",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce"
+   },
+   "ended": true,
+   "type": "performing orchestra",
+   "target-credit": "Berlin Philharmonic Orchestra",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": ""
+  },
+  {
+   "type": "producer",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "backward",
+   "attributes": [],
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "artist": {
+    "name": "Stephen Johns",
+    "type": "Person",
+    "disambiguation": "producer",
+    "country": null,
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928",
+    "sort-name": "Johns, Stephen"
+   },
+   "ended": false
+  },
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "performance",
+   "ended": true,
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "languages": [
+     "zxx"
+    ],
+    "id": "5c0deb15-2bc8-4ea6-9825-d42fbc87d86f",
+    "language": "zxx",
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "Ceres"
+   },
+   "begin": "2006-03-15",
+   "direction": "forward",
+   "end": "2006-03-18",
+   "attribute-ids": {}
+  }
+ ],
+ "aliases": [],
+ "length": 400173,
+ "disambiguation": ""
+}

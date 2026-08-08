@@ -1,0 +1,414 @@
+{
+ "id": "07d9e46d-0847-43d3-89da-27eb304943b1",
+ "languages": [],
+ "disambiguation": "",
+ "aliases": [
+  {
+   "begin": null,
+   "type": null,
+   "name": "Les Planetes, Op. 32: V. Saturne, Porteur De Vieillesse",
+   "end": null,
+   "locale": "fr",
+   "sort-name": "Les Planetes, Op. 32: V. Saturne, Porteur De Vieillesse",
+   "ended": false,
+   "type-id": null,
+   "primary": true
+  },
+  {
+   "begin": null,
+   "name": "Los planetas, Op. 32: V. Saturno, el portador de la Vejez",
+   "end": null,
+   "type": null,
+   "locale": "es",
+   "ended": false,
+   "sort-name": "Los planetas, Op. 32: V. Saturno, el portador de la Vejez",
+   "primary": true,
+   "type-id": null
+  },
+  {
+   "sort-name": "Os planetas, Op. 32: V. Saturno, o mensageiro da velhice",
+   "ended": false,
+   "type-id": null,
+   "primary": true,
+   "begin": null,
+   "end": null,
+   "name": "Os planetas, Op. 32: V. Saturno, o mensageiro da velhice",
+   "type": null,
+   "locale": "pt"
+  },
+  {
+   "sort-name": "Saturn (The Bringer Of Old Age)",
+   "ended": false,
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "Saturn (The Bringer Of Old Age)"
+  },
+  {
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "Saturn, the Bringer of Old Age",
+   "end": null,
+   "name": "Saturn, the Bringer of Old Age",
+   "type": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "sort-name": "Saturn, the Bringer of Old Age (Adagio)",
+   "ended": false,
+   "end": null,
+   "name": "Saturn, the Bringer of Old Age (Adagio)",
+   "type": null,
+   "locale": null,
+   "begin": null
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets Suite, Op. 32: V. Saturn, the Bringer of Old Age",
+   "locale": null,
+   "name": "The Planets Suite, Op. 32: V. Saturn, the Bringer of Old Age",
+   "end": null,
+   "type": null,
+   "begin": null
+  },
+  {
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Saturn, the Bringer of Old Age",
+   "locale": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "sort-name": "The Planets, Op. 32: Saturn, the Bringer of Old Age",
+   "ended": false
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Saturn, the Bringer of Old Age",
+   "primary": null,
+   "type-id": null,
+   "begin": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Saturn, the Bringer of Old Age",
+   "type": null,
+   "locale": null
+  },
+  {
+   "locale": null,
+   "end": null,
+   "name": "The Planets, Op. 32: Saturn, the Bringer of Old Age. Adagio - Andante",
+   "type": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: Saturn, the Bringer of Old Age. Adagio - Andante"
+  },
+  {
+   "locale": null,
+   "type": null,
+   "name": "The Planets, Op. 32: V. Saturn, the Bringer of Old Age",
+   "end": null,
+   "begin": null,
+   "primary": null,
+   "type-id": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: V. Saturn, the Bringer of Old Age"
+  },
+  {
+   "type-id": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: V. Saturn, the Bringer of Old Age",
+   "locale": null,
+   "name": "The Planets, Op. 32: V. Saturn, the Bringer of Old Age",
+   "end": null,
+   "type": null,
+   "begin": null
+  },
+  {
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: V. Saturn, the Bringer of Old Age (Adagio)",
+   "begin": null,
+   "type-id": null,
+   "primary": null,
+   "sort-name": "The Planets, Op. 32: V. Saturn, the Bringer of Old Age (Adagio)",
+   "ended": false
+  },
+  {
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, Op. 32: V. Saturn, the Bringer of Old Age: Adagio / Andante",
+   "ended": false,
+   "sort-name": "The Planets, Op. 32: V. Saturn, the Bringer of Old Age: Adagio / Andante",
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "begin": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: V. \"Saturn, the Bringer of Old Age\"",
+   "locale": null,
+   "sort-name": "The Planets, suite for orchestra & female chorus, Op. 32, H. 125: V. \"Saturn, the Bringer of Old Age\"",
+   "ended": false,
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "begin": null,
+   "end": null,
+   "name": "The Planets: Saturn, the Bringer of Old Age",
+   "type": null,
+   "locale": null,
+   "sort-name": "The Planets: Saturn, the Bringer of Old Age",
+   "ended": false,
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "ended": false,
+   "sort-name": "The Planets: Saturn, the Bringer of Old Age. Adagio - Andante",
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "name": "The Planets: Saturn, the Bringer of Old Age. Adagio - Andante",
+   "end": null
+  },
+  {
+   "begin": null,
+   "type": null,
+   "end": null,
+   "name": "The Planets: Saturn: The Bringer of Old Age",
+   "locale": null,
+   "sort-name": "The Planets: Saturn: The Bringer of Old Age",
+   "ended": false,
+   "type-id": null,
+   "primary": null
+  },
+  {
+   "sort-name": "The Planets: V. Saturn, the Bringer of Old Age",
+   "ended": false,
+   "type-id": null,
+   "primary": null,
+   "begin": null,
+   "name": "The Planets: V. Saturn, the Bringer of Old Age",
+   "end": null,
+   "type": null,
+   "locale": null
+  }
+ ],
+ "type": null,
+ "language": null,
+ "attributes": [],
+ "type-id": null,
+ "iswcs": [],
+ "title": "The Planets, op. 32: V. Saturn, the Bringer of Old Age",
+ "relations": [
+  {
+   "end": "1916",
+   "attribute-ids": {},
+   "begin": "1914",
+   "direction": "backward",
+   "attributes": [],
+   "artist": {
+    "sort-name": "Holst, Gustav",
+    "id": "3ba68671-e3b5-4263-81dc-76b16b29bbc6",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "GB",
+    "disambiguation": "composer",
+    "type": "Person",
+    "name": "Gustav Holst"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "ended": true,
+   "type": "composer",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": ""
+  },
+  {
+   "ended": false,
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "disambiguation": "for brass quintet and organ",
+    "type": null,
+    "languages": [
+     "zxx"
+    ],
+    "id": "a73b1834-9c02-4755-af84-2654e6e3cb15",
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: V. Saturn, the Bringer of Old Age",
+    "attributes": [],
+    "language": "zxx"
+   },
+   "begin": null,
+   "direction": "forward",
+   "end": null,
+   "attribute-ids": {},
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "arrangement"
+  },
+  {
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "disambiguation": "for organ, Sykes",
+    "type": null,
+    "id": "bf777ef3-48c1-49fe-94fb-8a39a4a0975a",
+    "type-id": null,
+    "iswcs": [],
+    "title": "The Planets, op. 32: V. Saturn, the Bringer of Old Age",
+    "attributes": [],
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "forward",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "arrangement",
+   "target-credit": ""
+  },
+  {
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "title": "The Planets, op. 32: V. Saturn, the Bringer of Old Age",
+    "type-id": null,
+    "iswcs": [],
+    "language": "zxx",
+    "attributes": [],
+    "id": "6ed58de2-fedc-4605-bc26-28cdb5ecd413",
+    "languages": [
+     "zxx"
+    ],
+    "type": null,
+    "disambiguation": "for organ, Challenger"
+   },
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "forward",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "arrangement",
+   "target-credit": ""
+  },
+  {
+   "type": "arrangement",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "end": null,
+   "attribute-ids": {},
+   "direction": "forward",
+   "begin": null,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "type": null,
+    "disambiguation": "for synthesizers, condensed",
+    "languages": [
+     "zxx"
+    ],
+    "type-id": null,
+    "title": "The Planets, op. 32: V. Saturn, the Bringer of Old Age",
+    "iswcs": [],
+    "language": "zxx",
+    "attributes": [],
+    "id": "5fde687a-9005-4446-9ce9-b013d69bb524"
+   },
+   "attributes": [],
+   "ended": false
+  },
+  {
+   "target-credit": "",
+   "type": "orchestration",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "direction": "backward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "type-id": "dd372cb2-5f4d-4dcd-868e-7564782f460b",
+   "work": {
+    "type": null,
+    "disambiguation": "for two pianos",
+    "language": "zxx",
+    "attributes": [],
+    "type-id": null,
+    "title": "The Planets, op. 32: V. Saturn, the Bringer of Old Age",
+    "iswcs": [],
+    "id": "1d9fd156-c10b-44fa-b9c9-d0e2d30b2623",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "attributes": []
+  },
+  {
+   "direction": "backward",
+   "begin": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "ended": false,
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "attributes": [],
+    "iswcs": [],
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "title": "The Planets, op. 32",
+    "id": "439c1605-bf74-4e0c-b2d9-6f4f89619ec6",
+    "type": "Suite",
+    "disambiguation": "Suite for Large Orchestra"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [
+    "movement"
+   ],
+   "ordering-key": 5,
+   "target-credit": "",
+   "type": "parts",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {}
+  }
+ ]
+}

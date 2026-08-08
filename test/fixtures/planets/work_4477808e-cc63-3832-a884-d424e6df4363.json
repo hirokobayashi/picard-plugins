@@ -1,0 +1,63 @@
+{
+ "relations": [
+  {
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "sort-name": "Matthews, Colin",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "1ebf6f25-cf08-4550-94cc-3cbf215106f0",
+    "country": "GB",
+    "name": "Colin Matthews",
+    "type": "Person",
+    "disambiguation": "English composer"
+   },
+   "ended": true,
+   "end": "2000",
+   "attribute-ids": {},
+   "begin": "2000",
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "composer",
+   "target-credit": ""
+  },
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "ordering-key": 2,
+   "type": "parts",
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "languages": [],
+    "id": "5a75e61c-a670-37a9-bf73-4e7e22bbb12a",
+    "title": "The Planets Suite extension",
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "iswcs": [],
+    "language": null,
+    "attributes": [],
+    "disambiguation": "with “Pluto” by Colin Matthews",
+    "type": "Suite"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": null
+  }
+ ],
+ "type-id": null,
+ "iswcs": [],
+ "title": "Pluto, the Renewer",
+ "attributes": [],
+ "language": null,
+ "disambiguation": "",
+ "aliases": [],
+ "type": null,
+ "languages": [],
+ "id": "4477808e-cc63-3832-a884-d424e6df4363"
+}

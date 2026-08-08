@@ -1,0 +1,128 @@
+{
+ "title": "Komarov's Fall",
+ "id": "04ee9933-7706-4d11-8b67-a749cc73f8b0",
+ "first-release-date": "2006-07-28",
+ "video": false,
+ "aliases": [],
+ "relations": [
+  {
+   "attributes": [],
+   "type-id": "0748fa55-56b5-4ad5-8ce8-15b97f82a0c2",
+   "artist": {
+    "country": "GB",
+    "type": "Person",
+    "name": "Mike Clements",
+    "disambiguation": "sound engineer for classical recordings, AKA \"Mr. Bear\" in his early work",
+    "sort-name": "Clements, Mike",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "9149b2bb-2fb6-4979-ba21-b38de82de23d"
+   },
+   "ended": true,
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "balance",
+   "target-credit": ""
+  },
+  {
+   "direction": "backward",
+   "begin": "2006-03-15",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "ended": true,
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "artist": {
+    "disambiguation": "conductor",
+    "type": "Person",
+    "name": "Simon Rattle",
+    "country": "GB",
+    "id": "80c3bce9-0b54-409c-aa10-3b0c7dbbc597",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Rattle, Simon"
+   },
+   "attributes": [],
+   "target-credit": "",
+   "type": "conductor",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "begin": "2006-03-15",
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": "2006-03-18",
+   "ended": true,
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "country": "DE",
+    "disambiguation": "",
+    "name": "Berliner Philharmoniker",
+    "type": "Orchestra",
+    "sort-name": "Berliner Philharmoniker",
+    "id": "dea28aa9-1086-4ffa-8739-0ccc759de1ce",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5"
+   },
+   "target-credit": "",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "type": "producer",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "attribute-ids": {},
+   "end": null,
+   "direction": "backward",
+   "begin": null,
+   "artist": {
+    "name": "Stephen Johns",
+    "type": "Person",
+    "disambiguation": "producer",
+    "country": null,
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "e5e558f4-fe2d-4a4d-8be5-a682aff45928",
+    "sort-name": "Johns, Stephen"
+   },
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "attributes": [],
+   "ended": false
+  },
+  {
+   "target-credit": "",
+   "type": "performance",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "direction": "forward",
+   "begin": "2006-03-15",
+   "end": "2006-03-18",
+   "attribute-ids": {},
+   "ended": true,
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "languages": [],
+    "id": "570250af-fed3-4b19-9b9a-5ad42fbbad0f",
+    "type-id": null,
+    "title": "Komarov's Fall",
+    "iswcs": [],
+    "language": null,
+    "attributes": []
+   },
+   "attributes": []
+  }
+ ],
+ "disambiguation": "",
+ "length": 469320
+}
