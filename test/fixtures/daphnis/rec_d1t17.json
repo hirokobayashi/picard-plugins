@@ -1,0 +1,127 @@
+{
+ "length": 155000,
+ "disambiguation": "",
+ "relations": [
+  {
+   "source-credit": "",
+   "type": "conductor",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "begin": "2016",
+   "attributes": [],
+   "artist": {
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "country": "FR",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier",
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "conductor"
+   },
+   "ended": true,
+   "end": "2016",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  },
+  {
+   "artist": {
+    "name": "Les Si\u00e8cles",
+    "sort-name": "Si\u00e8cles, Les",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "country": "FR",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e"
+   },
+   "ended": true,
+   "end": "2016",
+   "target-credit": "",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "begin": "2016",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   },
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [
+    "partial"
+   ],
+   "begin": "2016",
+   "ended": true,
+   "end": "2016",
+   "target-credit": "",
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "7ee7f3db-c438-3fa5-a30b-ca40499c97d6",
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau III. No. 11. Pantomime (Les amours de Pan et Syrinx)",
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "type-id": null
+   }
+  },
+  {
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type": "performance",
+   "source-credit": "",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau III. No. 11. Pantomime (Les amours de Pan et Syrinx)",
+    "language": "zxx",
+    "id": "7ee7f3db-c438-3fa5-a30b-ca40499c97d6",
+    "languages": [
+     "zxx"
+    ]
+   }
+  }
+ ],
+ "id": "2a025187-c9b8-4bf8-9609-f0c96307ffdf",
+ "first-release-date": "2017-03-17",
+ "aliases": [
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau III: Tr\u00e8s lent [Chlo\u00e9 figure par sa danse les accents de la fl\u00fbte]",
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau III: Tr\u00e8s lent [Chlo\u00e9 figure par sa danse les accents de la fl\u00fbte]",
+   "begin": null,
+   "ended": false,
+   "primary": null,
+   "end": null
+  }
+ ],
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, troisi\u00e8me partie - tr\u00e8s lent [Chlo\u00e9 figure par sa danse les accents de la fl\u00fbte]",
+ "video": false
+}

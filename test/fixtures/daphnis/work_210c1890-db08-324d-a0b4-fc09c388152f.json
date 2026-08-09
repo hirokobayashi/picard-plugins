@@ -1,0 +1,176 @@
+{
+ "attributes": [],
+ "title": "Daphnis et Chlo\u00e9: Tableau I. No. 1. Introduction et danse religieuse",
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "type-id": null,
+ "aliases": [
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "sort-name": "Daphnis et Chlo\u00e9, Premi\u00e8re partie: Danse religieuse",
+   "name": "Daphnis et Chlo\u00e9, Premi\u00e8re partie: Danse religieuse",
+   "ended": false,
+   "primary": null,
+   "end": null
+  },
+  {
+   "primary": null,
+   "end": null,
+   "ended": false,
+   "locale": null,
+   "name": "Daphnis et Chlo\u00e9: 1-\u00e8re partie: Danse religieuse",
+   "sort-name": "Daphnis et Chlo\u00e9: 1-\u00e8re partie: Danse religieuse",
+   "begin": null,
+   "type-id": null,
+   "type": null
+  },
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "name": "Daphnis et Chlo\u00e9: 1-\u00e8re partie: Introduction et danse religieuse",
+   "sort-name": "Daphnis et Chlo\u00e9: 1-\u00e8re partie: Introduction et danse religieuse",
+   "ended": false,
+   "primary": null,
+   "end": null
+  }
+ ],
+ "language": "zxx",
+ "relations": [
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "end": "1912",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "country": "FR",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "type": "Person",
+    "disambiguation": "French composer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Maurice Ravel",
+    "sort-name": "Ravel, Maurice"
+   },
+   "begin": "1909",
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "type": "composer",
+   "source-credit": ""
+  },
+  {
+   "source-credit": "",
+   "type": "orchestrator",
+   "type-id": "0a1771e1-8639-4740-8a43-bdafc050c3da",
+   "attributes": [],
+   "begin": null,
+   "artist": {
+    "disambiguation": "French composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Ravel, Maurice",
+    "name": "Maurice Ravel",
+    "country": "FR",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a"
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  },
+  {
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "arrangement",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 1. Introduction et danse religieuse",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "arr. piano",
+    "type-id": null,
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "7086443d-68b2-4df8-b4fc-53bd9f10207c"
+   }
+  },
+  {
+   "begin": null,
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "source-credit": "",
+   "type": "arrangement",
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "id": "cb7424d7-ac8e-494e-8e11-68238af0f768",
+    "languages": [],
+    "language": null,
+    "type-id": null,
+    "disambiguation": "catch-all for arrangements",
+    "iswcs": [],
+    "type": null,
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 1. Introduction et danse religieuse",
+    "attributes": []
+   },
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {}
+  },
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "73dd63b8-543f-4725-b643-ed384fe5dcac",
+    "language": "zxx",
+    "title": "Daphnis et Chlo\u00e9: Tableau I",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "type": null,
+    "iswcs": []
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 1,
+   "begin": null,
+   "attributes": []
+  }
+ ],
+ "id": "210c1890-db08-324d-a0b4-fc09c388152f",
+ "languages": [
+  "zxx"
+ ]
+}

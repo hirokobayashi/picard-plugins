@@ -1,0 +1,96 @@
+{
+ "relations": [
+  {
+   "attributes": [],
+   "begin": "2016",
+   "source-credit": "",
+   "type": "conductor",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "end": "2016",
+   "target-credit": "",
+   "artist": {
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "FR",
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39"
+   },
+   "ended": true,
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  },
+  {
+   "ended": true,
+   "artist": {
+    "name": "Les Si\u00e8cles",
+    "sort-name": "Si\u00e8cles, Les",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "country": "FR"
+   },
+   "end": "2016",
+   "target-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "begin": "2016",
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work",
+   "target-credit": "",
+   "end": "2016",
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "12b7d2c7-2c8d-375f-9e3c-151cf875c781",
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 2. Danse g\u00e9n\u00e9rale",
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null
+   },
+   "ended": true,
+   "attributes": [],
+   "begin": "2016",
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0"
+  }
+ ],
+ "disambiguation": "",
+ "length": 191000,
+ "first-release-date": "2017-03-17",
+ "id": "ac277cd8-f804-409c-8962-f1bc1474eebf",
+ "aliases": [
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "begin": null,
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Vif - Danse g\u00e9n\u00e9rale (Live)",
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Vif - Danse g\u00e9n\u00e9rale (Live)",
+   "locale": null
+  }
+ ],
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, premi\u00e8re partie - vif - danse g\u00e9n\u00e9rale",
+ "video": false
+}

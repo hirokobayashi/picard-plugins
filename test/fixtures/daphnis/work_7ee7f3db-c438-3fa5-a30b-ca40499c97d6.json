@@ -1,0 +1,140 @@
+{
+ "aliases": [
+  {
+   "locale": null,
+   "begin": null,
+   "sort-name": "Daphnis et Chlo\u00e9: Daphnis et Chlo\u00e9 miment l'aventure de Pan et de Syrinx",
+   "name": "Daphnis et Chlo\u00e9: Daphnis et Chlo\u00e9 miment l'aventure de Pan et de Syrinx",
+   "type-id": "a18cab3f-0ae2-3978-8f75-dd9c09702b25",
+   "type": "Work name",
+   "primary": null,
+   "end": null,
+   "ended": false
+  },
+  {
+   "type": null,
+   "type-id": null,
+   "name": "Daphnis et Chlo\u00e9: Pantomime",
+   "sort-name": "Daphnis et Chlo\u00e9: Pantomime",
+   "begin": null,
+   "locale": null,
+   "ended": false,
+   "end": null,
+   "primary": null
+  }
+ ],
+ "relations": [
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist",
+   "ended": true,
+   "artist": {
+    "name": "Maurice Ravel",
+    "sort-name": "Ravel, Maurice",
+    "type": "Person",
+    "disambiguation": "French composer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "FR",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a"
+   },
+   "target-credit": "",
+   "end": "1912",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "source-credit": "",
+   "type": "composer",
+   "begin": "1909",
+   "attributes": []
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "French composer",
+    "name": "Maurice Ravel",
+    "sort-name": "Ravel, Maurice",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "country": "FR"
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "type": "orchestrator",
+   "source-credit": "",
+   "type-id": "0a1771e1-8639-4740-8a43-bdafc050c3da",
+   "attributes": [],
+   "begin": null
+  },
+  {
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "source-credit": "",
+   "type": "arrangement",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau III. No. 11. Pantomime (Les amours de Pan et Syrinx)",
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "arr. piano",
+    "type-id": null,
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "9bcc2b94-cafc-495d-936e-5cac24515288"
+   }
+  },
+  {
+   "ended": false,
+   "work": {
+    "id": "0472df2f-8ebd-39ac-ab90-92aef4edaff1",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "title": "Daphnis et Chlo\u00e9: Tableau III",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null
+   },
+   "target-credit": "",
+   "end": null,
+   "source-credit": "",
+   "ordering-key": 2,
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "attributes": [],
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "language": "zxx",
+ "languages": [
+  "zxx"
+ ],
+ "id": "7ee7f3db-c438-3fa5-a30b-ca40499c97d6",
+ "attributes": [],
+ "title": "Daphnis et Chlo\u00e9: Tableau III. No. 11. Pantomime (Les amours de Pan et Syrinx)",
+ "type": null,
+ "iswcs": [],
+ "disambiguation": "",
+ "type-id": null
+}

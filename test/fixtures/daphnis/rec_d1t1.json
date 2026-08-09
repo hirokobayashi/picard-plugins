@@ -1,0 +1,127 @@
+{
+ "length": 190000,
+ "disambiguation": "",
+ "relations": [
+  {
+   "attributes": [],
+   "begin": "2016",
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "end": "2016",
+   "target-credit": "",
+   "artist": {
+    "country": "FR",
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier"
+   },
+   "ended": true,
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  },
+  {
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "2016",
+   "ended": true,
+   "artist": {
+    "country": "FR",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "sort-name": "Si\u00e8cles, Les",
+    "name": "Les Si\u00e8cles",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5"
+   },
+   "end": "2016",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  },
+  {
+   "work": {
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 1. Introduction et danse religieuse",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "id": "210c1890-db08-324d-a0b4-fc09c388152f",
+    "language": "zxx"
+   },
+   "end": "2016",
+   "target-credit": "",
+   "ended": true,
+   "begin": "2016",
+   "attributes": [
+    "partial"
+   ],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "attribute-values": {},
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   },
+   "direction": "forward",
+   "target-type": "work"
+  },
+  {
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "210c1890-db08-324d-a0b4-fc09c388152f",
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 1. Introduction et danse religieuse",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null
+   },
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  }
+ ],
+ "id": "03e53458-39f8-482a-b470-80a5a70d15bf",
+ "first-release-date": "2017-03-17",
+ "aliases": [
+  {
+   "primary": null,
+   "end": null,
+   "ended": false,
+   "locale": null,
+   "begin": null,
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Introduction (Live)",
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Introduction (Live)",
+   "type-id": null,
+   "type": null
+  }
+ ],
+ "video": false,
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, premi\u00e8re partie - introduction"
+}

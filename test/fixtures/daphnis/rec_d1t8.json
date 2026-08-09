@@ -1,0 +1,127 @@
+{
+ "first-release-date": "2017-03-17",
+ "id": "950e84f8-5ce2-4ec0-9460-723896364f96",
+ "relations": [
+  {
+   "artist": {
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "country": "FR",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier",
+    "name": "Fran\u00e7ois\u2010Xavier Roth"
+   },
+   "ended": true,
+   "end": "2016",
+   "target-credit": "",
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "begin": "2016",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "attributes": [],
+   "begin": "2016",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "end": "2016",
+   "target-credit": "",
+   "artist": {
+    "disambiguation": "",
+    "type": "Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "name": "Les Si\u00e8cles",
+    "sort-name": "Si\u00e8cles, Les",
+    "country": "FR",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e"
+   },
+   "ended": true,
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  },
+  {
+   "type": "performance",
+   "source-credit": "",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "begin": "2016",
+   "attributes": [
+    "partial"
+   ],
+   "ended": true,
+   "work": {
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 6. Nocturne. Danse lente et myst\u00e9rieuse des Nymphes",
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "id": "1cebc96d-b4ed-3615-90d5-dbc26c381fb2",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "end": "2016",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   },
+   "direction": "forward",
+   "attribute-values": {}
+  },
+  {
+   "begin": null,
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "work": {
+    "language": "zxx",
+    "id": "c757f3a9-6f6c-3e06-af1a-04f26ff7b36e",
+    "languages": [
+     "zxx"
+    ],
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 5. Danse de Lyc\u00e9ion"
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward"
+  }
+ ],
+ "disambiguation": "",
+ "length": 107000,
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, premi\u00e8re partie - sc\u00e8ne [Les pirates]",
+ "video": false,
+ "aliases": [
+  {
+   "begin": null,
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Sc\u00e8ne [Les Pirates]",
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Sc\u00e8ne [Les Pirates]",
+   "locale": null,
+   "type": null,
+   "type-id": null,
+   "end": null,
+   "primary": null,
+   "ended": false
+  }
+ ]
+}

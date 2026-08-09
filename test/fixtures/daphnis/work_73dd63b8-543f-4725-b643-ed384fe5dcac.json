@@ -1,0 +1,262 @@
+{
+ "aliases": [],
+ "id": "73dd63b8-543f-4725-b643-ed384fe5dcac",
+ "languages": [
+  "zxx"
+ ],
+ "relations": [
+  {
+   "begin": null,
+   "attributes": [],
+   "type": "composer",
+   "source-credit": "",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "target-credit": "",
+   "end": null,
+   "artist": {
+    "disambiguation": "French composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Ravel, Maurice",
+    "name": "Maurice Ravel",
+    "country": "FR",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a"
+   },
+   "ended": false,
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work",
+   "work": {
+    "id": "49854a5f-7a30-47a2-bcd1-db8c84811afd",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "type-id": null,
+    "disambiguation": "arr. piano",
+    "type": null,
+    "iswcs": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I",
+    "attributes": []
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "type": "arrangement",
+   "source-credit": ""
+  },
+  {
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 1,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9",
+    "type": "Ballet",
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "language": "zxx",
+    "id": "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "target-type": "work",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 1,
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "210c1890-db08-324d-a0b4-fc09c388152f",
+    "language": "zxx",
+    "type-id": null,
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 1. Introduction et danse religieuse",
+    "attributes": []
+   }
+  },
+  {
+   "ended": false,
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "12b7d2c7-2c8d-375f-9e3c-151cf875c781",
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 2. Danse g\u00e9n\u00e9rale",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null
+   },
+   "end": null,
+   "target-credit": "",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 2,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "begin": null,
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 3. Danse grotesque de Dorcon",
+    "language": "zxx",
+    "id": "5d951041-56ed-3731-9994-709e8218f471",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "source-credit": "",
+   "ordering-key": 3,
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "ordering-key": 4,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 4. Danse l\u00e9g\u00e8re et gracieuse de Daphnis",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "70e3948f-db7c-3b31-95e4-70baa564a393"
+   },
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "ordering-key": 5,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "work": {
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 5. Danse de Lyc\u00e9ion",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "id": "c757f3a9-6f6c-3e06-af1a-04f26ff7b36e",
+    "language": "zxx"
+   },
+   "target-credit": "",
+   "end": null,
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {}
+  },
+  {
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 6. Nocturne. Danse lente et myst\u00e9rieuse des Nymphes",
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "1cebc96d-b4ed-3615-90d5-dbc26c381fb2"
+   },
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 6,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "attributes": [],
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "language": "zxx",
+ "title": "Daphnis et Chlo\u00e9: Tableau I",
+ "attributes": [],
+ "type-id": null,
+ "disambiguation": "",
+ "iswcs": [],
+ "type": null
+}

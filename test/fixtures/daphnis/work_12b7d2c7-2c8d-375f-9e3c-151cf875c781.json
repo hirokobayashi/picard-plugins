@@ -1,0 +1,140 @@
+{
+ "type": null,
+ "iswcs": [],
+ "disambiguation": "",
+ "type-id": null,
+ "attributes": [],
+ "title": "Daphnis et Chlo\u00e9: Tableau I. No. 2. Danse g\u00e9n\u00e9rale",
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "begin": "1909",
+   "attributes": [],
+   "type": "composer",
+   "source-credit": "",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "end": "1912",
+   "target-credit": "",
+   "artist": {
+    "country": "FR",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "name": "Maurice Ravel",
+    "sort-name": "Ravel, Maurice",
+    "disambiguation": "French composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "ended": true
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": null,
+   "attributes": [],
+   "type-id": "0a1771e1-8639-4740-8a43-bdafc050c3da",
+   "source-credit": "",
+   "type": "orchestrator",
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "artist": {
+    "sort-name": "Ravel, Maurice",
+    "name": "Maurice Ravel",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "French composer",
+    "type": "Person",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "country": "FR"
+   }
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work",
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "7d477a48-6229-4028-8d72-fd01ff130702",
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 2. Danse g\u00e9n\u00e9rale",
+    "disambiguation": "arr. piano",
+    "type": null,
+    "iswcs": [],
+    "type-id": null
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "type": "arrangement",
+   "source-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299"
+  },
+  {
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 2,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "title": "Daphnis et Chlo\u00e9: Tableau I",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "id": "73dd63b8-543f-4725-b643-ed384fe5dcac",
+    "language": "zxx"
+   },
+   "target-type": "work",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  }
+ ],
+ "language": "zxx",
+ "id": "12b7d2c7-2c8d-375f-9e3c-151cf875c781",
+ "languages": [
+  "zxx"
+ ],
+ "aliases": [
+  {
+   "locale": null,
+   "name": "Daphnis et Chlo\u00e9: 1-\u00e8re partie: Danse g\u00e9n\u00e9rale",
+   "sort-name": "Daphnis et Chlo\u00e9: 1-\u00e8re partie: Danse g\u00e9n\u00e9rale",
+   "begin": null,
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  },
+  {
+   "end": null,
+   "primary": null,
+   "ended": false,
+   "begin": null,
+   "sort-name": "Daphnis et Chlo\u00e9: Danse g\u00e9n\u00e9rale",
+   "name": "Daphnis et Chlo\u00e9: Danse g\u00e9n\u00e9rale",
+   "locale": null,
+   "type": null,
+   "type-id": null
+  }
+ ]
+}

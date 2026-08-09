@@ -1,0 +1,127 @@
+{
+ "relations": [
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier",
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "country": "FR"
+   },
+   "ended": true,
+   "end": "2016",
+   "target-credit": "",
+   "source-credit": "",
+   "type": "conductor",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "begin": "2016",
+   "attributes": []
+  },
+  {
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "end": "2016",
+   "ended": true,
+   "artist": {
+    "sort-name": "Si\u00e8cles, Les",
+    "name": "Les Si\u00e8cles",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "country": "FR"
+   },
+   "attributes": [],
+   "begin": "2016",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "source-credit": "",
+   "type": "performing orchestra"
+  },
+  {
+   "ended": true,
+   "work": {
+    "language": "zxx",
+    "id": "1cebc96d-b4ed-3615-90d5-dbc26c381fb2",
+    "languages": [
+     "zxx"
+    ],
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 6. Nocturne. Danse lente et myst\u00e9rieuse des Nymphes"
+   },
+   "target-credit": "",
+   "end": "2016",
+   "type": "performance",
+   "source-credit": "",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "begin": "2016",
+   "attributes": [
+    "partial"
+   ],
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   },
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "1cebc96d-b4ed-3615-90d5-dbc26c381fb2",
+    "language": "zxx",
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 6. Nocturne. Danse lente et myst\u00e9rieuse des Nymphes",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null
+   },
+   "target-credit": "",
+   "end": null,
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {}
+  }
+ ],
+ "disambiguation": "",
+ "length": 92000,
+ "first-release-date": "2017-03-17",
+ "id": "763e80a6-d603-4c77-abc6-a07c20c70553",
+ "aliases": [
+  {
+   "ended": false,
+   "primary": null,
+   "end": null,
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Nocturne [Une lumi\u00e8re irr\u00e9elle enveloppe le paysage]",
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Nocturne [Une lumi\u00e8re irr\u00e9elle enveloppe le paysage]"
+  }
+ ],
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, premi\u00e8re partie - nocturne [Une lumi\u00e8re irr\u00e9elle enveloppe le paysage]",
+ "video": false
+}

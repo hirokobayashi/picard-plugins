@@ -4847,6 +4847,19 @@ class PartLevels():
         # list(set()) won't work as need to retain order
         work_list = list(collections.OrderedDict.fromkeys(work_list))
         work_list_p = list(collections.OrderedDict.fromkeys(work_list_p))
+        # ...and the ids too. A node is identified by its id TUPLE, so the same
+        # id twice spells a DIFFERENT node from the same id once, and nothing
+        # else ever builds the doubled spelling: works_cache holds the work's
+        # own id once, so when work_process later finds a parent for it,
+        # work_listing.index(prev_ids) raises ValueError and Picard aborts the
+        # release. MusicBrainz permits two relations between one recording and
+        # one work (e.g. Daphnis et Chloe 99feb608, where several recordings
+        # carry both a 'partial' and a plain performance relation to the same
+        # work), which is exactly how the id gets appended twice. The names
+        # above are already de-duped, so without this the tuple and its name
+        # list disagree in length as well.
+        workId_list = list(collections.OrderedDict.fromkeys(workId_list))
+        workId_list_p = list(collections.OrderedDict.fromkeys(workId_list_p))
 
         workId_tuple = tuple(workId_list)
         workId_tuple_p = tuple(workId_list_p)
@@ -5418,12 +5431,34 @@ class PartLevels():
                                             self.works_cache[wid], parentIds)
                                         self.parts[wid]['parent'] = add_list_uniquely(
                                             self.parts[wid]['parent'], parentIds)
-                                        index = self.work_listing[album].index(
-                                            prev_ids)
                                         new_id_list = add_list_uniquely(
                                             list(prev_ids), parentIds)
                                         new_ids = tuple(new_id_list)
-                                        self.work_listing[album][index] = new_ids
+                                        # prev_ids names wid's parents AS A
+                                        # NODE, but nothing guarantees that node
+                                        # is still listed under that name: a
+                                        # node's key grows as its own parents are
+                                        # discovered, so an earlier call may
+                                        # already have renamed ('X',) to ('X',
+                                        # 'X-parent'). works_cache[wid] is not
+                                        # stale -- X really is still wid's parent
+                                        # -- only the assumption that the parent
+                                        # tuple is a live work_listing key is
+                                        # wrong. A blind .index() then raises
+                                        # ValueError out of the webservice
+                                        # callback and Picard abandons the whole
+                                        # release (Daphnis et Chloe 99feb608,
+                                        # with partial recordings enabled: the
+                                        # Nocturne is the partial-parent of four
+                                        # tracks AND a child of Tableau I, so it
+                                        # is renamed before the last of those
+                                        # tracks is processed).
+                                        if prev_ids in self.work_listing[album]:
+                                            index = self.work_listing[album].index(
+                                                prev_ids)
+                                            self.work_listing[album][index] = new_ids
+                                        elif new_ids not in self.work_listing[album]:
+                                            self.work_listing[album].append(new_ids)
                                         # COPY the old entry, do not alias it.
                                         # ``prev_ids`` is deliberately left in
                                         # self.parts (see the commented-out del

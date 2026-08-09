@@ -1,0 +1,96 @@
+{
+ "disambiguation": "",
+ "length": 175000,
+ "relations": [
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "end": "2016",
+   "target-credit": "",
+   "artist": {
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "country": "FR",
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "conductor"
+   },
+   "ended": true,
+   "attributes": [],
+   "begin": "2016",
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d"
+  },
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist",
+   "ended": true,
+   "artist": {
+    "disambiguation": "",
+    "type": "Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "name": "Les Si\u00e8cles",
+    "sort-name": "Si\u00e8cles, Les",
+    "country": "FR",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e"
+   },
+   "end": "2016",
+   "target-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "2016"
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "attributes": [],
+   "begin": "2016",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 4. Danse l\u00e9g\u00e8re et gracieuse de Daphnis",
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "language": "zxx",
+    "id": "70e3948f-db7c-3b31-95e4-70baa564a393",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "target-credit": "",
+   "end": "2016",
+   "ended": true
+  }
+ ],
+ "id": "3d38f2bc-9b5d-46a6-a7d8-fa5c803284ef",
+ "first-release-date": "2017-03-17",
+ "aliases": [
+  {
+   "locale": null,
+   "begin": null,
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Danse l\u00e9g\u00e8re et gracieuse de Daphnis (Live)",
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Danse l\u00e9g\u00e8re et gracieuse de Daphnis (Live)",
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  }
+ ],
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, premi\u00e8re partie - danse l\u00e9g\u00e8re et gracieuse de daphnis",
+ "video": false
+}

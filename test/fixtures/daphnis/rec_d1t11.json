@@ -1,0 +1,127 @@
+{
+ "first-release-date": "2017-03-17",
+ "id": "65a4ff28-8cdd-4403-9bf2-e0e8bae67494",
+ "relations": [
+  {
+   "end": "2016",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "FR",
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39"
+   },
+   "attributes": [],
+   "begin": "2016",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "2016",
+   "attributes": [],
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "target-credit": "",
+   "end": "2016",
+   "artist": {
+    "sort-name": "Si\u00e8cles, Les",
+    "name": "Les Si\u00e8cles",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "country": "FR"
+   },
+   "ended": true
+  },
+  {
+   "begin": "2016",
+   "attributes": [
+    "partial"
+   ],
+   "type": "performance",
+   "source-credit": "",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "end": "2016",
+   "target-credit": "",
+   "work": {
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 6. Nocturne. Danse lente et myst\u00e9rieuse des Nymphes",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "id": "1cebc96d-b4ed-3615-90d5-dbc26c381fb2",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "ended": true,
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   }
+  },
+  {
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "work": {
+    "title": "Daphnis et Chlo\u00e9: Tableau II. No. 7. Introduction",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "id": "aaaff290-f883-368f-bb5d-91e76001c734",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "target-credit": "",
+   "end": null
+  }
+ ],
+ "length": 176000,
+ "disambiguation": "",
+ "video": false,
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, premi\u00e8re partie - (interlude)",
+ "aliases": [
+  {
+   "locale": null,
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Interlude (Live)",
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Interlude (Live)",
+   "begin": null,
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  }
+ ]
+}
