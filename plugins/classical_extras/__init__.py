@@ -5434,30 +5434,35 @@ class PartLevels():
                                         new_id_list = add_list_uniquely(
                                             list(prev_ids), parentIds)
                                         new_ids = tuple(new_id_list)
-                                        # prev_ids names wid's parents AS A
-                                        # NODE, but nothing guarantees that node
-                                        # is still listed under that name: a
-                                        # node's key grows as its own parents are
-                                        # discovered, so an earlier call may
-                                        # already have renamed ('X',) to ('X',
-                                        # 'X-parent'). works_cache[wid] is not
-                                        # stale -- X really is still wid's parent
-                                        # -- only the assumption that the parent
-                                        # tuple is a live work_listing key is
-                                        # wrong. A blind .index() then raises
-                                        # ValueError out of the webservice
-                                        # callback and Picard abandons the whole
-                                        # release (Daphnis et Chloe 99feb608,
-                                        # with partial recordings enabled: the
+                                        # ADD the grown node; never remove the
+                                        # old one. prev_ids names wid's parents
+                                        # AS A NODE, and that key is SHARED --
+                                        # any other child whose parent set is
+                                        # still exactly prev_ids names the same
+                                        # node. Replacing it in place (this used
+                                        # to be work_listing[index] = new_ids)
+                                        # is right for wid and silently destroys
+                                        # the key every one of those siblings
+                                        # depends on: create_trackback then
+                                        # finds no such parent and, trackback
+                                        # being a defaultdict, grafts a freshly
+                                        # created EMPTY node, so their whole
+                                        # subtree drops out of the album and
+                                        # they emit no work tags at all.
+                                        # self.parts has always kept both keys
+                                        # for exactly this reason (see the note
+                                        # below on why prev_ids is not deleted);
+                                        # work_listing was the odd one out.
+                                        # On Daphnis et Chloe 99feb608 with
+                                        # partial recordings enabled, the
                                         # Nocturne is the partial-parent of four
-                                        # tracks AND a child of Tableau I, so it
-                                        # is renamed before the last of those
-                                        # tracks is processed).
-                                        if prev_ids in self.work_listing[album]:
-                                            index = self.work_listing[album].index(
-                                                prev_ids)
-                                            self.work_listing[album][index] = new_ids
-                                        elif new_ids not in self.work_listing[album]:
+                                        # tracks AND a child of Tableau I, so
+                                        # renaming it stranded three of them.
+                                        # Which tracks were hit depended on how
+                                        # much of the hierarchy had resolved,
+                                        # i.e. on the order the async lookups
+                                        # came back in.
+                                        if new_ids not in self.work_listing[album]:
                                             self.work_listing[album].append(new_ids)
                                         # COPY the old entry, do not alias it.
                                         # ``prev_ids`` is deliberately left in
