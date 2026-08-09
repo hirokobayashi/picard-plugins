@@ -4069,5 +4069,479 @@ class SwanLakeFullBalletTwoVersionsIntegrationTestCase(ClassicalExtrasTestCase):
                 self.assertEqual(result, baseline,
                                  "drain order %r changed the tags" % order)
 
+class NutcrackerSuiteOverlapIntegrationTestCase(ClassicalExtrasTestCase):
+    """End-to-end guard for release b2f4b6e5 (Tchaikovsky: The Nutcracker,
+    complete, 2 discs / 24 tracks).
+
+    23 of the 24 tracks link to exactly one work, all under the ballet
+    "Щелкунчик, op. 71" (f3281e81). Disc 1 track 1 (Miniature Overture) is
+    recorded against TWO works: the ballet's own Увертюра (91421046) and the
+    first movement of the concert suite "The Nutcracker (suite from the
+    ballet), op. 71a" (fce0c96b), whose top is a different work (fd337fdc).
+
+    Reported symptom: disc 1 track 1 does not share the album's top work -- it
+    comes out under the suite while every other track is under the ballet."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "nutcracker")
+    _REL = "b2f4b6e5-e114-4e6e-ad18-879976885304"
+    _BALLET = "f3281e81-eea2-409f-88b8-9e1e1de5ca10"   # Щелкунчик, op. 71
+    _SUITE = "fd337fdc-a511-4830-8ee7-09d4ada32a54"    # ... suite, op. 71a
+    _BALLET_NAME = "Щелкунчик, op. 71"
+    _SUITE_NAME = "The Nutcracker (suite from the ballet), op. 71a"
+    # (label, disc, track, recording id, work id(s))
+    _TRACKS = [
+        # Miniature Overture: one recording, two works -- the ballet's
+        # overture and the suite's first movement.
+        ('d1t1', 1, 1, '3e557fd6-e178-4736-9250-9976ce58e180',
+         ['91421046-15ce-30c9-9d70-8c5669ddbeee',
+          'fce0c96b-42a9-4c41-a455-d5dc017bcb44']),
+        ('d1t2', 1, 2, '9c32ad42-fdf0-4482-904a-3e32e9309428',
+         'f1cd9dc7-625a-36f5-a0fe-ac645d5e8c1c'),
+        ('d1t3', 1, 3, '2a1e90eb-7153-4e1a-9a8a-2849d6f29706',
+         'a93104a5-fd64-3f1d-9331-d5405781a5e7'),
+        ('d1t4', 1, 4, '8ca2bb09-5ff3-4f22-992c-46307e45bdbc',
+         'dd9d1429-526d-31e0-a933-b72f4d39216a'),
+        ('d1t5', 1, 5, '44ac0eae-0f46-41dc-a245-cf6af2e7b58a',
+         'ff037004-5dc9-3984-b4db-f6fac19d431d'),
+        ('d1t6', 1, 6, 'a8a29a4f-4132-4070-aec9-8e5233de4bbe',
+         '7a231a49-debd-389d-a6c3-e921622598cb'),
+        ('d1t7', 1, 7, 'b76fbd03-95bd-474c-80e0-edb21a57f327',
+         'd56cb3fc-77a2-385b-962b-6e91d915dfd7'),
+        ('d1t8', 1, 8, '43df2df4-7b33-48f8-a29a-8474629d0d85',
+         '9f640e6d-5211-3ad6-8a7f-36136fc928ff'),
+        ('d1t9', 1, 9, '135866ed-8b21-4f8f-af23-c8b49fc320b2',
+         '2f4888c4-6e13-392d-8ad8-2294f1d517a9'),
+        ('d1t10', 1, 10, '1f0a558e-2cd1-4ba6-8e37-97277c3a0f58',
+         '8d44d4c1-5a55-3273-bff0-86cbde10f6c4'),
+        ('d2t1', 2, 1, '564423e7-08e9-4848-a69f-9ef698e52fbb',
+         '74c29f32-3051-3236-85ac-0b81a158fb7e'),
+        ('d2t2', 2, 2, 'cc1a3129-7559-4280-bbe9-d203b0d64e2a',
+         '44e2d780-78cc-3552-ba7c-d44e9dd6d2b7'),
+        ('d2t3', 2, 3, '511ca038-d40d-4044-8fce-967bf6db502e',
+         'a7d61779-a4f3-3e1e-8a4f-a1a4916e326a'),
+        ('d2t4', 2, 4, '01470b15-13ed-43a8-898a-02fb146758cf',
+         '9a717451-ef0d-326c-88c7-a7d61f9ebddd'),
+        ('d2t5', 2, 5, '9799f4d0-c828-4415-80cc-e67163be34b8',
+         '98b402ca-1bd0-3de4-8b77-6dd85ba0191e'),
+        ('d2t6', 2, 6, '71d00138-9b77-48af-8586-8a5ea97e6e7c',
+         '2c16255f-a245-3dde-8860-d37424a639db'),
+        ('d2t7', 2, 7, 'e5197389-f0ef-4378-88fd-c5d5651d0973',
+         '5f51ef98-34a6-3b7b-bede-32b4cdd33eed'),
+        ('d2t8', 2, 8, '9c90db12-1bc7-4c2f-abdc-6af4c0be48c5',
+         '4617c13c-6597-36b0-969e-ced9603e6889'),
+        ('d2t9', 2, 9, 'a29510b3-16f7-4589-848c-6073b5729efb',
+         'ba28e7e2-862e-3438-9faa-13ebb6e9030c'),
+        ('d2t10', 2, 10, 'a2ba4773-4a6e-464b-b0ee-2f503a39828a',
+         'fbffe214-835e-3930-8349-d42ff93f2648'),
+        ('d2t11', 2, 11, '9dd0bd6f-8857-4005-b3c1-a4cdce55e7dc',
+         '0dc80be8-dac8-3f33-a22b-464c64f792b1'),
+        ('d2t12', 2, 12, '592aba8c-2a44-4ab2-a8a4-9e31fb704e20',
+         '5fd9c9dd-9e0d-31cf-9861-58b7abd1d12f'),
+        ('d2t13', 2, 13, '8fec78c3-99ce-42cc-b707-6c6f9dc307e8',
+         '6a3d8f7a-c492-3614-ab90-f45a9a5ed2da'),
+        ('d2t14', 2, 14, 'a1de0149-8f01-4f7e-b3f4-f21d8df3d34f',
+         '9dc735d6-9824-36fa-9881-9b34b853ff2b'),
+    ]
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": True, "cwp_arrangements": True,
+            "cwp_medley": True, "cwp_collections": True,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    def _run_full_album(self, drain="fifo", partial=True, arrangements=True):
+        """Drive all 24 tracks through the real Picard flow."""
+        import random
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        # Movement numbering happens inside the real extend_metadata /
+        # publish_metadata pair, so a test that asserts on movementnumber /
+        # movementtotal has to let them run (_STUB_PUBLISH = False).
+        if getattr(self, "_STUB_PUBLISH", True):
+            pl.extend_metadata = lambda *a, **k: None
+            pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": partial, "cwp_arrangements": arrangements,
+            "cwp_medley": True, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        # Per-test option overrides (used to replay a user's real Picard
+        # config, where e.g. cwp_medley is on).
+        opts.update(getattr(self, "_extra_opts", {}))
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        from picard.metadata import Metadata
+
+        tracks = {}
+        for label, disc, track, rec_id, work_id in self._TRACKS:
+            # Picard's real Metadata (not a dict mock): it joins multi-values
+            # into a string on __getitem__, which the publish/extend path
+            # relies on.
+            tm = Metadata()
+            tm['musicbrainz_albumid'] = self._REL
+            tm['musicbrainz_recordingid'] = rec_id
+            tm['musicbrainz_workid'] = work_id
+            tm['album'] = "The Nutcracker"
+            tm['title'] = label
+            tm['tracknumber'] = str(track)
+            tm['discnumber'] = str(disc)
+            tm['~ce_options'] = repr(opts)
+            t = Mock(name=label)
+            t.metadata = tm
+            t._id = label
+            t.__hash__ = lambda self: hash(self._id)
+            t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+            tracks[label] = t
+            album._new_tracks.append(t)
+            node = {'recording': self._load("rec_%s.json" % label)}
+            pl.add_work_info(album, t.metadata, node, {})
+
+        rng = random.Random(drain)
+        while pending:
+            if drain == "fifo":
+                i = 0
+            elif drain == "lifo":
+                i = len(pending) - 1
+            else:
+                i = rng.randrange(len(pending))
+            cb, resp = pending.pop(i)
+            cb(resp, None, None)
+        self._pl = pl
+        self._album = album
+        return tracks
+
+    def test_overture_shares_the_album_top_work(self):
+        """The reported bug: disc 1 track 1 must be under the ballet, like the
+        other 23 tracks, not under the concert suite."""
+        tracks = self._run_full_album()
+        self.assertEqual(
+            self.mod.str_to_list(tracks['d1t1'].metadata['~cwp_workid_top']),
+            [self._BALLET],
+            "d1t1 top = %r (%s)" % (tracks['d1t1'].metadata['~cwp_workid_top'],
+                                    tracks['d1t1'].metadata['~cwp_work_top']))
+
+    def test_whole_album_agrees_on_one_top(self):
+        tracks = self._run_full_album()
+        tops = {tuple(self.mod.str_to_list(
+                    tracks[label].metadata['~cwp_workid_top']))
+                for label, _d, _t, _r, _w in self._TRACKS}
+        self.assertEqual(len(tops), 1,
+                         "album split across tops: %r" % (tops,))
+
+    def test_top_work_names_the_ballet_only(self):
+        """The user-visible half of the bug. The overture's suite parent must
+        not be fused into the album's top work: ~cwp_work_top (the source of
+        the `top_work` tag) has to name the ballet alone, on every track --
+        never 'Щелкунчик, op. 71; The Nutcracker (suite from the ballet)'.
+
+        This is a NAME-level failure only: ~cwp_workid_top stayed a single id
+        throughout, so an id-only assertion does not see it."""
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(20)]:
+            tracks = self._run_full_album(drain=order)
+            for label, _d, _t, _r, _w in self._TRACKS:
+                names = self.mod.str_to_list(
+                    tracks[label].metadata['~cwp_work_top'])
+                self.assertEqual(
+                    names, [self._BALLET_NAME],
+                    "drain %r: %s top_work = %r" % (order, label, names))
+
+    def test_every_track_keeps_its_work_metadata(self):
+        tracks = self._run_full_album()
+        for label, _d, _t, _r, _w in self._TRACKS:
+            self.assertTrue(tracks[label].metadata['~cwp_workid_top'],
+                            "%s lost its work metadata" % label)
+            self.assertTrue(tracks[label].metadata['~cwp_work_0'],
+                            "%s lost its level-0 work" % label)
+
+    def test_every_track_is_counted_as_a_movement(self):
+        """24 tracks of one ballet: movements must run 1..24 of 24, with the
+        overture (d1t1) included rather than stranded in a group of its own."""
+        self._STUB_PUBLISH = False
+        tracks = self._run_full_album()
+        for n, (label, _d, _t, _r, _w) in enumerate(self._TRACKS, start=1):
+            tm = tracks[label].metadata
+            self.assertEqual(
+                (tm['movementnumber'], tm['movementtotal']), (str(n), '24'),
+                "%s: movement %r of %r" % (label, tm['movementnumber'],
+                                           tm['movementtotal']))
+
+    def test_result_is_independent_of_lookup_order(self):
+        baseline = None
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]:
+            tracks = self._run_full_album(drain=order)
+            result = {
+                label: (self.mod.str_to_list(
+                            tracks[label].metadata['~cwp_work_top']),
+                        self.mod.str_to_list(
+                            tracks[label].metadata['~cwp_work_0']),
+                        tracks[label].metadata['~cwp_part_levels'])
+                for label, _d, _t, _r, _w in self._TRACKS}
+            if baseline is None:
+                baseline = result
+            else:
+                self.assertEqual(result, baseline,
+                                 "drain order %r changed the tags" % order)
+
+
+class RequiemCatchAllEditionIntegrationTestCase(ClassicalExtrasTestCase):
+    """End-to-end guard for release 63fb5437 (Mozart: Requiem, Bernstein,
+    1 disc / 14 tracks).
+
+    The same shape as the Nutcracker (b2f4b6e5), with the twist that the two
+    tops are character-identical. 13 of the 14 tracks link to exactly one work,
+    all under "Requiem in D minor, K. 626" [Beyer/Kunzelmann Edition]
+    (d0be6882). Track 1 is recorded against TWO works: the Beyer/Kunzelmann
+    Introitus (7b8867e5) and the Introitus of a SECOND K. 626 work, the
+    "catch-all for unknown editions" (5ba9868e), which is its own top.
+
+    Both tops are titled "Requiem in D minor, K. 626" and differ only by
+    disambiguation, so a split here is invisible in ~cwp_work_top -- it has to
+    be asserted on ~cwp_workid_top."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "requiem")
+    _REL = "63fb5437-9b7d-440c-aad2-0635bfbacee6"
+    _BEYER = "d0be6882-700f-48c9-af49-1f3d42627de5"     # Beyer/Kunzelmann Ed.
+    _CATCHALL = "5ba9868e-f053-4520-8957-6a9fedb2455a"  # unknown editions
+    _TOP_NAME = "Requiem in D minor, K. 626"            # BOTH of them
+    # (label, track, recording id, work id(s))
+    _TRACKS = [
+        # Introitus: one recording, two works -- the Beyer/Kunzelmann movement
+        # and the catch-all edition's movement. The bridge between the tops.
+        ('t1', 1, '182530c7-d72d-4504-bfbb-d4a8cdcd4b78',
+         ['7b8867e5-b146-482f-bfdd-9ee0e4471b37',
+          'a43e535d-671d-406b-9b3f-b80559242bf5']),
+        ('t2', 2, 'f879e18d-fba9-41af-861b-761eb8011902',
+         'e9a58e22-5092-49f0-9f3f-9191fb392a81'),
+        ('t3', 3, '224f7281-ab5c-4708-8bd6-bd83fe0c8d04',
+         '6198f617-8ea4-41d9-ba4f-742512cf0123'),
+        ('t4', 4, '8f65f257-fdbd-4ac1-96aa-b263b25b523a',
+         '60c4c27c-52c2-4af7-ba57-82e61c091f66'),
+        ('t5', 5, '9b030c1b-e068-4697-ae6e-94615c0fc319',
+         '9c18c926-c6b3-4e06-b50f-fd453bf18e8c'),
+        ('t6', 6, '2ce37150-a297-42f3-918c-f4e592e99a68',
+         '50827de7-974d-4f0a-89aa-2151b071c0df'),
+        ('t7', 7, 'f88fbaf3-ab29-4acc-9f4a-6d7f1e848e9a',
+         '1766cf64-5b60-4a4f-bec6-6195247c83ce'),
+        ('t8', 8, 'b8b5a68c-f60c-4c49-bc0d-e925b5a08d91',
+         '20b30605-16fe-4775-911d-cb4ba3a86422'),
+        ('t9', 9, '5099bd66-220c-4e22-a9e4-71c3003a9ae0',
+         'f20850fa-1208-4cb3-a69d-5b02558198b5'),
+        ('t10', 10, 'e811cbc0-48de-43d3-8eb5-ce663fb66c1e',
+         'af70cc9a-d670-4722-8447-1bc85d6d88e6'),
+        ('t11', 11, '97b4a245-1865-43c6-94e7-ba21243ae180',
+         '49954224-a4b6-48b7-9f38-c719cf823ec1'),
+        ('t12', 12, '6013dfe3-719c-46af-aee2-98b096a48f00',
+         'aaa7e36a-b909-49d9-ad2d-9033a9d3be54'),
+        ('t13', 13, '86ce292c-681d-414d-945a-c5c20c6da3af',
+         '68d21c1a-03cb-4f33-bf71-022ad990883b'),
+        ('t14', 14, 'c9131c55-ad7c-4229-b161-c41242148241',
+         '9fa1ab5f-f90c-4727-bcc9-c64aad8cd1a8'),
+    ]
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": True, "cwp_arrangements": True,
+            "cwp_medley": True, "cwp_collections": True,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    def _run_full_album(self, drain="fifo", partial=True, arrangements=True):
+        """Drive all 14 tracks through the real Picard flow."""
+        import random
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        # Movement numbering happens inside the real extend_metadata /
+        # publish_metadata pair, so a test that asserts on movementnumber /
+        # movementtotal has to let them run (_STUB_PUBLISH = False).
+        if getattr(self, "_STUB_PUBLISH", True):
+            pl.extend_metadata = lambda *a, **k: None
+            pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": partial, "cwp_arrangements": arrangements,
+            "cwp_medley": True, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts.update(getattr(self, "_extra_opts", {}))
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        from picard.metadata import Metadata
+
+        tracks = {}
+        for label, track, rec_id, work_id in self._TRACKS:
+            # Picard's real Metadata (not a dict mock): it joins multi-values
+            # into a string on __getitem__, which the publish/extend path
+            # relies on.
+            tm = Metadata()
+            tm['musicbrainz_albumid'] = self._REL
+            tm['musicbrainz_recordingid'] = rec_id
+            tm['musicbrainz_workid'] = work_id
+            tm['album'] = "Requiem"
+            tm['title'] = label
+            tm['tracknumber'] = str(track)
+            tm['discnumber'] = "1"
+            tm['~ce_options'] = repr(opts)
+            t = Mock(name=label)
+            t.metadata = tm
+            t._id = label
+            t.__hash__ = lambda self: hash(self._id)
+            t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+            tracks[label] = t
+            album._new_tracks.append(t)
+            node = {'recording': self._load("rec_%s.json" % label)}
+            pl.add_work_info(album, t.metadata, node, {})
+
+        rng = random.Random(drain)
+        while pending:
+            if drain == "fifo":
+                i = 0
+            elif drain == "lifo":
+                i = len(pending) - 1
+            else:
+                i = rng.randrange(len(pending))
+            cb, resp = pending.pop(i)
+            cb(resp, None, None)
+        self._pl = pl
+        self._album = album
+        return tracks
+
+    def test_introitus_shares_the_album_top_work(self):
+        """The reported bug: track 1 must sit under the same K. 626 as the
+        other 13, not under the catch-all edition."""
+        tracks = self._run_full_album()
+        self.assertEqual(
+            self.mod.str_to_list(tracks['t1'].metadata['~cwp_workid_top']),
+            [self._BEYER],
+            "t1 top = %r" % (tracks['t1'].metadata['~cwp_workid_top'],))
+
+    def test_whole_album_agrees_on_one_top_id(self):
+        """Both tops share a title, so this must be asserted on the ID."""
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(20)]:
+            tracks = self._run_full_album(drain=order)
+            tops = {tuple(self.mod.str_to_list(
+                        tracks[label].metadata['~cwp_workid_top']))
+                    for label, _t, _r, _w in self._TRACKS}
+            self.assertEqual(
+                tops, {(self._BEYER,)},
+                "drain %r: album tops = %r" % (order, tops))
+
+    def test_every_track_keeps_its_work_metadata(self):
+        tracks = self._run_full_album()
+        for label, _t, _r, _w in self._TRACKS:
+            self.assertTrue(tracks[label].metadata['~cwp_workid_top'],
+                            "%s lost its work metadata" % label)
+            self.assertTrue(tracks[label].metadata['~cwp_work_0'],
+                            "%s lost its level-0 work" % label)
+
+    def test_every_track_is_counted_as_a_movement(self):
+        """The reported symptom: track 1 is not counted as a movement.
+
+        When track 1 is stranded under a top of its own, that top's
+        movement-total is 1, publish_metadata's ``movementtotal > 1`` guard
+        fails and the track gets no movementnumber/movementtotal at all --
+        while the remaining 13 are renumbered 1..13 as their own group."""
+        self._STUB_PUBLISH = False
+        tracks = self._run_full_album()
+        total = str(len(self._TRACKS))
+        for label, track, _r, _w in self._TRACKS:
+            tm = tracks[label].metadata
+            self.assertEqual(
+                (tm['movementnumber'], tm['movementtotal']),
+                (str(track), total),
+                "%s: movement %r of %r" % (label, tm['movementnumber'],
+                                           tm['movementtotal']))
+
+    def test_result_is_independent_of_lookup_order(self):
+        baseline = None
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]:
+            tracks = self._run_full_album(drain=order)
+            result = {
+                label: (self.mod.str_to_list(
+                            tracks[label].metadata['~cwp_workid_top']),
+                        self.mod.str_to_list(
+                            tracks[label].metadata['~cwp_work_0']),
+                        tracks[label].metadata['~cwp_part_levels'])
+                for label, _t, _r, _w in self._TRACKS}
+            if baseline is None:
+                baseline = result
+            else:
+                self.assertEqual(result, baseline,
+                                 "drain order %r changed the tags" % order)
+
+
 if __name__ == "__main__":
     unittest.main()
