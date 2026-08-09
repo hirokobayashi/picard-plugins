@@ -4291,6 +4291,36 @@ class NutcrackerSuiteOverlapIntegrationTestCase(ClassicalExtrasTestCase):
             self.assertTrue(tracks[label].metadata['~cwp_work_0'],
                             "%s lost its level-0 work" % label)
 
+    def test_overture_names_only_the_branch_it_is_filed_under(self):
+        """d1t1's recording is related to two catalogue entries of the same
+        music -- the ballet's Увертюра and the suite's first movement. The
+        track is filed under the ballet, so the suite's name (whose top lost
+        the album's vote and was dropped) must not appear in its level-0 tags.
+
+        The node keeps BOTH ids in ~cwp_workid_0: the recording really is
+        related to both works, and that tuple is the node's identity."""
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]:
+            tracks = self._run_full_album(drain=order)
+            tm = tracks['d1t1'].metadata
+            self.assertEqual(
+                self.mod.str_to_list(tm['~cwp_work_0']),
+                ['Щелкунчик, op. 71: Увертюра'],
+                "drain %r: d1t1 work_0 = %r" % (
+                    order, self.mod.str_to_list(tm['~cwp_work_0'])))
+            self.assertEqual(
+                len(self.mod.str_to_list(tm['~cwp_part_0'])), 1,
+                "drain %r: d1t1 part_0 = %r" % (
+                    order, self.mod.str_to_list(tm['~cwp_part_0'])))
+
+    def test_every_track_has_a_single_level_0_work(self):
+        tracks = self._run_full_album()
+        for label, _d, _t, _r, _w in self._TRACKS:
+            self.assertEqual(
+                len(self.mod.str_to_list(
+                    tracks[label].metadata['~cwp_work_0'])), 1,
+                "%s work_0 = %r" % (label, self.mod.str_to_list(
+                    tracks[label].metadata['~cwp_work_0'])))
+
     def test_every_track_is_counted_as_a_movement(self):
         """24 tracks of one ballet: movements must run 1..24 of 24, with the
         overture (d1t1) included rather than stranded in a group of its own."""
@@ -4506,6 +4536,36 @@ class RequiemCatchAllEditionIntegrationTestCase(ClassicalExtrasTestCase):
                             "%s lost its work metadata" % label)
             self.assertTrue(tracks[label].metadata['~cwp_work_0'],
                             "%s lost its level-0 work" % label)
+
+    def test_introitus_names_only_the_edition_it_is_filed_under(self):
+        """t1's recording is related to the Introitus of BOTH editions. The
+        track is filed under Beyer/Kunzelmann, so the catch-all edition's name
+        -- whose top was dropped -- must not appear in its level-0 tags.
+
+        The two names differ only in their quotation marks, which is what the
+        doubled tag looked like to the user."""
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]:
+            tracks = self._run_full_album(drain=order)
+            tm = tracks['t1'].metadata
+            self.assertEqual(
+                self.mod.str_to_list(tm['~cwp_work_0']),
+                ['Requiem in D minor, K. 626: I. Introitus: '
+                 '“Requiem aeternam”'],
+                "drain %r: t1 work_0 = %r" % (
+                    order, self.mod.str_to_list(tm['~cwp_work_0'])))
+            self.assertEqual(
+                len(self.mod.str_to_list(tm['~cwp_part_0'])), 1,
+                "drain %r: t1 part_0 = %r" % (
+                    order, self.mod.str_to_list(tm['~cwp_part_0'])))
+
+    def test_every_track_has_a_single_level_0_work(self):
+        tracks = self._run_full_album()
+        for label, _t, _r, _w in self._TRACKS:
+            self.assertEqual(
+                len(self.mod.str_to_list(
+                    tracks[label].metadata['~cwp_work_0'])), 1,
+                "%s work_0 = %r" % (label, self.mod.str_to_list(
+                    tracks[label].metadata['~cwp_work_0'])))
 
     def test_every_track_is_counted_as_a_movement(self):
         """The reported symptom: track 1 is not counted as a movement.
