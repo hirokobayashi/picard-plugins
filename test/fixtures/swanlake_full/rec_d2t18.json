@@ -1,0 +1,188 @@
+{
+ "aliases": [
+  {
+   "type": null,
+   "type-id": null,
+   "sort-name": "Swan Lake, Op. 20 - Mariinsky Version / Act 3: Scène finale (Andante)",
+   "name": "Swan Lake, Op. 20 - Mariinsky Version / Act 3: Scène finale (Andante)",
+   "begin": null,
+   "locale": null,
+   "ended": false,
+   "end": null,
+   "primary": null
+  }
+ ],
+ "video": false,
+ "title": "Swan Lake, op. 20 - Mariinsky Version / Act 3: Scène finale (Andante)",
+ "relations": [
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "ended": true,
+   "artist": {
+    "country": "RU",
+    "id": "87b4252d-314b-4252-9cd3-44c08f3087b6",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Валерий Гергиев",
+    "sort-name": "Gergiev, Valery"
+   },
+   "end": "2006-06-04",
+   "target-credit": "Valery Gergiev"
+  },
+  {
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "artist": {
+    "country": null,
+    "id": "0a4338c5-e6f3-46f1-a58a-99e8f43fcd0f",
+    "disambiguation": "editor/engineer/producer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Watson, Ian",
+    "name": "Ian Watson"
+   },
+   "attributes": [],
+   "begin": null,
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "type": "editor",
+   "source-credit": "",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "artist": {
+    "country": null,
+    "id": "72a764f3-2923-42ec-a73d-a87c72a409ef",
+    "disambiguation": "engineer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Whiteside, Jenni",
+    "name": "Jenni Whiteside"
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "type": "editor",
+   "source-credit": "",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "attributes": [],
+   "begin": null,
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "begin": "2006-05-28",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "end": "2006-06-04",
+   "target-credit": "Orchestra of the Mariinsky Theatre",
+   "ended": true,
+   "artist": {
+    "country": "RU",
+    "id": "6c05e40f-33b2-4150-b93a-ddc2b0d88a6a",
+    "disambiguation": "fka Kirov Orchestra till 1992",
+    "type": "Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "sort-name": "Orchestra of the Mariinsky Theatre",
+    "name": "Симфонический оркестр Мариинского театра"
+   }
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "id": "8052a978-7ff9-4793-bf87-d941457e8520",
+    "country": null,
+    "name": "Andrew Cornall",
+    "sort-name": "Cornall, Andrew",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "engineer / producer"
+   },
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "source-credit": "",
+   "type": "producer",
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "target-credit": "",
+   "end": "2006-06-04",
+   "artist": {
+    "country": null,
+    "id": "08536219-b31a-45be-8dda-42b008ec93e4",
+    "sort-name": "Siney, Philip",
+    "name": "Philip Siney",
+    "disambiguation": "sound engineer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "ended": true,
+   "begin": "2006-05-28",
+   "attributes": [],
+   "type": "recording",
+   "source-credit": "",
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926"
+  },
+  {
+   "ended": true,
+   "work": {
+    "id": "96e46066-78b2-4d5f-a10f-dac2b4dc2b58",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "title": "Swan Lake, op. 20: Act IV: Scène finale. Andante",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "ed. Drigo",
+    "type": null,
+    "iswcs": []
+   },
+   "target-credit": "",
+   "end": "2006-06-04",
+   "type": "performance",
+   "source-credit": "",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "length": 56840,
+ "disambiguation": "",
+ "first-release-date": "2007-04-25",
+ "id": "706709c6-5d60-4849-b02f-7824e074d4d5"
+}

@@ -1,0 +1,186 @@
+{
+ "length": 113986,
+ "disambiguation": "",
+ "relations": [
+  {
+   "end": "2006-06-04",
+   "target-credit": "Valery Gergiev",
+   "ended": true,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "name": "Валерий Гергиев",
+    "sort-name": "Gergiev, Valery",
+    "id": "87b4252d-314b-4252-9cd3-44c08f3087b6",
+    "country": "RU"
+   },
+   "begin": "2006-05-28",
+   "attributes": [],
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "type": "editor",
+   "source-credit": "",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "artist": {
+    "sort-name": "Watson, Ian",
+    "name": "Ian Watson",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "editor/engineer/producer",
+    "id": "0a4338c5-e6f3-46f1-a58a-99e8f43fcd0f",
+    "country": null
+   },
+   "target-credit": "",
+   "end": null,
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  },
+  {
+   "artist": {
+    "country": null,
+    "id": "72a764f3-2923-42ec-a73d-a87c72a409ef",
+    "name": "Jenni Whiteside",
+    "sort-name": "Whiteside, Jenni",
+    "type": "Person",
+    "disambiguation": "engineer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "source-credit": "",
+   "type": "editor",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "attributes": [],
+   "begin": null,
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "attributes": [],
+   "begin": "2006-05-28",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "target-credit": "Orchestra of the Mariinsky Theatre",
+   "end": "2006-06-04",
+   "artist": {
+    "country": "RU",
+    "id": "6c05e40f-33b2-4150-b93a-ddc2b0d88a6a",
+    "type": "Orchestra",
+    "disambiguation": "fka Kirov Orchestra till 1992",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "sort-name": "Orchestra of the Mariinsky Theatre",
+    "name": "Симфонический оркестр Мариинского театра"
+   },
+   "ended": true,
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "end": null,
+   "target-credit": "",
+   "artist": {
+    "country": null,
+    "id": "8052a978-7ff9-4793-bf87-d941457e8520",
+    "disambiguation": "engineer / producer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Andrew Cornall",
+    "sort-name": "Cornall, Andrew"
+   },
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "type": "producer",
+   "source-credit": "",
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0"
+  },
+  {
+   "target-credit": "",
+   "end": "2006-06-04",
+   "artist": {
+    "id": "08536219-b31a-45be-8dda-42b008ec93e4",
+    "country": null,
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "sound engineer",
+    "type": "Person",
+    "name": "Philip Siney",
+    "sort-name": "Siney, Philip"
+   },
+   "ended": true,
+   "begin": "2006-05-28",
+   "attributes": [],
+   "type": "recording",
+   "source-credit": "",
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "ended": true,
+   "end": "2006-06-04",
+   "target-credit": "",
+   "work": {
+    "languages": [],
+    "id": "92d6dc8c-ce35-3933-bd87-ca224b70315d",
+    "language": null,
+    "title": "Swan Lake, op. 20: Act I, no. 4: Pas de trois: I. Intrada: Allegro",
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": ""
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "id": "807e3d84-76e5-4c6d-895a-bf48286b8ae3",
+ "first-release-date": "2007-04-25",
+ "aliases": [
+  {
+   "locale": null,
+   "begin": null,
+   "sort-name": "Swan Lake, Op. 20 - Mariinsky Version / Act 1: Scene 1: Pas de trois - Intrada (Allegro moderato)",
+   "name": "Swan Lake, Op. 20 - Mariinsky Version / Act 1: Scene 1: Pas de trois - Intrada (Allegro moderato)",
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  }
+ ],
+ "title": "Swan Lake, op. 20 - Mariinsky Version / Act 1: Scene 1: Pas de trois - Intrada (Allegro moderato)",
+ "video": false
+}

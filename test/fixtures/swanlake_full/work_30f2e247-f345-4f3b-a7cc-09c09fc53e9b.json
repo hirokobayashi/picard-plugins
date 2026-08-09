@@ -1,0 +1,141 @@
+{
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "type-id": null,
+ "attributes": [],
+ "title": "Swan Lake, op. 20: Act III, no. 22: Danse napolitaine: Allegro moderato - Andantino quasi moderato: Presto",
+ "relations": [
+  {
+   "target-credit": "",
+   "end": null,
+   "artist": {
+    "sort-name": "Tchaikovsky, Pyotr Ilyich",
+    "name": "Пётр Ильич Чайковский",
+    "type": "Person",
+    "disambiguation": "Russian romantic composer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "RU",
+    "id": "9ddd7abc-9e1b-471d-8031-583bc6bc8be9"
+   },
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "source-credit": "",
+   "type": "composer",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "work": {
+    "attributes": [],
+    "title": "Danse napolitaine from Swan Lake",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "for two pianos, Debussy",
+    "type-id": null,
+    "language": "zxx",
+    "id": "46c49e25-f4be-4f68-8d21-62f4c6603f57",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "target-credit": "",
+   "end": null,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "source-credit": "",
+   "type": "arrangement",
+   "attributes": [],
+   "begin": null
+  },
+  {
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "work",
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "languages": [],
+    "id": "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+    "language": null,
+    "title": "Swan Lake, op. 20: Act III",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null
+   },
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "source-credit": "",
+   "ordering-key": 10,
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a"
+  },
+  {
+   "attributes": [],
+   "begin": null,
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 5,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "ed. Drigo",
+    "title": "Swan Lake, op. 20: Act III",
+    "attributes": [],
+    "id": "d1ef611e-ac47-445e-b0e2-377ad47d0261",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  }
+ ],
+ "language": null,
+ "languages": [],
+ "id": "30f2e247-f345-4f3b-a7cc-09c09fc53e9b",
+ "aliases": [
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "begin": null,
+   "sort-name": "Swan Lake, op. 20: Act III: Neapolitan Dance",
+   "name": "Swan Lake, op. 20: Act III: Neapolitan Dance",
+   "locale": null
+  },
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "name": "Swan Lake, op. 20: Danse napolitaine",
+   "sort-name": "Swan Lake, op. 20: Danse napolitaine",
+   "begin": null,
+   "locale": null
+  }
+ ]
+}

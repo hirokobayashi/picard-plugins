@@ -1,0 +1,186 @@
+{
+ "length": 216200,
+ "disambiguation": "",
+ "relations": [
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "type": "Person",
+    "disambiguation": "conductor",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Gergiev, Valery",
+    "name": "Валерий Гергиев",
+    "country": "RU",
+    "id": "87b4252d-314b-4252-9cd3-44c08f3087b6"
+   },
+   "ended": true,
+   "target-credit": "Valery Gergiev",
+   "end": "2006-06-04",
+   "source-credit": "",
+   "type": "conductor",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "begin": "2006-05-28"
+  },
+  {
+   "begin": null,
+   "attributes": [],
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "type": "editor",
+   "source-credit": "",
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "artist": {
+    "type": "Person",
+    "disambiguation": "editor/engineer/producer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Ian Watson",
+    "sort-name": "Watson, Ian",
+    "country": null,
+    "id": "0a4338c5-e6f3-46f1-a58a-99e8f43fcd0f"
+   },
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "sort-name": "Whiteside, Jenni",
+    "name": "Jenni Whiteside",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "engineer",
+    "id": "72a764f3-2923-42ec-a73d-a87c72a409ef",
+    "country": null
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "source-credit": "",
+   "type": "editor",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "end": "2006-06-04",
+   "target-credit": "Orchestra of the Mariinsky Theatre",
+   "artist": {
+    "sort-name": "Orchestra of the Mariinsky Theatre",
+    "name": "Симфонический оркестр Мариинского театра",
+    "type": "Orchestra",
+    "disambiguation": "fka Kirov Orchestra till 1992",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "country": "RU",
+    "id": "6c05e40f-33b2-4150-b93a-ddc2b0d88a6a"
+   },
+   "ended": true
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "end": null,
+   "target-credit": "",
+   "artist": {
+    "id": "8052a978-7ff9-4793-bf87-d941457e8520",
+    "country": null,
+    "name": "Andrew Cornall",
+    "sort-name": "Cornall, Andrew",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "engineer / producer",
+    "type": "Person"
+   },
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "source-credit": "",
+   "type": "producer",
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0"
+  },
+  {
+   "begin": "2006-05-28",
+   "attributes": [],
+   "source-credit": "",
+   "type": "recording",
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+   "target-credit": "",
+   "end": "2006-06-04",
+   "artist": {
+    "name": "Philip Siney",
+    "sort-name": "Siney, Philip",
+    "type": "Person",
+    "disambiguation": "sound engineer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": null,
+    "id": "08536219-b31a-45be-8dda-42b008ec93e4"
+   },
+   "ended": true,
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "ended": true,
+   "work": {
+    "title": "Swan Lake, op. 20: Act III: Pas de deux: II. Andante",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "1895 R. Drigo Edition; “Black Swan” pas de deux",
+    "iswcs": [],
+    "type": null,
+    "id": "5b0ad9f9-22d0-4181-a45e-4108511687bf",
+    "languages": [],
+    "language": null
+   },
+   "target-credit": "",
+   "end": "2006-06-04",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "id": "274c546d-fdee-4305-b5a4-bb4443991635",
+ "first-release-date": "2007-04-25",
+ "aliases": [
+  {
+   "primary": null,
+   "end": null,
+   "ended": false,
+   "locale": null,
+   "begin": null,
+   "name": "Swan Lake, Op. 20 - Mariinsky Version / Act 2: Pas de deux: Variation 1 (Andante)",
+   "sort-name": "Swan Lake, Op. 20 - Mariinsky Version / Act 2: Pas de deux: Variation 1 (Andante)",
+   "type-id": null,
+   "type": null
+  }
+ ],
+ "video": false,
+ "title": "Swan Lake, op. 20 - Mariinsky Version / Act 2: Pas de deux: Variation 1 (Andante)"
+}

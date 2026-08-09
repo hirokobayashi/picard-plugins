@@ -2897,13 +2897,16 @@ class MergeDuplicateTopsTestCase(ClassicalExtrasTestCase):
     """Unit-level cover for _merge_duplicate_tops: only tops that actually share
     a work id with the survivor are folded into it."""
 
-    def _merge(self, tops, counts):
+    def _merge(self, tops, counts, names=None):
         """Run the merge over ``tops`` with ``counts`` = {top: n tracks}.
-        Returns the surviving self.top[album] list."""
+        ``names`` optionally overrides a top's work name (default: distinct per
+        top). Returns the surviving self.top[album] list."""
         pl = self.mod.PartLevels()
         album = "alb"
         pl.top[album] = list(tops)
-        pl.parts = {t: {'name': ['w-%s' % t[0][:4]]} for t in tops}
+        names = names or {}
+        pl.parts = {t: {'name': [names.get(t, 'w-%s' % t[0][:4])]}
+                    for t in tops}
         tracks_in_top = {
             t: {("trk%d-%s" % (i, t[0]), album) for i in range(counts[t])}
             for t in tops}
@@ -2931,6 +2934,32 @@ class MergeDuplicateTopsTestCase(ClassicalExtrasTestCase):
         """A genuine multi-work album (a concerto and a symphony) is preserved."""
         a, b = ("a",), ("b",)
         self.assertEqual(self._merge([a, b], {a: 3, b: 4}), [a, b])
+
+    def test_bridged_same_named_tops_are_merged(self):
+        """The Swan Lake shape: two editions of one ballet, entered under
+        separate ids but the SAME title, bridged by the fused top of the
+        movements that are part of both. Sharing no id, the round loop used to
+        leave both standing, so the album reported two top works with identical
+        names. They are the one work, so the component folds into the
+        most-selected id."""
+        orig, fused, drigo = ("orig",), ("orig", "drigo"), ("drigo",)
+        name = "Swan Lake, op. 20"
+        self.assertEqual(
+            self._merge([orig, fused, drigo],
+                        {orig: 14, fused: 0, drigo: 29},
+                        names={orig: name, fused: name, drigo: name}),
+            [drigo])
+
+    def test_same_name_alone_does_not_merge(self):
+        """Name equality only applies WITHIN a component, and components are
+        built from shared work ids. Two same-named works with no fused top
+        bridging them (two different composers' Requiem) share no id, so they
+        are separate components and both survive."""
+        a, b = ("a",), ("b",)
+        self.assertEqual(
+            self._merge([a, b], {a: 3, b: 4},
+                        names={a: "Requiem", b: "Requiem"}),
+            [a, b])
 
 
 
@@ -3774,6 +3803,271 @@ class FirebirdPartialTopWorkIntegrationTestCase(ClassicalExtrasTestCase):
                 self.assertEqual(result, baseline,
                                  "drain order %r changed the tags" % order)
 
+
+class SwanLakeFullBalletTwoVersionsIntegrationTestCase(ClassicalExtrasTestCase):
+    """End-to-end guard for release a1a9e501 (Tchaikovsky: Swan Lake, complete,
+    2 discs / 43 tracks).
+
+    MusicBrainz carries the ballet twice -- the original op. 20 (11f48c5e) and
+    the 1895 R. Drigo edition (13867eb1) -- and most of this release's movement
+    works are 'parts' of BOTH: once through the Drigo act works and once
+    through the original's act/number works. Only 9 tracks reach a single root
+    (8 Drigo, 1 original).
+
+    Reported symptom: the album comes out with two top works, so a track is
+    tagged with both versions of Swan Lake at once."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures",
+                           "swanlake_full")
+    _REL = "a1a9e501-a7df-45b4-9879-ddd9661d0f65"
+    _ORIGINAL = "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"   # Swan Lake, op. 20
+    _DRIGO = "13867eb1-42c2-45ed-97d9-e1cc85b006fd"      # 1895 R. Drigo Edition
+    # Tracks whose work reaches only one root.
+    _ONLY_DRIGO = ('d1t18', 'd2t10', 'd2t11', 'd2t12', 'd2t16', 'd2t18',
+                   'd2t19', 'd2t20')
+    _ONLY_ORIGINAL = ('d2t2',)
+    # (label, disc, track, recording id, work id)
+    _TRACKS = [
+        ('d1t1', 1, 1, 'eb2b8067-0f42-4723-bfd4-2ad8b1f47e3a',
+         '58907391-15e4-3095-90a3-743583eb7039'),
+        ('d1t2', 1, 2, '81795ffe-3f47-4506-a501-ab14c51fccf3',
+         'd15ce760-99c4-36bc-b2d7-96a6e24b8e11'),
+        ('d1t3', 1, 3, 'd8bddaa8-ec9e-4bae-b830-69016bb29ecc',
+         'f32adc94-5198-347b-b275-08a6db82f686'),
+        ('d1t4', 1, 4, 'e67d38c7-e053-4ed9-afdc-f60e5dfeda61',
+         'bafdc758-3521-3e27-952f-f724011b5f73'),
+        ('d1t5', 1, 5, '807e3d84-76e5-4c6d-895a-bf48286b8ae3',
+         '92d6dc8c-ce35-3933-bd87-ca224b70315d'),
+        ('d1t6', 1, 6, 'dd7549c9-e4af-4d1c-b7c3-587203a576f5',
+         'c9b2a368-1b94-3c7d-a116-53b7998e0fd4'),
+        ('d1t7', 1, 7, '016578bb-ddd8-4ccb-9a28-20b2f32e15b9',
+         '19e52375-1eaf-3a11-bbe6-ad8ff4543ed2'),
+        ('d1t8', 1, 8, '2886683d-2ac4-4a5c-bb30-9d402b2ba138',
+         '4fad32b7-8d81-3097-8947-5115789cf346'),
+        ('d1t9', 1, 9, 'f581bd74-7e7f-4ac0-b9e1-4810bd6da827',
+         '538bc728-d945-334e-863d-85ac78de6e7b'),
+        ('d1t10', 1, 10, '22bd7f25-ea65-4a34-89f6-5e098a9bfa9a',
+         '6da5000b-656d-3827-a2c5-adbeed72becb'),
+        ('d1t11', 1, 11, 'e27b8774-9ff5-4fd3-93f7-452be2cb706e',
+         '0607862a-8ec9-35a1-a9cb-6f013b96bc00'),
+        ('d1t12', 1, 12, 'ace57164-e1d3-4e56-9ee4-584a70da05f4',
+         '96ffa250-7241-315c-9816-1019e2a32416'),
+        ('d1t13', 1, 13, '29f7a2f6-011d-4631-82a5-83a30b4d5d03',
+         'aea64fe4-1a6e-38d1-97b7-99a220634234'),
+        ('d1t14', 1, 14, '619d9e85-35fc-4415-a78a-3c4d9bd837b6',
+         'efcc7513-7303-31f9-a1ca-6fec650cb801'),
+        ('d1t15', 1, 15, '3c8cd4ca-9bd1-4de9-812a-de375396b44d',
+         'cc2e2a57-098a-320a-9644-1457eb040ec7'),
+        ('d1t16', 1, 16, 'cccf205f-b9ac-488f-8c16-84cfa1953764',
+         '6d7ee040-e7e9-3500-b63f-3584cc2e5cd1'),
+        ('d1t17', 1, 17, 'bec54809-b50d-4d25-a6e1-776497e0751d',
+         '89c4f004-98b2-3334-ab32-ca9409e79ad9'),
+        ('d1t18', 1, 18, '02d31e8c-33d7-412e-8c67-12e0903dc901',
+         '34103e67-a6a1-4d22-955c-9ac4220f854e'),
+        ('d1t19', 1, 19, 'e70c2550-0f43-4199-a244-5d3c3d9d944d',
+         '09a40707-a00f-3866-9b80-81a16928465f'),
+        ('d1t20', 1, 20, 'e6941636-d44c-46d3-a2b4-6aed3687f032',
+         '7cf29f44-2874-4bd6-bfd6-66564e331d23'),
+        ('d1t21', 1, 21, '5f4e5c42-6eaf-4e05-ae06-63a954baa819',
+         'c490180d-bae6-3336-84fa-59d89fc46de9'),
+        ('d1t22', 1, 22, '2cec599b-bbf1-4daa-898a-e52f249eb8a9',
+         '9e7a1e2e-5f87-43c0-80e4-01567fa86b56'),
+        ('d1t23', 1, 23, '5e885ca3-bef0-4f66-a39d-d67fb8320bd4',
+         'bd56f23f-6ddd-4d24-ba8c-3f20eaf066d1'),
+        ('d2t1', 2, 1, 'c4edfdd3-8d25-4b2d-a415-567945411e09',
+         '0471148d-3968-40f3-a7b8-3bdb1e4ae176'),
+        ('d2t2', 2, 2, 'b650402e-6c50-41ac-a27b-f98e06c454d0',
+         '5b130c88-2b07-4f3a-ab04-705eb1e9d13e'),
+        ('d2t3', 2, 3, '1ef60cbb-ff35-494d-a9b9-5f9a86e78dbd',
+         '17a59c78-99f0-47b6-859f-2e854dcd30aa'),
+        ('d2t4', 2, 4, '28e25d79-d8ed-460e-9d48-fed8c49b1e24',
+         'c6f93641-f036-4f18-a55d-dcbf183c68af'),
+        ('d2t5', 2, 5, '4b3d823e-30ad-4080-8899-9450ce939cd9',
+         'c148e7d2-269b-4faf-9c93-82b79c5ef54c'),
+        ('d2t6', 2, 6, '37b471e7-a5fd-4ae0-b0c7-79f9bc465743',
+         '30f2e247-f345-4f3b-a7cc-09c09fc53e9b'),
+        ('d2t7', 2, 7, '1b406f18-0779-4140-a105-8be90a2c1dba',
+         '12818a2e-048a-475a-a279-66d8f90f4193'),
+        ('d2t8', 2, 8, '6221b79a-2c87-404f-9ee4-eb797dc90fe5',
+         '1a972d5e-ee15-4108-b16c-5585e54c1540'),
+        ('d2t9', 2, 9, 'db15a9e7-eca4-4eb5-be04-44fe2a049ef4',
+         'de8c7fd6-1b3c-3fe5-89de-143cffc8bed2'),
+        ('d2t10', 2, 10, '274c546d-fdee-4305-b5a4-bb4443991635',
+         '5b0ad9f9-22d0-4181-a45e-4108511687bf'),
+        ('d2t11', 2, 11, 'd31c6098-2489-4815-b9c9-608cb93d2daf',
+         '1f33d81d-186d-4cbd-8530-d98f3eaab1fd'),
+        ('d2t12', 2, 12, 'e41a9694-f64f-42fa-9db4-8f838b09ebed',
+         '200e0f8f-77f3-4c7a-8da3-f7fcc1397ff7'),
+        ('d2t13', 2, 13, 'd35fee9e-8794-4528-8cd7-b4aee947eb3c',
+         '6f11edd1-b6be-3895-a2d8-40f501efb5a2'),
+        ('d2t14', 2, 14, 'c941a3c9-f9fa-4376-ab2d-7243c424f365',
+         'f12bea2c-7c34-47f9-9f68-66560e66a645'),
+        ('d2t15', 2, 15, 'a8cef37c-b41e-47fe-b04e-cadd82e1a879',
+         'c370363b-3d2b-41e4-8541-b752c49a6f07'),
+        ('d2t16', 2, 16, 'a68ef316-8454-489a-bad6-bc8a7cd2e96e',
+         '27e185cb-3078-465f-8ce1-cdfeda39aa71'),
+        ('d2t17', 2, 17, '3e188351-6197-462d-9a4a-a28da8ca48ee',
+         '8b81b827-2554-4f8f-b62a-0823bf4b57f4'),
+        ('d2t18', 2, 18, '706709c6-5d60-4849-b02f-7824e074d4d5',
+         '96e46066-78b2-4d5f-a10f-dac2b4dc2b58'),
+        ('d2t19', 2, 19, '9aebc44f-30bc-4c10-bc4e-83940f04ac6f',
+         '894c67c6-e999-4b8a-8913-58f627b7bcdd'),
+        ('d2t20', 2, 20, 'd8180f9e-f81d-450a-b94a-fa086eecd57f',
+         '3d749164-4223-4526-b0ea-a65bc2235038'),
+    ]
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": True, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    def _run_full_album(self, drain="fifo", partial=True, arrangements=True):
+        """Drive all 43 tracks through the real Picard flow."""
+        import random
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        pl.extend_metadata = lambda *a, **k: None
+        pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": partial, "cwp_arrangements": arrangements,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        class _M(dict):
+            def __getitem__(self, k):
+                return self.get(k, '')
+
+            def getall(self, k):
+                v = self.get(k)
+                return [] if v is None else (v if isinstance(v, list) else [v])
+
+        tracks = {}
+        for label, disc, track, rec_id, work_id in self._TRACKS:
+            tm = _M(musicbrainz_albumid=self._REL,
+                    musicbrainz_recordingid=rec_id,
+                    musicbrainz_workid=work_id, album="Swan Lake",
+                    title=label, tracknumber=str(track), discnumber=str(disc))
+            tm['~ce_options'] = repr(opts)
+            t = Mock(name=label)
+            t.metadata = tm
+            t._id = label
+            t.__hash__ = lambda self: hash(self._id)
+            t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+            tracks[label] = t
+            album._new_tracks.append(t)
+            node = {'recording': self._load("rec_%s.json" % label)}
+            pl.add_work_info(album, t.metadata, node, {})
+
+        rng = random.Random(drain)
+        while pending:
+            if drain == "fifo":
+                i = 0
+            elif drain == "lifo":
+                i = len(pending) - 1
+            else:
+                i = rng.randrange(len(pending))
+            cb, resp = pending.pop(i)
+            cb(resp, None, None)
+        self._pl = pl
+        self._album = album
+        return tracks
+
+    def test_no_track_is_tagged_with_both_versions(self):
+        """The reported bug: a track must name ONE Swan Lake, not both the
+        original and the Drigo edition."""
+        tracks = self._run_full_album()
+        for label, _d, _t, _r, _w in self._TRACKS:
+            tm = tracks[label].metadata
+            tops = self.mod.str_to_list(tm['~cwp_workid_top'])
+            self.assertEqual(
+                len(tops), 1,
+                "%s has %d top works: %r" % (label, len(tops),
+                                             tm['~cwp_work_top']))
+
+    def test_whole_album_agrees_on_one_version(self):
+        """43 tracks of one ballet: the album must settle on a single top."""
+        tracks = self._run_full_album()
+        tops = {tuple(self.mod.str_to_list(
+                    tracks[label].metadata['~cwp_workid_top']))
+                for label, _d, _t, _r, _w in self._TRACKS}
+        self.assertEqual(len(tops), 1,
+                         "album split across tops: %r" % (tops,))
+
+    def test_unambiguous_tracks_keep_their_own_root(self):
+        """A track whose work reaches only one root must be tagged with that
+        root -- it is not a candidate for any other."""
+        tracks = self._run_full_album()
+        for label in self._ONLY_DRIGO:
+            self.assertIn(
+                self._DRIGO,
+                self.mod.str_to_list(tracks[label].metadata['~cwp_workid_top']),
+                "%s should be under the Drigo edition" % label)
+
+    def test_every_track_keeps_its_work_metadata(self):
+        tracks = self._run_full_album()
+        for label, _d, _t, _r, _w in self._TRACKS:
+            self.assertTrue(tracks[label].metadata['~cwp_workid_top'],
+                            "%s lost its work metadata" % label)
+            self.assertTrue(tracks[label].metadata['~cwp_work_0'],
+                            "%s lost its level-0 work" % label)
+
+    def test_result_is_independent_of_lookup_order(self):
+        baseline = None
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]:
+            tracks = self._run_full_album(drain=order)
+            result = {
+                label: (self.mod.str_to_list(
+                            tracks[label].metadata['~cwp_work_top']),
+                        self.mod.str_to_list(
+                            tracks[label].metadata['~cwp_work_0']),
+                        tracks[label].metadata['~cwp_part_levels'])
+                for label, _d, _t, _r, _w in self._TRACKS}
+            if baseline is None:
+                baseline = result
+            else:
+                self.assertEqual(result, baseline,
+                                 "drain order %r changed the tags" % order)
 
 if __name__ == "__main__":
     unittest.main()

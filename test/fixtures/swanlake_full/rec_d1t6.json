@@ -1,0 +1,186 @@
+{
+ "aliases": [
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "begin": null,
+   "name": "Swan Lake, Op. 20 - Mariinsky Version / Act 1: Scene 1: Pas de trois - Variation 1 (Allegro semplice)",
+   "sort-name": "Swan Lake, Op. 20 - Mariinsky Version / Act 1: Scene 1: Pas de trois - Variation 1 (Allegro semplice)",
+   "locale": null
+  }
+ ],
+ "video": false,
+ "title": "Swan Lake, op. 20 - Mariinsky Version / Act 1: Scene 1: Pas de trois - Variation 1 (Allegro semplice)",
+ "disambiguation": "",
+ "length": 76146,
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "begin": "2006-05-28",
+   "attributes": [],
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "source-credit": "",
+   "type": "conductor",
+   "target-credit": "Valery Gergiev",
+   "end": "2006-06-04",
+   "ended": true,
+   "artist": {
+    "country": "RU",
+    "id": "87b4252d-314b-4252-9cd3-44c08f3087b6",
+    "sort-name": "Gergiev, Valery",
+    "name": "Валерий Гергиев",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   }
+  },
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type": "editor",
+   "source-credit": "",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "attributes": [],
+   "begin": null,
+   "artist": {
+    "country": null,
+    "id": "0a4338c5-e6f3-46f1-a58a-99e8f43fcd0f",
+    "name": "Ian Watson",
+    "sort-name": "Watson, Ian",
+    "disambiguation": "editor/engineer/producer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null
+  },
+  {
+   "artist": {
+    "id": "72a764f3-2923-42ec-a73d-a87c72a409ef",
+    "country": null,
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "engineer",
+    "type": "Person",
+    "name": "Jenni Whiteside",
+    "sort-name": "Whiteside, Jenni"
+   },
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "source-credit": "",
+   "type": "editor",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "begin": null,
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "artist": {
+    "country": "RU",
+    "id": "6c05e40f-33b2-4150-b93a-ddc2b0d88a6a",
+    "sort-name": "Orchestra of the Mariinsky Theatre",
+    "name": "Симфонический оркестр Мариинского театра",
+    "type": "Orchestra",
+    "disambiguation": "fka Kirov Orchestra till 1992",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5"
+   },
+   "ended": true,
+   "target-credit": "Orchestra of the Mariinsky Theatre",
+   "end": "2006-06-04"
+  },
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type": "producer",
+   "source-credit": "",
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "attributes": [],
+   "begin": null,
+   "artist": {
+    "country": null,
+    "id": "8052a978-7ff9-4793-bf87-d941457e8520",
+    "name": "Andrew Cornall",
+    "sort-name": "Cornall, Andrew",
+    "type": "Person",
+    "disambiguation": "engineer / producer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null
+  },
+  {
+   "end": "2006-06-04",
+   "target-credit": "",
+   "artist": {
+    "type": "Person",
+    "disambiguation": "sound engineer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Siney, Philip",
+    "name": "Philip Siney",
+    "country": null,
+    "id": "08536219-b31a-45be-8dda-42b008ec93e4"
+   },
+   "ended": true,
+   "begin": "2006-05-28",
+   "attributes": [],
+   "type": "recording",
+   "source-credit": "",
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "begin": "2006-05-28",
+   "attributes": [],
+   "ended": true,
+   "work": {
+    "title": "Swan Lake, op. 20: Act I, no. 4: Pas de trois: III. Allegro semplice",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "languages": [],
+    "id": "c9b2a368-1b94-3c7d-a116-53b7998e0fd4",
+    "language": null
+   },
+   "end": "2006-06-04",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {}
+  }
+ ],
+ "id": "dd7549c9-e4af-4d1c-b7c3-587203a576f5",
+ "first-release-date": "2007-04-25"
+}
