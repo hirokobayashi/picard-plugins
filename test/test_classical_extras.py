@@ -4543,5 +4543,213 @@ class RequiemCatchAllEditionIntegrationTestCase(ClassicalExtrasTestCase):
                                  "drain order %r changed the tags" % order)
 
 
+class SwanLakeCrossAlbumMovementTotalIntegrationTestCase(ClassicalExtrasTestCase):
+    """Guard against one album's movement count leaking into another.
+
+    Picard registers ONE PartLevels for the session, so self.parts is shared by
+    every album loaded. The movement total used to be stored there as
+    self.parts[movementgroup]['movement-total'] -- keyed by work id alone, with
+    no album in the key. Two releases of the same work therefore overwrote each
+    other's total, and any album re-published afterwards reported the other
+    one's count. Picard re-runs process_album whenever an album's files change,
+    which happens constantly while mass tagging.
+
+    Here the 19-track Jarvi Swan Lake (4e93a6a0) and the 43-track two-editions
+    Swan Lake (a1a9e501) both hang off "Swan Lake, op. 20" 11f48c5e. Loading
+    the 43-track album and then re-processing the 19-track one used to tag the
+    latter movementtotal '19; 43'."""
+
+    _JARVI_DIR = os.path.join(os.path.dirname(__file__), "fixtures",
+                              "swanlake_jarvi")
+    _FULL_DIR = os.path.join(os.path.dirname(__file__), "fixtures",
+                             "swanlake_full")
+    _JARVI_REL = "4e93a6a0-7858-4480-8420-b96c7eece538"
+    _FULL_REL = "a1a9e501-a7df-45b4-9879-ddd9661d0f65"
+    _GROUP = "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"   # Swan Lake, op. 20
+    # (label, track, recording id, work id)
+    _JARVI_TRACKS = [
+        ('t1', 1, '7cb0e24e-1feb-4116-9830-f1a4c195ace6',
+         '58907391-15e4-3095-90a3-743583eb7039'),
+        ('t2', 2, '9342b235-8a5f-45bb-9740-7415f6f94202',
+         'd15ce760-99c4-36bc-b2d7-96a6e24b8e11'),
+        ('t3', 3, '0a37744a-d383-45ed-bb32-793534e0afd0',
+         'f32adc94-5198-347b-b275-08a6db82f686'),
+        ('t4', 4, '372cc888-e785-45f4-bafa-5fed2fbfe782',
+         'bafdc758-3521-3e27-952f-f724011b5f73'),
+        ('t5', 5, 'c0f4ccdb-3b69-48b5-9b05-447abbb5258b',
+         '44d081b5-3bce-42af-bf1f-c68191251bf6'),
+        ('t6', 6, '82e19b56-1e0b-4105-a897-b4cbda402c66',
+         '96ffa250-7241-315c-9816-1019e2a32416'),
+        ('t7', 7, '3bdc898b-6238-447b-a93b-11f40a13fc37',
+         'aea64fe4-1a6e-38d1-97b7-99a220634234'),
+        ('t8', 8, '8e31cce7-5761-470d-98de-5a54a882df82',
+         '3481d89d-95f0-4f74-afe6-02b33a9095ac'),
+        ('t9', 9, 'd47f5329-0776-4aca-a988-655cdc9c9d2c',
+         '0471148d-3968-40f3-a7b8-3bdb1e4ae176'),
+        ('t10', 10, 'b3498fd0-52a6-4a6f-b3a4-68e088522664',
+         'c6f93641-f036-4f18-a55d-dcbf183c68af'),
+        ('t11', 11, '69ecf97c-1c09-4958-aaaf-2b8e0aca9078',
+         '8ace07c4-0b91-4964-bac7-63cf103315d2'),
+        ('t12', 12, '7cf85bde-35eb-4bc8-bb9a-71e70c8e49d1',
+         'c057e48f-df20-4b40-ac1c-367474242c81'),
+        ('t13', 13, 'fd852a5e-bb56-4eb7-b388-8b35ec2b5b08',
+         '12818a2e-048a-475a-a279-66d8f90f4193'),
+        ('t14', 14, '3b32df17-7a18-4b3b-b96b-d999709dbaed',
+         '8d51db60-63d9-4d4c-9b26-16e8e29a99f6'),
+        ('t15', 15, '21f888aa-5706-4f2b-9fe2-ee3270d781de',
+         'c148e7d2-269b-4faf-9c93-82b79c5ef54c'),
+        ('t16', 16, '5c7551fd-28c2-40b9-9cfa-b45e79d59cdd',
+         '30f2e247-f345-4f3b-a7cc-09c09fc53e9b'),
+        ('t17', 17, '663dfa49-8659-4579-a34e-38524452d588',
+         '1a972d5e-ee15-4108-b16c-5585e54c1540'),
+        ('t18', 18, '2180ee69-8cc0-49ac-a8af-2d018afa027a',
+         'f12bea2c-7c34-47f9-9f68-66560e66a645'),
+        ('t19', 19, '28721fbc-e331-4e92-8bfa-dd76ea12bc55',
+         '5e8125e0-20d4-4311-a9ab-1dc29a9f6dc9'),
+    ]
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": True, "cwp_arrangements": True,
+            "cwp_medley": True, "cwp_collections": True,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    @staticmethod
+    def _read(directory, name):
+        with open(os.path.join(directory, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def _load_album(self, pl, release_id, rows, fixdir, album_name):
+        """Run one album through the shared PartLevels; return (tracks, album).
+
+        Work fixtures are looked up in BOTH albums' directories -- the two
+        releases share most of their work hierarchy, which is the point.
+        """
+        from unittest.mock import Mock
+        pending = []
+
+        def get(host, port, path, cb, **kw):
+            wid = path.rsplit("/", 1)[-1]
+            for d in (self._FULL_DIR, self._JARVI_DIR):
+                fn = os.path.join(d, "work_%s.json" % wid)
+                if os.path.exists(fn):
+                    pending.append((cb, self._read(d, "work_%s.json" % wid)))
+                    return
+            raise FileNotFoundError(wid)
+
+        tagger = Mock()
+        tagger.webservice.get = get
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": True, "cwp_arrangements": True,
+            "cwp_medley": True, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        from picard.metadata import Metadata
+        tracks = {}
+        for row in rows:
+            if len(row) == 5:                      # full album: has a disc no.
+                label, disc, track, rec_id, work_id = row
+                recfile = "rec_%s.json" % label
+            else:
+                label, track, rec_id, work_id = row
+                disc = 1
+                recfile = "rec_%s.json" % label
+            tm = Metadata()
+            tm['musicbrainz_albumid'] = release_id
+            tm['musicbrainz_recordingid'] = rec_id
+            tm['musicbrainz_workid'] = work_id
+            tm['album'] = album_name
+            tm['title'] = label
+            tm['tracknumber'] = str(track)
+            tm['discnumber'] = str(disc)
+            tm['~ce_options'] = repr(opts)
+            t = Mock(name=label)
+            t.metadata = tm
+            t._id = release_id + label
+            t.__hash__ = lambda self: hash(self._id)
+            t.__eq__ = lambda self, o: getattr(o, "_id", None) == self._id
+            tracks[label] = t
+            album._new_tracks.append(t)
+            pl.add_work_info(album, tm,
+                             {'recording': self._read(fixdir, recfile)}, {})
+        while pending:
+            cb, resp = pending.pop(0)
+            cb(resp, None, None)
+        return tracks, album
+
+    def _shared_partlevels(self):
+        mod = self.mod
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+        pl = mod.PartLevels()
+        pl.process_work_artists = lambda *a, **k: None
+        return pl
+
+    def test_movement_total_survives_another_album_and_a_reprocess(self):
+        """The reported bug: mass tagging gave a 19-track release a movement
+        total taken from a different Swan Lake album."""
+        pl = self._shared_partlevels()
+        jarvi, jarvi_album = self._load_album(
+            pl, self._JARVI_REL, self._JARVI_TRACKS, self._JARVI_DIR,
+            "Swan Lake")
+        self._load_album(
+            pl, self._FULL_REL,
+            SwanLakeFullBalletTwoVersionsIntegrationTestCase._TRACKS,
+            self._FULL_DIR, "Swan Lake (complete)")
+        # Picard re-runs process_album whenever the album's files change.
+        pl.process_album(self._JARVI_REL, jarvi_album)
+        for label, track, _r, _w in self._JARVI_TRACKS:
+            tm = jarvi[label].metadata
+            self.assertEqual(
+                (tm['movementnumber'], tm['movementtotal']),
+                (str(track), '19'),
+                "%s: movement %r of %r" % (label, tm['movementnumber'],
+                                           tm['movementtotal']))
+
+    def test_each_album_keeps_its_own_total(self):
+        """Both albums share the top work, so their totals must be kept apart:
+        19 for the Jarvi release, 43 for the complete one."""
+        pl = self._shared_partlevels()
+        jarvi, _ = self._load_album(
+            pl, self._JARVI_REL, self._JARVI_TRACKS, self._JARVI_DIR,
+            "Swan Lake")
+        full, _ = self._load_album(
+            pl, self._FULL_REL,
+            SwanLakeFullBalletTwoVersionsIntegrationTestCase._TRACKS,
+            self._FULL_DIR, "Swan Lake (complete)")
+        self.assertEqual(
+            {jarvi[l].metadata['movementtotal']
+             for l, _t, _r, _w in self._JARVI_TRACKS}, {'19'})
+        self.assertEqual(
+            {full[l].metadata['movementtotal']
+             for l, _d, _t, _r, _w in
+             SwanLakeFullBalletTwoVersionsIntegrationTestCase._TRACKS}, {'43'})
+
+
 if __name__ == "__main__":
     unittest.main()
