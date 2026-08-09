@@ -1,0 +1,82 @@
+{
+ "video": false,
+ "title": "The Firebird Suite, 1919 Revision: The Firebird and Her Dance",
+ "aliases": [],
+ "id": "f9c2a258-bed5-405b-948d-6bc312d1ea66",
+ "first-release-date": "1996",
+ "disambiguation": "",
+ "length": 16666,
+ "relations": [
+  {
+   "ended": true,
+   "artist": {
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "大植英次",
+    "sort-name": "Oue, Eiji",
+    "country": "JP",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408"
+   },
+   "end": "1996-01-20",
+   "target-credit": "Eiji Oue",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "ended": true,
+   "artist": {
+    "name": "Minnesota Orchestra",
+    "sort-name": "Minnesota Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "type": "Orchestra",
+    "disambiguation": "",
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "country": "US"
+   },
+   "end": "1996-01-20",
+   "target-credit": ""
+  },
+  {
+   "target-credit": "",
+   "end": "1996-01-20",
+   "work": {
+    "language": null,
+    "languages": [],
+    "id": "123a4c09-3bde-4624-ae15-ef55ee7f95e1",
+    "disambiguation": "“Concert suite for orchestra No. 2” 1919 version",
+    "iswcs": [],
+    "type": null,
+    "type-id": null,
+    "attributes": [],
+    "title": "L’Oiseau de feu: I. L’Oiseau de feu et sa danse"
+   },
+   "ended": true,
+   "begin": "1996-01-18",
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work"
+  }
+ ]
+}

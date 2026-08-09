@@ -1,0 +1,82 @@
+{
+ "id": "5c863af9-7be0-48d7-9cc5-94f6d878c0a5",
+ "first-release-date": "1996",
+ "length": 284733,
+ "disambiguation": "",
+ "relations": [
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "country": "JP",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "name": "大植英次",
+    "sort-name": "Oue, Eiji",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "ended": true,
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20",
+   "source-credit": "",
+   "type": "conductor",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "begin": "1996-01-18"
+  },
+  {
+   "end": "1996-01-20",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "country": "US"
+   },
+   "begin": "1996-01-18",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "ended": true,
+   "end": "1996-01-20",
+   "target-credit": "",
+   "work": {
+    "attributes": [],
+    "title": "L’Oiseau de feu: II. Ronde des princesses (Khorovode)",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "“Concert suite for orchestra No. 2” 1919 version",
+    "type-id": null,
+    "language": null,
+    "id": "fe91c939-f74f-42b8-908c-e212d26b705a",
+    "languages": []
+   }
+  }
+ ],
+ "title": "The Firebird Suite, 1919 Revision: Round Dance of the Princesses",
+ "video": false,
+ "aliases": []
+}

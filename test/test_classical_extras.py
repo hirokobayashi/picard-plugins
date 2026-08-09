@@ -3532,5 +3532,248 @@ class DaphnisPartialRecordingCrashTestCase(ClassicalExtrasTestCase):
                                  "drain order %r changed the tags" % order)
 
 
+class FirebirdPartialTopWorkIntegrationTestCase(ClassicalExtrasTestCase):
+    """End-to-end guard for release 0b54b210 (Stravinsky: The Song of the
+    Nightingale / The Firebird Suite / The Rite of Spring).
+
+    Tracks 1-7 are the 1919 Firebird suite: each recording performs one
+    movement, and every movement is 'parts' of the suite work 1a00a184. Track 5
+    alone carries a SECOND performance relation, marked 'partial', straight to
+    the full ballet 2fbaaf2d -- which is a root in its own right, not an
+    ancestor of the suite (the suite is only 'based on' it).
+
+    So track 5 is the one track on the album whose two works sit under two
+    different top works. Reported symptom: track 5 does not come out under the
+    Firebird top work its six siblings get."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "firebird")
+    _REL = "0b54b210-bae2-4da0-bd05-1d117bf674f1"
+    _SUITE = "1a00a184-8e67-4b01-a496-81b1b6df9a88"   # L'Oiseau de feu, suite de 1919
+    _BALLET = "2fbaaf2d-deff-46fb-ac15-ac76e9e56eca"  # L'Oiseau de feu (full ballet)
+    _NIGHTINGALE = "a79fb213-970d-428b-8982-cbde96ba060e"
+    _RITE = "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    _FIREBIRD_TRACKS = ["t%d" % n for n in range(1, 8)]
+    # (label, track, recording id, work id(s))
+    _TRACKS = [
+        ('t1', 1, '637eb54f-dac8-4f41-a5a5-b1df7a8fa0e6',
+         'a5e780df-3693-40a5-9dc0-0623033a8ae0'),
+        ('t2', 2, 'f9c2a258-bed5-405b-948d-6bc312d1ea66',
+         '123a4c09-3bde-4624-ae15-ef55ee7f95e1'),
+        ('t3', 3, 'cc8cb52e-6e8b-4543-8b71-06a97ae656c2',
+         'a594bc7b-2436-4b00-815e-13ab2e02c92e'),
+        ('t4', 4, '5c863af9-7be0-48d7-9cc5-94f6d878c0a5',
+         'fe91c939-f74f-42b8-908c-e212d26b705a'),
+        ('t5', 5, '036a332c-4e01-4e74-8528-456060d37182',
+         ['a06c71e7-e293-4206-a40b-a4cf89b34cb0',
+          '2fbaaf2d-deff-46fb-ac15-ac76e9e56eca']),
+        ('t6', 6, 'f3e9c4b3-5d23-4e34-b34d-ee796bf08d47',
+         '223dae8d-badc-42a8-a94e-86cf9adf9338'),
+        ('t7', 7, '63fb30a8-2a3f-475f-8882-d31b1292e914',
+         '0eb658ac-cab3-4008-a4fa-ab0565f99dc8'),
+        ('t8', 8, '56214ec7-52d6-4384-bee1-a315377417e6',
+         '3e68f8ca-88bd-4c08-b50f-5bc24469076d'),
+        ('t9', 9, 'ba1c4b4b-65c1-47be-819a-d5fdbdf6e1b9',
+         '548717ae-4e49-48d8-98d5-a06d2a2fc125'),
+        ('t10', 10, '36b60507-8ffa-4e0b-ad97-a59350c4ba7f',
+         'b7e718be-e840-4cfe-9aed-698c666e6eec'),
+        ('t11', 11, '7473cf59-445a-4b60-853a-7c4c33a968d2',
+         '8a38160f-0c08-4c69-8fd1-261750a23cf1'),
+        ('t12', 12, '38c81495-2a16-4308-a8c2-ee25607887b8',
+         '40fd0ab1-ccc7-347a-91ff-6b5d9fa40cd4'),
+        ('t13', 13, 'fbbc1256-aaa7-40b5-b256-b105d3c4d63e',
+         '29e4d499-4ec2-3879-9839-b57fd977298d'),
+        ('t14', 14, '744a9ae4-d591-4581-8254-e52258245cc6',
+         '1ff0d8a2-5a40-3f09-87f8-66331f1b044b'),
+        ('t15', 15, '5e3dbd6e-eb57-4ea5-b553-2527ac13c03a',
+         '4090b576-d60f-3e9b-a587-dd79648e0ec7'),
+        ('t16', 16, 'c8d02b19-ff2f-451c-99f7-42c975a31a21',
+         'a37aedd7-08df-35c6-9a97-29cb61192d45'),
+        ('t17', 17, '52cf34f5-63d9-4c25-ba3a-c8de256eae86',
+         'c8700d76-b8b8-37eb-80f2-e3e9ee24dc30'),
+        ('t18', 18, '15f5b52c-044c-445e-9f45-73ba19e7385e',
+         '87aea44d-eb59-3656-ad88-9e060d28dab9'),
+        ('t19', 19, 'eb0c7db9-c5d4-4480-bc1f-583105cdc1f3',
+         '48e140f4-d75f-3990-8c5b-f9c07ad11670'),
+        ('t20', 20, '52e6f664-6d8e-4490-9a6c-f486535cc00a',
+         '4608f8ba-7df2-3f36-b0d6-5999fefb7aca'),
+        ('t21', 21, 'afb82133-253a-4d97-adef-74432b23958f',
+         'dc312a3c-c83f-348e-95b1-7617fcc62541'),
+        ('t22', 22, '883e4315-47cd-4cea-917f-09f7639a2d4f',
+         'eedc0a88-6b55-3ed2-aacf-f93f7cb26272'),
+        ('t23', 23, '26953305-17f2-462e-9893-5c3bf3121835',
+         'e6e27966-53bf-39c1-b1a2-ddde5ac1e4aa'),
+        ('t24', 24, 'c6ced445-a58f-44ae-b4ef-8376d15e5727',
+         'a2d06e4c-9988-3aca-a244-23bafb74a99c'),
+        ('t25', 25, '41f66d4e-8fda-44d9-a93f-cf51d36aaec9',
+         '75ab293f-86d2-324e-85ed-afbc873b74b3'),
+    ]
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": True, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    def _run_full_album(self, drain="fifo", partial=True):
+        """Drive all 25 tracks through the real Picard flow."""
+        import random
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        pl.extend_metadata = lambda *a, **k: None
+        pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": partial, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        class _M(dict):
+            def __getitem__(self, k):
+                return self.get(k, '')
+
+            def getall(self, k):
+                v = self.get(k)
+                return [] if v is None else (v if isinstance(v, list) else [v])
+
+        tracks = {}
+        for label, track, rec_id, work_id in self._TRACKS:
+            tm = _M(musicbrainz_albumid=self._REL,
+                    musicbrainz_recordingid=rec_id,
+                    musicbrainz_workid=work_id,
+                    album="The Song of the Nightingale / The Firebird Suite"
+                          " / The Rite of Spring",
+                    title=label, tracknumber=str(track), discnumber="1")
+            tm['~ce_options'] = repr(opts)
+            t = Mock(name=label)
+            t.metadata = tm
+            t._id = label
+            t.__hash__ = lambda self: hash(self._id)
+            t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+            tracks[label] = t
+            album._new_tracks.append(t)
+            node = {'recording': self._load("rec_%s.json" % label)}
+            pl.add_work_info(album, t.metadata, node, {})
+
+        rng = random.Random(drain)
+        while pending:
+            if drain == "fifo":
+                i = 0
+            elif drain == "lifo":
+                i = len(pending) - 1
+            else:
+                i = rng.randrange(len(pending))
+            cb, resp = pending.pop(i)
+            cb(resp, None, None)
+        self._pl = pl
+        self._album = album
+        return tracks
+
+    def test_track_5_keeps_the_firebird_top_work(self):
+        """The reported bug. Track 5's extra 'partial' relation to the whole
+        ballet must not cost it the top work its six siblings share."""
+        tracks = self._run_full_album()
+        tops = self.mod.str_to_list(tracks['t5'].metadata['~cwp_workid_top'])
+        self.assertIn(self._SUITE, tops,
+                      "track 5 lost the Firebird suite top work; got %r"
+                      % (tracks['t5'].metadata['~cwp_work_top'],))
+
+    def test_all_firebird_tracks_share_one_top_work(self):
+        """Tracks 1-7 are one work: they must agree on the top work under
+        every lookup order."""
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]:
+            tracks = self._run_full_album(drain=order)
+            for label in self._FIREBIRD_TRACKS:
+                tm = tracks[label].metadata
+                self.assertIn(
+                    self._SUITE,
+                    self.mod.str_to_list(tm['~cwp_workid_top']),
+                    "%s (order %s) top work is %r"
+                    % (label, order, tm['~cwp_work_top']))
+
+    def test_every_track_keeps_its_work_metadata(self):
+        """No track may be stranded by the extra relation on track 5."""
+        tracks = self._run_full_album()
+        for label, _t, _r, _w in self._TRACKS:
+            self.assertTrue(
+                tracks[label].metadata['~cwp_workid_top'],
+                "%s lost its work metadata" % label)
+            self.assertTrue(
+                tracks[label].metadata['~cwp_work_0'],
+                "%s lost its level-0 work" % label)
+
+    def test_the_other_two_works_are_unaffected(self):
+        """The Nightingale (8-11) and the Rite (12-25) are ordinary
+        hierarchies on the same album; they pin the rest of the release."""
+        tracks = self._run_full_album()
+        for label in ["t%d" % n for n in range(8, 12)]:
+            self.assertEqual(
+                self.mod.str_to_list(
+                    tracks[label].metadata['~cwp_workid_top']),
+                [self._NIGHTINGALE], "%s top work" % label)
+        for label in ["t%d" % n for n in range(12, 26)]:
+            self.assertEqual(
+                self.mod.str_to_list(
+                    tracks[label].metadata['~cwp_workid_top']),
+                [self._RITE], "%s top work" % label)
+
+    def test_result_is_independent_of_lookup_order(self):
+        """Whatever the album resolves to, it must resolve to the same thing
+        every time -- the async work lookups return in network order."""
+        baseline = None
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]:
+            tracks = self._run_full_album(drain=order)
+            result = {
+                label: (self.mod.str_to_list(
+                            tracks[label].metadata['~cwp_work_top']),
+                        self.mod.str_to_list(
+                            tracks[label].metadata['~cwp_work_0']),
+                        tracks[label].metadata['~cwp_part_levels'])
+                for label, _t, _r, _w in self._TRACKS}
+            if baseline is None:
+                baseline = result
+            else:
+                self.assertEqual(result, baseline,
+                                 "drain order %r changed the tags" % order)
+
+
 if __name__ == "__main__":
     unittest.main()

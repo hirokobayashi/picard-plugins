@@ -1,0 +1,84 @@
+{
+ "aliases": [],
+ "title": "The Rite of Spring (The Sacrifice): Evocation of the Ancestors",
+ "video": false,
+ "length": 44133,
+ "disambiguation": "",
+ "relations": [
+  {
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "ended": true,
+   "artist": {
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Oue, Eiji",
+    "name": "大植英次",
+    "country": "JP",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408"
+   },
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20",
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "end": "1996-01-20",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "type": "Orchestra",
+    "disambiguation": "",
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra",
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "country": "US"
+   },
+   "attributes": [],
+   "begin": "1996-01-18",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": ""
+  },
+  {
+   "begin": "1996-01-18",
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "e6e27966-53bf-39c1-b1a2-ddde5ac1e4aa",
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice: IV. Evocation des ancêtres"
+   },
+   "end": "1996-01-20",
+   "target-credit": "",
+   "ended": true,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward"
+  }
+ ],
+ "id": "26953305-17f2-462e-9893-5c3bf3121835",
+ "first-release-date": "1996"
+}

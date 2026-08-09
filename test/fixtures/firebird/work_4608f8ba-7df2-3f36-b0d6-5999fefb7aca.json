@@ -1,0 +1,129 @@
+{
+ "language": "zxx",
+ "relations": [
+  {
+   "ended": true,
+   "artist": {
+    "country": "RU",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "name": "Игорь Фёдорович Стравинский",
+    "type": "Person",
+    "disambiguation": "Russian composer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "end": "1913",
+   "target-credit": "",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "type": "composer",
+   "source-credit": "",
+   "begin": "1911",
+   "attributes": [],
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "label",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "type-id": "05ee6f18-4517-342d-afdf-5897f64276e3",
+   "source-credit": "",
+   "type": "publishing",
+   "label": {
+    "sort-name": "Boosey & Hawkes Ltd.",
+    "name": "Boosey & Hawkes Ltd.",
+    "type-id": "e9ad53b0-e3d0-3885-a10b-8193d501338c",
+    "disambiguation": "",
+    "type": "Publisher",
+    "id": "3ca57c06-495c-4f6c-96cc-e60a51fe82ca",
+    "label-code": null
+   },
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "target-credit": "Boosey & Hawkes Ltd."
+  },
+  {
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "type-id": null,
+    "disambiguation": "for two pianos",
+    "type": null,
+    "iswcs": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice: I. Introduction",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "id": "f35f75c7-5e17-3749-a977-aed76300baff",
+    "language": "zxx"
+   },
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "type": "arrangement",
+   "source-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work"
+  },
+  {
+   "attributes": [],
+   "begin": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 1,
+   "type": "parts",
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "language": "zxx",
+    "id": "6cfef07d-7152-4c86-8db7-614f73767549",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  }
+ ],
+ "id": "4608f8ba-7df2-3f36-b0d6-5999fefb7aca",
+ "languages": [
+  "zxx"
+ ],
+ "aliases": [
+  {
+   "locale": null,
+   "sort-name": "The Rite of Spring: Part II: The Sacrifice: I. Introduction",
+   "name": "The Rite of Spring: Part II: The Sacrifice: I. Introduction",
+   "begin": null,
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  }
+ ],
+ "disambiguation": "",
+ "iswcs": [],
+ "type": null,
+ "type-id": null,
+ "attributes": [],
+ "title": "Le Sacre du printemps: II. Le Sacrifice: I. Introduction"
+}

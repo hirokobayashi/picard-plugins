@@ -1,0 +1,84 @@
+{
+ "video": false,
+ "title": "The Rite of Spring (The Sacrifice): Mystic Circles of the Young Girls",
+ "aliases": [],
+ "first-release-date": "1996",
+ "id": "afb82133-253a-4d97-adef-74432b23958f",
+ "relations": [
+  {
+   "artist": {
+    "name": "大植英次",
+    "sort-name": "Oue, Eiji",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "JP",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408"
+   },
+   "ended": true,
+   "end": "1996-01-20",
+   "target-credit": "Eiji Oue",
+   "source-credit": "",
+   "type": "conductor",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "ended": true,
+   "artist": {
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra",
+    "type": "Orchestra",
+    "disambiguation": "",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "country": "US",
+    "id": "227b1359-4587-44d8-8616-6275816cb999"
+   },
+   "end": "1996-01-20",
+   "target-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "work": {
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "title": "Le Sacre du printemps: II. Le Sacrifice: II. Cercles mystérieux des adolescentes",
+    "attributes": [],
+    "id": "dc312a3c-c83f-348e-95b1-7617fcc62541",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "target-credit": "",
+   "end": "1996-01-20",
+   "ended": true
+  }
+ ],
+ "length": 186333,
+ "disambiguation": ""
+}

@@ -1,0 +1,84 @@
+{
+ "id": "41f66d4e-8fda-44d9-a93f-cf51d36aaec9",
+ "first-release-date": "1996",
+ "length": 285200,
+ "disambiguation": "",
+ "relations": [
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "artist": {
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "country": "JP",
+    "name": "大植英次",
+    "sort-name": "Oue, Eiji",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "conductor",
+    "type": "Person"
+   },
+   "ended": true,
+   "end": "1996-01-20",
+   "target-credit": "Eiji Oue"
+  },
+  {
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "artist": {
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "country": "US",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra"
+   },
+   "ended": true,
+   "target-credit": "",
+   "end": "1996-01-20"
+  },
+  {
+   "work": {
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "title": "Le Sacre du printemps: II. Le Sacrifice: VI. Danse sacrale (L’Élue)",
+    "attributes": [],
+    "id": "75ab293f-86d2-324e-85ed-afbc873b74b3",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "end": "1996-01-20",
+   "target-credit": "",
+   "ended": true,
+   "begin": "1996-01-18",
+   "attributes": [],
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work"
+  }
+ ],
+ "title": "The Rite of Spring (The Sacrifice): Sacrificial Dance (The Chosen One)",
+ "video": false,
+ "aliases": []
+}

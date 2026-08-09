@@ -1,0 +1,125 @@
+{
+ "id": "036a332c-4e01-4e74-8528-456060d37182",
+ "first-release-date": "1996",
+ "length": 299200,
+ "disambiguation": "",
+ "relations": [
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "conductor",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "artist": {
+    "sort-name": "Oue, Eiji",
+    "name": "大植英次",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "country": "JP"
+   },
+   "ended": true,
+   "end": "1996-01-20",
+   "target-credit": "Eiji Oue"
+  },
+  {
+   "begin": "1996-01-18",
+   "attributes": [],
+   "source-credit": "",
+   "type": "performing orchestra",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "end": "1996-01-20",
+   "target-credit": "",
+   "artist": {
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "country": "US",
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "",
+    "type": "Orchestra"
+   },
+   "ended": true,
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "ended": true,
+   "target-credit": "",
+   "end": "1996-01-20",
+   "work": {
+    "languages": [],
+    "id": "a06c71e7-e293-4206-a40b-a4cf89b34cb0",
+    "language": null,
+    "type-id": null,
+    "disambiguation": "“Concert suite for orchestra No. 2” 1919 version",
+    "type": null,
+    "iswcs": [],
+    "title": "L’Oiseau de feu: III. Danse infernale du roi Kachtcheï",
+    "attributes": []
+   },
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "title": "L’Oiseau de feu",
+    "attributes": [],
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "type": "Ballet",
+    "iswcs": [],
+    "disambiguation": "",
+    "languages": [
+     "zxx"
+    ],
+    "id": "2fbaaf2d-deff-46fb-ac15-ac76e9e56eca",
+    "language": "zxx"
+   },
+   "ended": false,
+   "begin": null,
+   "attributes": [
+    "partial"
+   ],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   },
+   "target-type": "work"
+  }
+ ],
+ "video": false,
+ "title": "The Firebird Suite, 1919 Revision: Infernal Dance of King Kashchei",
+ "aliases": [
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "sort-name": "L'oiseau de feu (The Firebird), ballet in 2 scenes for orchestra- Suite (Excerpt)",
+   "name": "L'oiseau de feu (The Firebird), ballet in 2 scenes for orchestra- Suite (Excerpt)",
+   "begin": null,
+   "ended": false,
+   "primary": null,
+   "end": null
+  }
+ ]
+}

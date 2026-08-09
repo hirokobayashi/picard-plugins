@@ -1,0 +1,82 @@
+{
+ "aliases": [],
+ "title": "The Song of the Nightingale: Chinese March",
+ "video": false,
+ "relations": [
+  {
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20",
+   "ended": true,
+   "artist": {
+    "country": "JP",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Oue, Eiji",
+    "name": "大植英次"
+   },
+   "begin": "1996-01-18",
+   "attributes": [],
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "source-credit": "",
+   "type": "conductor",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "target-credit": "",
+   "end": "1996-01-20",
+   "ended": true,
+   "artist": {
+    "country": "US",
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "type": "Orchestra",
+    "disambiguation": "",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra"
+   },
+   "attributes": [],
+   "begin": "1996-01-18",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "work": {
+    "languages": [],
+    "id": "548717ae-4e49-48d8-98d5-a06d2a2fc125",
+    "language": null,
+    "title": "Le Chant du rossignol : II. Marche chinoise",
+    "attributes": [],
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": ""
+   },
+   "end": "1996-01-20",
+   "target-credit": "",
+   "ended": true,
+   "attributes": [],
+   "begin": "1996-01-18",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work"
+  }
+ ],
+ "disambiguation": "",
+ "length": 211093,
+ "first-release-date": "1996",
+ "id": "ba1c4b4b-65c1-47be-819a-d5fdbdf6e1b9"
+}

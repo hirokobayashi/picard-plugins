@@ -1,0 +1,170 @@
+{
+ "title": "Le Chant du rossignol",
+ "attributes": [],
+ "type-id": "01ef2ab4-d58d-3ef9-b309-eef98b58435f",
+ "type": "Symphonic poem",
+ "iswcs": [],
+ "disambiguation": "",
+ "aliases": [],
+ "languages": [
+  "zxx"
+ ],
+ "id": "a79fb213-970d-428b-8982-cbde96ba060e",
+ "language": "zxx",
+ "relations": [
+  {
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist",
+   "end": "1917",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "country": "RU",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "Russian composer",
+    "name": "Игорь Фёдорович Стравинский",
+    "sort-name": "Stravinsky, Igor Fyodorovitch"
+   },
+   "begin": "1917",
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "source-credit": "",
+   "type": "composer"
+  },
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "languages": [
+     "rus"
+    ],
+    "id": "c89da753-2f79-480c-a79b-174c36b65caa",
+    "language": "rus",
+    "title": "The Nightingale",
+    "attributes": [],
+    "type-id": "d8059ee8-cb37-3351-9ca4-23978567339f",
+    "type": "Opera",
+    "iswcs": [],
+    "disambiguation": ""
+   },
+   "type-id": "6bb1df6b-57f3-434d-8a39-5dc363d2eb78",
+   "type": "based on",
+   "source-credit": "",
+   "attributes": [],
+   "begin": null
+  },
+  {
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 4,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "work": {
+    "id": "8a38160f-0c08-4c69-8fd1-261750a23cf1",
+    "languages": [],
+    "language": null,
+    "title": "Le Chant du rossignol : IV. Jeu du rossignol mécanique",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null
+   },
+   "target-credit": "",
+   "end": null,
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {}
+  },
+  {
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Chant du rossignol : II. Marche chinoise",
+    "language": null,
+    "languages": [],
+    "id": "548717ae-4e49-48d8-98d5-a06d2a2fc125"
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "ordering-key": 2,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work"
+  },
+  {
+   "begin": null,
+   "attributes": [],
+   "ordering-key": 3,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "languages": [],
+    "id": "b7e718be-e840-4cfe-9aed-698c666e6eec",
+    "language": null,
+    "title": "Le Chant du rossignol : III. Chant du rossignol",
+    "attributes": [],
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": ""
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward"
+  },
+  {
+   "ended": false,
+   "work": {
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "title": "Le Chant du rossignol : I. Introduction",
+    "attributes": [],
+    "languages": [],
+    "id": "3e68f8ca-88bd-4c08-b50f-5bc24469076d",
+    "language": null
+   },
+   "target-credit": "",
+   "end": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ordering-key": 1,
+   "source-credit": "",
+   "type": "parts",
+   "begin": null,
+   "attributes": [],
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ]
+}

@@ -1,0 +1,129 @@
+{
+ "type-id": null,
+ "disambiguation": "",
+ "iswcs": [],
+ "type": null,
+ "title": "Le Sacre du printemps: I. L’Adoration de la terre: VIII. Danse de la terre",
+ "attributes": [],
+ "languages": [
+  "zxx"
+ ],
+ "id": "48e140f4-d75f-3990-8c5b-f9c07ad11670",
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "composer",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "attributes": [],
+   "begin": "1911",
+   "artist": {
+    "country": "RU",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "type": "Person",
+    "disambiguation": "Russian composer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Игорь Фёдорович Стравинский",
+    "sort-name": "Stravinsky, Igor Fyodorovitch"
+   },
+   "ended": true,
+   "end": "1913",
+   "target-credit": ""
+  },
+  {
+   "begin": null,
+   "attributes": [],
+   "label": {
+    "id": "3ca57c06-495c-4f6c-96cc-e60a51fe82ca",
+    "label-code": null,
+    "sort-name": "Boosey & Hawkes Ltd.",
+    "name": "Boosey & Hawkes Ltd.",
+    "type-id": "e9ad53b0-e3d0-3885-a10b-8193d501338c",
+    "disambiguation": "",
+    "type": "Publisher"
+   },
+   "source-credit": "",
+   "type": "publishing",
+   "type-id": "05ee6f18-4517-342d-afdf-5897f64276e3",
+   "end": null,
+   "target-credit": "Boosey & Hawkes Ltd.",
+   "ended": false,
+   "target-type": "label",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L'Adoration de la terre: VIII. Danse de la terre",
+    "disambiguation": "for two pianos",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "language": "zxx",
+    "id": "5c1367fb-a078-3b7c-868d-45a6d3e6233a",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type": "arrangement",
+   "source-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "source-credit": "",
+   "ordering-key": 8,
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "work": {
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "languages": [
+     "zxx"
+    ],
+    "id": "56d71673-5103-46b1-8c0f-d81d19eaced8",
+    "language": "zxx"
+   },
+   "end": null,
+   "target-credit": ""
+  }
+ ],
+ "language": "zxx",
+ "aliases": [
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "begin": null,
+   "name": "The Rite of Spring: Part I: Adoration of the Earth: VIII. Dance of the Earth",
+   "sort-name": "The Rite of Spring: Part I: Adoration of the Earth: VIII. Dance of the Earth",
+   "locale": null
+  }
+ ]
+}

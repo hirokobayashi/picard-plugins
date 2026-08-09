@@ -1,0 +1,129 @@
+{
+ "title": "Le Sacre du printemps: II. Le Sacrifice: IV. Evocation des ancêtres",
+ "attributes": [],
+ "type-id": null,
+ "type": null,
+ "iswcs": [],
+ "disambiguation": "",
+ "aliases": [
+  {
+   "end": null,
+   "primary": null,
+   "ended": false,
+   "begin": null,
+   "name": "The Rite of Spring: Part II: The Sacrifice: IV. Evocation of the Ancestors",
+   "sort-name": "The Rite of Spring: Part II: The Sacrifice: IV. Evocation of the Ancestors",
+   "locale": null,
+   "type": null,
+   "type-id": null
+  }
+ ],
+ "id": "e6e27966-53bf-39c1-b1a2-ddde5ac1e4aa",
+ "languages": [
+  "zxx"
+ ],
+ "relations": [
+  {
+   "target-credit": "",
+   "end": "1913",
+   "ended": true,
+   "artist": {
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "name": "Игорь Фёдорович Стравинский",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "Russian composer",
+    "type": "Person",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "country": "RU"
+   },
+   "begin": "1911",
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "type": "composer",
+   "source-credit": "",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "label",
+   "target-credit": "Boosey & Hawkes Ltd.",
+   "end": null,
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "type-id": "05ee6f18-4517-342d-afdf-5897f64276e3",
+   "type": "publishing",
+   "source-credit": "",
+   "label": {
+    "type-id": "e9ad53b0-e3d0-3885-a10b-8193d501338c",
+    "type": "Publisher",
+    "disambiguation": "",
+    "name": "Boosey & Hawkes Ltd.",
+    "sort-name": "Boosey & Hawkes Ltd.",
+    "label-code": null,
+    "id": "3ca57c06-495c-4f6c-96cc-e60a51fe82ca"
+   }
+  },
+  {
+   "ended": false,
+   "work": {
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice: IV. Evocation des ancêtres",
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "for two pianos",
+    "type-id": null,
+    "language": "zxx",
+    "id": "4ab0d93e-4f78-3891-aa8b-1b3e05c988c6",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "end": null,
+   "target-credit": "",
+   "type": "arrangement",
+   "source-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "begin": null,
+   "attributes": [],
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice",
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "type-id": null,
+    "language": "zxx",
+    "id": "6cfef07d-7152-4c86-8db7-614f73767549",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 4,
+   "attributes": [],
+   "begin": null,
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "language": "zxx"
+}

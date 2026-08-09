@@ -1,0 +1,84 @@
+{
+ "relations": [
+  {
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "ended": true,
+   "artist": {
+    "country": "JP",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "name": "大植英次",
+    "sort-name": "Oue, Eiji",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20",
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "artist": {
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "country": "US",
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "",
+    "type": "Orchestra"
+   },
+   "ended": true,
+   "end": "1996-01-20",
+   "target-credit": ""
+  },
+  {
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "ended": true,
+   "end": "1996-01-20",
+   "target-credit": "",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "87aea44d-eb59-3656-ad88-9e060d28dab9",
+    "language": "zxx",
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: VII. Le Sage",
+    "attributes": [],
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": ""
+   },
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  }
+ ],
+ "length": 22533,
+ "disambiguation": "",
+ "first-release-date": "1996",
+ "id": "15f5b52c-044c-445e-9f45-73ba19e7385e",
+ "aliases": [],
+ "title": "The Rite of Spring (Adoration of Earth): Adoration of the Earth (The Sage)",
+ "video": false
+}

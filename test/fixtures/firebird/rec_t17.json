@@ -1,0 +1,84 @@
+{
+ "title": "The Rite of Spring (Adoration of Earth): Procession of the Sage",
+ "video": false,
+ "aliases": [],
+ "id": "52cf34f5-63d9-4c25-ba3a-c8de256eae86",
+ "first-release-date": "1996",
+ "disambiguation": "",
+ "length": 47200,
+ "relations": [
+  {
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "ended": true,
+   "artist": {
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "country": "JP",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "name": "大植英次",
+    "sort-name": "Oue, Eiji"
+   },
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20",
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "ended": true,
+   "artist": {
+    "type": "Orchestra",
+    "disambiguation": "",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra",
+    "country": "US",
+    "id": "227b1359-4587-44d8-8616-6275816cb999"
+   },
+   "end": "1996-01-20",
+   "target-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "work": {
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: VI. Cortège du Sage",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "id": "c8700d76-b8b8-37eb-80f2-e3e9ee24dc30",
+    "language": "zxx"
+   },
+   "end": "1996-01-20",
+   "target-credit": "",
+   "ended": true
+  }
+ ]
+}

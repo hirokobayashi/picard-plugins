@@ -1,0 +1,140 @@
+{
+ "language": "zxx",
+ "relations": [
+  {
+   "source-credit": "",
+   "type": "composer",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "begin": "1911",
+   "attributes": [],
+   "artist": {
+    "country": "RU",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "disambiguation": "Russian composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "name": "Игорь Фёдорович Стравинский"
+   },
+   "ended": true,
+   "target-credit": "",
+   "end": "1913",
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  },
+  {
+   "attributes": [],
+   "begin": null,
+   "type": "publishing",
+   "source-credit": "",
+   "label": {
+    "id": "3ca57c06-495c-4f6c-96cc-e60a51fe82ca",
+    "label-code": null,
+    "name": "Boosey & Hawkes Ltd.",
+    "sort-name": "Boosey & Hawkes Ltd.",
+    "type-id": "e9ad53b0-e3d0-3885-a10b-8193d501338c",
+    "disambiguation": "",
+    "type": "Publisher"
+   },
+   "type-id": "05ee6f18-4517-342d-afdf-5897f64276e3",
+   "target-credit": "Boosey & Hawkes Ltd.",
+   "end": null,
+   "ended": false,
+   "target-type": "label",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  },
+  {
+   "attributes": [],
+   "begin": null,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "source-credit": "",
+   "type": "arrangement",
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "2cb14d25-e161-3ec8-ad09-fac900e3d57f",
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice: VI. Danse sacrale (L'Elue)",
+    "disambiguation": "for two pianos",
+    "iswcs": [],
+    "type": null,
+    "type-id": null
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward"
+  },
+  {
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "title": "Le Sacre du printemps: II. Le Sacrifice",
+    "attributes": [],
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "id": "6cfef07d-7152-4c86-8db7-614f73767549",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 6,
+   "begin": null,
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "languages": [
+  "zxx"
+ ],
+ "id": "75ab293f-86d2-324e-85ed-afbc873b74b3",
+ "aliases": [
+  {
+   "ended": false,
+   "primary": null,
+   "end": null,
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "name": "Le sacre du printemps, Part II: \"Le sacrifice\" VI. \"Danse sacrale\" - \"L'élue\"",
+   "sort-name": "Le sacre du printemps, Part II: \"Le sacrifice\" VI. \"Danse sacrale\" - \"L'élue\"",
+   "begin": null
+  },
+  {
+   "sort-name": "The Rite of Spring: Part II: The Sacrifice: VI. Sacrificial Dance: The Chosen One",
+   "name": "The Rite of Spring: Part II: The Sacrifice: VI. Sacrificial Dance: The Chosen One",
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "type-id": null,
+   "end": null,
+   "primary": null,
+   "ended": false
+  }
+ ],
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "type-id": null,
+ "attributes": [],
+ "title": "Le Sacre du printemps: II. Le Sacrifice: VI. Danse sacrale (L’Élue)"
+}

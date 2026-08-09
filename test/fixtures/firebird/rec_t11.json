@@ -1,0 +1,82 @@
+{
+ "aliases": [],
+ "video": false,
+ "title": "The Song of the Nightingale: Game of the Mechanical Nightingale",
+ "relations": [
+  {
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "source-credit": "",
+   "type": "conductor",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "ended": true,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "sort-name": "Oue, Eiji",
+    "name": "大植英次",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "country": "JP"
+   },
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20",
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  },
+  {
+   "attributes": [],
+   "begin": "1996-01-18",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "target-credit": "",
+   "end": "1996-01-20",
+   "artist": {
+    "country": "US",
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "name": "Minnesota Orchestra",
+    "sort-name": "Minnesota Orchestra",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5"
+   },
+   "ended": true,
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  },
+  {
+   "work": {
+    "language": null,
+    "languages": [],
+    "id": "8a38160f-0c08-4c69-8fd1-261750a23cf1",
+    "attributes": [],
+    "title": "Le Chant du rossignol : IV. Jeu du rossignol mécanique",
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null
+   },
+   "end": "1996-01-20",
+   "target-credit": "",
+   "ended": true,
+   "begin": "1996-01-18",
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work"
+  }
+ ],
+ "disambiguation": "",
+ "length": 646906,
+ "first-release-date": "1996",
+ "id": "7473cf59-445a-4b60-853a-7c4c33a968d2"
+}

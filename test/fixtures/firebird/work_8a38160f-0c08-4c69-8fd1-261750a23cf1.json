@@ -1,0 +1,176 @@
+{
+ "title": "Le Chant du rossignol : IV. Jeu du rossignol mécanique",
+ "attributes": [],
+ "type-id": null,
+ "type": null,
+ "iswcs": [],
+ "disambiguation": "",
+ "aliases": [
+  {
+   "primary": null,
+   "end": null,
+   "ended": false,
+   "locale": null,
+   "begin": null,
+   "name": "Funeral March and Finale",
+   "sort-name": "Funeral March and Finale",
+   "type-id": null,
+   "type": null
+  },
+  {
+   "begin": null,
+   "sort-name": "Song of the Nightingale: Funeral March and Finale",
+   "name": "Song of the Nightingale: Funeral March and Finale",
+   "locale": null,
+   "type": null,
+   "type-id": null,
+   "end": null,
+   "primary": null,
+   "ended": false
+  },
+  {
+   "primary": null,
+   "end": null,
+   "ended": false,
+   "locale": null,
+   "begin": null,
+   "sort-name": "Song of the Nightingale: The Emperor's Displeasure at the Departure of the Real Nightingale",
+   "name": "Song of the Nightingale: The Emperor's Displeasure at the Departure of the Real Nightingale",
+   "type-id": null,
+   "type": null
+  },
+  {
+   "locale": null,
+   "name": "Song of the Nightingale: The Emperor's Sickroom",
+   "sort-name": "Song of the Nightingale: The Emperor's Sickroom",
+   "begin": null,
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  },
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "sort-name": "Song of the Nightingale: The Mechanical Nightingale",
+   "name": "Song of the Nightingale: The Mechanical Nightingale",
+   "begin": null,
+   "locale": null
+  },
+  {
+   "locale": null,
+   "name": "Song of the Nightingale: The Real Nightingale Returns to Thwart Death",
+   "sort-name": "Song of the Nightingale: The Real Nightingale Returns to Thwart Death",
+   "begin": null,
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  },
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "name": "The Emperor's Displeasure at the Departure of the Real Nightingale",
+   "sort-name": "The Emperor's Displeasure at the Departure of the Real Nightingale",
+   "ended": false,
+   "primary": null,
+   "end": null
+  },
+  {
+   "end": null,
+   "primary": null,
+   "ended": false,
+   "begin": null,
+   "name": "The Emperor's Sickroom",
+   "sort-name": "The Emperor's Sickroom",
+   "locale": null,
+   "type": null,
+   "type-id": null
+  },
+  {
+   "locale": null,
+   "name": "The Mechanical Nightingale",
+   "sort-name": "The Mechanical Nightingale",
+   "begin": null,
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  },
+  {
+   "primary": null,
+   "end": null,
+   "ended": false,
+   "locale": null,
+   "sort-name": "The Real Nightingale Returns to Thwart Death",
+   "name": "The Real Nightingale Returns to Thwart Death",
+   "begin": null,
+   "type-id": null,
+   "type": null
+  }
+ ],
+ "languages": [],
+ "id": "8a38160f-0c08-4c69-8fd1-261750a23cf1",
+ "relations": [
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "end": "1917",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "country": "RU",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "name": "Игорь Фёдорович Стравинский",
+    "type": "Person",
+    "disambiguation": "Russian composer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "begin": "1917",
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "source-credit": "",
+   "type": "composer"
+  },
+  {
+   "work": {
+    "id": "a79fb213-970d-428b-8982-cbde96ba060e",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "title": "Le Chant du rossignol",
+    "attributes": [],
+    "type-id": "01ef2ab4-d58d-3ef9-b309-eef98b58435f",
+    "iswcs": [],
+    "type": "Symphonic poem",
+    "disambiguation": ""
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "ordering-key": 4,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "work"
+  }
+ ],
+ "language": null
+}
