@@ -1,0 +1,93 @@
+{
+ "id": "ffc2f12f-a6f4-45cc-a8b1-dd44a2df5c7f",
+ "languages": [],
+ "type": null,
+ "aliases": [],
+ "disambiguation": "",
+ "type-id": null,
+ "iswcs": [],
+ "title": "Gayaneh: Act I, Scene II (Recovery). Scene. Aisha",
+ "attributes": [],
+ "language": null,
+ "relations": [
+  {
+   "attributes": [],
+   "artist": {
+    "sort-name": "Khachaturian, Aram Ilich",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "SU",
+    "disambiguation": "Soviet-Armenian composer",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "type": "Person"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "ended": true,
+   "end": "1942",
+   "attribute-ids": {},
+   "begin": "1942",
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "composer",
+   "target-credit": ""
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 10,
+   "target-credit": "",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "title": "Gayaneh: Act I",
+    "iswcs": [],
+    "attributes": [],
+    "language": null,
+    "id": "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad",
+    "languages": [],
+    "type": "Ballet",
+    "disambiguation": ""
+   },
+   "attributes": [
+    "movement"
+   ],
+   "ended": false,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "direction": "backward",
+   "begin": null
+  },
+  {
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "backward",
+   "attributes": [],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "id": "54f203c0-b992-40da-a318-a35310f887bb",
+    "language": null,
+    "attributes": [],
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "title": "Gayaneh: Act I, Scene II (Recovery)",
+    "iswcs": [],
+    "languages": [],
+    "disambiguation": "",
+    "type": "Ballet"
+   },
+   "ended": false,
+   "type": "parts",
+   "ordering-key": 3,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  }
+ ]
+}

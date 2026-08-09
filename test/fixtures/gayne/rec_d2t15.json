@@ -1,0 +1,82 @@
+{
+ "aliases": [],
+ "relations": [
+  {
+   "ended": true,
+   "attributes": [],
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "artist": {
+    "disambiguation": "",
+    "type": "Person",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e",
+    "country": "SU",
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Gorkovenko, Stanislav"
+   },
+   "begin": "1997-09",
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": "1997-09",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "conductor"
+  },
+  {
+   "end": "1997-09",
+   "attribute-ids": {},
+   "begin": "1997-09",
+   "direction": "backward",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra",
+    "disambiguation": "St Petersburg Radio & TV Orchestra",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430",
+    "type": "Orchestra",
+    "country": "RU"
+   },
+   "ended": true,
+   "type": "performing orchestra",
+   "target-credit": "St. Petersburg Radio Symphony Orchestra",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "direction": "forward",
+   "begin": "1997-09",
+   "attribute-ids": {},
+   "end": "1997-09",
+   "ended": true,
+   "work": {
+    "languages": [],
+    "id": "b6171611-c838-4384-9b45-eb0055e41d2b",
+    "title": "Gayaneh: Act III, Scene VI (Conscience). Aisha\u2019s loneliness",
+    "type-id": null,
+    "iswcs": [],
+    "language": null,
+    "attributes": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "target-credit": "",
+   "type": "performance",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "disambiguation": "",
+ "length": 46000,
+ "video": false,
+ "title": "Gayne: Act III. Scene VI. \"Conscience\", 38. Loneliness of Aysha",
+ "id": "53e1d322-799c-4bcf-9ab0-c2b1c8ef7e7a",
+ "first-release-date": "2007-11-21"
+}

@@ -1,0 +1,62 @@
+{
+ "relations": [
+  {
+   "direction": "backward",
+   "begin": "1942",
+   "end": "1942",
+   "attribute-ids": {},
+   "ended": true,
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "country": "SU",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "type": "Person",
+    "disambiguation": "Soviet-Armenian composer",
+    "sort-name": "Khachaturian, Aram Ilich",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f"
+   },
+   "attributes": [],
+   "target-credit": "",
+   "type": "composer",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {}
+  },
+  {
+   "ended": false,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "id": "3b261f86-09a8-4d6a-9ba9-58a7eb19a387",
+    "type-id": null,
+    "title": "Gayaneh: Act II, Scene III (Jealousy)",
+    "iswcs": [],
+    "language": null,
+    "attributes": [],
+    "languages": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "attributes": [],
+   "direction": "backward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null,
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "parts"
+  }
+ ],
+ "attributes": [],
+ "language": null,
+ "title": "Gayaneh: Act II, Scene III (Jealousy). Scene. Aisha and Gayaneh",
+ "type-id": null,
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "aliases": [],
+ "id": "30205ad2-bcff-4757-8a1b-c2c4220d63f0",
+ "languages": []
+}

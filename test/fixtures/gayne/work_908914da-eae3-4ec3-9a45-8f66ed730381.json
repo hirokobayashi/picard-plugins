@@ -1,0 +1,63 @@
+{
+ "id": "908914da-eae3-4ec3-9a45-8f66ed730381",
+ "languages": [],
+ "aliases": [],
+ "disambiguation": "",
+ "type": null,
+ "language": null,
+ "attributes": [],
+ "type-id": null,
+ "iswcs": [],
+ "title": "Gayaneh: Act III, Scene VII (Expiation). Duet of Armen and Gayaneh",
+ "relations": [
+  {
+   "attribute-ids": {},
+   "end": "1942",
+   "direction": "backward",
+   "begin": "1942",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "disambiguation": "Soviet-Armenian composer",
+    "type": "Person",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "country": "SU",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Khachaturian, Aram Ilich"
+   },
+   "attributes": [],
+   "ended": true,
+   "type": "composer",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "ended": false,
+   "work": {
+    "languages": [],
+    "type-id": null,
+    "iswcs": [],
+    "title": "Gayaneh: Act III, Scene VII (Expiation)",
+    "language": null,
+    "attributes": [],
+    "id": "94cc5799-81d1-4447-b22b-979c86025c50",
+    "type": null,
+    "disambiguation": ""
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "direction": "backward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {},
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "ordering-key": 7,
+   "target-credit": "",
+   "type": "parts"
+  }
+ ]
+}

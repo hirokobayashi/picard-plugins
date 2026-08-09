@@ -1,0 +1,445 @@
+{
+ "relations": [
+  {
+   "target-credit": "",
+   "type": "composer",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "begin": "1942",
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": "1942",
+   "ended": true,
+   "attributes": [],
+   "artist": {
+    "type": "Person",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "disambiguation": "Soviet-Armenian composer",
+    "country": "SU",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "sort-name": "Khachaturian, Aram Ilich"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+  },
+  {
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 3,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "type": "Ballet",
+    "disambiguation": "",
+    "languages": [],
+    "attributes": [],
+    "language": null,
+    "iswcs": [],
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "title": "Gayaneh, op. 50",
+    "id": "693e681e-98a1-4d21-9bc8-e084a248461d"
+   },
+   "attributes": [],
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "direction": "backward",
+   "begin": null
+  },
+  {
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "ordering-key": 1,
+   "target-credit": "",
+   "type": "parts",
+   "ended": false,
+   "attributes": [
+    "movement"
+   ],
+   "work": {
+    "languages": [],
+    "language": null,
+    "attributes": [],
+    "type-id": null,
+    "title": "Gayaneh: Act I, Scene I (Spring). Carpet-making",
+    "iswcs": [],
+    "id": "af1f7eea-35bd-4d04-9d8a-3b1497afec88",
+    "type": null,
+    "disambiguation": ""
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "direction": "forward",
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   }
+  },
+  {
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "direction": "forward",
+   "begin": null,
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "id": "aebdbf15-ef7c-4729-bc35-002d7233864c",
+    "attributes": [],
+    "language": null,
+    "type-id": null,
+    "iswcs": [],
+    "title": "Gayaneh: Act I, Scene I (Spring). Lezghinka",
+    "languages": []
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [
+    "movement"
+   ],
+   "ended": false,
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 2,
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": ""
+  },
+  {
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "begin": null,
+   "direction": "forward",
+   "attributes": [
+    "movement"
+   ],
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "languages": [],
+    "id": "6035f51e-0559-4444-9310-cbc3b79a960e",
+    "language": null,
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "title": "Gayaneh: Act I, Scene I (Spring). Dance of Nuneh and Girls"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ended": false,
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 3,
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": ""
+  },
+  {
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "begin": null,
+   "direction": "forward",
+   "attributes": [
+    "movement"
+   ],
+   "work": {
+    "id": "f5c29d63-43f8-420b-bd8d-97a2dc9defb0",
+    "attributes": [],
+    "language": null,
+    "title": "Gayaneh: Act I, Scene I (Spring). Gayaneh\u2019s Dance",
+    "type-id": null,
+    "iswcs": [],
+    "languages": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ended": false,
+   "type": "parts",
+   "ordering-key": 4,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "ordering-key": 5,
+   "type": "parts",
+   "ended": false,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "id": "fb479c25-21be-4fba-aaa5-78693fcaafdd",
+    "language": null,
+    "attributes": [],
+    "title": "Gayaneh: Act I, Scene I (Spring). Awaiting the Hunters",
+    "type-id": null,
+    "iswcs": [],
+    "languages": []
+   },
+   "attributes": [
+    "movement"
+   ],
+   "direction": "forward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   }
+  },
+  {
+   "ended": false,
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "language": null,
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "Gayaneh: Act I, Scene I (Spring). Duet of Gayaneh and Armen",
+    "id": "8b1941d9-0bdd-408e-8d6a-e96b6a52dfc9",
+    "languages": []
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [
+    "movement"
+   ],
+   "direction": "forward",
+   "begin": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "ordering-key": 6,
+   "target-credit": "",
+   "type": "parts"
+  },
+  {
+   "attributes": [
+    "movement"
+   ],
+   "work": {
+    "iswcs": [],
+    "type-id": null,
+    "title": "Gayaneh: Act I, Scene I (Spring). Entr'acte",
+    "attributes": [],
+    "language": null,
+    "id": "264850e9-eb3e-43a2-979b-be099ad5fbc6",
+    "languages": [],
+    "type": null,
+    "disambiguation": ""
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ended": false,
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "begin": null,
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 7
+  },
+  {
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 8,
+   "attributes": [
+    "movement"
+   ],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "id": "5bf8cc0c-1ef0-4017-ae5d-5bfe1a77f02a",
+    "language": null,
+    "attributes": [],
+    "type-id": null,
+    "title": "Gayaneh: Act I, Scene II (Recovery). Aisha Recovers",
+    "iswcs": [],
+    "languages": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "ended": false,
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "begin": null,
+   "direction": "forward"
+  },
+  {
+   "begin": null,
+   "direction": "forward",
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "ended": false,
+   "attributes": [
+    "movement"
+   ],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "languages": [],
+    "attributes": [],
+    "language": null,
+    "iswcs": [],
+    "type-id": null,
+    "title": "Gayaneh: Act I, Scene II (Recovery). Scene. Duet of Aisha and Georgi",
+    "id": "85878830-b5a9-483b-abdd-f1f2819cd754",
+    "type": null,
+    "disambiguation": ""
+   },
+   "target-credit": "",
+   "ordering-key": 9,
+   "type": "parts",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "type": "parts",
+   "ordering-key": 10,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "direction": "forward",
+   "begin": null,
+   "work": {
+    "languages": [],
+    "id": "ffc2f12f-a6f4-45cc-a8b1-dd44a2df5c7f",
+    "attributes": [],
+    "language": null,
+    "title": "Gayaneh: Act I, Scene II (Recovery). Scene. Aisha",
+    "type-id": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [
+    "movement"
+   ],
+   "ended": false
+  },
+  {
+   "type": "parts",
+   "ordering-key": 11,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "begin": null,
+   "direction": "forward",
+   "attributes": [
+    "movement"
+   ],
+   "work": {
+    "languages": [],
+    "id": "6f771810-5e09-4f8a-ab3f-f28bc6328da1",
+    "language": null,
+    "attributes": [],
+    "title": "Gayaneh: Act I, Scene II (Recovery). Scene. Aisha and Armen",
+    "type-id": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ended": false
+  },
+  {
+   "direction": "forward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "disambiguation": "",
+    "type": "Ballet",
+    "id": "54f203c0-b992-40da-a318-a35310f887bb",
+    "iswcs": [],
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "title": "Gayaneh: Act I, Scene II (Recovery)",
+    "language": null,
+    "attributes": [],
+    "languages": []
+   },
+   "attributes": [],
+   "target-credit": "",
+   "ordering-key": 9,
+   "type": "parts",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "ordering-key": 1,
+   "target-credit": "",
+   "type": "parts",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "begin": null,
+   "direction": "forward",
+   "attribute-ids": {},
+   "end": null,
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "languages": [],
+    "attributes": [],
+    "language": null,
+    "type-id": null,
+    "iswcs": [],
+    "title": "Gayaneh: Act I, Scene I (Spring)",
+    "id": "697f1f18-1a3c-4981-85ee-eb2c43e9c971"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a"
+  }
+ ],
+ "language": null,
+ "attributes": [],
+ "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+ "title": "Gayaneh: Act I",
+ "iswcs": [],
+ "aliases": [],
+ "disambiguation": "",
+ "type": "Ballet",
+ "id": "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad",
+ "languages": []
+}

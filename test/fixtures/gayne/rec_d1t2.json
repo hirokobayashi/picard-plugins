@@ -1,0 +1,82 @@
+{
+ "aliases": [],
+ "relations": [
+  {
+   "target-credit": "",
+   "type": "conductor",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "begin": "1997-09",
+   "direction": "backward",
+   "end": "1997-09",
+   "attribute-ids": {},
+   "ended": true,
+   "attributes": [],
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "artist": {
+    "sort-name": "Gorkovenko, Stanislav",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85",
+    "country": "SU",
+    "type": "Person",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e",
+    "disambiguation": ""
+   }
+  },
+  {
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "target-credit": "St. Petersburg Radio Symphony Orchestra",
+   "type": "performing orchestra",
+   "ended": true,
+   "attributes": [],
+   "artist": {
+    "country": "RU",
+    "type": "Orchestra",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430",
+    "disambiguation": "St Petersburg Radio & TV Orchestra",
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf"
+   },
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "begin": "1997-09",
+   "direction": "backward",
+   "end": "1997-09",
+   "attribute-ids": {}
+  },
+  {
+   "type": "performance",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "end": "1997-09",
+   "attribute-ids": {},
+   "begin": "1997-09",
+   "direction": "forward",
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "iswcs": [],
+    "type-id": null,
+    "title": "Gayaneh: Prologue (Friendship). The Hunters",
+    "language": null,
+    "attributes": [],
+    "id": "94859fab-d983-4cde-802f-8cb11a5c9d07",
+    "languages": [],
+    "type": null,
+    "disambiguation": ""
+   },
+   "ended": true
+  }
+ ],
+ "disambiguation": "",
+ "length": 89440,
+ "title": "Gayne: Introduction Prologue \"Friendship\", 1. Hunting",
+ "id": "c77edf31-bd7d-4cd0-94cb-914718d626cb",
+ "first-release-date": "2007-11-21",
+ "video": false
+}

@@ -1,0 +1,93 @@
+{
+ "attributes": [],
+ "language": null,
+ "title": "Gayaneh: Act I, Scene II (Recovery). Scene. Duet of Aisha and Georgi",
+ "type-id": null,
+ "iswcs": [],
+ "relations": [
+  {
+   "type": "composer",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "end": "1942",
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "1942",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "sort-name": "Khachaturian, Aram Ilich",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "country": "SU",
+    "type": "Person",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "disambiguation": "Soviet-Armenian composer"
+   },
+   "attributes": [],
+   "ended": true
+  },
+  {
+   "attributes": [
+    "movement"
+   ],
+   "work": {
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "title": "Gayaneh: Act I",
+    "iswcs": [],
+    "language": null,
+    "attributes": [],
+    "id": "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad",
+    "languages": [],
+    "type": "Ballet",
+    "disambiguation": ""
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ended": false,
+   "end": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "begin": null,
+   "direction": "backward",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 9,
+   "target-credit": ""
+  },
+  {
+   "end": null,
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": null,
+   "work": {
+    "languages": [],
+    "attributes": [],
+    "language": null,
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "iswcs": [],
+    "title": "Gayaneh: Act I, Scene II (Recovery)",
+    "id": "54f203c0-b992-40da-a318-a35310f887bb",
+    "type": "Ballet",
+    "disambiguation": ""
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "ended": false,
+   "type": "parts",
+   "ordering-key": 2,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  }
+ ],
+ "languages": [],
+ "id": "85878830-b5a9-483b-abdd-f1f2819cd754",
+ "disambiguation": "",
+ "aliases": [],
+ "type": null
+}

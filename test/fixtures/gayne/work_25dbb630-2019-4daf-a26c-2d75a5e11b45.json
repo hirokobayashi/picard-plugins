@@ -1,0 +1,62 @@
+{
+ "relations": [
+  {
+   "ended": true,
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "disambiguation": "Soviet-Armenian composer",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "type": "Person",
+    "country": "SU",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Khachaturian, Aram Ilich"
+   },
+   "attributes": [],
+   "direction": "backward",
+   "begin": "1942",
+   "end": "1942",
+   "attribute-ids": {},
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "composer"
+  },
+  {
+   "direction": "backward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "type-id": null,
+    "iswcs": [],
+    "title": "Gayaneh: Act II, Scene IV (Crime)",
+    "attributes": [],
+    "language": null,
+    "id": "326f7a00-314d-4fd2-b931-29f8d5f37001",
+    "languages": []
+   },
+   "attributes": [],
+   "target-credit": "",
+   "type": "parts",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "language": null,
+ "attributes": [],
+ "type-id": null,
+ "iswcs": [],
+ "title": "Gayaneh: Act II, Scene IV (Crime). Scene. In the Mountains",
+ "disambiguation": "",
+ "aliases": [],
+ "type": null,
+ "id": "25dbb630-2019-4daf-a26c-2d75a5e11b45",
+ "languages": []
+}

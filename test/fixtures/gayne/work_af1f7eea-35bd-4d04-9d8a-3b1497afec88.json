@@ -1,0 +1,93 @@
+{
+ "disambiguation": "",
+ "aliases": [],
+ "type": null,
+ "id": "af1f7eea-35bd-4d04-9d8a-3b1497afec88",
+ "languages": [],
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "composer",
+   "target-credit": "",
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "sort-name": "Khachaturian, Aram Ilich",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "country": "SU",
+    "type": "Person",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "disambiguation": "Soviet-Armenian composer"
+   },
+   "ended": true,
+   "attribute-ids": {},
+   "end": "1942",
+   "begin": "1942",
+   "direction": "backward"
+  },
+  {
+   "ordering-key": 1,
+   "target-credit": "",
+   "type": "parts",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "backward",
+   "begin": null,
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "ended": false,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "type": "Ballet",
+    "disambiguation": "",
+    "languages": [],
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "title": "Gayaneh: Act I",
+    "iswcs": [],
+    "attributes": [],
+    "language": null,
+    "id": "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+   },
+   "attributes": [
+    "movement"
+   ]
+  },
+  {
+   "ended": false,
+   "attributes": [],
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "languages": [],
+    "title": "Gayaneh: Act I, Scene I (Spring)",
+    "type-id": null,
+    "iswcs": [],
+    "attributes": [],
+    "language": null,
+    "id": "697f1f18-1a3c-4981-85ee-eb2c43e9c971"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": null,
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "ordering-key": 1,
+   "type": "parts"
+  }
+ ],
+ "type-id": null,
+ "title": "Gayaneh: Act I, Scene I (Spring). Carpet-making",
+ "iswcs": [],
+ "attributes": [],
+ "language": null
+}

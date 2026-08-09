@@ -1,0 +1,86 @@
+{
+ "aliases": [],
+ "relations": [
+  {
+   "ended": true,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85",
+    "sort-name": "Gorkovenko, Stanislav",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e",
+    "type": "Person",
+    "disambiguation": "",
+    "country": "SU"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "direction": "backward",
+   "begin": "1997-09",
+   "attribute-ids": {},
+   "end": "1997-09",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "conductor"
+  },
+  {
+   "artist": {
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra",
+    "disambiguation": "St Petersburg Radio & TV Orchestra",
+    "type": "Orchestra",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430",
+    "country": "RU"
+   },
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "ended": true,
+   "attribute-ids": {},
+   "end": "1997-09",
+   "direction": "backward",
+   "begin": "1997-09",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "performing orchestra",
+   "target-credit": "St. Petersburg Radio Symphony Orchestra"
+  },
+  {
+   "attributes": [
+    "partial"
+   ],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "languages": [],
+    "title": "Gayaneh: Act II, Scene V (Love)",
+    "type-id": null,
+    "iswcs": [],
+    "attributes": [],
+    "language": null,
+    "id": "cf1ed388-904b-4992-a056-76f9ecea6612",
+    "type": null,
+    "disambiguation": ""
+   },
+   "ended": true,
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   },
+   "end": "1997-09",
+   "begin": "1997-09",
+   "direction": "forward",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "performance",
+   "target-credit": ""
+  }
+ ],
+ "disambiguation": "",
+ "length": 67000,
+ "title": "Gayne: Act II. Scene V. \"Love\", 30. Scene of Gayne and Armen",
+ "first-release-date": "2007-11-21",
+ "id": "17f88bf3-996a-432e-bcb5-f177083fc792",
+ "video": false
+}

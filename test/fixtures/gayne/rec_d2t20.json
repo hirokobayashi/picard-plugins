@@ -1,0 +1,82 @@
+{
+ "aliases": [],
+ "relations": [
+  {
+   "type": "conductor",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "end": "1997-09",
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "1997-09",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "artist": {
+    "type": "Person",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e",
+    "disambiguation": "",
+    "country": "SU",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85",
+    "sort-name": "Gorkovenko, Stanislav"
+   },
+   "attributes": [],
+   "ended": true
+  },
+  {
+   "attribute-ids": {},
+   "end": "1997-09",
+   "begin": "1997-09",
+   "direction": "backward",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "country": "RU",
+    "disambiguation": "St Petersburg Radio & TV Orchestra",
+    "type": "Orchestra",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430",
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra",
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5"
+   },
+   "ended": true,
+   "type": "performing orchestra",
+   "target-credit": "St. Petersburg Radio Symphony Orchestra",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "type": "performance",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "end": "1997-09",
+   "attribute-ids": {},
+   "begin": "1997-09",
+   "direction": "forward",
+   "attributes": [],
+   "work": {
+    "id": "f11929a3-1a7c-45b4-9352-2a0624160dee",
+    "language": null,
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "Gayaneh: Act III, Scene VII (Expiation). Nuneh\u2019s Dance",
+    "languages": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "ended": true
+  }
+ ],
+ "length": 87000,
+ "disambiguation": "",
+ "video": false,
+ "id": "df16eda9-42b3-422a-8b73-f6860e232ac9",
+ "first-release-date": "2007-11-21",
+ "title": "Gayne: Act III. Scene VII. \"Atonement\", 43. Dance of Nunne"
+}

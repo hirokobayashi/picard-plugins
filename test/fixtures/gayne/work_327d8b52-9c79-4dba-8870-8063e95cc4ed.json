@@ -1,0 +1,63 @@
+{
+ "languages": [],
+ "id": "327d8b52-9c79-4dba-8870-8063e95cc4ed",
+ "disambiguation": "",
+ "aliases": [],
+ "type": null,
+ "iswcs": [],
+ "type-id": null,
+ "title": "Gayaneh: Act III, Scene VII (Expiation). Men\u2019s Dance",
+ "language": null,
+ "attributes": [],
+ "relations": [
+  {
+   "target-credit": "",
+   "type": "composer",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "begin": "1942",
+   "attribute-ids": {},
+   "end": "1942",
+   "ended": true,
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "country": "SU",
+    "type": "Person",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "disambiguation": "Soviet-Armenian composer",
+    "sort-name": "Khachaturian, Aram Ilich",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f"
+   },
+   "attributes": []
+  },
+  {
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "ordering-key": 9,
+   "target-credit": "",
+   "type": "parts",
+   "ended": false,
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "id": "94cc5799-81d1-4447-b22b-979c86025c50",
+    "language": null,
+    "attributes": [],
+    "title": "Gayaneh: Act III, Scene VII (Expiation)",
+    "type-id": null,
+    "iswcs": [],
+    "languages": []
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "direction": "backward",
+   "begin": null,
+   "attribute-ids": {},
+   "end": null
+  }
+ ]
+}

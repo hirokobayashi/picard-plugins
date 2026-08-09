@@ -1,0 +1,86 @@
+{
+ "first-release-date": "2007-11-21",
+ "id": "2f741d26-cfdd-44c4-b582-8463ec0a36ab",
+ "title": "Gayne: Act I. Scene II. \"Recovery\", 11. Act Tune",
+ "video": false,
+ "aliases": [],
+ "relations": [
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "conductor",
+   "ended": true,
+   "attributes": [],
+   "artist": {
+    "country": "SU",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e",
+    "type": "Person",
+    "disambiguation": "",
+    "sort-name": "Gorkovenko, Stanislav",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "begin": "1997-09",
+   "direction": "backward",
+   "end": "1997-09",
+   "attribute-ids": {}
+  },
+  {
+   "artist": {
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf",
+    "country": "RU",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430",
+    "type": "Orchestra",
+    "disambiguation": "St Petersburg Radio & TV Orchestra"
+   },
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "ended": true,
+   "attribute-ids": {},
+   "end": "1997-09",
+   "direction": "backward",
+   "begin": "1997-09",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "performing orchestra",
+   "target-credit": "St. Petersburg Radio Symphony Orchestra"
+  },
+  {
+   "target-credit": "",
+   "type": "performance",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "forward",
+   "begin": "1997-09",
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   },
+   "end": "1997-09",
+   "ended": true,
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "iswcs": [],
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "title": "Gayaneh: Act I, Scene II (Recovery)",
+    "language": null,
+    "attributes": [],
+    "id": "54f203c0-b992-40da-a318-a35310f887bb",
+    "languages": [],
+    "type": "Ballet",
+    "disambiguation": ""
+   },
+   "attributes": [
+    "partial"
+   ]
+  }
+ ],
+ "length": 91066,
+ "disambiguation": ""
+}

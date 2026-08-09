@@ -1,0 +1,82 @@
+{
+ "relations": [
+  {
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "conductor",
+   "target-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "artist": {
+    "country": "SU",
+    "disambiguation": "",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e",
+    "type": "Person",
+    "sort-name": "Gorkovenko, Stanislav",
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "attributes": [],
+   "ended": true,
+   "end": "1997-09",
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "1997-09"
+  },
+  {
+   "ended": true,
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "country": "RU",
+    "disambiguation": "St Petersburg Radio & TV Orchestra",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430",
+    "type": "Orchestra",
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra",
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5"
+   },
+   "attributes": [],
+   "direction": "backward",
+   "begin": "1997-09",
+   "end": "1997-09",
+   "attribute-ids": {},
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "St. Petersburg Radio Symphony Orchestra",
+   "type": "performing orchestra"
+  },
+  {
+   "type": "performance",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "attribute-ids": {},
+   "end": "1997-09",
+   "direction": "forward",
+   "begin": "1997-09",
+   "work": {
+    "type-id": null,
+    "iswcs": [],
+    "title": "Gayaneh: Act II, Scene III (Jealousy). Girls\u2019 Dance",
+    "attributes": [],
+    "language": null,
+    "id": "4f06bae9-ed7b-474f-9fd1-aedb613a5131",
+    "languages": [],
+    "type": null,
+    "disambiguation": ""
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "ended": true
+  }
+ ],
+ "aliases": [],
+ "length": 179533,
+ "disambiguation": "",
+ "video": false,
+ "title": "Gayne: Act II. Scene III. \"Jealousy\", 17. Dance of Maidens",
+ "first-release-date": "2007-11-21",
+ "id": "7daf5829-4e38-4344-9d59-d214cb4b29a1"
+}
