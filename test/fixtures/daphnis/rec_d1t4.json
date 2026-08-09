@@ -1,0 +1,96 @@
+{
+ "aliases": [
+  {
+   "end": null,
+   "primary": null,
+   "ended": false,
+   "begin": null,
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Danse grotesque de Dorcon - Sc\u00e8ne (Live)",
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Danse grotesque de Dorcon - Sc\u00e8ne (Live)",
+   "locale": null,
+   "type": null,
+   "type-id": null
+  }
+ ],
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, premi\u00e8re partie - danse grotesque de dorcon - sc\u00e8ne",
+ "video": false,
+ "relations": [
+  {
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "begin": "2016",
+   "attributes": [],
+   "ended": true,
+   "artist": {
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "country": "FR",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier"
+   },
+   "end": "2016",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "end": "2016",
+   "target-credit": "",
+   "artist": {
+    "country": "FR",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "name": "Les Si\u00e8cles",
+    "sort-name": "Si\u00e8cles, Les"
+   },
+   "ended": true,
+   "begin": "2016",
+   "attributes": [],
+   "source-credit": "",
+   "type": "performing orchestra",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb"
+  },
+  {
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work",
+   "target-credit": "",
+   "end": "2016",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "5d951041-56ed-3731-9994-709e8218f471",
+    "language": "zxx",
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 3. Danse grotesque de Dorcon",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "type": null,
+    "iswcs": []
+   },
+   "ended": true,
+   "begin": "2016",
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance"
+  }
+ ],
+ "disambiguation": "",
+ "length": 112000,
+ "first-release-date": "2017-03-17",
+ "id": "1b5d9fd9-dfaf-4e3b-9442-4fabb00022a0"
+}

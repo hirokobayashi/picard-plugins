@@ -1,0 +1,96 @@
+{
+ "relations": [
+  {
+   "ended": true,
+   "artist": {
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "country": "FR",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier",
+    "name": "Fran\u00e7ois\u2010Xavier Roth"
+   },
+   "end": "2016",
+   "target-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "source-credit": "",
+   "type": "conductor",
+   "begin": "2016",
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "artist": {
+    "name": "Les Si\u00e8cles",
+    "sort-name": "Si\u00e8cles, Les",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "country": "FR"
+   },
+   "ended": true,
+   "target-credit": "",
+   "end": "2016",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "begin": "2016",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work",
+   "work": {
+    "language": "zxx",
+    "id": "9554228e-79e2-33df-a9af-5fa96f69a28c",
+    "languages": [
+     "zxx"
+    ],
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau III. No. 10. Lever du jour"
+   },
+   "target-credit": "",
+   "end": "2016",
+   "ended": true,
+   "begin": "2016",
+   "attributes": [],
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0"
+  }
+ ],
+ "disambiguation": "",
+ "length": 339000,
+ "first-release-date": "2017-03-17",
+ "id": "e5b6e25f-b327-45b2-b855-a973cac9dc18",
+ "aliases": [
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau III: Lever du jour - Sc\u00e8ne (Live)",
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau III: Lever du jour - Sc\u00e8ne (Live)",
+   "ended": false,
+   "primary": null,
+   "end": null
+  }
+ ],
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, troisi\u00e8me partie - lever du jour - sc\u00e8ne",
+ "video": false
+}

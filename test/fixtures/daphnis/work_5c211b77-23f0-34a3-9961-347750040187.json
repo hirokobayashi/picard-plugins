@@ -1,0 +1,201 @@
+{
+ "type-id": null,
+ "disambiguation": "",
+ "type": null,
+ "iswcs": [],
+ "title": "Daphnis et Chlo\u00e9: Tableau II",
+ "attributes": [],
+ "id": "5c211b77-23f0-34a3-9961-347750040187",
+ "languages": [
+  "zxx"
+ ],
+ "relations": [
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "ended": true,
+   "artist": {
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "country": "FR",
+    "name": "Maurice Ravel",
+    "sort-name": "Ravel, Maurice",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "French composer",
+    "type": "Person"
+   },
+   "target-credit": "",
+   "end": "1912",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "type": "composer",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "1909"
+  },
+  {
+   "type-id": "0a1771e1-8639-4740-8a43-bdafc050c3da",
+   "type": "orchestrator",
+   "source-credit": "",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "artist": {
+    "country": "FR",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "sort-name": "Ravel, Maurice",
+    "name": "Maurice Ravel",
+    "disambiguation": "French composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "target-credit": "",
+   "end": null,
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  },
+  {
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau II",
+    "disambiguation": "arr. piano",
+    "iswcs": [],
+    "type": null,
+    "type-id": null,
+    "language": "zxx",
+    "id": "bab679b7-78f1-44e1-9f34-7f37a7b5d33e",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "end": null,
+   "target-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "type": "arrangement",
+   "source-credit": "",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "work",
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1",
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9",
+    "disambiguation": "",
+    "iswcs": [],
+    "type": "Ballet",
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63"
+   },
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "source-credit": "",
+   "ordering-key": 2,
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a"
+  },
+  {
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau II. No. 7. Introduction",
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "language": "zxx",
+    "id": "aaaff290-f883-368f-bb5d-91e76001c734",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 1,
+   "attributes": [],
+   "begin": null,
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "work": {
+    "title": "Daphnis et Chlo\u00e9: Tableau II. No. 8. Danse guerri\u00e8re",
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "id": "bcf2209c-108d-3e53-a347-89df0a88f9e4",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 2,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work"
+  },
+  {
+   "begin": null,
+   "attributes": [],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 3,
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "e405c071-b184-32b8-aaae-7f5816418977",
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau II. No. 9. Danse suppliante de Chlo\u00e9",
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward"
+  }
+ ],
+ "language": "zxx",
+ "aliases": []
+}

@@ -3254,5 +3254,271 @@ class GayneSceneLevelTopWorkIntegrationTestCase(ClassicalExtrasTestCase):
                     "drain order %r changed the tags" % order)
 
 
+class DaphnisPartialRecordingCrashTestCase(ClassicalExtrasTestCase):
+    """End-to-end guard for release 99feb608 (Ravel: Daphnis et Chloe), which
+    aborted tagging outright when "include partial recordings" was on.
+
+    MusicBrainz allows two relations between one recording and one work, and
+    this release uses that: most recordings carry BOTH a 'partial' performance
+    relation and a plain one. Several (d1t7, d1t9, d1t10) point both relations
+    at the SAME work.
+
+    That broke node identity twice. A node is keyed by its id TUPLE, so:
+
+    1. build_work_info de-duplicated work NAMES but not work IDS, so the two
+       relations appended the same id twice and the track's node was keyed
+       ('X', 'X') -- a different node from ('X',), which is the only spelling
+       anything else builds.
+    2. work_process then renames a node in place as its own parents turn up,
+       so ('X',) becomes ('X', 'X-parent'). A child still names its parent by
+       the old tuple, and the bare .index(prev_ids) raised ValueError straight
+       out of the webservice callback, abandoning the release.
+
+    With cwp_partial off the album was always fine, which is why this needed
+    the option on to reproduce."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "daphnis")
+    _REL = "99feb608-f52c-4c7c-a0ed-2d9d3200e3f9"
+    _BALLET = "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"    # Daphnis et Chloe
+    # Tracks whose two relations both point at the same work.
+    _DUPLICATE_RELATION_TRACKS = ("d1t1", "d1t2", "d1t7", "d1t9", "d1t10")
+    # (label, disc, track, recording id, work id(s))
+    _TRACKS = [
+        ('d1t1', 1, 1, '03e53458-39f8-482a-b470-80a5a70d15bf',
+         '210c1890-db08-324d-a0b4-fc09c388152f'),
+        ('d1t2', 1, 2, '8a7fa542-9262-4a4b-b999-bf29444e7aa1',
+         '210c1890-db08-324d-a0b4-fc09c388152f'),
+        ('d1t3', 1, 3, 'ac277cd8-f804-409c-8962-f1bc1474eebf',
+         '12b7d2c7-2c8d-375f-9e3c-151cf875c781'),
+        ('d1t4', 1, 4, '1b5d9fd9-dfaf-4e3b-9442-4fabb00022a0',
+         '5d951041-56ed-3731-9994-709e8218f471'),
+        ('d1t5', 1, 5, '3d38f2bc-9b5d-46a6-a7d8-fa5c803284ef',
+         '70e3948f-db7c-3b31-95e4-70baa564a393'),
+        ('d1t6', 1, 6, '54d756d9-1391-4710-a134-29c535fa4305',
+         ['c757f3a9-6f6c-3e06-af1a-04f26ff7b36e', '70e3948f-db7c-3b31-95e4-70baa564a393']),
+        ('d1t7', 1, 7, '13ae0661-1a3c-47ac-9b2c-85cca4c1def7',
+         'c757f3a9-6f6c-3e06-af1a-04f26ff7b36e'),
+        ('d1t8', 1, 8, '950e84f8-5ce2-4ec0-9460-723896364f96',
+         ['1cebc96d-b4ed-3615-90d5-dbc26c381fb2', 'c757f3a9-6f6c-3e06-af1a-04f26ff7b36e']),
+        ('d1t9', 1, 9, '763e80a6-d603-4c77-abc6-a07c20c70553',
+         '1cebc96d-b4ed-3615-90d5-dbc26c381fb2'),
+        ('d1t10', 1, 10, 'bd9fcffb-0eb5-4f75-9fc8-826868525e24',
+         '1cebc96d-b4ed-3615-90d5-dbc26c381fb2'),
+        ('d1t11', 1, 11, '65a4ff28-8cdd-4403-9bf2-e0e8bae67494',
+         ['1cebc96d-b4ed-3615-90d5-dbc26c381fb2', 'aaaff290-f883-368f-bb5d-91e76001c734']),
+        ('d1t12', 1, 12, '10bb3689-09a8-4e2d-a475-cd457105af7b',
+         ['aaaff290-f883-368f-bb5d-91e76001c734', 'bcf2209c-108d-3e53-a347-89df0a88f9e4']),
+        ('d1t13', 1, 13, '24c23dba-232b-4e40-8443-3992edc5e697',
+         'e405c071-b184-32b8-aaae-7f5816418977'),
+        ('d1t14', 1, 14, '7494b3ac-59b4-4beb-a275-f5dae57931df',
+         'e405c071-b184-32b8-aaae-7f5816418977'),
+        ('d1t15', 1, 15, 'e5b6e25f-b327-45b2-b855-a973cac9dc18',
+         '9554228e-79e2-33df-a9af-5fa96f69a28c'),
+        ('d1t16', 1, 16, '59997839-dbae-4350-8739-f83a11c0eb12',
+         '7ee7f3db-c438-3fa5-a30b-ca40499c97d6'),
+        ('d1t17', 1, 17, '2a025187-c9b8-4bf8-9609-f0c96307ffdf',
+         '7ee7f3db-c438-3fa5-a30b-ca40499c97d6'),
+        ('d1t18', 1, 18, '8d5613ab-b5f8-451c-98c3-b771ebca1280',
+         '7ee7f3db-c438-3fa5-a30b-ca40499c97d6'),
+        ('d1t19', 1, 19, '1a6bfc9f-0160-4c49-a684-588d8bb71841',
+         '6f8e29d3-d405-3396-a667-7c15274b5a67'),
+    ]
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": True, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    def _run_full_album(self, drain="fifo", partial=True):
+        """Drive all 19 tracks through the real Picard flow. ``partial`` sets
+        cwp_partial: the crash only happens with it on."""
+        import random
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        pl.extend_metadata = lambda *a, **k: None
+        pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": partial, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        class _M(dict):
+            def __getitem__(self, k):
+                return self.get(k, '')
+
+            def getall(self, k):
+                v = self.get(k)
+                return [] if v is None else (v if isinstance(v, list) else [v])
+
+        tracks = {}
+        for label, disc, track, rec_id, work_id in self._TRACKS:
+            tm = _M(musicbrainz_albumid=self._REL,
+                    musicbrainz_recordingid=rec_id,
+                    musicbrainz_workid=work_id, album="Daphnis et Chloe",
+                    title=label, tracknumber=str(track), discnumber=str(disc))
+            tm['~ce_options'] = repr(opts)
+            t = Mock(name=label)
+            t.metadata = tm
+            t._id = label
+            t.__hash__ = lambda self: hash(self._id)
+            t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+            tracks[label] = t
+            album._new_tracks.append(t)
+            node = {'recording': self._load("rec_%s.json" % label)}
+            pl.add_work_info(album, t.metadata, node, {})
+
+        rng = random.Random(drain)
+        while pending:
+            if drain == "fifo":
+                i = 0
+            elif drain == "lifo":
+                i = len(pending) - 1
+            else:
+                i = rng.randrange(len(pending))
+            cb, resp = pending.pop(i)
+            cb(resp, None, None)
+        self._pl = pl
+        self._album = album
+        return tracks
+
+    def test_album_with_partial_recordings_does_not_crash(self):
+        """The reported bug. work_process raised ValueError from inside the
+        webservice callback, so Picard abandoned the release."""
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]:
+            try:
+                self._run_full_album(drain=order)
+            except ValueError as e:
+                self.fail("drain order %r crashed the album: %s" % (order, e))
+
+    def test_node_ids_are_never_repeated_within_a_tuple(self):
+        """Two relations to one work must not spell the node ('X', 'X'):
+        nothing else ever builds that key, so the node is unreachable and its
+        id tuple disagrees in length with its (already de-duplicated) name
+        list."""
+        self._run_full_album()
+        for node in self._pl.work_listing[self._album]:
+            self.assertEqual(
+                len(node), len(set(node)),
+                "node %r repeats a work id" % (node,))
+
+    def test_tagged_tracks_all_resolve_to_the_ballet(self):
+        """Every track that comes out with a top work must report the ballet --
+        this is a single-work release."""
+        tracks = self._run_full_album()
+        for label, _d, _t, _r, _w in self._TRACKS:
+            tm = tracks[label].metadata
+            top = tm['~cwp_workid_top']
+            if not top:
+                continue          # see test_every_track_keeps_its_work_metadata
+            self.assertEqual(
+                tuple(self.mod.str_to_list(top)), (self._BALLET,),
+                "%s should resolve to Daphnis et Chloe" % label)
+
+    def test_album_is_clean_without_partial_recordings(self):
+        """With cwp_partial off the album has always been correct and stable;
+        pinned so the partial-recording work above cannot regress it."""
+        baseline = None
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(6)]:
+            tracks = self._run_full_album(drain=order, partial=False)
+            result = {}
+            for label, _d, _t, _r, _w in self._TRACKS:
+                tm = tracks[label].metadata
+                self.assertEqual(
+                    tuple(self.mod.str_to_list(tm['~cwp_workid_top'])),
+                    (self._BALLET,), "%s (order %s)" % (label, order))
+                result[label] = (self.mod.str_to_list(tm['~cwp_work_top']),
+                                 tm['~cwp_part_levels'])
+            if baseline is None:
+                baseline = result
+            else:
+                self.assertEqual(result, baseline,
+                                 "drain order %r changed the tags" % order)
+
+    @unittest.expectedFailure
+    def test_every_track_keeps_its_work_metadata(self):
+        """KNOWN REMAINING DEFECT (pre-existing, previously masked by the
+        crash). d1t7, d1t9 and d1t10 -- the tracks whose two relations both
+        name the same work -- come out with no work tags at all when
+        cwp_partial is on, even though process_album assigns all 19 tracks the
+        correct top work internally.
+
+        Cause: their parent node was renamed in place as its own parents were
+        discovered, so ('c757f3a9',) and ('1cebc96d',) are no longer keys in
+        work_listing; the children still name the old spelling, create_trackback
+        finds no such parent and (trackback being a defaultdict) grafts an EMPTY
+        node, dropping the subtree. Same shape as the Tristan reduction bug.
+
+        Not fixed here because the stale key has no unambiguous replacement:
+        ('1cebc96d',) is superseded by BOTH ('1cebc96d', '73dd63b8') and
+        ('1cebc96d', '5c211b77'), which are different nodes. Choosing between
+        them is a design change to how node keys mutate."""
+        tracks = self._run_full_album()
+        for label, _d, _t, _r, _w in self._TRACKS:
+            self.assertTrue(
+                tracks[label].metadata['~cwp_workid_top'],
+                "%s lost its work metadata" % label)
+
+    @unittest.expectedFailure
+    def test_partial_result_is_independent_of_lookup_order(self):
+        """KNOWN REMAINING DEFECT (pre-existing). With cwp_partial on, d1t6
+        comes out at part_levels 2 under fifo and 3 under lifo, because whether
+        a parent node has already been renamed depends on the order the async
+        lookups return in. Shares a cause with
+        test_every_track_keeps_its_work_metadata."""
+        baseline = None
+        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(6)]:
+            tracks = self._run_full_album(drain=order)
+            result = {
+                label: (self.mod.str_to_list(tracks[label].metadata['~cwp_work_top']),
+                        tracks[label].metadata['~cwp_part_levels'])
+                for label, _d, _t, _r, _w in self._TRACKS}
+            if baseline is None:
+                baseline = result
+            else:
+                self.assertEqual(result, baseline,
+                                 "drain order %r changed the tags" % order)
+
+
 if __name__ == "__main__":
     unittest.main()

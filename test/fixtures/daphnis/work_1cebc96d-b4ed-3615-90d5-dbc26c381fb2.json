@@ -1,0 +1,178 @@
+{
+ "title": "Daphnis et Chlo\u00e9: Tableau I. No. 6. Nocturne. Danse lente et myst\u00e9rieuse des Nymphes",
+ "attributes": [],
+ "type-id": null,
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "aliases": [
+  {
+   "end": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "Daphnis et Chlo\u00e9, Premi\u00e8re partie: (Une lumi\u00e8re irr\u00e9ele enveloppe le paysage)",
+   "name": "Daphnis et Chlo\u00e9, Premi\u00e8re partie: (Une lumi\u00e8re irr\u00e9ele enveloppe le paysage)",
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "type-id": null
+  },
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "sort-name": "Daphnis et Chlo\u00e9: 1-\u00e8re partie: Danse des 3 nymphes",
+   "name": "Daphnis et Chlo\u00e9: 1-\u00e8re partie: Danse des 3 nymphes",
+   "begin": null,
+   "ended": false,
+   "primary": null,
+   "end": null
+  },
+  {
+   "ended": false,
+   "end": null,
+   "primary": false,
+   "type": "Work name",
+   "type-id": "a18cab3f-0ae2-3978-8f75-dd9c09702b25",
+   "begin": null,
+   "sort-name": "Daphnis et Chlo\u00e9: Tableau I. Une lumi\u00e8re irr\u00e9ele enveloppe le paysage",
+   "name": "Daphnis et Chlo\u00e9: Tableau I. Une lumi\u00e8re irr\u00e9ele enveloppe le paysage",
+   "locale": "fr"
+  }
+ ],
+ "id": "1cebc96d-b4ed-3615-90d5-dbc26c381fb2",
+ "languages": [
+  "zxx"
+ ],
+ "language": "zxx",
+ "relations": [
+  {
+   "artist": {
+    "country": "FR",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "name": "Maurice Ravel",
+    "sort-name": "Ravel, Maurice",
+    "type": "Person",
+    "disambiguation": "French composer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "ended": true,
+   "end": "1912",
+   "target-credit": "",
+   "type": "composer",
+   "source-credit": "",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "begin": "1909",
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "ended": false,
+   "artist": {
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "country": "FR",
+    "name": "Maurice Ravel",
+    "sort-name": "Ravel, Maurice",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "French composer"
+   },
+   "target-credit": "",
+   "end": null,
+   "type-id": "0a1771e1-8639-4740-8a43-bdafc050c3da",
+   "type": "orchestrator",
+   "source-credit": "",
+   "attributes": [],
+   "begin": null,
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "attributes": [],
+   "begin": null,
+   "source-credit": "",
+   "type": "arrangement",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 6. Nocturne. Danse lente et myst\u00e9rieuse des Nymphes",
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "arr. piano",
+    "languages": [
+     "zxx"
+    ],
+    "id": "fc41a37e-a51b-420a-9a87-e0a4330db74d",
+    "language": "zxx"
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false
+  },
+  {
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9, Suite no. 1: I. Nocturne",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "language": "zxx",
+    "id": "0f926d9d-1467-49fd-b5f9-d654b2a89ba2",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "type-id": "7440b539-19ab-4243-8c03-4f5942ca2218",
+   "type": "other version",
+   "source-credit": "",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work"
+  },
+  {
+   "attributes": [],
+   "begin": null,
+   "source-credit": "",
+   "ordering-key": 6,
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I",
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "type-id": null,
+    "language": "zxx",
+    "id": "73dd63b8-543f-4725-b643-ed384fe5dcac",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  }
+ ]
+}

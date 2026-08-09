@@ -1,0 +1,154 @@
+{
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "source-credit": "",
+   "type": "composer",
+   "attributes": [],
+   "begin": "1909",
+   "ended": true,
+   "artist": {
+    "country": "FR",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "sort-name": "Ravel, Maurice",
+    "name": "Maurice Ravel",
+    "disambiguation": "French composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "target-credit": "",
+   "end": "1912"
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "country": "FR",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "French composer",
+    "type": "Person",
+    "sort-name": "Ravel, Maurice",
+    "name": "Maurice Ravel"
+   },
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "type": "orchestrator",
+   "source-credit": "",
+   "type-id": "0a1771e1-8639-4740-8a43-bdafc050c3da",
+   "attributes": [],
+   "begin": null
+  },
+  {
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "arrangement",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "work": {
+    "language": "zxx",
+    "id": "b718202b-9227-468c-9d8c-1015f80e3349",
+    "languages": [
+     "zxx"
+    ],
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau III. No. 10. Lever du jour",
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "arr. piano",
+    "type-id": null
+   },
+   "target-credit": "",
+   "end": null
+  },
+  {
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "type": "arrangement",
+   "source-credit": "",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "title": "Daphnis et Chlo\u00e9: Tableau III. No. 10. Lever du jour",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "catch-all for arrangements",
+    "iswcs": [],
+    "type": null,
+    "languages": [],
+    "id": "30efb6ca-3885-4134-9011-ff26d5ee2cf4",
+    "language": null
+   }
+  },
+  {
+   "attributes": [],
+   "begin": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ordering-key": 1,
+   "source-credit": "",
+   "type": "parts",
+   "work": {
+    "language": "zxx",
+    "id": "0472df2f-8ebd-39ac-ab90-92aef4edaff1",
+    "languages": [
+     "zxx"
+    ],
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau III"
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  }
+ ],
+ "language": "zxx",
+ "languages": [
+  "zxx"
+ ],
+ "id": "9554228e-79e2-33df-a9af-5fa96f69a28c",
+ "aliases": [
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "begin": null,
+   "name": "Daphnis et Chlo\u00e9: Lever du jour",
+   "sort-name": "Daphnis et Chlo\u00e9: Lever du jour",
+   "locale": null
+  }
+ ],
+ "type": null,
+ "iswcs": [],
+ "disambiguation": "",
+ "type-id": null,
+ "attributes": [],
+ "title": "Daphnis et Chlo\u00e9: Tableau III. No. 10. Lever du jour"
+}

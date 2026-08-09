@@ -1,0 +1,127 @@
+{
+ "aliases": [
+  {
+   "type": null,
+   "type-id": null,
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau III: Chlo\u00e9 tombe dans les bras de Daphnis (Live)",
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau III: Chlo\u00e9 tombe dans les bras de Daphnis (Live)",
+   "begin": null,
+   "locale": null,
+   "ended": false,
+   "end": null,
+   "primary": null
+  }
+ ],
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, troisi\u00e8me partie - chlo\u00e9 tombe dans les bras de daphnis",
+ "video": false,
+ "disambiguation": "",
+ "length": 139000,
+ "relations": [
+  {
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "begin": "2016",
+   "attributes": [],
+   "ended": true,
+   "artist": {
+    "type": "Person",
+    "disambiguation": "conductor",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier",
+    "country": "FR",
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39"
+   },
+   "end": "2016",
+   "target-credit": "",
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "target-credit": "",
+   "end": "2016",
+   "ended": true,
+   "artist": {
+    "country": "FR",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "name": "Les Si\u00e8cles",
+    "sort-name": "Si\u00e8cles, Les",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5"
+   },
+   "attributes": [],
+   "begin": "2016",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "begin": "2016",
+   "attributes": [
+    "partial"
+   ],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "work": {
+    "title": "Daphnis et Chlo\u00e9: Tableau III. No. 11. Pantomime (Les amours de Pan et Syrinx)",
+    "attributes": [],
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "id": "7ee7f3db-c438-3fa5-a30b-ca40499c97d6",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "end": "2016",
+   "target-credit": "",
+   "ended": true,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   },
+   "direction": "forward"
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work",
+   "work": {
+    "type-id": null,
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau III. No. 11. Pantomime (Les amours de Pan et Syrinx)",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "id": "7ee7f3db-c438-3fa5-a30b-ca40499c97d6",
+    "language": "zxx"
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance"
+  }
+ ],
+ "id": "8d5613ab-b5f8-451c-98c3-b771ebca1280",
+ "first-release-date": "2017-03-17"
+}

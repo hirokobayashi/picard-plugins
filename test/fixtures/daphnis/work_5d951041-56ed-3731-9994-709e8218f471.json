@@ -1,0 +1,129 @@
+{
+ "languages": [
+  "zxx"
+ ],
+ "id": "5d951041-56ed-3731-9994-709e8218f471",
+ "language": "zxx",
+ "relations": [
+  {
+   "end": "1912",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "country": "FR",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "disambiguation": "French composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Maurice Ravel",
+    "sort-name": "Ravel, Maurice"
+   },
+   "attributes": [],
+   "begin": "1909",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "source-credit": "",
+   "type": "composer",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "attributes": [],
+   "begin": null,
+   "type-id": "0a1771e1-8639-4740-8a43-bdafc050c3da",
+   "source-credit": "",
+   "type": "orchestrator",
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "French composer",
+    "sort-name": "Ravel, Maurice",
+    "name": "Maurice Ravel",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "country": "FR"
+   }
+  },
+  {
+   "ended": false,
+   "work": {
+    "language": "zxx",
+    "id": "54233604-226a-4178-896d-9d3f99bad965",
+    "languages": [
+     "zxx"
+    ],
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "arr. piano",
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 3. Danse grotesque de Dorcon"
+   },
+   "target-credit": "",
+   "end": null,
+   "source-credit": "",
+   "type": "arrangement",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "begin": null,
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "73dd63b8-543f-4725-b643-ed384fe5dcac",
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau I"
+   },
+   "ordering-key": 3,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "aliases": [
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "sort-name": "Daphnis et Chlo\u00e9: 1-\u00e8re partie: Danse grotesque de Dorcon",
+   "name": "Daphnis et Chlo\u00e9: 1-\u00e8re partie: Danse grotesque de Dorcon",
+   "begin": null,
+   "locale": null
+  }
+ ],
+ "type-id": null,
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "title": "Daphnis et Chlo\u00e9: Tableau I. No. 3. Danse grotesque de Dorcon",
+ "attributes": []
+}

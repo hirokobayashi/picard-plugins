@@ -1,0 +1,96 @@
+{
+ "length": 241000,
+ "disambiguation": "",
+ "relations": [
+  {
+   "end": "2016",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "country": "FR",
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier"
+   },
+   "begin": "2016",
+   "attributes": [],
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "end": "2016",
+   "target-credit": "",
+   "artist": {
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "type": "Orchestra",
+    "disambiguation": "",
+    "name": "Les Si\u00e8cles",
+    "sort-name": "Si\u00e8cles, Les",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "country": "FR"
+   },
+   "ended": true,
+   "begin": "2016",
+   "attributes": [],
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "attributes": [],
+   "begin": "2016",
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau III. No. 12. Danse g\u00e9n\u00e9rale (Bacchanale)",
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "type-id": null,
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "6f8e29d3-d405-3396-a667-7c15274b5a67"
+   },
+   "target-credit": "",
+   "end": "2016",
+   "ended": true
+  }
+ ],
+ "id": "1a6bfc9f-0160-4c49-a684-588d8bb71841",
+ "first-release-date": "2017-03-17",
+ "aliases": [
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau III: Anim\u00e9 - Danse g\u00e9n\u00e9rale (Live)",
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau III: Anim\u00e9 - Danse g\u00e9n\u00e9rale (Live)",
+   "begin": null,
+   "ended": false,
+   "primary": null,
+   "end": null
+  }
+ ],
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, troisi\u00e8me partie - anim\u00e9 - danse g\u00e9n\u00e9rale",
+ "video": false
+}

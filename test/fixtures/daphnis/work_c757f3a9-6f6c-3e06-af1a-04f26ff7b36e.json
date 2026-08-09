@@ -1,0 +1,129 @@
+{
+ "disambiguation": "",
+ "iswcs": [],
+ "type": null,
+ "type-id": null,
+ "attributes": [],
+ "title": "Daphnis et Chlo\u00e9: Tableau I. No. 5. Danse de Lyc\u00e9ion",
+ "language": "zxx",
+ "relations": [
+  {
+   "target-credit": "",
+   "end": "1912",
+   "ended": true,
+   "artist": {
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "country": "FR",
+    "name": "Maurice Ravel",
+    "sort-name": "Ravel, Maurice",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "French composer"
+   },
+   "attributes": [],
+   "begin": "1909",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "type": "composer",
+   "source-credit": "",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "ended": false,
+   "artist": {
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "country": "FR",
+    "sort-name": "Ravel, Maurice",
+    "name": "Maurice Ravel",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "French composer"
+   },
+   "target-credit": "",
+   "end": null,
+   "type-id": "0a1771e1-8639-4740-8a43-bdafc050c3da",
+   "type": "orchestrator",
+   "source-credit": "",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "id": "a2a91700-a7a4-450a-93f8-34ec1c9e30d9",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 5. Danse de Lyc\u00e9ion",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "arr. piano",
+    "iswcs": [],
+    "type": null
+   },
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "type": "arrangement",
+   "source-credit": "",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work"
+  },
+  {
+   "ended": false,
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "73dd63b8-543f-4725-b643-ed384fe5dcac",
+    "language": "zxx",
+    "title": "Daphnis et Chlo\u00e9: Tableau I",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null
+   },
+   "end": null,
+   "target-credit": "",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ordering-key": 5,
+   "source-credit": "",
+   "type": "parts",
+   "begin": null,
+   "attributes": [],
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "languages": [
+  "zxx"
+ ],
+ "id": "c757f3a9-6f6c-3e06-af1a-04f26ff7b36e",
+ "aliases": [
+  {
+   "begin": null,
+   "sort-name": "Daphnis et Chlo\u00e9, Premi\u00e8re partie: (Lyc\u00e9nion entre)",
+   "name": "Daphnis et Chlo\u00e9, Premi\u00e8re partie: (Lyc\u00e9nion entre)",
+   "locale": null,
+   "type": null,
+   "type-id": null,
+   "end": null,
+   "primary": null,
+   "ended": false
+  }
+ ]
+}

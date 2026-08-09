@@ -1,0 +1,127 @@
+{
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "2016",
+   "attributes": [],
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "end": "2016",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "country": "FR",
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier"
+   }
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "end": "2016",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "country": "FR",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "type": "Orchestra",
+    "disambiguation": "",
+    "sort-name": "Si\u00e8cles, Les",
+    "name": "Les Si\u00e8cles"
+   },
+   "begin": "2016",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": ""
+  },
+  {
+   "type": "performance",
+   "source-credit": "",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [
+    "partial"
+   ],
+   "begin": "2016",
+   "ended": true,
+   "end": "2016",
+   "target-credit": "",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "c757f3a9-6f6c-3e06-af1a-04f26ff7b36e",
+    "language": "zxx",
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 5. Danse de Lyc\u00e9ion",
+    "attributes": []
+   },
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   },
+   "attribute-values": {}
+  },
+  {
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "id": "c757f3a9-6f6c-3e06-af1a-04f26ff7b36e",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 5. Danse de Lyc\u00e9ion",
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": ""
+   },
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "begin": null
+  }
+ ],
+ "length": 91000,
+ "disambiguation": "",
+ "first-release-date": "2017-03-17",
+ "id": "13ae0661-1a3c-47ac-9b2c-85cca4c1def7",
+ "aliases": [
+  {
+   "locale": null,
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Danse de Lyc\u00e9ion (Live)",
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Danse de Lyc\u00e9ion (Live)",
+   "begin": null,
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  }
+ ],
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, premi\u00e8re partie - danse de lyc\u00e9ion",
+ "video": false
+}

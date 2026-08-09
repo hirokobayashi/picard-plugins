@@ -1,0 +1,127 @@
+{
+ "first-release-date": "2017-03-17",
+ "id": "24c23dba-232b-4e40-8443-3992edc5e697",
+ "relations": [
+  {
+   "end": "2016",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier",
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "country": "FR"
+   },
+   "attributes": [],
+   "begin": "2016",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "type": "conductor",
+   "source-credit": "",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "2016",
+   "ended": true,
+   "artist": {
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "country": "FR",
+    "sort-name": "Si\u00e8cles, Les",
+    "name": "Les Si\u00e8cles",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "type": "Orchestra",
+    "disambiguation": ""
+   },
+   "target-credit": "",
+   "end": "2016",
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "e405c071-b184-32b8-aaae-7f5816418977",
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau II. No. 9. Danse suppliante de Chlo\u00e9"
+   },
+   "target-credit": "",
+   "end": "2016",
+   "ended": true,
+   "attributes": [
+    "partial"
+   ],
+   "begin": "2016",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "attribute-values": {},
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   },
+   "direction": "forward",
+   "target-type": "work"
+  },
+  {
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work",
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau II. No. 9. Danse suppliante de Chlo\u00e9",
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null,
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "e405c071-b184-32b8-aaae-7f5816418977"
+   },
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": ""
+  }
+ ],
+ "length": 218000,
+ "disambiguation": "",
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, deuxi\u00e8me partie - danse suppliante de chlo\u00e9",
+ "video": false,
+ "aliases": [
+  {
+   "end": null,
+   "primary": null,
+   "ended": false,
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau II: Danse suppliante de Chlo\u00e9 (Live)",
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau II: Danse suppliante de Chlo\u00e9 (Live)",
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "type-id": null
+  }
+ ]
+}

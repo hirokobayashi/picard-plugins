@@ -1,0 +1,127 @@
+{
+ "video": false,
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, premi\u00e8re partie - lent [Devant le groupe radieux que forment daphnis et chlo\u00e9 enlac\u00e9s]",
+ "aliases": [
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Lent [devant le groupe radieux que forment Daphnis et Chlo\u00e9 enlac\u00e9s]",
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau I: Lent [devant le groupe radieux que forment Daphnis et Chlo\u00e9 enlac\u00e9s]",
+   "begin": null,
+   "locale": null
+  }
+ ],
+ "id": "54d756d9-1391-4710-a134-29c535fa4305",
+ "first-release-date": "2017-03-17",
+ "length": 102000,
+ "disambiguation": "",
+ "relations": [
+  {
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "begin": "2016",
+   "artist": {
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier",
+    "name": "Fran\u00e7ois\u2010Xavier Roth",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "country": "FR"
+   },
+   "ended": true,
+   "target-credit": "",
+   "end": "2016",
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist",
+   "end": "2016",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "sort-name": "Si\u00e8cles, Les",
+    "name": "Les Si\u00e8cles",
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "country": "FR"
+   },
+   "begin": "2016",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": ""
+  },
+  {
+   "ended": true,
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "c757f3a9-6f6c-3e06-af1a-04f26ff7b36e",
+    "language": "zxx",
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 5. Danse de Lyc\u00e9ion",
+    "attributes": []
+   },
+   "target-credit": "",
+   "end": "2016",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "begin": "2016",
+   "attributes": [
+    "partial"
+   ],
+   "attribute-ids": {
+    "partial": "d2b63be6-91ec-426a-987a-30b47f8aae2d"
+   },
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "begin": null,
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "work": {
+    "title": "Daphnis et Chlo\u00e9: Tableau I. No. 4. Danse l\u00e9g\u00e8re et gracieuse de Daphnis",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "id": "70e3948f-db7c-3b31-95e4-70baa564a393",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false
+  }
+ ]
+}

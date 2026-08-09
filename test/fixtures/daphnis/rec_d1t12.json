@@ -1,0 +1,123 @@
+{
+ "first-release-date": "2017-03-17",
+ "id": "10bb3689-09a8-4e2d-a475-cd457105af7b",
+ "relations": [
+  {
+   "attributes": [],
+   "begin": "2016",
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "end": "2016",
+   "target-credit": "",
+   "artist": {
+    "country": "FR",
+    "id": "16f5c7dc-2311-4fba-b1e3-6cd29aed5b39",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Roth, Fran\u00e7ois\u2010Xavier",
+    "name": "Fran\u00e7ois\u2010Xavier Roth"
+   },
+   "ended": true,
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "id": "416b6251-c71c-492f-9f71-2c58ba55593e",
+    "country": "FR",
+    "sort-name": "Si\u00e8cles, Les",
+    "name": "Les Si\u00e8cles",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "type": "Orchestra",
+    "disambiguation": ""
+   },
+   "ended": true,
+   "end": "2016",
+   "target-credit": "",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "begin": "2016"
+  },
+  {
+   "ended": true,
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "aaaff290-f883-368f-bb5d-91e76001c734",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau II. No. 7. Introduction"
+   },
+   "target-credit": "",
+   "end": "2016",
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "begin": "2016",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": true,
+   "end": "2016",
+   "target-credit": "",
+   "work": {
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau II. No. 8. Danse guerri\u00e8re",
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "bcf2209c-108d-3e53-a347-89df0a88f9e4"
+   },
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "begin": "2016"
+  }
+ ],
+ "disambiguation": "",
+ "length": 271000,
+ "video": false,
+ "title": "Daphnis et chlo\u00e9, m. 57, acte i, deuxi\u00e8me partie - introduction - danse guerri\u00e8re",
+ "aliases": [
+  {
+   "ended": false,
+   "primary": null,
+   "end": null,
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "sort-name": "Daphnis et Chlo\u00e9, M. 57, Tableau II: Introduction - Danse guerri\u00e8re (Live)",
+   "name": "Daphnis et Chlo\u00e9, M. 57, Tableau II: Introduction - Danse guerri\u00e8re (Live)",
+   "begin": null
+  }
+ ]
+}

@@ -1,0 +1,156 @@
+{
+ "id": "bcf2209c-108d-3e53-a347-89df0a88f9e4",
+ "languages": [
+  "zxx"
+ ],
+ "language": "zxx",
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "begin": "1909",
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "type": "composer",
+   "source-credit": "",
+   "end": "1912",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "country": "FR",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "French composer",
+    "type": "Person",
+    "name": "Maurice Ravel",
+    "sort-name": "Ravel, Maurice"
+   }
+  },
+  {
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "French composer",
+    "type": "Person",
+    "name": "Maurice Ravel",
+    "sort-name": "Ravel, Maurice",
+    "id": "6fdd3b3e-1ea6-4da9-8d6f-8f8de01c133a",
+    "country": "FR"
+   },
+   "begin": null,
+   "attributes": [],
+   "type-id": "0a1771e1-8639-4740-8a43-bdafc050c3da",
+   "type": "orchestrator",
+   "source-credit": "",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "begin": null,
+   "attributes": [],
+   "type": "arrangement",
+   "source-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "088db940-c216-4a44-ada0-3e16c48ba8ea",
+    "disambiguation": "arr. piano",
+    "iswcs": [],
+    "type": null,
+    "type-id": null,
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau II. No. 8. Danse guerri\u00e8re"
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false
+  },
+  {
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "id": "b3634a9d-9b37-4196-97c1-829fedfceff6",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "title": "Daphnis et Chlo\u00e9, Suite no. 1: III. Danse guerri\u00e8re",
+    "attributes": []
+   },
+   "type-id": "7440b539-19ab-4243-8c03-4f5942ca2218",
+   "source-credit": "",
+   "type": "other version",
+   "attributes": [],
+   "begin": null,
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "work": {
+    "attributes": [],
+    "title": "Daphnis et Chlo\u00e9: Tableau II",
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null,
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "5c211b77-23f0-34a3-9961-347750040187"
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "ordering-key": 2,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "work"
+  }
+ ],
+ "aliases": [
+  {
+   "primary": null,
+   "end": null,
+   "ended": false,
+   "locale": null,
+   "name": "Daphnis et Chlo\u00e9: Danse guerri\u00e8re",
+   "sort-name": "Daphnis et Chlo\u00e9: Danse guerri\u00e8re",
+   "begin": null,
+   "type-id": null,
+   "type": null
+  }
+ ],
+ "type-id": null,
+ "disambiguation": "",
+ "type": null,
+ "iswcs": [],
+ "title": "Daphnis et Chlo\u00e9: Tableau II. No. 8. Danse guerri\u00e8re",
+ "attributes": []
+}
