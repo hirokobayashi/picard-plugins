@@ -3275,7 +3275,13 @@ class DaphnisPartialRecordingCrashTestCase(ClassicalExtrasTestCase):
        out of the webservice callback, abandoning the release.
 
     With cwp_partial off the album was always fine, which is why this needed
-    the option on to reproduce."""
+    the option on to reproduce.
+
+    Fixing the crash then exposed a third defect underneath it: work_process
+    renamed a parent node in work_listing in place, but that key is SHARED by
+    every child with the same parent set, so the rename stranded the siblings
+    and three tracks emitted no work tags at all. work_listing is additive
+    now, matching what self.parts already did."""
 
     _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "daphnis")
     _REL = "99feb608-f52c-4c7c-a0ed-2d9d3200e3f9"
@@ -3442,18 +3448,19 @@ class DaphnisPartialRecordingCrashTestCase(ClassicalExtrasTestCase):
                 len(node), len(set(node)),
                 "node %r repeats a work id" % (node,))
 
-    def test_tagged_tracks_all_resolve_to_the_ballet(self):
-        """Every track that comes out with a top work must report the ballet --
-        this is a single-work release."""
+    def test_all_tracks_resolve_to_the_ballet(self):
+        """This is a single-work release: all 19 tracks report the ballet."""
         tracks = self._run_full_album()
         for label, _d, _t, _r, _w in self._TRACKS:
             tm = tracks[label].metadata
-            top = tm['~cwp_workid_top']
-            if not top:
-                continue          # see test_every_track_keeps_its_work_metadata
             self.assertEqual(
-                tuple(self.mod.str_to_list(top)), (self._BALLET,),
+                tuple(self.mod.str_to_list(tm['~cwp_workid_top'])),
+                (self._BALLET,),
                 "%s should resolve to Daphnis et Chloe" % label)
+            self.assertEqual(
+                self.mod.str_to_list(tm['~cwp_work_group']),
+                ["Daphnis et Chloé"],
+                "%s work_group should be the ballet" % label)
 
     def test_album_is_clean_without_partial_recordings(self):
         """With cwp_partial off the album has always been correct and stable;
@@ -3475,46 +3482,51 @@ class DaphnisPartialRecordingCrashTestCase(ClassicalExtrasTestCase):
                 self.assertEqual(result, baseline,
                                  "drain order %r changed the tags" % order)
 
-    @unittest.expectedFailure
     def test_every_track_keeps_its_work_metadata(self):
-        """KNOWN REMAINING DEFECT (pre-existing, previously masked by the
-        crash). d1t7, d1t9 and d1t10 -- the tracks whose two relations both
-        name the same work -- come out with no work tags at all when
-        cwp_partial is on, even though process_album assigns all 19 tracks the
-        correct top work internally.
+        """No track may be stranded. d1t7, d1t9 and d1t10 -- the tracks whose
+        two relations both name the same work -- used to come out with no work
+        tags at all when cwp_partial was on, even though process_album assigned
+        all 19 tracks the correct top work internally.
 
-        Cause: their parent node was renamed in place as its own parents were
-        discovered, so ('c757f3a9',) and ('1cebc96d',) are no longer keys in
-        work_listing; the children still name the old spelling, create_trackback
-        finds no such parent and (trackback being a defaultdict) grafts an EMPTY
-        node, dropping the subtree. Same shape as the Tristan reduction bug.
-
-        Not fixed here because the stale key has no unambiguous replacement:
-        ('1cebc96d',) is superseded by BOTH ('1cebc96d', '73dd63b8') and
-        ('1cebc96d', '5c211b77'), which are different nodes. Choosing between
-        them is a design change to how node keys mutate."""
+        Their parent node had been renamed in place as its own parents were
+        discovered, so ('c757f3a9',) and ('1cebc96d',) stopped being keys in
+        work_listing. That key is SHARED by every child with the same parent
+        set, so the rename stranded the siblings: create_trackback found no
+        such parent and (trackback being a defaultdict) grafted an EMPTY node,
+        dropping the subtree. work_listing is additive now, as self.parts
+        already was."""
         tracks = self._run_full_album()
         for label, _d, _t, _r, _w in self._TRACKS:
             self.assertTrue(
                 tracks[label].metadata['~cwp_workid_top'],
                 "%s lost its work metadata" % label)
+            self.assertTrue(
+                tracks[label].metadata['~cwp_work_0'],
+                "%s lost its level-0 work" % label)
 
-    @unittest.expectedFailure
     def test_partial_result_is_independent_of_lookup_order(self):
-        """KNOWN REMAINING DEFECT (pre-existing). With cwp_partial on, d1t6
-        comes out at part_levels 2 under fifo and 3 under lifo, because whether
-        a parent node has already been renamed depends on the order the async
-        lookups return in. Shares a cause with
+        """With cwp_partial on, whether a shared parent node had already been
+        renamed depended on the order the async lookups returned in, so the
+        same release tagged differently from run to run -- d1t6 came out at
+        part_levels 2 under fifo and 3 under lifo, and which tracks were
+        stranded moved around too. Same cause as
         test_every_track_keeps_its_work_metadata."""
         baseline = None
-        for order in ["fifo", "lifo"] + ["rand%d" % i for i in range(6)]:
+        orders = ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]
+        for order in orders:
             tracks = self._run_full_album(drain=order)
             result = {
                 label: (self.mod.str_to_list(tracks[label].metadata['~cwp_work_top']),
+                        self.mod.str_to_list(tracks[label].metadata['~cwp_work_0']),
                         tracks[label].metadata['~cwp_part_levels'])
                 for label, _d, _t, _r, _w in self._TRACKS}
             if baseline is None:
                 baseline = result
+                # sanity: the baseline is the CORRECT answer, not a stable
+                # wrong one -- every track tagged, under the one ballet
+                for label in baseline:
+                    self.assertEqual(baseline[label][0], ["Daphnis et Chloé"],
+                                     "%s top work" % label)
             else:
                 self.assertEqual(result, baseline,
                                  "drain order %r changed the tags" % order)
