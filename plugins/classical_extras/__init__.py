@@ -4759,10 +4759,19 @@ class PartLevels():
                     key = 100 + i
             else:
                 key = 100 + i
-            keyed_workIds[key] = workId
+            # Several works of ONE recording can share an ordering key: a
+            # movement catalogued both as no. 1 of a ballet and as no. 1 of the
+            # concert suite drawn from it scores 1 either way (likewise two
+            # editions of the same movement, each "I." of its own edition).
+            # Assigning keyed_workIds[key] straight kept only the last of them,
+            # so the track was left with whichever work happened to sort last,
+            # the other work's ancestry was never looked up, and the track was
+            # stranded under a top of its own -- taking its movement number
+            # with it. Keep every work under its key.
+            keyed_workIds.setdefault(key, []).append(workId)
         partial = False
-        for key in sorted(keyed_workIds):
-            workId = keyed_workIds[key]
+        for workId in [wid for key in sorted(keyed_workIds)
+                       for wid in keyed_workIds[key]]:
             work_rels = parse_data(
                 release_id,
                 trackXmlNode,
