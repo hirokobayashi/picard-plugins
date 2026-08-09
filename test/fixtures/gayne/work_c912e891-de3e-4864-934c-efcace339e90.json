@@ -1,0 +1,228 @@
+{
+ "relations": [
+  {
+   "type": "composer",
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "end": "1942",
+   "attribute-ids": {},
+   "begin": "1942",
+   "direction": "backward",
+   "attributes": [],
+   "artist": {
+    "sort-name": "Khachaturian, Aram Ilich",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "country": "SU",
+    "type": "Person",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "disambiguation": "Soviet-Armenian composer"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "ended": true
+  },
+  {
+   "end": null,
+   "attribute-ids": {},
+   "direction": "forward",
+   "begin": null,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "disambiguation": "catch-all for unknown versions",
+    "type": null,
+    "languages": [
+     "zxx"
+    ],
+    "id": "4f10d0d0-d644-463e-8791-c65b65d6ff36",
+    "title": "Sabre Dance, from the ballet Gayaneh",
+    "type-id": null,
+    "iswcs": [
+     "T-801.025.525-2",
+     "T-914.729.240-8"
+    ],
+    "language": "zxx",
+    "attributes": []
+   },
+   "attributes": [],
+   "ended": false,
+   "type": "arrangement",
+   "target-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": ""
+  },
+  {
+   "work": {
+    "id": "a2e50b84-979a-49a7-9542-5ff6a56ddf76",
+    "iswcs": [],
+    "type-id": null,
+    "title": "Sabre Dance, from the ballet Gayaneh",
+    "language": "zxx",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "disambiguation": "for piano, Levant",
+    "type": null
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "direction": "forward",
+   "begin": null,
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "arrangement",
+   "target-credit": ""
+  },
+  {
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "arrangement",
+   "ended": false,
+   "work": {
+    "disambiguation": "for violin and piano, arr. Heifetz",
+    "type": null,
+    "id": "628186e4-895c-4fcf-8735-a48e8b5eb8fc",
+    "language": "zxx",
+    "attributes": [],
+    "title": "Gayaneh: Sabre Dance",
+    "type-id": null,
+    "iswcs": [],
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "direction": "forward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {}
+  },
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "arrangement",
+   "ended": false,
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "type-id": null,
+    "title": "Sabre Dance, from the ballet Gayaneh",
+    "iswcs": [],
+    "language": "zxx",
+    "attributes": [],
+    "id": "3900a7d5-b5fe-4b5b-bbe8-d3eadce411cb",
+    "type": null,
+    "disambiguation": "for piano, Solin"
+   },
+   "attributes": [],
+   "direction": "forward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {}
+  },
+  {
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "other version",
+   "target-credit": "",
+   "attributes": [],
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "id": "a3403569-3995-33cd-936a-8d9d19190eef",
+    "title": "Third Suite from the ballet \u201cGayaneh\u201d for orchestra, op. 55: V. Sabre Dance",
+    "type-id": null,
+    "iswcs": [],
+    "attributes": [],
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "7440b539-19ab-4243-8c03-4f5942ca2218",
+   "ended": false,
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "forward"
+  },
+  {
+   "end": null,
+   "attribute-ids": {},
+   "direction": "forward",
+   "begin": null,
+   "type-id": "7440b539-19ab-4243-8c03-4f5942ca2218",
+   "work": {
+    "languages": [
+     "eng"
+    ],
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "title": "(Everytime They Play the) Sabre Dance",
+    "iswcs": [],
+    "language": "eng",
+    "attributes": [],
+    "id": "1390df00-f65e-47da-a40e-e2cfc7eac921",
+    "type": "Song",
+    "disambiguation": "vocal version by The Andrews Sisters"
+   },
+   "attributes": [],
+   "ended": false,
+   "type": "other version",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "attributes": [],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "languages": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "Gayaneh: Act III, Scene VII (Expiation)",
+    "attributes": [],
+    "language": null,
+    "id": "94cc5799-81d1-4447-b22b-979c86025c50"
+   },
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": "",
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 8
+  }
+ ],
+ "type-id": null,
+ "iswcs": [],
+ "title": "Gayaneh: Act III, Scene VII (Expiation). Sabre Dance",
+ "language": null,
+ "attributes": [],
+ "disambiguation": "",
+ "aliases": [],
+ "type": null,
+ "id": "c912e891-de3e-4864-934c-efcace339e90",
+ "languages": []
+}

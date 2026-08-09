@@ -4454,9 +4454,14 @@ class PartLevels():
         # hierarchical iterative work structure - {album: {id: , children:{id:
         # , children{}, id: etc}, id: etc} }
 
-        self.child_listing = collections.defaultdict(list)
-        # contains list of workIds which are descendants of a given workId, to
-        # prevent recursion when adding new ids
+        self.child_listing = collections.defaultdict(set)
+        # contains the set of workIds which are descendants of a given workId,
+        # to prevent recursion when adding new ids. Only ever membership-tested,
+        # never iterated in order, so a set is the natural structure -- and a
+        # necessary one: as a list the descendant propagation in work_process
+        # re-appended the same ids on every visit, growing one listing to 477
+        # million entries (19 distinct) on a 51-track ballet and hanging the
+        # album for good.
 
         self.work_listing = collections.defaultdict(list)
         # contains list of workIds for each album
@@ -5383,11 +5388,15 @@ class PartLevels():
                             for p in parentIds:
                                 for w in wid:
                                     if w != p:
-                                        self.child_listing[p].append(w)
+                                        self.child_listing[p].add(w)
                                     if w in self.child_listing:
-                                        self.child_listing[p] += [
+                                        # Materialise the comprehension before
+                                        # updating: when p == w this would
+                                        # otherwise mutate the very set being
+                                        # iterated.
+                                        self.child_listing[p].update([
                                             d for d in self.child_listing[w]
-                                            if d != p]
+                                            if d != p])
 
                             if parentIds:
                                 if wid in self.works_cache:

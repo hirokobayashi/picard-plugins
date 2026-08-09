@@ -1,0 +1,63 @@
+{
+ "relations": [
+  {
+   "target-credit": "",
+   "type": "composer",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "begin": "1942",
+   "end": "1942",
+   "attribute-ids": {},
+   "ended": true,
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "sort-name": "Khachaturian, Aram Ilich",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "type": "Person",
+    "disambiguation": "Soviet-Armenian composer",
+    "country": "SU"
+   },
+   "attributes": []
+  },
+  {
+   "begin": null,
+   "direction": "backward",
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "attributes": [],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "languages": [],
+    "id": "94cc5799-81d1-4447-b22b-979c86025c50",
+    "type-id": null,
+    "iswcs": [],
+    "title": "Gayaneh: Act III, Scene VII (Expiation)",
+    "language": null,
+    "attributes": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "ordering-key": 4,
+   "target-credit": "",
+   "type": "parts",
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {}
+  }
+ ],
+ "language": null,
+ "attributes": [],
+ "type-id": null,
+ "title": "Gayaneh: Act III, Scene VII (Expiation). Dance of the Young Girls",
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "aliases": [],
+ "id": "e3a17187-8df1-449b-a154-6a9d4f2a51aa",
+ "languages": []
+}

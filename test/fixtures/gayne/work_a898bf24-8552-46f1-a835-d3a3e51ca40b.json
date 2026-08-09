@@ -1,0 +1,62 @@
+{
+ "relations": [
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "composer",
+   "ended": true,
+   "attributes": [],
+   "artist": {
+    "country": "SU",
+    "type": "Person",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "disambiguation": "Soviet-Armenian composer",
+    "sort-name": "Khachaturian, Aram Ilich",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "begin": "1942",
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": "1942"
+  },
+  {
+   "attribute-ids": {},
+   "end": null,
+   "direction": "backward",
+   "begin": null,
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "language": null,
+    "attributes": [],
+    "type-id": null,
+    "title": "Gayaneh: Act II, Scene V (Love)",
+    "iswcs": [],
+    "id": "cf1ed388-904b-4992-a056-76f9ecea6612",
+    "languages": []
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "ended": false,
+   "type": "parts",
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  }
+ ],
+ "language": null,
+ "attributes": [],
+ "type-id": null,
+ "title": "Gayaneh: Act II, Scene V (Love). Gayaneh\u2019s Dance",
+ "iswcs": [],
+ "aliases": [],
+ "disambiguation": "",
+ "type": null,
+ "id": "a898bf24-8552-46f1-a835-d3a3e51ca40b",
+ "languages": []
+}

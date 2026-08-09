@@ -1,0 +1,82 @@
+{
+ "title": "Gayne: Act II. Scene V. \"Love\", 31. Love Duet of Gayne and Armen",
+ "id": "878dc738-a64a-40a2-bb2c-8d695488fd4b",
+ "first-release-date": "2007-11-21",
+ "video": false,
+ "aliases": [],
+ "relations": [
+  {
+   "target-credit": "",
+   "type": "conductor",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "direction": "backward",
+   "begin": "1997-09",
+   "end": "1997-09",
+   "attribute-ids": {},
+   "ended": true,
+   "artist": {
+    "sort-name": "Gorkovenko, Stanislav",
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "SU",
+    "disambiguation": "",
+    "type": "Person",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": []
+  },
+  {
+   "ended": true,
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "country": "RU",
+    "type": "Orchestra",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430",
+    "disambiguation": "St Petersburg Radio & TV Orchestra",
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf"
+   },
+   "attributes": [],
+   "direction": "backward",
+   "begin": "1997-09",
+   "attribute-ids": {},
+   "end": "1997-09",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "St. Petersburg Radio Symphony Orchestra",
+   "type": "performing orchestra"
+  },
+  {
+   "begin": "1997-09",
+   "direction": "forward",
+   "end": "1997-09",
+   "attribute-ids": {},
+   "ended": true,
+   "attributes": [],
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "languages": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "Gayaneh: Act II, Scene V (Love). Scene. Duet of Armen and Gayaneh",
+    "attributes": [],
+    "language": null,
+    "id": "28b92f66-9d35-46ed-9aca-ce12ee3625e0"
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "target-credit": "",
+   "type": "performance",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "length": 272000,
+ "disambiguation": ""
+}

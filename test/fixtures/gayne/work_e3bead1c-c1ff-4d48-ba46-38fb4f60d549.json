@@ -1,0 +1,62 @@
+{
+ "relations": [
+  {
+   "artist": {
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Khachaturian, Aram Ilich",
+    "disambiguation": "Soviet-Armenian composer",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "type": "Person",
+    "country": "SU"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "attributes": [],
+   "ended": true,
+   "attribute-ids": {},
+   "end": "1942",
+   "direction": "backward",
+   "begin": "1942",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "composer",
+   "target-credit": ""
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "parts",
+   "target-credit": "",
+   "attributes": [],
+   "work": {
+    "languages": [],
+    "id": "3b261f86-09a8-4d6a-9ba9-58a7eb19a387",
+    "language": null,
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "title": "Gayaneh: Act II, Scene III (Jealousy)",
+    "disambiguation": "",
+    "type": null
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ended": false,
+   "attribute-ids": {},
+   "end": null,
+   "begin": null,
+   "direction": "backward"
+  }
+ ],
+ "iswcs": [],
+ "type-id": null,
+ "title": "Gayaneh: Act II, Scene III (Jealousy). Scene and Dance",
+ "attributes": [],
+ "language": null,
+ "type": null,
+ "aliases": [],
+ "disambiguation": "",
+ "languages": [],
+ "id": "e3bead1c-c1ff-4d48-ba46-38fb4f60d549"
+}

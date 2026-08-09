@@ -1,0 +1,82 @@
+{
+ "title": "Gayne: Act II. Scene III. \"Jealousy\", 16. Hunters Give Karen a Trial",
+ "first-release-date": "2007-11-21",
+ "id": "0ddafb49-6191-4c7a-8039-de9b007ac9f2",
+ "video": false,
+ "relations": [
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "conductor",
+   "ended": true,
+   "artist": {
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Gorkovenko, Stanislav",
+    "disambiguation": "",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e",
+    "type": "Person",
+    "country": "SU"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "direction": "backward",
+   "begin": "1997-09",
+   "end": "1997-09",
+   "attribute-ids": {}
+  },
+  {
+   "type": "performing orchestra",
+   "target-credit": "St. Petersburg Radio Symphony Orchestra",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "end": "1997-09",
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "1997-09",
+   "artist": {
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra",
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "country": "RU",
+    "disambiguation": "St Petersburg Radio & TV Orchestra",
+    "type": "Orchestra",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430"
+   },
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "ended": true
+  },
+  {
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "performance",
+   "ended": true,
+   "work": {
+    "languages": [],
+    "id": "32393107-f780-4242-a747-03856de55aaf",
+    "title": "Gayaneh: Act II, Scene III (Jealousy). The Hunters test Armen",
+    "type-id": null,
+    "iswcs": [],
+    "language": null,
+    "attributes": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "direction": "forward",
+   "begin": "1997-09",
+   "attribute-ids": {},
+   "end": "1997-09"
+  }
+ ],
+ "aliases": [],
+ "length": 122133,
+ "disambiguation": ""
+}

@@ -1,0 +1,82 @@
+{
+ "relations": [
+  {
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "conductor",
+   "ended": true,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85",
+    "sort-name": "Gorkovenko, Stanislav",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e",
+    "type": "Person",
+    "disambiguation": "",
+    "country": "SU"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "direction": "backward",
+   "begin": "1997-09",
+   "end": "1997-09",
+   "attribute-ids": {}
+  },
+  {
+   "attributes": [],
+   "artist": {
+    "disambiguation": "St Petersburg Radio & TV Orchestra",
+    "type": "Orchestra",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430",
+    "country": "RU",
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra"
+   },
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "ended": true,
+   "end": "1997-09",
+   "attribute-ids": {},
+   "begin": "1997-09",
+   "direction": "backward",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "performing orchestra",
+   "target-credit": "St. Petersburg Radio Symphony Orchestra"
+  },
+  {
+   "ended": true,
+   "attributes": [],
+   "work": {
+    "languages": [],
+    "id": "d534c014-83e5-4187-b871-4e4c6e714516",
+    "attributes": [],
+    "language": null,
+    "type-id": null,
+    "iswcs": [],
+    "title": "Gayaneh: Act III, Scene VI (Conscience). Georgi\u2019s Departure",
+    "disambiguation": "",
+    "type": null
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "begin": "1997-09",
+   "direction": "forward",
+   "end": "1997-09",
+   "attribute-ids": {},
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "performance"
+  }
+ ],
+ "aliases": [],
+ "disambiguation": "",
+ "length": 134000,
+ "first-release-date": "2007-11-21",
+ "id": "9cbd0f45-bebd-4edd-82ba-b5c6795d9ca1",
+ "title": "Gayne: Act III. Scene VI. \"Conscience\", 40. Exit of Georgiy",
+ "video": false
+}

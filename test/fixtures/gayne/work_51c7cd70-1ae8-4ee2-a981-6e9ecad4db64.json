@@ -1,0 +1,62 @@
+{
+ "relations": [
+  {
+   "target-credit": "",
+   "type": "composer",
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "begin": "1942",
+   "direction": "backward",
+   "end": "1942",
+   "attribute-ids": {},
+   "ended": true,
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Khachaturian, Aram Ilich",
+    "disambiguation": "Soviet-Armenian composer",
+    "type": "Person",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "country": "SU"
+   }
+  },
+  {
+   "ended": false,
+   "work": {
+    "language": null,
+    "attributes": [],
+    "type-id": null,
+    "title": "Gayaneh: Act II, Scene V (Love)",
+    "iswcs": [],
+    "id": "cf1ed388-904b-4992-a056-76f9ecea6612",
+    "languages": [],
+    "type": null,
+    "disambiguation": ""
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "direction": "backward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {},
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "target-credit": "",
+   "type": "parts"
+  }
+ ],
+ "attributes": [],
+ "language": null,
+ "type-id": null,
+ "title": "Gayaneh: Act II, Scene V (Love). Scene. Armen and Georgi",
+ "iswcs": [],
+ "aliases": [],
+ "disambiguation": "",
+ "type": null,
+ "languages": [],
+ "id": "51c7cd70-1ae8-4ee2-a981-6e9ecad4db64"
+}

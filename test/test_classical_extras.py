@@ -2934,5 +2934,325 @@ class MergeDuplicateTopsTestCase(ClassicalExtrasTestCase):
 
 
 
+class GayneSceneLevelTopWorkIntegrationTestCase(ClassicalExtrasTestCase):
+    """End-to-end guard for release 52a8033b (Khachaturian: Gayne, 2 discs).
+
+    Most tracks are linked to a leaf movement work, but three are linked
+    straight at a *container* work instead: disc 1 track 12 to "Act I, Scene II
+    (Recovery)" and disc 2 track 7 to "Act II, Scene V (Love)" (disc 1 tracks
+    4/5 share one leaf). Those scene works are also intermediate nodes in their
+    neighbours' hierarchies, so the plugin sees the same node both as a track's
+    own work and as a parent of other tracks' works.
+
+    Reported against d1t12, whose top work came out as the scene itself rather
+    than the ballet. The MusicBrainz cause was that "Act I, Scene II (Recovery)"
+    (and "Act I, Scene I (Spring)") had no "part of" link to "Act I", making
+    them parentless roots; both have since been linked. This test pins the
+    resolved hierarchy so a regression -- in the plugin or in a refetch of the
+    fixtures -- is caught: every track on the album must report the ballet as
+    its top work, and the scene-linked tracks must sit at the right depth."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "gayne")
+    _REL = "52a8033b-562d-4f2d-9663-eda85e102775"
+    _BALLET = "693e681e-98a1-4d21-9bc8-e084a248461d"   # Gayaneh, op. 50
+    _ACT1 = "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"     # Gayaneh: Act I
+    _SCENE2 = "54f203c0-b992-40da-a318-a35310f887bb"   # Act I, Scene II (Recovery)
+    # (label, disc, track, recording id, work id)
+    _TRACKS = [
+        ("d1t1", 1, 1, "9eecb165-6c44-4093-a116-1924b25dda9e",
+         "dbb66a91-1290-4e01-a8c4-2928487a6494"),
+        ("d1t2", 1, 2, "c77edf31-bd7d-4cd0-94cb-914718d626cb",
+         "94859fab-d983-4cde-802f-8cb11a5c9d07"),
+        ("d1t3", 1, 3, "c6dadf43-8250-4609-9a70-4903f55cf99b",
+         "0c04b182-09ec-4c3c-b499-0680a5063bd3"),
+        ("d1t4", 1, 4, "4a050941-29ba-4fd6-ac5e-bb5171ba72ec",
+         "a0bb5503-3f9a-4359-8f11-c27d4d518b82"),
+        ("d1t5", 1, 5, "867c15f1-ee10-4730-ab36-24f2340dfec6",
+         "a0bb5503-3f9a-4359-8f11-c27d4d518b82"),
+        ("d1t6", 1, 6, "74142639-a3cb-4014-aef9-52b4c3beb303",
+         "af1f7eea-35bd-4d04-9d8a-3b1497afec88"),
+        ("d1t7", 1, 7, "85fe59ba-86ed-4d37-b074-e0433a89ce57",
+         "aebdbf15-ef7c-4729-bc35-002d7233864c"),
+        ("d1t8", 1, 8, "ed682416-8e56-44f6-aa84-c0292f57b793",
+         "6035f51e-0559-4444-9310-cbc3b79a960e"),
+        ("d1t9", 1, 9, "87fe8719-162a-43ec-b5bc-638dc65a1d0a",
+         "f5c29d63-43f8-420b-bd8d-97a2dc9defb0"),
+        ("d1t10", 1, 10, "795afa97-4c76-4543-ab38-ae43876be4b4",
+         "fb479c25-21be-4fba-aaa5-78693fcaafdd"),
+        ("d1t11", 1, 11, "18abc847-4fc9-4395-afb7-9146d2200e8c",
+         "8b1941d9-0bdd-408e-8d6a-e96b6a52dfc9"),
+        ("d1t12", 1, 12, "2f741d26-cfdd-44c4-b582-8463ec0a36ab",
+         "54f203c0-b992-40da-a318-a35310f887bb"),
+        ("d1t13", 1, 13, "1825a0fc-d666-4729-802c-b71fd6f7fac8",
+         "85878830-b5a9-483b-abdd-f1f2819cd754"),
+        ("d1t14", 1, 14, "3b2d9191-6571-438e-9b27-1fecabea072a",
+         "85878830-b5a9-483b-abdd-f1f2819cd754"),
+        ("d1t15", 1, 15, "d3d1b6bf-8214-4421-bc41-59ddae91482d",
+         "ffc2f12f-a6f4-45cc-a8b1-dd44a2df5c7f"),
+        ("d1t16", 1, 16, "dc3d407c-684a-4074-8169-33a53082d517",
+         "6f771810-5e09-4f8a-ab3f-f28bc6328da1"),
+        ("d1t17", 1, 17, "0ddafb49-6191-4c7a-8039-de9b007ac9f2",
+         "32393107-f780-4242-a747-03856de55aaf"),
+        ("d1t18", 1, 18, "7daf5829-4e38-4344-9d59-d214cb4b29a1",
+         "4f06bae9-ed7b-474f-9fd1-aedb613a5131"),
+        ("d1t19", 1, 19, "a4d7b324-6d66-418f-b688-e7dfb34d02e2",
+         "b89c6302-e6a4-4627-b6d7-838050ad3e8d"),
+        ("d1t20", 1, 20, "aa8a6144-78be-4fc6-bfac-1e7886c27a7f",
+         "a4222150-2bb1-4a7d-b402-80064b93b1ca"),
+        ("d1t21", 1, 21, "32b68003-21f8-400c-b3d4-174d10b42270",
+         "e3bead1c-c1ff-4d48-ba46-38fb4f60d549"),
+        ("d1t22", 1, 22, "630d053a-0893-4080-8a02-0bfff4fcdc03",
+         "64ae2dc6-b2e6-4ee5-add7-108328f553b9"),
+        ("d1t23", 1, 23, "1c852c21-bfb0-49d3-b14d-99bfa67ed182",
+         "4b4d382b-6994-4a44-87ed-7a9cd7bfeac8"),
+        ("d1t24", 1, 24, "fb2d1a59-a08f-49f3-9598-83929c61913c",
+         "30205ad2-bcff-4757-8a1b-c2c4220d63f0"),
+        ("d2t1", 2, 1, "1d6f95fc-fa07-4666-8a9f-5f7417606406",
+         "25dbb630-2019-4daf-a26c-2d75a5e11b45"),
+        ("d2t2", 2, 2, "d3220710-5d37-482d-af89-f74c86f2f399",
+         "0e776558-af02-4bdd-8d5f-8a0313eddf41"),
+        ("d2t3", 2, 3, "8707181c-15f5-497e-b4c1-ac849b082b33",
+         "77995ffa-460f-48b3-8a25-f364e6d6ca6f"),
+        ("d2t4", 2, 4, "25f2f3f8-2d59-4930-9d08-bc12d1240381",
+         "55fcadd4-cec1-4c5c-8e64-ccf4bc631570"),
+        ("d2t5", 2, 5, "958764ae-7c0d-4ccf-bf09-bf009b86df46",
+         "a898bf24-8552-46f1-a835-d3a3e51ca40b"),
+        ("d2t6", 2, 6, "d069f937-8477-4aea-80a8-5daf52f3a92e",
+         "64ef66f8-8623-4365-bc2f-fd27ae1bd426"),
+        ("d2t7", 2, 7, "17f88bf3-996a-432e-bcb5-f177083fc792",
+         "cf1ed388-904b-4992-a056-76f9ecea6612"),
+        ("d2t8", 2, 8, "878dc738-a64a-40a2-bb2c-8d695488fd4b",
+         "28b92f66-9d35-46ed-9aca-ce12ee3625e0"),
+        ("d2t9", 2, 9, "3b84970c-559a-4680-991e-6560e1b2114b",
+         "51c7cd70-1ae8-4ee2-a981-6e9ecad4db64"),
+        ("d2t10", 2, 10, "09fedfc4-b336-46de-90aa-315c153aea14",
+         "bd64cb18-353a-4ca9-959a-6423f1a02fc5"),
+        ("d2t11", 2, 11, "8b08f65c-61e0-4f59-9faa-1dce7bdd6956",
+         "e520e450-6c09-46f1-be8c-5bff9d728a32"),
+        ("d2t12", 2, 12, "e651039a-1995-406b-be02-35205f44dac4",
+         "1b33d9d1-3ec8-4155-b20f-be225d59b64b"),
+        ("d2t13", 2, 13, "8dfe6c45-a06d-4906-bf6d-4c1ab7c38836",
+         "f9d6ed83-55f9-480a-8e58-ec72463441e1"),
+        ("d2t14", 2, 14, "c1439bed-4460-4521-b4f1-9b796b3ff2c0",
+         "f9d6ed83-55f9-480a-8e58-ec72463441e1"),
+        ("d2t15", 2, 15, "53e1d322-799c-4bcf-9ab0-c2b1c8ef7e7a",
+         "b6171611-c838-4384-9b45-eb0055e41d2b"),
+        ("d2t16", 2, 16, "2df8689b-c065-4124-9fec-873a6b1c5629",
+         "0d9a1d30-3554-44e5-9206-d8f202ca3f58"),
+        ("d2t17", 2, 17, "9cbd0f45-bebd-4edd-82ba-b5c6795d9ca1",
+         "d534c014-83e5-4187-b871-4e4c6e714516"),
+        ("d2t18", 2, 18, "58106303-f34f-4686-a496-6b8b7216cbbe",
+         "a69996f6-1597-328c-bb27-ffbf0efdba6b"),
+        ("d2t19", 2, 19, "a4238b68-2885-4b20-9b8e-8971992b2189",
+         "327d8b52-9c79-4dba-8870-8063e95cc4ed"),
+        ("d2t20", 2, 20, "df16eda9-42b3-422a-8b73-f6860e232ac9",
+         "f11929a3-1a7c-45b4-9352-2a0624160dee"),
+        ("d2t21", 2, 21, "cb3fd077-35e6-48de-add1-14825783f02e",
+         "e3a17187-8df1-449b-a154-6a9d4f2a51aa"),
+        ("d2t22", 2, 22, "560897c5-695e-4924-9484-0be2a95100f7",
+         "0c9f5f62-c4d0-43bb-822a-e7f0c5b296cf"),
+        ("d2t23", 2, 23, "665afb85-40b0-4de5-ab29-6774fbe2d47f",
+         "b04bc4fa-24da-4ebf-91f7-3e4f0851224b"),
+        ("d2t24", 2, 24, "270d655c-e4eb-474b-a340-4449811738e0",
+         "908914da-eae3-4ec3-9a45-8f66ed730381"),
+        ("d2t25", 2, 25, "0aeec881-06f8-45e5-9e6e-2a3f86f0fbcb",
+         "c912e891-de3e-4864-934c-efcace339e90"),
+        ("d2t26", 2, 26, "cea3bb69-e95c-43d0-90fd-7ae96e8ffe28",
+         "ae240c62-610c-4404-b12b-1cec623d0b48"),
+        ("d2t27", 2, 27, "c05f98e1-c1ad-4127-8c72-dc0012c1ff98",
+         "9b6a0ecc-685c-4adf-a1ca-4070d0974cb0"),
+    ]
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": False, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    def _make_track(self, label, disc, track, rec_id, work_id, opts):
+        class _M(dict):
+            def __getitem__(self, k):
+                return self.get(k, '')
+
+            def getall(self, k):
+                v = self.get(k)
+                return [] if v is None else (v if isinstance(v, list) else [v])
+        tm = _M(musicbrainz_albumid=self._REL, musicbrainz_recordingid=rec_id,
+                musicbrainz_workid=work_id, album="Gayne",
+                title=label, tracknumber=str(track), discnumber=str(disc))
+        tm['~ce_options'] = repr(opts)
+        from unittest.mock import Mock
+        t = Mock(name=label)
+        t.metadata = tm
+        t._id = label
+        t.__hash__ = lambda self: hash(self._id)
+        t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+        return t
+
+    def _run_full_album(self, drain="fifo"):
+        """Drive all 51 tracks through the real Picard flow: build every track,
+        then drain the queued webservice callbacks so process_album runs once at
+        the end. ``drain`` picks the order the lookups are answered in."""
+        import random
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        pl.extend_metadata = lambda *a, **k: None
+        pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": False, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        tracks = {}
+        for label, disc, track, rec_id, work_id in self._TRACKS:
+            t = self._make_track(label, disc, track, rec_id, work_id, opts)
+            tracks[label] = t
+            album._new_tracks.append(t)
+            node = {'recording': self._load("rec_%s.json" % label)}
+            pl.add_work_info(album, t.metadata, node, {})
+
+        rng = random.Random(drain)
+        while pending:
+            if drain == "fifo":
+                i = 0
+            elif drain == "lifo":
+                i = len(pending) - 1
+            else:
+                i = rng.randrange(len(pending))
+            cb, resp = pending.pop(i)
+            cb(resp, None, None)
+        self._pl = pl
+        return tracks
+
+    def test_descendant_listing_does_not_blow_up(self):
+        """Guard against the descendant-propagation blowup this album exposed.
+
+        work_process records, for each parent, every descendant reachable
+        below it. That listing was a plain list appended to on every visit, so
+        re-visiting a work re-appended its whole descendant list to the
+        parent's -- self-concatenation that doubles on each pass. On this
+        51-track ballet an unlucky lookup order grew one listing past 477
+        MILLION entries holding just 19 distinct ids, and the album never
+        finished tagging: Picard span forever, eating memory.
+
+        The listing is only ever membership-tested, so it is a set and the
+        propagation is idempotent. Asserted directly because the symptom is a
+        hang, which no assertion would otherwise catch -- the suite would just
+        stop."""
+        self._run_full_album(drain="rand1")
+        listing = self._pl.child_listing
+        for parent, descendants in listing.items():
+            self.assertIsInstance(
+                descendants, set,
+                "child_listing[%r] must be a set to stay idempotent" % (parent,))
+            self.assertNotIn(
+                parent, descendants,
+                "%r recorded as its own descendant" % (parent,))
+        biggest = max((len(v) for v in listing.values()), default=0)
+        # The whole album is 58 works, so no parent can legitimately have more
+        # descendants than that; the bug produced eight-figure counts.
+        self.assertLessEqual(
+            biggest, 58,
+            "descendant listing has grown beyond the album's work count")
+
+    def test_scene_linked_track_gets_the_ballet_as_top_work(self):
+        """The reported failure: d1t12 is linked directly at "Act I, Scene II
+        (Recovery)", which used to be a parentless work and so became its own
+        top. It must resolve up through "Act I" to the ballet."""
+        tm = self._run_full_album()["d1t12"].metadata
+        self.assertEqual(
+            tuple(self.mod.str_to_list(tm['~cwp_workid_top'])), (self._BALLET,))
+        self.assertEqual(
+            self.mod.str_to_list(tm['~cwp_work_top']), ["Gayaneh, op. 50"])
+        self.assertEqual(
+            self.mod.str_to_list(tm['~cwp_work_group']), ["Gayaneh, op. 50"])
+
+    def test_whole_album_shares_one_top_work(self):
+        """A single-work release: all 51 tracks belong to the one ballet, so no
+        track may be orphaned or land on a scene/act as its own top."""
+        tracks = self._run_full_album()
+        for label, _d, _t, _r, _w in self._TRACKS:
+            tm = tracks[label].metadata
+            self.assertEqual(
+                tuple(self.mod.str_to_list(tm['~cwp_workid_top'])),
+                (self._BALLET,),
+                "%s should resolve to the ballet, got %r"
+                % (label, tm['~cwp_work_top']))
+            self.assertEqual(
+                self.mod.str_to_list(tm['~cwp_work_group']),
+                ["Gayaneh, op. 50"],
+                "%s work_group should be the ballet" % label)
+
+    def test_scene_linked_track_keeps_the_scene_as_its_own_work(self):
+        """d1t12's own work stays the scene, sitting one level under Act I --
+        the fix must lift its top, not flatten the track into the act."""
+        tm = self._run_full_album()["d1t12"].metadata
+        self.assertEqual(
+            tuple(self.mod.str_to_list(tm['~cwp_workid_0'])), (self._SCENE2,))
+        self.assertEqual(
+            tuple(self.mod.str_to_list(tm['~cwp_workid_1'])), (self._ACT1,))
+        self.assertEqual(tm['~cwp_part_levels'], '2')
+
+    def test_result_is_independent_of_lookup_order(self):
+        """Picard answers the work lookups in network-completion order, so the
+        tags must not depend on which order this album's 50-odd lookups come
+        back in."""
+        orders = ["fifo", "lifo"] + ["rand%d" % i for i in range(12)]
+        baseline = None
+        for order in orders:
+            tracks = self._run_full_album(drain=order)
+            result = {
+                label: (self.mod.str_to_list(tracks[label].metadata['~cwp_work_top']),
+                        self.mod.str_to_list(tracks[label].metadata['~cwp_work_group']))
+                for label, _d, _t, _r, _w in self._TRACKS}
+            if baseline is None:
+                baseline = result
+                self.assertEqual(baseline["d1t12"][0], ["Gayaneh, op. 50"])
+            else:
+                self.assertEqual(
+                    result, baseline,
+                    "drain order %r changed the tags" % order)
+
+
 if __name__ == "__main__":
     unittest.main()

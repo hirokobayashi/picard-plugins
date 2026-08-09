@@ -1,0 +1,82 @@
+{
+ "title": "Gayne: Act III. Scene VI. \"Conscience\", 35. Monologue of Aysha (Memories of Georgiy)",
+ "first-release-date": "2007-11-21",
+ "id": "e651039a-1995-406b-be02-35205f44dac4",
+ "video": false,
+ "relations": [
+  {
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "conductor",
+   "target-credit": "",
+   "artist": {
+    "country": "SU",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e",
+    "type": "Person",
+    "disambiguation": "",
+    "sort-name": "Gorkovenko, Stanislav",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "ended": true,
+   "attribute-ids": {},
+   "end": "1997-09",
+   "direction": "backward",
+   "begin": "1997-09"
+  },
+  {
+   "end": "1997-09",
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "1997-09",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra",
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "country": "RU",
+    "disambiguation": "St Petersburg Radio & TV Orchestra",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430",
+    "type": "Orchestra"
+   },
+   "attributes": [],
+   "ended": true,
+   "type": "performing orchestra",
+   "target-credit": "St. Petersburg Radio Symphony Orchestra",
+   "target-type": "artist",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "performance",
+   "target-credit": "",
+   "work": {
+    "type": null,
+    "disambiguation": "",
+    "languages": [],
+    "title": "Gayaneh: Act III, Scene VI (Conscience). Aisha\u2019s Monologue",
+    "type-id": null,
+    "iswcs": [],
+    "language": null,
+    "attributes": [],
+    "id": "1b33d9d1-3ec8-4155-b20f-be225d59b64b"
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "ended": true,
+   "end": "1997-09",
+   "attribute-ids": {},
+   "direction": "forward",
+   "begin": "1997-09"
+  }
+ ],
+ "aliases": [],
+ "length": 259000,
+ "disambiguation": ""
+}

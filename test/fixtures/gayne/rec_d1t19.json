@@ -1,0 +1,82 @@
+{
+ "disambiguation": "",
+ "relations": [
+  {
+   "attributes": [],
+   "artist": {
+    "disambiguation": "",
+    "type": "Person",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e",
+    "country": "SU",
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Gorkovenko, Stanislav"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "ended": true,
+   "attribute-ids": {},
+   "end": "1997-09",
+   "begin": "1997-09",
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "conductor",
+   "target-credit": ""
+  },
+  {
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "target-credit": "St. Petersburg Radio Symphony Orchestra",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf",
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430",
+    "type": "Orchestra",
+    "disambiguation": "St Petersburg Radio & TV Orchestra",
+    "country": "RU"
+   },
+   "ended": true,
+   "end": "1997-09",
+   "attribute-ids": {},
+   "begin": "1997-09",
+   "direction": "backward"
+  },
+  {
+   "source-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "performance",
+   "ended": true,
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "id": "b89c6302-e6a4-4627-b6d7-838050ad3e8d",
+    "iswcs": [],
+    "type-id": null,
+    "title": "Gayaneh: Act II, Scene III (Jealousy). Dance of Armen and Georgi",
+    "language": null,
+    "attributes": [],
+    "languages": []
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attributes": [],
+   "direction": "forward",
+   "begin": "1997-09",
+   "end": "1997-09",
+   "attribute-ids": {}
+  }
+ ],
+ "aliases": [],
+ "length": 122533,
+ "video": false,
+ "id": "a4d7b324-6d66-418f-b688-e7dfb34d02e2",
+ "first-release-date": "2007-11-21",
+ "title": "Gayne: Act II. Scene III. \"Jealousy\", 18. Dance of Aremen and Georgiy"
+}

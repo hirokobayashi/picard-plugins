@@ -1,0 +1,63 @@
+{
+ "type-id": null,
+ "title": "Gayaneh: Act III, Scene VI (Conscience). The Mountain Village",
+ "iswcs": [],
+ "attributes": [],
+ "language": null,
+ "relations": [
+  {
+   "ended": true,
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "artist": {
+    "disambiguation": "Soviet-Armenian composer",
+    "type": "Person",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "country": "SU",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Khachaturian, Aram Ilich"
+   },
+   "attributes": [],
+   "direction": "backward",
+   "begin": "1942",
+   "end": "1942",
+   "attribute-ids": {},
+   "source-credit": "",
+   "target-type": "artist",
+   "attribute-values": {},
+   "target-credit": "",
+   "type": "composer"
+  },
+  {
+   "direction": "backward",
+   "begin": null,
+   "end": null,
+   "attribute-ids": {},
+   "ended": false,
+   "work": {
+    "id": "e7157173-14ff-4eab-a305-adfa84be9498",
+    "language": null,
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "Gayaneh: Act III, Scene VI (Conscience)",
+    "languages": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "target-credit": "",
+   "ordering-key": 1,
+   "type": "parts",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "languages": [],
+ "id": "e520e450-6c09-46f1-be8c-5bff9d728a32",
+ "type": null,
+ "aliases": [],
+ "disambiguation": ""
+}

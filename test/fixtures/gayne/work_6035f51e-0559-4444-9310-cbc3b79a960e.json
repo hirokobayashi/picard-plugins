@@ -1,0 +1,93 @@
+{
+ "aliases": [],
+ "disambiguation": "",
+ "type": null,
+ "languages": [],
+ "id": "6035f51e-0559-4444-9310-cbc3b79a960e",
+ "relations": [
+  {
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "composer",
+   "target-credit": "",
+   "artist": {
+    "sort-name": "Khachaturian, Aram Ilich",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "id": "fa25cd1f-beeb-4718-b4bb-d3da4f53539f",
+    "country": "SU",
+    "type": "Person",
+    "name": "\u0531\u0580\u0561\u0574 \u053d\u0561\u0579\u0561\u057f\u0580\u0575\u0561\u0576",
+    "disambiguation": "Soviet-Armenian composer"
+   },
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "attributes": [],
+   "ended": true,
+   "attribute-ids": {},
+   "end": "1942",
+   "direction": "backward",
+   "begin": "1942"
+  },
+  {
+   "attribute-ids": {
+    "movement": "1d05bc4b-9884-4c9f-9f69-616f119047f3"
+   },
+   "end": null,
+   "begin": null,
+   "direction": "backward",
+   "attributes": [
+    "movement"
+   ],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "languages": [],
+    "title": "Gayaneh: Act I",
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "iswcs": [],
+    "attributes": [],
+    "language": null,
+    "id": "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad",
+    "type": "Ballet",
+    "disambiguation": ""
+   },
+   "ended": false,
+   "type": "parts",
+   "ordering-key": 3,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-values": {},
+   "source-credit": ""
+  },
+  {
+   "end": null,
+   "attribute-ids": {},
+   "begin": null,
+   "direction": "backward",
+   "attributes": [],
+   "work": {
+    "languages": [],
+    "language": null,
+    "attributes": [],
+    "iswcs": [],
+    "type-id": null,
+    "title": "Gayaneh: Act I, Scene I (Spring)",
+    "id": "697f1f18-1a3c-4981-85ee-eb2c43e9c971",
+    "type": null,
+    "disambiguation": ""
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ended": false,
+   "type": "parts",
+   "target-credit": "",
+   "ordering-key": 3,
+   "attribute-values": {},
+   "target-type": "work",
+   "source-credit": ""
+  }
+ ],
+ "language": null,
+ "attributes": [],
+ "type-id": null,
+ "title": "Gayaneh: Act I, Scene I (Spring). Dance of Nuneh and Girls",
+ "iswcs": []
+}

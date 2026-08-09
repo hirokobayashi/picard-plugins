@@ -1,0 +1,82 @@
+{
+ "relations": [
+  {
+   "ended": true,
+   "attributes": [],
+   "artist": {
+    "country": "SU",
+    "disambiguation": "",
+    "type": "Person",
+    "name": "\u0421\u0442\u0430\u043d\u0438\u0441\u043b\u0430\u0432 \u0413\u043e\u0440\u043a\u043e\u0432\u0435\u043d\u043a\u043e",
+    "sort-name": "Gorkovenko, Stanislav",
+    "id": "2fc54e56-386e-468b-bc43-0e039bcc7d85",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "begin": "1997-09",
+   "direction": "backward",
+   "attribute-ids": {},
+   "end": "1997-09",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "type": "conductor"
+  },
+  {
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "artist": {
+    "type": "Orchestra",
+    "name": "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0441\u0438\u043c\u0444\u043e\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440 \u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433\u0430",
+    "disambiguation": "St Petersburg Radio & TV Orchestra",
+    "country": "RU",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "id": "74efb400-74d7-4a0d-b3be-745b13425baf",
+    "sort-name": "St. Petersburg Radio & TV Symphony Orchestra"
+   },
+   "ended": true,
+   "end": "1997-09",
+   "attribute-ids": {},
+   "begin": "1997-09",
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "target-credit": "St. Petersburg Radio Symphony Orchestra"
+  },
+  {
+   "target-credit": "",
+   "type": "performance",
+   "source-credit": "",
+   "attribute-values": {},
+   "target-type": "work",
+   "begin": "1997-09",
+   "direction": "forward",
+   "end": "1997-09",
+   "attribute-ids": {},
+   "ended": true,
+   "attributes": [],
+   "work": {
+    "id": "64ef66f8-8623-4365-bc2f-fd27ae1bd426",
+    "attributes": [],
+    "language": null,
+    "title": "Gayaneh: Act II, Scene V (Love). The Blind Armen",
+    "type-id": null,
+    "iswcs": [],
+    "languages": [],
+    "disambiguation": "",
+    "type": null
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0"
+  }
+ ],
+ "disambiguation": "",
+ "aliases": [],
+ "length": 48000,
+ "video": false,
+ "id": "d069f937-8477-4aea-80a8-5daf52f3a92e",
+ "first-release-date": "2007-11-21",
+ "title": "Gayne: Act II. Scene V. \"Love\", 29. Blind Armen"
+}
