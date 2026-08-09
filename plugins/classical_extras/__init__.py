@@ -5458,6 +5458,21 @@ class PartLevels():
                                             if d != p])
 
                             if parentIds:
+                                # Remember WHICH of this node's works these
+                                # parents belong to. A node fusing several works
+                                # keeps one name per id, index-aligned with the
+                                # id tuple, but 'parent' is a flat list filled in
+                                # lookup-completion order, so it cannot say which
+                                # name sits under which parent -- and the order
+                                # it ends up in varies with the order the replies
+                                # arrive. work_process looks up exactly one work,
+                                # so here (and only here) the pairing is known.
+                                # set_metadata uses it to drop the branches that
+                                # belong to a top the album did not choose.
+                                parent_of = self.parts[wid]['parent_of']
+                                parent_of[workId] = add_list_uniquely(
+                                    parent_of[workId] if workId in parent_of
+                                    else [], list(parentIds))
                                 if wid in self.works_cache:
                                     # Make sure we haven't done this
                                     # relationship before, perhaps for another
@@ -8377,6 +8392,9 @@ class PartLevels():
                 works.append(work)
             else:
                 works = work[:]
+            all_works = works
+            works = self._names_under_parent(
+                release_id, workId, parentId, works)
             stripped_works = []
             for work in works:
                 extend = True
@@ -8416,8 +8434,59 @@ class PartLevels():
                                 # Single-work top: work_group == work_top.
                                 tm['~cwp_work_group'] = full_parent.strip()
             tm['~cwp_part_' + str(part_level - 1)] = stripped_works
+            if len(works) != len(all_works):
+                # process_trackback wrote ~cwp_work_<n> from the node's full
+                # name list, before the parent this track is filed under was
+                # known. Now that the other branches have been pruned, bring it
+                # into line so the work and part tags agree.
+                tm['~cwp_work_' + str(part_level - 1)] = works
             self.parts[workId]['stripped_name'] = stripped_works
         write_log(release_id, 'debug', "GOT TO END OF SET_METADATA")
+
+    def _names_under_parent(self, release_id, workId, parentId, names):
+        """Restrict a fused node's work names to the branch under ``parentId``.
+
+        A node that fuses several works -- one recording related to two
+        catalogue entries of the same music, e.g. a ballet movement and the
+        concert suite's twin of it (Nutcracker b2f4b6e5 d1t1), or two editions
+        of one movement (Requiem 63fb5437 t1) -- carries one name per id of the
+        node's id tuple, index-aligned with its ``parent`` list. Only the branch
+        leading to the parent this track is actually filed under belongs in its
+        tags: the others hang off a top work that lost the album's vote and was
+        dropped, so keeping them named a work the track is not filed under and
+        doubled every level-0 value.
+
+        The pairing comes from ``parent_of`` ({work id: [parent ids]}), recorded
+        in work_process where the work being looked up is known. The node's flat
+        ``parent`` list cannot be used: it is filled in lookup-completion order,
+        so which parent sits at which index varies with the order the replies
+        arrive, and aligning names against it made the tags depend on that order.
+
+        Falls back to the full list whenever the branches cannot be told apart
+        -- no per-id parents, an id missing from the map, or nothing left -- so
+        a genuinely multi-work recording keeps every name. A movement shared by
+        two tops that BOTH survive is unaffected: they are fused into one parent
+        node, so every branch matches ``parentId`` and all the names are kept
+        (The Planets).
+        """
+        parent_of = self.parts[workId].get('parent_of')
+        if not parent_of or len(names) != len(workId):
+            return names
+        if any(wid not in parent_of for wid in workId):
+            return names
+        wanted = tuple(parentId)
+        keep = [n for n, wid in zip(names, workId)
+                if any(p in wanted for p in parent_of[wid])]
+        if not keep or len(keep) == len(names):
+            return names
+        write_log(
+            release_id,
+            'info',
+            "Node %s: kept the name(s) filed under %s -> %s",
+            workId,
+            parentId,
+            keep)
+        return keep
 
     def write_tags(self, release_id, track, tm, workId):
         """
