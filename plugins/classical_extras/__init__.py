@@ -4449,6 +4449,16 @@ class PartLevels():
         # metadata collection for top-level works for (track, album) -
         # structure is {(track, album): {workId: }, etc}
 
+        self.movement_totals = collections.defaultdict(dict)
+        # number of movements in each movement group, PER ALBUM -
+        # {album: {movementgroup: total}}. Must not live in self.parts: that is
+        # keyed by work id alone and shared by every album in the session, so
+        # two releases of one work (or a release and a compilation drawing on
+        # it) overwrote each other's total. Whichever processed the group last
+        # won, and any album re-published afterwards -- routine when mass
+        # tagging, as Picard re-runs process_album when an album's files change
+        # -- reported that other album's movement count.
+
         self.trackback = collections.defaultdict(
             lambda: collections.defaultdict(dict))
         # hierarchical iterative work structure - {album: {id: , children:{id:
@@ -7488,7 +7498,7 @@ class PartLevels():
                             track, movementgroup)
                         self.tracks[album][track_meta]['movement-group'] = movementgroup
                         self.tracks[album][track_meta]['movement-number'] = movement_count
-                        self.parts[tuple(movementgroup)]['movement-total'] = movement_count
+                        self.movement_totals[album][tuple(movementgroup)] = movement_count
                     prev_movementgroup = movementgroup
 
                 write_log(
@@ -9137,7 +9147,8 @@ class PartLevels():
 
         # set movement grouping tags (hidden vars)
         if movement_info:
-            movementtotal = self.parts[tuple(movement_info['movement-group'])]['movement-total']
+            movementtotal = self.movement_totals[album].get(
+                tuple(movement_info['movement-group']), 0)
             if movementtotal > 1:
                 tm['~cwp_movt_num'] = movement_info['movement-number']
                 tm['~cwp_movt_tot'] = movementtotal
