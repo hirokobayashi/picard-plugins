@@ -1,0 +1,82 @@
+{
+ "first-release-date": "1996",
+ "id": "5e3dbd6e-eb57-4ea5-b553-2527ac13c03a",
+ "relations": [
+  {
+   "artist": {
+    "sort-name": "Oue, Eiji",
+    "name": "大植英次",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "country": "JP"
+   },
+   "ended": true,
+   "end": "1996-01-20",
+   "target-credit": "Eiji Oue",
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "ended": true,
+   "artist": {
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "country": "US",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra"
+   },
+   "target-credit": "",
+   "end": "1996-01-20",
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "ended": true,
+   "end": "1996-01-20",
+   "target-credit": "",
+   "work": {
+    "id": "4090b576-d60f-3e9b-a587-dd79648e0ec7",
+    "languages": [],
+    "language": null,
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: IV. Rondes printanières",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "type": null,
+    "iswcs": []
+   },
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  }
+ ],
+ "disambiguation": "",
+ "length": 190240,
+ "title": "The Rite of Spring (Adoration of Earth): Sprint Rounds",
+ "video": false,
+ "aliases": []
+}

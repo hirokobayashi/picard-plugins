@@ -1,0 +1,82 @@
+{
+ "first-release-date": "1996",
+ "id": "637eb54f-dac8-4f41-a5a5-b1df7a8fa0e6",
+ "relations": [
+  {
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "artist": {
+    "sort-name": "Oue, Eiji",
+    "name": "大植英次",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "country": "JP"
+   },
+   "ended": true,
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20",
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "begin": "1996-01-18",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "target-credit": "",
+   "end": "1996-01-20",
+   "ended": true,
+   "artist": {
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "country": "US",
+    "name": "Minnesota Orchestra",
+    "sort-name": "Minnesota Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "type": "Orchestra",
+    "disambiguation": ""
+   }
+  },
+  {
+   "ended": true,
+   "work": {
+    "disambiguation": "“Concert suite for orchestra No. 2” 1919 version",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "attributes": [],
+    "title": "L’Oiseau de feu: I. Introduction",
+    "language": null,
+    "languages": [],
+    "id": "a5e780df-3693-40a5-9dc0-0623033a8ae0"
+   },
+   "target-credit": "",
+   "end": "1996-01-20",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "disambiguation": "",
+ "length": 173826,
+ "title": "The Firebird Suite, 1919 Revision: Introduction",
+ "video": false,
+ "aliases": []
+}

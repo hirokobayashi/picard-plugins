@@ -4830,6 +4830,10 @@ class PartLevels():
         workId_list_p = []
         work_list_p = []
         attribute_list_p = []
+        # Real work ids at the bottom level, i.e. everything in workId_list
+        # except the recording-id stand-ins invented for partial recordings.
+        # Only these have parents still to be looked up.
+        real_id_list = []
         for w in work_list_info:
             if 'partial' not in w['attributes'] or not options[
                 'cwp_partial']:  # just do the bottom-level 'works' first
@@ -4839,6 +4843,8 @@ class PartLevels():
                 if 'parent' in w:
                     if w['parent'] not in parent_list:  # avoid duplicating parents!
                         parent_list.append(w['parent'])
+                else:
+                    real_id_list.append(w['id'])
             else:
                 workId_list_p.append(w['id'])
                 work_list_p += w['titles']
@@ -4865,9 +4871,17 @@ class PartLevels():
         workId_tuple_p = tuple(workId_list_p)
         if workId_tuple not in self.work_listing[album]:
             self.work_listing[album].append(workId_tuple)
+        # Real works sharing the node with a partial recording still need their
+        # own parents looked up: the pre-seeded parent below covers only the
+        # partial side and makes the node look fully cached. Filled in only on
+        # the pass that seeds the node, so a later track on the same node does
+        # not queue the same lookup twice.
+        lookup_ids = []
         if workId_tuple not in self.parts or not self.USE_CACHE:
             self.parts[workId_tuple]['name'] = work_list
             if parent_list:
+                lookup_ids = list(
+                    collections.OrderedDict.fromkeys(real_id_list))
                 if workId_tuple in self.works_cache:
                     self.works_cache[workId_tuple] += parent_list
                     self.parts[workId_tuple]['parent'] += parent_list
@@ -4915,15 +4929,28 @@ class PartLevels():
             not_in_cache = self.check_cache(
                 track_metadata, album, track, workId_tuple, [])
         else:
+            # work_not_in_cache looks up every id in the tuple, so there is
+            # nothing left for lookup_ids to add.
+            lookup_ids = []
             if partial:
                 not_in_cache = [workId_tuple_p]
             else:
                 not_in_cache = [workId_tuple]
-        for workId_tuple in not_in_cache:
+        for wid_tuple in not_in_cache:
             if not self.USE_CACHE:
-                if workId_tuple in self.works_cache:
-                    del self.works_cache[workId_tuple]
-            self.work_not_in_cache(release_id, album, track, workId_tuple)
+                if wid_tuple in self.works_cache:
+                    del self.works_cache[wid_tuple]
+            self.work_not_in_cache(release_id, album, track, wid_tuple)
+        # MusicBrainz allows a recording to carry an ordinary performance
+        # relation AND a 'partial' one to a different work (Stravinsky release
+        # 0b54b210 track 5: the Firebird movement plus a partial performance of
+        # the whole ballet). Both end up in one bottom-level node, but only the
+        # ballet was recorded as its parent, and works_cache then made the node
+        # look fully resolved -- so the movement's own parent, the suite the
+        # other six tracks sit under, was never fetched and the track came out
+        # under the ballet alone.
+        for workId in lookup_ids:
+            self.work_add_track(album, track, workId, 0)
 
 
     def get_sk_tags(self, release_id, album, track, tm, options):

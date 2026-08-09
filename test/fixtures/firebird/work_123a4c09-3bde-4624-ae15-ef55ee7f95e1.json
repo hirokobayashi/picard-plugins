@@ -1,0 +1,88 @@
+{
+ "type-id": null,
+ "disambiguation": "“Concert suite for orchestra No. 2” 1919 version",
+ "type": null,
+ "iswcs": [],
+ "title": "L’Oiseau de feu: I. L’Oiseau de feu et sa danse",
+ "attributes": [],
+ "id": "123a4c09-3bde-4624-ae15-ef55ee7f95e1",
+ "languages": [],
+ "relations": [
+  {
+   "end": "1919",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "country": "RU",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "name": "Игорь Фёдорович Стравинский",
+    "disambiguation": "Russian composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "attributes": [],
+   "begin": "1919",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "type": "composer",
+   "source-credit": "",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "\"¡Se echó a volar!\" - Danza del pájaro de fuego",
+    "language": null,
+    "languages": [],
+    "id": "5e325df2-0f76-4361-b69a-a19e7e70e8f7"
+   },
+   "type-id": "6bb1df6b-57f3-434d-8a39-5dc363d2eb78",
+   "type": "based on",
+   "source-credit": "",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "ended": false,
+   "work": {
+    "id": "1a00a184-8e67-4b01-a496-81b1b6df9a88",
+    "languages": [],
+    "language": null,
+    "title": "L’Oiseau de feu, suite de 1919",
+    "attributes": [],
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "type": "Suite",
+    "iswcs": [],
+    "disambiguation": "“The Firebird” 1919 Suite, aka Concert Suite for Orchestra no. 2"
+   },
+   "end": null,
+   "target-credit": "",
+   "ordering-key": 2,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "begin": null,
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "language": null,
+ "aliases": []
+}

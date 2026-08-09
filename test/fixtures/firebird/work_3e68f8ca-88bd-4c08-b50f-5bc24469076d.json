@@ -1,0 +1,88 @@
+{
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "attributes": [],
+   "begin": "1917",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "source-credit": "",
+   "type": "composer",
+   "end": "1917",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "name": "Игорь Фёдорович Стравинский",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "Russian composer",
+    "type": "Person",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "country": "RU"
+   }
+  },
+  {
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "title": "Le Chant du rossignol",
+    "attributes": [],
+    "type-id": "01ef2ab4-d58d-3ef9-b309-eef98b58435f",
+    "disambiguation": "",
+    "iswcs": [],
+    "type": "Symphonic poem",
+    "id": "a79fb213-970d-428b-8982-cbde96ba060e",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "ordering-key": 1,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "work"
+  }
+ ],
+ "language": null,
+ "id": "3e68f8ca-88bd-4c08-b50f-5bc24469076d",
+ "languages": [],
+ "aliases": [
+  {
+   "type": null,
+   "type-id": null,
+   "name": "Presto",
+   "sort-name": "Presto",
+   "begin": null,
+   "locale": null,
+   "ended": false,
+   "end": null,
+   "primary": null
+  },
+  {
+   "type": null,
+   "type-id": null,
+   "begin": null,
+   "name": "Song of the Nightingale: Presto",
+   "sort-name": "Song of the Nightingale: Presto",
+   "locale": null,
+   "ended": false,
+   "end": null,
+   "primary": null
+  }
+ ],
+ "type": null,
+ "iswcs": [],
+ "disambiguation": "",
+ "type-id": null,
+ "attributes": [],
+ "title": "Le Chant du rossignol : I. Introduction"
+}

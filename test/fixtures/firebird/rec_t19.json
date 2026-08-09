@@ -1,0 +1,84 @@
+{
+ "length": 77573,
+ "disambiguation": "",
+ "relations": [
+  {
+   "ended": true,
+   "artist": {
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "大植英次",
+    "sort-name": "Oue, Eiji",
+    "country": "JP",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408"
+   },
+   "end": "1996-01-20",
+   "target-credit": "Eiji Oue",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "source-credit": "",
+   "type": "conductor",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "ended": true,
+   "artist": {
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "country": "US",
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "type": "Orchestra",
+    "disambiguation": ""
+   },
+   "target-credit": "",
+   "end": "1996-01-20",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "target-credit": "",
+   "end": "1996-01-20",
+   "work": {
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: VIII. Danse de la terre",
+    "language": "zxx",
+    "id": "48e140f4-d75f-3990-8c5b-f9c07ad11670",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "ended": true,
+   "begin": "1996-01-18",
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work"
+  }
+ ],
+ "id": "eb0c7db9-c5d4-4480-bc1f-583105cdc1f3",
+ "first-release-date": "1996",
+ "aliases": [],
+ "title": "The Rite of Spring (Adoration of Earth): Dance of the Earth",
+ "video": false
+}

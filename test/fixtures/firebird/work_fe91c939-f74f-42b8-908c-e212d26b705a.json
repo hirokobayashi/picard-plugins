@@ -1,0 +1,88 @@
+{
+ "aliases": [],
+ "id": "fe91c939-f74f-42b8-908c-e212d26b705a",
+ "languages": [],
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "attributes": [],
+   "begin": "1919",
+   "type": "composer",
+   "source-credit": "",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "end": "1919",
+   "target-credit": "",
+   "artist": {
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "country": "RU",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "Russian composer",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "name": "Игорь Фёдорович Стравинский"
+   },
+   "ended": true
+  },
+  {
+   "ended": false,
+   "work": {
+    "id": "791663dc-c96c-4662-9d20-9ed2759d265e",
+    "languages": [],
+    "language": null,
+    "title": "Ronda de las princesas",
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "Music + spoken words"
+   },
+   "target-credit": "",
+   "end": null,
+   "source-credit": "",
+   "type": "based on",
+   "type-id": "6bb1df6b-57f3-434d-8a39-5dc363d2eb78",
+   "attributes": [],
+   "begin": null,
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "attributes": [],
+   "begin": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 4,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "type": "Suite",
+    "iswcs": [],
+    "disambiguation": "“The Firebird” 1919 Suite, aka Concert Suite for Orchestra no. 2",
+    "title": "L’Oiseau de feu, suite de 1919",
+    "attributes": [],
+    "languages": [],
+    "id": "1a00a184-8e67-4b01-a496-81b1b6df9a88",
+    "language": null
+   },
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  }
+ ],
+ "language": null,
+ "title": "L’Oiseau de feu: II. Ronde des princesses (Khorovode)",
+ "attributes": [],
+ "type-id": null,
+ "disambiguation": "“Concert suite for orchestra No. 2” 1919 version",
+ "type": null,
+ "iswcs": []
+}

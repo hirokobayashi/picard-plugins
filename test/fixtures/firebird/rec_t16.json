@@ -1,0 +1,84 @@
+{
+ "aliases": [],
+ "title": "The Rite of Spring (Adoration of Earth): Games of the Rival Towns",
+ "video": false,
+ "relations": [
+  {
+   "source-credit": "",
+   "type": "conductor",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "artist": {
+    "country": "JP",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "sort-name": "Oue, Eiji",
+    "name": "大植英次",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "ended": true,
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20",
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "ended": true,
+   "artist": {
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra",
+    "type": "Orchestra",
+    "disambiguation": "",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "country": "US",
+    "id": "227b1359-4587-44d8-8616-6275816cb999"
+   },
+   "end": "1996-01-20",
+   "target-credit": ""
+  },
+  {
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": true,
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "a37aedd7-08df-35c6-9a97-29cb61192d45",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: V. Jeux des cités rivales"
+   },
+   "target-credit": "",
+   "end": "1996-01-20",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "begin": "1996-01-18",
+   "attributes": []
+  }
+ ],
+ "disambiguation": "",
+ "length": 110560,
+ "first-release-date": "1996",
+ "id": "c8d02b19-ff2f-451c-99f7-42c975a31a21"
+}

@@ -1,0 +1,129 @@
+{
+ "aliases": [
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "name": "The Rite of Spring: Part I: Adoration of the Earth: V. Games of the Two Rival Tribes",
+   "sort-name": "The Rite of Spring: Part I: Adoration of the Earth: V. Games of the Two Rival Tribes",
+   "begin": null,
+   "ended": false,
+   "primary": null,
+   "end": null
+  }
+ ],
+ "language": "zxx",
+ "relations": [
+  {
+   "type": "composer",
+   "source-credit": "",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "begin": "1911",
+   "attributes": [],
+   "artist": {
+    "disambiguation": "Russian composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Игорь Фёдорович Стравинский",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "country": "RU",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c"
+   },
+   "ended": true,
+   "target-credit": "",
+   "end": "1913",
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "target-credit": "Boosey & Hawkes Ltd.",
+   "end": null,
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "type": "publishing",
+   "source-credit": "",
+   "label": {
+    "name": "Boosey & Hawkes Ltd.",
+    "sort-name": "Boosey & Hawkes Ltd.",
+    "disambiguation": "",
+    "type": "Publisher",
+    "type-id": "e9ad53b0-e3d0-3885-a10b-8193d501338c",
+    "id": "3ca57c06-495c-4f6c-96cc-e60a51fe82ca",
+    "label-code": null
+   },
+   "type-id": "05ee6f18-4517-342d-afdf-5897f64276e3",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "label"
+  },
+  {
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type": "arrangement",
+   "source-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "d2bd69cf-a227-3580-8bc8-04ff64b861f5",
+    "language": "zxx",
+    "type-id": null,
+    "disambiguation": "for two pianos",
+    "type": null,
+    "iswcs": [],
+    "title": "Le Sacre du printemps: I. L'Adoration de la terre: V. Jeux des cités rivales",
+    "attributes": []
+   }
+  },
+  {
+   "attributes": [],
+   "begin": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 5,
+   "type": "parts",
+   "work": {
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "id": "56d71673-5103-46b1-8c0f-d81d19eaced8",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  }
+ ],
+ "languages": [
+  "zxx"
+ ],
+ "id": "a37aedd7-08df-35c6-9a97-29cb61192d45",
+ "attributes": [],
+ "title": "Le Sacre du printemps: I. L’Adoration de la terre: V. Jeux des cités rivales",
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "type-id": null
+}

@@ -1,0 +1,438 @@
+{
+ "aliases": [
+  {
+   "primary": null,
+   "end": null,
+   "ended": false,
+   "locale": null,
+   "sort-name": "L'Adoration de la terre",
+   "name": "L'Adoration de la terre",
+   "begin": null,
+   "type-id": null,
+   "type": null
+  },
+  {
+   "type": "Work name",
+   "type-id": "a18cab3f-0ae2-3978-8f75-dd9c09702b25",
+   "begin": null,
+   "sort-name": "The Rite of Spring: Part I: Adoration of the Earth",
+   "name": "The Rite of Spring: Part I: Adoration of the Earth",
+   "locale": "en",
+   "ended": false,
+   "end": null,
+   "primary": true
+  },
+  {
+   "locale": null,
+   "begin": null,
+   "name": "The Rite of Spring: The Adoration of the Earth",
+   "sort-name": "The Rite of Spring: The Adoration of the Earth",
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  },
+  {
+   "type": "Work name",
+   "type-id": "a18cab3f-0ae2-3978-8f75-dd9c09702b25",
+   "begin": null,
+   "sort-name": "春の祭典 第1部 大地礼讃",
+   "name": "春の祭典 第1部 大地礼讃",
+   "locale": "ja",
+   "ended": false,
+   "end": null,
+   "primary": true
+  }
+ ],
+ "relations": [
+  {
+   "target-credit": "",
+   "end": "1913",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "Russian composer",
+    "type": "Person",
+    "name": "Игорь Фёдорович Стравинский",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "country": "RU"
+   },
+   "ended": true,
+   "begin": "1911",
+   "attributes": [],
+   "type": "composer",
+   "source-credit": "",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "id": "1edb4034-6a40-4ef5-b1d2-577cecbfceae",
+    "languages": [],
+    "language": null,
+    "type-id": null,
+    "disambiguation": "for piano solo, Achatz",
+    "iswcs": [],
+    "type": null,
+    "title": "Le Sacre du printemps: I. L'Adoration de la terre",
+    "attributes": []
+   },
+   "source-credit": "",
+   "type": "arrangement",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "begin": null,
+   "attributes": [],
+   "source-credit": "",
+   "type": "arrangement",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "id": "2ac1f48e-ce60-4338-a26e-b164c838d4d3",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "for two pianos",
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre",
+    "attributes": []
+   },
+   "ended": false
+  },
+  {
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work",
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "id": "a33f1476-0328-42a0-8a44-bfe9f670e4c6",
+    "languages": [],
+    "language": null,
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "title": "Le Sacre di Printemps, Part I: The Adoration of the Earth (Introduction / Dance of the Young Maidens / Mock Abduction / Spring Rounds / Games of the Rival Tribes / Entry of the Wise Men / Kiss to the Earth / Worship dance of the Earth)",
+    "attributes": []
+   },
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "type": "arrangement",
+   "source-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299"
+  },
+  {
+   "type": "arrangement",
+   "source-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "b5473133-4741-4623-828a-6f657db2eb76",
+    "language": "zxx",
+    "title": "Le Sacre du printemps: I. L'Adoration de la terre",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "for four pianos, Maarten Bon",
+    "type": null,
+    "iswcs": []
+   },
+   "target-credit": "",
+   "end": null,
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {}
+  },
+  {
+   "ended": false,
+   "work": {
+    "attributes": [],
+    "title": "Le Sacre du printemps",
+    "disambiguation": "",
+    "type": "Ballet",
+    "iswcs": [],
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "54dacada-b00c-34b6-bbbb-e89855c7219f"
+   },
+   "target-credit": "",
+   "end": null,
+   "source-credit": "",
+   "ordering-key": 1,
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "attributes": [],
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "ordering-key": 5,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "a37aedd7-08df-35c6-9a97-29cb61192d45",
+    "language": "zxx",
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: V. Jeux des cités rivales",
+    "attributes": []
+   },
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: VIII. Danse de la terre",
+    "language": "zxx",
+    "id": "48e140f4-d75f-3990-8c5b-f9c07ad11670",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 8,
+   "attributes": [],
+   "begin": null,
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work",
+   "work": {
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: VI. Cortège du Sage",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "id": "c8700d76-b8b8-37eb-80f2-e3e9ee24dc30",
+    "language": "zxx"
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 6
+  },
+  {
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 7,
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "language": "zxx",
+    "id": "87aea44d-eb59-3656-ad88-9e060d28dab9",
+    "languages": [
+     "zxx"
+    ],
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: VII. Le Sage",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null
+   },
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: I. Introduction",
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "40fd0ab1-ccc7-347a-91ff-6b5d9fa40cd4"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 1,
+   "attributes": [],
+   "begin": null
+  },
+  {
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: III. Jeu du rapt",
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "languages": [
+     "zxx"
+    ],
+    "id": "1ff0d8a2-5a40-3f09-87f8-66331f1b044b",
+    "language": "zxx"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 3,
+   "type": "parts",
+   "attributes": [],
+   "begin": null,
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work",
+   "work": {
+    "language": null,
+    "id": "4090b576-d60f-3e9b-a587-dd79648e0ec7",
+    "languages": [],
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: IV. Rondes printanières",
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 4,
+   "type": "parts"
+  },
+  {
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: II. Les Augures printaniers – Danses des adolescentes",
+    "attributes": [],
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "id": "29e4d499-4ec2-3879-9839-b57fd977298d",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ordering-key": 2,
+   "source-credit": "",
+   "type": "parts",
+   "begin": null,
+   "attributes": []
+  }
+ ],
+ "language": "zxx",
+ "id": "56d71673-5103-46b1-8c0f-d81d19eaced8",
+ "languages": [
+  "zxx"
+ ],
+ "attributes": [],
+ "title": "Le Sacre du printemps: I. L’Adoration de la terre",
+ "type": null,
+ "iswcs": [],
+ "disambiguation": "",
+ "type-id": null
+}

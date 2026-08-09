@@ -1,0 +1,82 @@
+{
+ "relations": [
+  {
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist",
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20",
+   "artist": {
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "country": "JP",
+    "sort-name": "Oue, Eiji",
+    "name": "大植英次",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "conductor",
+    "type": "Person"
+   },
+   "ended": true,
+   "begin": "1996-01-18",
+   "attributes": [],
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d"
+  },
+  {
+   "end": "1996-01-20",
+   "target-credit": "",
+   "artist": {
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "name": "Minnesota Orchestra",
+    "sort-name": "Minnesota Orchestra",
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "country": "US"
+   },
+   "ended": true,
+   "attributes": [],
+   "begin": "1996-01-18",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "type": "performance",
+   "source-credit": "",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "ended": true,
+   "work": {
+    "language": null,
+    "id": "3e68f8ca-88bd-4c08-b50f-5bc24469076d",
+    "languages": [],
+    "attributes": [],
+    "title": "Le Chant du rossignol : I. Introduction",
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null
+   },
+   "target-credit": "",
+   "end": "1996-01-20"
+  }
+ ],
+ "length": 145840,
+ "disambiguation": "",
+ "first-release-date": "1996",
+ "id": "56214ec7-52d6-4384-bee1-a315377417e6",
+ "aliases": [],
+ "title": "The Song of the Nightingale: Presto",
+ "video": false
+}

@@ -1,0 +1,115 @@
+{
+ "languages": [],
+ "id": "a06c71e7-e293-4206-a40b-a4cf89b34cb0",
+ "language": null,
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "1919",
+   "attributes": [],
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "source-credit": "",
+   "type": "composer",
+   "end": "1919",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "country": "RU",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "name": "Игорь Фёдорович Стравинский",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "disambiguation": "Russian composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   }
+  },
+  {
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "58677e11-20f4-4e4c-9cda-1580734dd1bc",
+    "language": "zxx",
+    "type-id": null,
+    "disambiguation": "for piano, Agosti",
+    "type": null,
+    "iswcs": [],
+    "title": "Three Movements from The Firebird: I. Danse infernale",
+    "attributes": []
+   },
+   "source-credit": "",
+   "type": "arrangement",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "begin": null,
+   "attributes": [],
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "begin": null,
+   "attributes": [],
+   "type-id": "6bb1df6b-57f3-434d-8a39-5dc363d2eb78",
+   "type": "based on",
+   "source-credit": "",
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "languages": [],
+    "id": "f710e83f-5909-4a2d-9932-2be2e4770455",
+    "language": null,
+    "title": "Danza infernal del rey Katschei",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "Music + spoken words",
+    "iswcs": [],
+    "type": null
+   },
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {}
+  },
+  {
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 5,
+   "type": "parts",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "work": {
+    "id": "1a00a184-8e67-4b01-a496-81b1b6df9a88",
+    "languages": [],
+    "language": null,
+    "type-id": "212bf9fb-ce4f-396e-87ca-3db671c085fb",
+    "iswcs": [],
+    "type": "Suite",
+    "disambiguation": "“The Firebird” 1919 Suite, aka Concert Suite for Orchestra no. 2",
+    "title": "L’Oiseau de feu, suite de 1919",
+    "attributes": []
+   },
+   "end": null,
+   "target-credit": ""
+  }
+ ],
+ "aliases": [],
+ "type-id": null,
+ "type": null,
+ "iswcs": [],
+ "disambiguation": "“Concert suite for orchestra No. 2” 1919 version",
+ "title": "L’Oiseau de feu: III. Danse infernale du roi Kachtcheï",
+ "attributes": []
+}

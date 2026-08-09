@@ -1,0 +1,129 @@
+{
+ "id": "1ff0d8a2-5a40-3f09-87f8-66331f1b044b",
+ "languages": [
+  "zxx"
+ ],
+ "language": "zxx",
+ "relations": [
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "source-credit": "",
+   "type": "composer",
+   "begin": "1911",
+   "attributes": [],
+   "ended": true,
+   "artist": {
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "country": "RU",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "Russian composer",
+    "type": "Person",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "name": "Игорь Фёдорович Стравинский"
+   },
+   "target-credit": "",
+   "end": "1913"
+  },
+  {
+   "begin": null,
+   "attributes": [],
+   "label": {
+    "label-code": null,
+    "id": "3ca57c06-495c-4f6c-96cc-e60a51fe82ca",
+    "name": "Boosey & Hawkes Ltd.",
+    "sort-name": "Boosey & Hawkes Ltd.",
+    "type-id": "e9ad53b0-e3d0-3885-a10b-8193d501338c",
+    "type": "Publisher",
+    "disambiguation": ""
+   },
+   "source-credit": "",
+   "type": "publishing",
+   "type-id": "05ee6f18-4517-342d-afdf-5897f64276e3",
+   "target-credit": "Boosey & Hawkes Ltd.",
+   "end": null,
+   "ended": false,
+   "target-type": "label",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "for two pianos",
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L'Adoration de la terre: III. Jeu du rapt",
+    "language": "zxx",
+    "id": "4e383b58-f43e-3129-a192-2d9e6ed9d46b",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "source-credit": "",
+   "type": "arrangement",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 3,
+   "type": "parts",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "56d71673-5103-46b1-8c0f-d81d19eaced8",
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null
+   },
+   "target-type": "work",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  }
+ ],
+ "aliases": [
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "sort-name": "The Rite of Spring: Part I: Adoration of the Earth: III. Ritual of Abduction",
+   "name": "The Rite of Spring: Part I: Adoration of the Earth: III. Ritual of Abduction",
+   "ended": false,
+   "primary": null,
+   "end": null
+  }
+ ],
+ "type-id": null,
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "title": "Le Sacre du printemps: I. L’Adoration de la terre: III. Jeu du rapt",
+ "attributes": []
+}

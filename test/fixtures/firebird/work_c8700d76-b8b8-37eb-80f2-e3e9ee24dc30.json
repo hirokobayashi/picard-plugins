@@ -1,0 +1,129 @@
+{
+ "language": "zxx",
+ "relations": [
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "target-credit": "",
+   "end": "1913",
+   "artist": {
+    "name": "Игорь Фёдорович Стравинский",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "Russian composer",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "country": "RU"
+   },
+   "ended": true,
+   "begin": "1911",
+   "attributes": [],
+   "source-credit": "",
+   "type": "composer",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+  },
+  {
+   "type-id": "05ee6f18-4517-342d-afdf-5897f64276e3",
+   "label": {
+    "name": "Boosey & Hawkes Ltd.",
+    "sort-name": "Boosey & Hawkes Ltd.",
+    "disambiguation": "",
+    "type": "Publisher",
+    "type-id": "e9ad53b0-e3d0-3885-a10b-8193d501338c",
+    "id": "3ca57c06-495c-4f6c-96cc-e60a51fe82ca",
+    "label-code": null
+   },
+   "type": "publishing",
+   "source-credit": "",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "end": null,
+   "target-credit": "Boosey & Hawkes Ltd.",
+   "target-type": "label",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "f6ad58ec-1a89-329c-87bc-fa74dfde6532",
+    "language": "zxx",
+    "title": "Le Sacre du printemps: I. L'Adoration de la terre: VI. Cortège du Sage",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "for two pianos",
+    "iswcs": [],
+    "type": null
+   },
+   "end": null,
+   "target-credit": "",
+   "source-credit": "",
+   "type": "arrangement",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "begin": null
+  },
+  {
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "id": "56d71673-5103-46b1-8c0f-d81d19eaced8",
+    "language": "zxx"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 6,
+   "attributes": [],
+   "begin": null,
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ],
+ "id": "c8700d76-b8b8-37eb-80f2-e3e9ee24dc30",
+ "languages": [
+  "zxx"
+ ],
+ "aliases": [
+  {
+   "type": null,
+   "type-id": null,
+   "begin": null,
+   "name": "The Rite of Spring: Part I: Adoration of the Earth: VI. Procession of the Sage",
+   "sort-name": "The Rite of Spring: Part I: Adoration of the Earth: VI. Procession of the Sage",
+   "locale": null,
+   "ended": false,
+   "end": null,
+   "primary": null
+  }
+ ],
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "type-id": null,
+ "attributes": [],
+ "title": "Le Sacre du printemps: I. L’Adoration de la terre: VI. Cortège du Sage"
+}

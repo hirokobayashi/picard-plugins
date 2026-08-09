@@ -1,0 +1,88 @@
+{
+ "attributes": [],
+ "title": "Le Chant du rossignol : III. Chant du rossignol",
+ "disambiguation": "",
+ "type": null,
+ "iswcs": [],
+ "type-id": null,
+ "aliases": [
+  {
+   "locale": null,
+   "sort-name": "Song of the Nightingale",
+   "name": "Song of the Nightingale",
+   "begin": null,
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  },
+  {
+   "type": null,
+   "type-id": null,
+   "name": "Song of the Nightingale: Song of the Nightingale",
+   "sort-name": "Song of the Nightingale: Song of the Nightingale",
+   "begin": null,
+   "locale": null,
+   "ended": false,
+   "end": null,
+   "primary": null
+  }
+ ],
+ "language": null,
+ "relations": [
+  {
+   "ended": true,
+   "artist": {
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "country": "RU",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "Russian composer",
+    "type": "Person",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "name": "Игорь Фёдорович Стравинский"
+   },
+   "end": "1917",
+   "target-credit": "",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "source-credit": "",
+   "type": "composer",
+   "attributes": [],
+   "begin": "1917",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "work",
+   "work": {
+    "title": "Le Chant du rossignol",
+    "attributes": [],
+    "type-id": "01ef2ab4-d58d-3ef9-b309-eef98b58435f",
+    "disambiguation": "",
+    "type": "Symphonic poem",
+    "iswcs": [],
+    "id": "a79fb213-970d-428b-8982-cbde96ba060e",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "ordering-key": 3,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a"
+  }
+ ],
+ "languages": [],
+ "id": "b7e718be-e840-4cfe-9aed-698c666e6eec"
+}

@@ -1,0 +1,84 @@
+{
+ "video": false,
+ "title": "The Rite of Spring (The Sacrifice): Glorification of the Chosen One",
+ "aliases": [],
+ "first-release-date": "1996",
+ "id": "883e4315-47cd-4cea-917f-09f7639a2d4f",
+ "relations": [
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "artist": {
+    "name": "大植英次",
+    "sort-name": "Oue, Eiji",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "JP",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408"
+   },
+   "ended": true,
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20"
+  },
+  {
+   "artist": {
+    "country": "US",
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "disambiguation": "",
+    "type": "Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "name": "Minnesota Orchestra",
+    "sort-name": "Minnesota Orchestra"
+   },
+   "ended": true,
+   "target-credit": "",
+   "end": "1996-01-20",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work",
+   "end": "1996-01-20",
+   "target-credit": "",
+   "work": {
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice: III. Glorification de l’élue",
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "eedc0a88-6b55-3ed2-aacf-f93f7cb26272"
+   },
+   "ended": true,
+   "attributes": [],
+   "begin": "1996-01-18",
+   "type": "performance",
+   "source-credit": "",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0"
+  }
+ ],
+ "length": 99866,
+ "disambiguation": ""
+}

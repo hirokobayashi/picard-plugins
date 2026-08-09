@@ -1,0 +1,395 @@
+{
+ "title": "Le Sacre du printemps: II. Le Sacrifice",
+ "attributes": [],
+ "type-id": null,
+ "type": null,
+ "iswcs": [],
+ "disambiguation": "",
+ "aliases": [
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "begin": null,
+   "sort-name": "Le Sacrifice",
+   "name": "Le Sacrifice",
+   "ended": false,
+   "primary": null,
+   "end": null
+  },
+  {
+   "locale": null,
+   "begin": null,
+   "name": "The Rite of Spring: Part II: The Exalted Sacrifice",
+   "sort-name": "The Rite of Spring: Part II: The Exalted Sacrifice",
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  },
+  {
+   "locale": "en",
+   "name": "The Rite of Spring: Part II: The Sacrifice",
+   "sort-name": "The Rite of Spring: Part II: The Sacrifice",
+   "begin": null,
+   "type-id": "a18cab3f-0ae2-3978-8f75-dd9c09702b25",
+   "type": "Work name",
+   "primary": true,
+   "end": null,
+   "ended": false
+  },
+  {
+   "locale": null,
+   "begin": null,
+   "sort-name": "The Rite of Spring: The Sacrifice",
+   "name": "The Rite of Spring: The Sacrifice",
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  },
+  {
+   "type": "Work name",
+   "type-id": "a18cab3f-0ae2-3978-8f75-dd9c09702b25",
+   "begin": null,
+   "sort-name": "春の祭典 第2部 いけにえ",
+   "name": "春の祭典 第2部 いけにえ",
+   "locale": "ja",
+   "ended": false,
+   "end": null,
+   "primary": false
+  }
+ ],
+ "id": "6cfef07d-7152-4c86-8db7-614f73767549",
+ "languages": [
+  "zxx"
+ ],
+ "relations": [
+  {
+   "target-credit": "",
+   "end": "1913",
+   "artist": {
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "country": "RU",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "name": "Игорь Фёдорович Стравинский",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "Russian composer"
+   },
+   "ended": true,
+   "attributes": [],
+   "begin": "1911",
+   "source-credit": "",
+   "type": "composer",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "work": {
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "for piano solo, Achatz",
+    "title": "Le Sacre du printemps: II. Le Sacrifice",
+    "attributes": [],
+    "id": "65442b09-e9d9-41d3-86d0-a1cac23d1a59",
+    "languages": [],
+    "language": null
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "source-credit": "",
+   "type": "arrangement",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work"
+  },
+  {
+   "type": "arrangement",
+   "source-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "work": {
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice",
+    "disambiguation": "for two pianos",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "language": "zxx",
+    "id": "dd8485cc-2589-4235-b3e3-f26232532f9d",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "end": null,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {}
+  },
+  {
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "type": "arrangement",
+   "source-credit": "",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du Printemps, Part II: The Sacrifice (Introduction / Mystical Circle of the Young Maidens / Glorification of the Chosen One / Evocation of the Ancestors / Ritual of the Ancestors / Sacrificial Dance)",
+    "language": null,
+    "id": "45047831-b2ea-4d3d-bb4f-c8a1ebc37064",
+    "languages": []
+   }
+  },
+  {
+   "work": {
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "for four pianos, Maarten Bon",
+    "title": "Le Sacre du printemps: II. Le Sacrifice",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "id": "04bbcad5-d4dc-42f0-b86c-37565151683c",
+    "language": "zxx"
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "type": "arrangement",
+   "source-credit": "",
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work"
+  },
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "attributes": [],
+    "title": "Le Sacre du printemps",
+    "iswcs": [],
+    "type": "Ballet",
+    "disambiguation": "",
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "54dacada-b00c-34b6-bbbb-e89855c7219f"
+   },
+   "source-credit": "",
+   "ordering-key": 2,
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "begin": null,
+   "attributes": [],
+   "ordering-key": 6,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "75ab293f-86d2-324e-85ed-afbc873b74b3",
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice: VI. Danse sacrale (L’Élue)",
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward"
+  },
+  {
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work",
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice: V. Action rituelle des ancêtres",
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "language": "zxx",
+    "id": "a2d06e4c-9988-3aca-a244-23bafb74a99c",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ordering-key": 5,
+   "source-credit": "",
+   "type": "parts"
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work",
+   "work": {
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice: IV. Evocation des ancêtres",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "language": "zxx",
+    "id": "e6e27966-53bf-39c1-b1a2-ddde5ac1e4aa",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ordering-key": 4,
+   "source-credit": "",
+   "type": "parts"
+  },
+  {
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 3,
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "work": {
+    "language": "zxx",
+    "id": "eedc0a88-6b55-3ed2-aacf-f93f7cb26272",
+    "languages": [
+     "zxx"
+    ],
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice: III. Glorification de l’élue"
+   },
+   "target-credit": "",
+   "end": null
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work",
+   "work": {
+    "title": "Le Sacre du printemps: II. Le Sacrifice: II. Cercles mystérieux des adolescentes",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "id": "dc312a3c-c83f-348e-95b1-7617fcc62541",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "source-credit": "",
+   "ordering-key": 2,
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a"
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "attributes": [],
+   "begin": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 1,
+   "type": "parts",
+   "work": {
+    "id": "4608f8ba-7df2-3f36-b0d6-5999fefb7aca",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "title": "Le Sacre du printemps: II. Le Sacrifice: I. Introduction",
+    "attributes": []
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false
+  }
+ ],
+ "language": "zxx"
+}

@@ -1,0 +1,84 @@
+{
+ "id": "38c81495-2a16-4308-a8c2-ee25607887b8",
+ "first-release-date": "1996",
+ "length": 199360,
+ "disambiguation": "",
+ "relations": [
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist",
+   "ended": true,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "name": "大植英次",
+    "sort-name": "Oue, Eiji",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "country": "JP"
+   },
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "source-credit": "",
+   "type": "conductor",
+   "attributes": [],
+   "begin": "1996-01-18"
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "source-credit": "",
+   "type": "performing orchestra",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "end": "1996-01-20",
+   "target-credit": "",
+   "artist": {
+    "country": "US",
+    "id": "227b1359-4587-44d8-8616-6275816cb999",
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra",
+    "type": "Orchestra",
+    "disambiguation": "",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5"
+   },
+   "ended": true
+  },
+  {
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "attributes": [],
+   "begin": "1996-01-18",
+   "ended": true,
+   "target-credit": "",
+   "end": "1996-01-20",
+   "work": {
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: I. Introduction",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "languages": [
+     "zxx"
+    ],
+    "id": "40fd0ab1-ccc7-347a-91ff-6b5d9fa40cd4",
+    "language": "zxx"
+   }
+  }
+ ],
+ "title": "The Rite of Spring (Adoration of Earth): Introduction",
+ "video": false,
+ "aliases": []
+}

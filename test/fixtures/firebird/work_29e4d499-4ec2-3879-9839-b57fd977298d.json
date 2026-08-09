@@ -1,0 +1,167 @@
+{
+ "aliases": [
+  {
+   "begin": null,
+   "sort-name": "The Rite of Spring: Dance of the Young Girls",
+   "name": "The Rite of Spring: Dance of the Young Girls",
+   "locale": null,
+   "type": null,
+   "type-id": null,
+   "end": null,
+   "primary": null,
+   "ended": false
+  },
+  {
+   "locale": null,
+   "begin": null,
+   "sort-name": "The Rite of Spring: Part I: Adoration of the Earth: II. The Augurs of Spring: Dances of the Young Girls",
+   "name": "The Rite of Spring: Part I: Adoration of the Earth: II. The Augurs of Spring: Dances of the Young Girls",
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  }
+ ],
+ "relations": [
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "end": "1913",
+   "target-credit": "",
+   "artist": {
+    "name": "Игорь Фёдорович Стравинский",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "Russian composer",
+    "type": "Person",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "country": "RU"
+   },
+   "ended": true,
+   "begin": "1911",
+   "attributes": [],
+   "type": "composer",
+   "source-credit": "",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+  },
+  {
+   "target-type": "label",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "label": {
+    "type": "Publisher",
+    "disambiguation": "",
+    "type-id": "e9ad53b0-e3d0-3885-a10b-8193d501338c",
+    "sort-name": "Boosey & Hawkes Ltd.",
+    "name": "Boosey & Hawkes Ltd.",
+    "label-code": null,
+    "id": "3ca57c06-495c-4f6c-96cc-e60a51fe82ca"
+   },
+   "source-credit": "",
+   "type": "publishing",
+   "type-id": "05ee6f18-4517-342d-afdf-5897f64276e3",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "end": null,
+   "target-credit": "Boosey & Hawkes Ltd."
+  },
+  {
+   "target-type": "work",
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "type": "arrangement",
+   "source-credit": "",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "disambiguation": "for two pianos",
+    "iswcs": [],
+    "type": null,
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L'Adoration de la terre: II. Les Augures Printaniers (Danses des adolescentes)",
+    "language": "zxx",
+    "id": "29789358-56bd-3510-9f61-fe62ebe53bbb",
+    "languages": [
+     "zxx"
+    ]
+   }
+  },
+  {
+   "begin": null,
+   "attributes": [],
+   "type": "based on",
+   "source-credit": "",
+   "type-id": "6bb1df6b-57f3-434d-8a39-5dc363d2eb78",
+   "work": {
+    "type-id": null,
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "title": "Igor to Please",
+    "attributes": [],
+    "languages": [
+     "zxx"
+    ],
+    "id": "3dfe1fb3-7f34-42ac-9aba-133365364372",
+    "language": "zxx"
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward"
+  },
+  {
+   "source-credit": "",
+   "ordering-key": 2,
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre",
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "language": "zxx",
+    "id": "56d71673-5103-46b1-8c0f-d81d19eaced8",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "target-type": "work",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  }
+ ],
+ "language": "zxx",
+ "id": "29e4d499-4ec2-3879-9839-b57fd977298d",
+ "languages": [
+  "zxx"
+ ],
+ "attributes": [],
+ "title": "Le Sacre du printemps: I. L’Adoration de la terre: II. Les Augures printaniers – Danses des adolescentes",
+ "disambiguation": "",
+ "iswcs": [],
+ "type": null,
+ "type-id": null
+}

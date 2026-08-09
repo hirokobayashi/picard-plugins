@@ -1,0 +1,129 @@
+{
+ "languages": [
+  "zxx"
+ ],
+ "id": "dc312a3c-c83f-348e-95b1-7617fcc62541",
+ "relations": [
+  {
+   "ended": true,
+   "artist": {
+    "name": "Игорь Фёдорович Стравинский",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "type": "Person",
+    "disambiguation": "Russian composer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "RU",
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c"
+   },
+   "target-credit": "",
+   "end": "1913",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "type": "composer",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "1911",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "label",
+   "target-credit": "Boosey & Hawkes Ltd.",
+   "end": null,
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "label": {
+    "disambiguation": "",
+    "type": "Publisher",
+    "type-id": "e9ad53b0-e3d0-3885-a10b-8193d501338c",
+    "sort-name": "Boosey & Hawkes Ltd.",
+    "name": "Boosey & Hawkes Ltd.",
+    "id": "3ca57c06-495c-4f6c-96cc-e60a51fe82ca",
+    "label-code": null
+   },
+   "type": "publishing",
+   "source-credit": "",
+   "type-id": "05ee6f18-4517-342d-afdf-5897f64276e3"
+  },
+  {
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "source-credit": "",
+   "type": "arrangement",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "work": {
+    "attributes": [],
+    "title": "Le Sacre du printemps: II. Le Sacrifice: II. Cercles mystérieux des adolescentes",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "for two pianos",
+    "type-id": null,
+    "language": "zxx",
+    "id": "2340e8bf-aabe-382b-b4c8-205c1611512c",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "target-credit": "",
+   "end": null,
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {}
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "work": {
+    "languages": [
+     "zxx"
+    ],
+    "id": "6cfef07d-7152-4c86-8db7-614f73767549",
+    "language": "zxx",
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "title": "Le Sacre du printemps: II. Le Sacrifice",
+    "attributes": []
+   },
+   "target-credit": "",
+   "end": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 2,
+   "attributes": [],
+   "begin": null
+  }
+ ],
+ "language": "zxx",
+ "aliases": [
+  {
+   "type": null,
+   "type-id": null,
+   "sort-name": "The Rite of Spring: Part II: The Sacrifice: II. Mystic Circles of the Young Girls",
+   "name": "The Rite of Spring: Part II: The Sacrifice: II. Mystic Circles of the Young Girls",
+   "begin": null,
+   "locale": null,
+   "ended": false,
+   "end": null,
+   "primary": null
+  }
+ ],
+ "type-id": null,
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "title": "Le Sacre du printemps: II. Le Sacrifice: II. Cercles mystérieux des adolescentes",
+ "attributes": []
+}

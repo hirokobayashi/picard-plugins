@@ -1,0 +1,190 @@
+{
+ "video": false,
+ "title": "The Firebird Suite, 1919 Revision: Finale",
+ "aliases": [
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "sort-name": "The Firebird: Finale",
+   "name": "The Firebird: Finale",
+   "begin": null,
+   "ended": false,
+   "primary": null,
+   "end": null
+  }
+ ],
+ "id": "63fb30a8-2a3f-475f-8882-d31b1292e914",
+ "first-release-date": "1996",
+ "length": 175000,
+ "disambiguation": "",
+ "relations": [
+  {
+   "attributes": [],
+   "begin": "1996-01-18",
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "target-credit": "Eiji Oue",
+   "end": "1996-01-20",
+   "artist": {
+    "sort-name": "Oue, Eiji",
+    "name": "大植英次",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "id": "19caa619-9305-43f2-a7fd-cc0a4f6d8408",
+    "country": "JP"
+   },
+   "ended": true,
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "type": "editor",
+   "source-credit": "",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "artist": {
+    "id": "7acf22bc-de4e-439e-935e-0c16fb3086ee",
+    "country": "US",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "",
+    "type": "Person",
+    "sort-name": "Stubblebine, Paul",
+    "name": "Paul Stubblebine"
+   },
+   "target-credit": "",
+   "end": null
+  },
+  {
+   "target-credit": "",
+   "end": "1996-01-20",
+   "artist": {
+    "disambiguation": "",
+    "type": "Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "sort-name": "Minnesota Orchestra",
+    "name": "Minnesota Orchestra",
+    "country": "US",
+    "id": "227b1359-4587-44d8-8616-6275816cb999"
+   },
+   "ended": true,
+   "attributes": [],
+   "begin": "1996-01-18",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "source-credit": "",
+   "type": "producer",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "artist": {
+    "id": "9dfee677-9ed7-49cf-b73a-14f2635066c2",
+    "country": null,
+    "sort-name": "Henderson, J. Tamblyn, Jr.",
+    "name": "J. Tamblyn Henderson, Jr.",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "",
+    "type": "Person"
+   },
+   "target-credit": "",
+   "end": null,
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {
+    "executive": "e0039285-6667-4f94-80d6-aa6520c6d359"
+   },
+   "attribute-values": {},
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "source-credit": "",
+   "type": "producer",
+   "attributes": [
+    "executive"
+   ],
+   "begin": null,
+   "ended": false,
+   "artist": {
+    "sort-name": "Martin, Marcia",
+    "name": "Marcia Martin",
+    "disambiguation": "producer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": null,
+    "id": "0bde8021-2d0e-4d2a-b8c4-052a7ebe96bf"
+   },
+   "end": null,
+   "target-credit": "Marcia Gordon Martin"
+  },
+  {
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+   "source-credit": "",
+   "type": "recording",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "artist": {
+    "id": "fc5c3abe-a2dc-4e13-bef8-da4f20328860",
+    "country": null,
+    "sort-name": "Johnson, Keith O.",
+    "name": "Keith O. Johnson",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "engineer",
+    "type": "Person"
+   },
+   "end": null,
+   "target-credit": ""
+  },
+  {
+   "ended": true,
+   "target-credit": "",
+   "end": "1996-01-20",
+   "work": {
+    "language": null,
+    "languages": [],
+    "id": "0eb658ac-cab3-4008-a4fa-ab0565f99dc8",
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "“Concert suite for orchestra No. 2” 1919 version",
+    "type-id": null,
+    "attributes": [],
+    "title": "L’Oiseau de feu: III. Finale"
+   },
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "begin": "1996-01-18",
+   "attributes": [],
+   "direction": "forward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work"
+  }
+ ]
+}

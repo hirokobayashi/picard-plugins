@@ -1,0 +1,129 @@
+{
+ "title": "Le Sacre du printemps: I. L’Adoration de la terre: VII. Le Sage",
+ "attributes": [],
+ "type-id": null,
+ "type": null,
+ "iswcs": [],
+ "disambiguation": "",
+ "aliases": [
+  {
+   "locale": null,
+   "name": "The Rite of Spring: Part I: Adoration of the Earth: VII. The Sage",
+   "sort-name": "The Rite of Spring: Part I: Adoration of the Earth: VII. The Sage",
+   "begin": null,
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  }
+ ],
+ "languages": [
+  "zxx"
+ ],
+ "id": "87aea44d-eb59-3656-ad88-9e060d28dab9",
+ "relations": [
+  {
+   "artist": {
+    "id": "c278de2c-9696-4fdf-a919-0781cd945e2c",
+    "country": "RU",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "Russian composer",
+    "sort-name": "Stravinsky, Igor Fyodorovitch",
+    "name": "Игорь Фёдорович Стравинский"
+   },
+   "ended": true,
+   "end": "1913",
+   "target-credit": "",
+   "source-credit": "",
+   "type": "composer",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "begin": "1911",
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "label": {
+    "sort-name": "Boosey & Hawkes Ltd.",
+    "name": "Boosey & Hawkes Ltd.",
+    "type-id": "e9ad53b0-e3d0-3885-a10b-8193d501338c",
+    "disambiguation": "",
+    "type": "Publisher",
+    "id": "3ca57c06-495c-4f6c-96cc-e60a51fe82ca",
+    "label-code": null
+   },
+   "source-credit": "",
+   "type": "publishing",
+   "type-id": "05ee6f18-4517-342d-afdf-5897f64276e3",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "target-credit": "Boosey & Hawkes Ltd.",
+   "end": null,
+   "target-type": "label",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "work": {
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "for two pianos",
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre: VII. Adoration de la Terre",
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "f24c3c1b-155d-4c16-a498-1aecf722eb77"
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "source-credit": "",
+   "type": "arrangement",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work"
+  },
+  {
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "work",
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "56d71673-5103-46b1-8c0f-d81d19eaced8",
+    "disambiguation": "",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "attributes": [],
+    "title": "Le Sacre du printemps: I. L’Adoration de la terre"
+   },
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 7,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a"
+  }
+ ],
+ "language": "zxx"
+}
