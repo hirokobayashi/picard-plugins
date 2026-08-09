@@ -6483,12 +6483,27 @@ class PartLevels():
             # take the best-scoring top, absorb only the tops that overlap it,
             # and re-run on whatever is left, which stays a top work in its own
             # right.
+            #
+            # Two tops that share no id but have the SAME NAME are the one work
+            # entered twice, though -- MusicBrainz carries several editions of a
+            # ballet under one title, distinguished only by disambiguation
+            # comment (Swan Lake op. 20 a1a9e501: the original 11f48c5e and the
+            # 1895 R. Drigo edition 13867eb1, whose act works are both parents
+            # of most movements). Splitting the album between them reports two
+            # top works with identical names, so absorb those too. Only within
+            # a component: a fused top bridging the two is hard evidence that a
+            # track's work really is part of both, so this can never merge two
+            # unrelated works that happen to share a title.
+            rep_names = {t: self._normalise_name(self._part_name(t))
+                         for t in comp}
             remaining = list(comp)
             while remaining:
                 representative = max(remaining, key=_score)
                 dropped = [t for t in remaining
                            if t != representative
-                           and id_sets[t] & id_sets[representative]]
+                           and (id_sets[t] & id_sets[representative]
+                                or (rep_names[t]
+                                    and rep_names[t] == rep_names[representative]))]
                 remaining = [t for t in remaining
                              if t != representative and t not in dropped]
                 if not dropped:

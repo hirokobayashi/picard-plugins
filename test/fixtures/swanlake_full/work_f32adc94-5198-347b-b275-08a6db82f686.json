@@ -1,0 +1,141 @@
+{
+ "relations": [
+  {
+   "attributes": [],
+   "begin": null,
+   "type": "composer",
+   "source-credit": "",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "end": null,
+   "target-credit": "Pyotr Ilyich Tchaikovsky",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "Russian romantic composer",
+    "name": "Пётр Ильич Чайковский",
+    "sort-name": "Tchaikovsky, Pyotr Ilyich",
+    "id": "9ddd7abc-9e1b-471d-8031-583bc6bc8be9",
+    "country": "RU"
+   },
+   "ended": false,
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  },
+  {
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "type-id": "51975ed8-bbfa-486b-9f28-5947f4370299",
+   "type": "arrangement",
+   "source-credit": "",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "work": {
+    "id": "c1158caf-65ea-44fa-9692-6de9b668ddf2",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "type-id": null,
+    "disambiguation": "for two pianos, Babin",
+    "iswcs": [],
+    "type": null,
+    "title": "Swan Lake: Waltz",
+    "attributes": []
+   },
+   "target-credit": "",
+   "end": null
+  },
+  {
+   "ended": false,
+   "work": {
+    "title": "Swan Lake, op. 20: Act I",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "languages": [],
+    "id": "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+    "language": null
+   },
+   "end": null,
+   "target-credit": "",
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 3,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "attributes": [],
+   "begin": null,
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "attributes": [],
+   "begin": null,
+   "source-credit": "",
+   "ordering-key": 5,
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "language": "zxx",
+    "id": "70ce41a5-a59b-4318-84c3-8218be875493",
+    "languages": [
+     "zxx"
+    ],
+    "attributes": [],
+    "title": "Swan Lake, op. 20: Act I",
+    "disambiguation": "ed. Drigo",
+    "iswcs": [],
+    "type": null,
+    "type-id": null
+   },
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  }
+ ],
+ "language": null,
+ "languages": [],
+ "id": "f32adc94-5198-347b-b275-08a6db82f686",
+ "aliases": [
+  {
+   "type": null,
+   "type-id": null,
+   "sort-name": "Der Schwanensee: Walzer A-Dur (1. Akt)",
+   "name": "Der Schwanensee: Walzer A-Dur (1. Akt)",
+   "begin": null,
+   "locale": null,
+   "ended": false,
+   "end": null,
+   "primary": null
+  },
+  {
+   "name": "Le Lac des Cygnes, Acte 1: No. 2 - Valse, Tempo di valse",
+   "sort-name": "Le Lac des Cygnes, Acte 1: No. 2 - Valse, Tempo di valse",
+   "begin": null,
+   "locale": null,
+   "type": null,
+   "type-id": null,
+   "end": null,
+   "primary": null,
+   "ended": false
+  }
+ ],
+ "iswcs": [],
+ "type": null,
+ "disambiguation": "",
+ "type-id": null,
+ "attributes": [],
+ "title": "Swan Lake, op. 20: Act I, no. 2: Valse, Tempo di valse"
+}

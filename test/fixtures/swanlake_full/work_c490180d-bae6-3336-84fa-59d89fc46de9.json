@@ -1,0 +1,103 @@
+{
+ "disambiguation": "",
+ "iswcs": [],
+ "type": null,
+ "type-id": null,
+ "attributes": [],
+ "title": "Swan Lake, op. 20: Act II, no. 13: Danses des cygnes: II. Moderato assai - Molto piu mosso",
+ "language": null,
+ "relations": [
+  {
+   "ended": false,
+   "artist": {
+    "id": "9ddd7abc-9e1b-471d-8031-583bc6bc8be9",
+    "country": "RU",
+    "sort-name": "Tchaikovsky, Pyotr Ilyich",
+    "name": "Пётр Ильич Чайковский",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "Russian romantic composer"
+   },
+   "target-credit": "",
+   "end": null,
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "source-credit": "",
+   "type": "composer",
+   "begin": null,
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "disambiguation": "ed. Drigo",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "attributes": [],
+    "title": "Swan Lake, op. 20: Act II",
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "de767453-bc07-4029-b3db-137be23d2293"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "ordering-key": 8,
+   "source-credit": "",
+   "type": "parts",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "target-type": "work",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 2,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "languages": [],
+    "id": "3481d89d-95f0-4f74-afe6-02b33a9095ac",
+    "language": null,
+    "title": "Swan Lake, op. 20: Act II, no. 13: Danses des cygnes",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null
+   }
+  }
+ ],
+ "id": "c490180d-bae6-3336-84fa-59d89fc46de9",
+ "languages": [],
+ "aliases": [
+  {
+   "locale": null,
+   "begin": null,
+   "sort-name": "Le Lac des Cygnes, Acte 2: II. Moderato assai - Molto piu mosso",
+   "name": "Le Lac des Cygnes, Acte 2: II. Moderato assai - Molto piu mosso",
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  }
+ ]
+}

@@ -1,0 +1,188 @@
+{
+ "disambiguation": "",
+ "length": 551080,
+ "relations": [
+  {
+   "target-credit": "Valery Gergiev",
+   "end": "2006-06-04",
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "sort-name": "Gergiev, Valery",
+    "name": "Валерий Гергиев",
+    "id": "87b4252d-314b-4252-9cd3-44c08f3087b6",
+    "country": "RU"
+   },
+   "ended": true,
+   "attributes": [],
+   "begin": "2006-05-28",
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "begin": null,
+   "attributes": [],
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "source-credit": "",
+   "type": "editor",
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "artist": {
+    "country": null,
+    "id": "0a4338c5-e6f3-46f1-a58a-99e8f43fcd0f",
+    "sort-name": "Watson, Ian",
+    "name": "Ian Watson",
+    "disambiguation": "editor/engineer/producer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   }
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "begin": null,
+   "attributes": [],
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "type": "editor",
+   "source-credit": "",
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "artist": {
+    "id": "72a764f3-2923-42ec-a73d-a87c72a409ef",
+    "country": null,
+    "name": "Jenni Whiteside",
+    "sort-name": "Whiteside, Jenni",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "engineer"
+   }
+  },
+  {
+   "target-credit": "Orchestra of the Mariinsky Theatre",
+   "end": "2006-06-04",
+   "ended": true,
+   "artist": {
+    "type": "Orchestra",
+    "disambiguation": "fka Kirov Orchestra till 1992",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "name": "Симфонический оркестр Мариинского театра",
+    "sort-name": "Orchestra of the Mariinsky Theatre",
+    "country": "RU",
+    "id": "6c05e40f-33b2-4150-b93a-ddc2b0d88a6a"
+   },
+   "begin": "2006-05-28",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist",
+   "target-credit": "",
+   "end": null,
+   "artist": {
+    "id": "8052a978-7ff9-4793-bf87-d941457e8520",
+    "country": null,
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "engineer / producer",
+    "type": "Person",
+    "name": "Andrew Cornall",
+    "sort-name": "Cornall, Andrew"
+   },
+   "ended": false,
+   "begin": null,
+   "attributes": [],
+   "source-credit": "",
+   "type": "producer",
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0"
+  },
+  {
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+   "source-credit": "",
+   "type": "recording",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "ended": true,
+   "artist": {
+    "sort-name": "Siney, Philip",
+    "name": "Philip Siney",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "sound engineer",
+    "id": "08536219-b31a-45be-8dda-42b008ec93e4",
+    "country": null
+   },
+   "target-credit": "",
+   "end": "2006-06-04"
+  },
+  {
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work",
+   "end": "2006-06-04",
+   "target-credit": "",
+   "work": {
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "34103e67-a6a1-4d22-955c-9ac4220f854e",
+    "disambiguation": "ed. Drigo; a.k.a “Love Duet” or ”White Adagio”",
+    "iswcs": [],
+    "type": null,
+    "type-id": null,
+    "attributes": [],
+    "title": "Swan Lake, op. 20: Act II: No. 13 Scène. Andante"
+   },
+   "ended": true,
+   "attributes": [],
+   "begin": "2006-05-28",
+   "type": "performance",
+   "source-credit": "",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0"
+  }
+ ],
+ "id": "02d31e8c-33d7-412e-8c67-12e0903dc901",
+ "first-release-date": "2007-04-25",
+ "aliases": [
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "begin": null,
+   "name": "Swan Lake, Op. 20 - Mariinsky Version / Act 1: Scene 2: Pas d’action (Andante - Andante ma non troppo)",
+   "sort-name": "Swan Lake, Op. 20 - Mariinsky Version / Act 1: Scene 2: Pas d’action (Andante - Andante ma non troppo)",
+   "locale": null
+  }
+ ],
+ "title": "Swan Lake, op. 20 - Mariinsky Version / Act 1: Scene 2: Pas d’action (Andante - Andante ma non troppo)",
+ "video": false
+}

@@ -1,0 +1,186 @@
+{
+ "first-release-date": "2007-04-25",
+ "id": "9aebc44f-30bc-4c10-bc4e-83940f04ac6f",
+ "relations": [
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "sort-name": "Gergiev, Valery",
+    "name": "Валерий Гергиев",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "RU",
+    "id": "87b4252d-314b-4252-9cd3-44c08f3087b6"
+   },
+   "ended": true,
+   "target-credit": "Valery Gergiev",
+   "end": "2006-06-04",
+   "source-credit": "",
+   "type": "conductor",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "begin": "2006-05-28",
+   "attributes": []
+  },
+  {
+   "target-credit": "",
+   "end": null,
+   "artist": {
+    "country": null,
+    "id": "0a4338c5-e6f3-46f1-a58a-99e8f43fcd0f",
+    "disambiguation": "editor/engineer/producer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Watson, Ian",
+    "name": "Ian Watson"
+   },
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "source-credit": "",
+   "type": "editor",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "artist": {
+    "id": "72a764f3-2923-42ec-a73d-a87c72a409ef",
+    "country": null,
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "engineer",
+    "sort-name": "Whiteside, Jenni",
+    "name": "Jenni Whiteside"
+   },
+   "begin": null,
+   "attributes": [],
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "source-credit": "",
+   "type": "editor",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "ended": true,
+   "artist": {
+    "id": "6c05e40f-33b2-4150-b93a-ddc2b0d88a6a",
+    "country": "RU",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "type": "Orchestra",
+    "disambiguation": "fka Kirov Orchestra till 1992",
+    "name": "Симфонический оркестр Мариинского театра",
+    "sort-name": "Orchestra of the Mariinsky Theatre"
+   },
+   "end": "2006-06-04",
+   "target-credit": "Orchestra of the Mariinsky Theatre",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "attributes": [],
+   "begin": "2006-05-28"
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "name": "Andrew Cornall",
+    "sort-name": "Cornall, Andrew",
+    "disambiguation": "engineer / producer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": null,
+    "id": "8052a978-7ff9-4793-bf87-d941457e8520"
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "source-credit": "",
+   "type": "producer",
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "ended": true,
+   "artist": {
+    "id": "08536219-b31a-45be-8dda-42b008ec93e4",
+    "country": null,
+    "sort-name": "Siney, Philip",
+    "name": "Philip Siney",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "sound engineer"
+   },
+   "end": "2006-06-04",
+   "target-credit": "",
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+   "source-credit": "",
+   "type": "recording",
+   "begin": "2006-05-28",
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "work": {
+    "title": "Swan Lake, op. 20: Variation III. Un poco di Chopin",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null,
+    "languages": [],
+    "id": "894c67c6-e999-4b8a-8913-58f627b7bcdd",
+    "language": null
+   },
+   "end": "2006-06-04",
+   "target-credit": "",
+   "ended": true,
+   "begin": "2006-05-28",
+   "attributes": [],
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work"
+  }
+ ],
+ "length": 193093,
+ "disambiguation": "",
+ "title": "Swan Lake, op. 20 - Mariinsky Version / Act 3: Scène: Interpolation 3 (Allegro moderato)",
+ "video": false,
+ "aliases": [
+  {
+   "primary": null,
+   "end": null,
+   "ended": false,
+   "locale": null,
+   "begin": null,
+   "name": "Swan Lake, Op. 20 - Mariinsky Version / Act 3: Scène: Interpolation 3 (Allegro moderato)",
+   "sort-name": "Swan Lake, Op. 20 - Mariinsky Version / Act 3: Scène: Interpolation 3 (Allegro moderato)",
+   "type-id": null,
+   "type": null
+  }
+ ]
+}

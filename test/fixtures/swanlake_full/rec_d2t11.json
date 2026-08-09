@@ -1,0 +1,186 @@
+{
+ "aliases": [
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "sort-name": "Swan Lake, Op. 20 - Mariinsky Version / Act 2: Pas de deux: Variation 2 (Moderato) (Interpolation 4)",
+   "name": "Swan Lake, Op. 20 - Mariinsky Version / Act 2: Pas de deux: Variation 2 (Moderato) (Interpolation 4)",
+   "begin": null,
+   "ended": false,
+   "primary": null,
+   "end": null
+  }
+ ],
+ "video": false,
+ "title": "Swan Lake, op. 20 - Mariinsky Version / Act 2: Pas de deux: Variation 2 (Moderato) (Interpolation 4)",
+ "relations": [
+  {
+   "source-credit": "",
+   "type": "conductor",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "begin": "2006-05-28",
+   "attributes": [],
+   "artist": {
+    "country": "RU",
+    "id": "87b4252d-314b-4252-9cd3-44c08f3087b6",
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Валерий Гергиев",
+    "sort-name": "Gergiev, Valery"
+   },
+   "ended": true,
+   "target-credit": "Valery Gergiev",
+   "end": "2006-06-04",
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "artist": {
+    "country": null,
+    "id": "0a4338c5-e6f3-46f1-a58a-99e8f43fcd0f",
+    "type": "Person",
+    "disambiguation": "editor/engineer/producer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Ian Watson",
+    "sort-name": "Watson, Ian"
+   },
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "source-credit": "",
+   "type": "editor",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "begin": null,
+   "attributes": [],
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "ended": false,
+   "artist": {
+    "sort-name": "Whiteside, Jenni",
+    "name": "Jenni Whiteside",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "engineer",
+    "type": "Person",
+    "id": "72a764f3-2923-42ec-a73d-a87c72a409ef",
+    "country": null
+   },
+   "end": null,
+   "target-credit": "",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "source-credit": "",
+   "type": "editor",
+   "begin": null,
+   "attributes": [],
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "country": "RU",
+    "id": "6c05e40f-33b2-4150-b93a-ddc2b0d88a6a",
+    "name": "Симфонический оркестр Мариинского театра",
+    "sort-name": "Orchestra of the Mariinsky Theatre",
+    "type": "Orchestra",
+    "disambiguation": "fka Kirov Orchestra till 1992",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5"
+   },
+   "ended": true,
+   "target-credit": "Orchestra of the Mariinsky Theatre",
+   "end": "2006-06-04",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "begin": "2006-05-28",
+   "attributes": []
+  },
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "source-credit": "",
+   "type": "producer",
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "begin": null,
+   "attributes": [],
+   "artist": {
+    "name": "Andrew Cornall",
+    "sort-name": "Cornall, Andrew",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "engineer / producer",
+    "id": "8052a978-7ff9-4793-bf87-d941457e8520",
+    "country": null
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "sort-name": "Siney, Philip",
+    "name": "Philip Siney",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "sound engineer",
+    "id": "08536219-b31a-45be-8dda-42b008ec93e4",
+    "country": null
+   },
+   "ended": true,
+   "end": "2006-06-04",
+   "target-credit": "",
+   "source-credit": "",
+   "type": "recording",
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+   "begin": "2006-05-28",
+   "attributes": []
+  },
+  {
+   "begin": "2006-05-28",
+   "attributes": [],
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "source-credit": "",
+   "type": "performance",
+   "target-credit": "",
+   "end": "2006-06-04",
+   "work": {
+    "language": null,
+    "languages": [],
+    "id": "1f33d81d-186d-4cbd-8530-d98f3eaab1fd",
+    "attributes": [],
+    "title": "Swan Lake, op. 20: Act III: Pas de deux: “Variation Chabukiani”",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "Siegfried’s variation (c. 1932–)",
+    "type-id": null
+   },
+   "ended": true,
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {}
+  }
+ ],
+ "disambiguation": "",
+ "length": 57426,
+ "first-release-date": "2007-04-25",
+ "id": "d31c6098-2489-4815-b9c9-608cb93d2daf"
+}

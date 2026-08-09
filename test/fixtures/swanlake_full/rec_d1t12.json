@@ -1,0 +1,186 @@
+{
+ "video": false,
+ "title": "Swan Lake, op. 20 - Mariinsky Version / Act 1: Scene 1: Danse des coupes (Polonaise: Tempo de polacca)",
+ "aliases": [
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "begin": null,
+   "name": "Swan Lake, Op. 20 - Mariinsky Version / Act 1: Scene 1: Danse des coupes (Polonaise: Tempo de polacca)",
+   "sort-name": "Swan Lake, Op. 20 - Mariinsky Version / Act 1: Scene 1: Danse des coupes (Polonaise: Tempo de polacca)",
+   "locale": null
+  }
+ ],
+ "id": "ace57164-e1d3-4e56-9ee4-584a70da05f4",
+ "first-release-date": "2007-04-25",
+ "disambiguation": "",
+ "length": 191373,
+ "relations": [
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "artist": {
+    "disambiguation": "conductor",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Gergiev, Valery",
+    "name": "Валерий Гергиев",
+    "country": "RU",
+    "id": "87b4252d-314b-4252-9cd3-44c08f3087b6"
+   },
+   "ended": true,
+   "target-credit": "Valery Gergiev",
+   "end": "2006-06-04"
+  },
+  {
+   "artist": {
+    "id": "0a4338c5-e6f3-46f1-a58a-99e8f43fcd0f",
+    "country": null,
+    "sort-name": "Watson, Ian",
+    "name": "Ian Watson",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "editor/engineer/producer"
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "source-credit": "",
+   "type": "editor",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "attributes": [],
+   "begin": null,
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "attributes": [],
+   "begin": null,
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "source-credit": "",
+   "type": "editor",
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "artist": {
+    "name": "Jenni Whiteside",
+    "sort-name": "Whiteside, Jenni",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "engineer",
+    "id": "72a764f3-2923-42ec-a73d-a87c72a409ef",
+    "country": null
+   }
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "target-credit": "Orchestra of the Mariinsky Theatre",
+   "end": "2006-06-04",
+   "ended": true,
+   "artist": {
+    "name": "Симфонический оркестр Мариинского театра",
+    "sort-name": "Orchestra of the Mariinsky Theatre",
+    "type": "Orchestra",
+    "disambiguation": "fka Kirov Orchestra till 1992",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "country": "RU",
+    "id": "6c05e40f-33b2-4150-b93a-ddc2b0d88a6a"
+   }
+  },
+  {
+   "attributes": [],
+   "begin": null,
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "type": "producer",
+   "source-credit": "",
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "artist": {
+    "id": "8052a978-7ff9-4793-bf87-d941457e8520",
+    "country": null,
+    "sort-name": "Cornall, Andrew",
+    "name": "Andrew Cornall",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "engineer / producer",
+    "type": "Person"
+   },
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "begin": "2006-05-28",
+   "attributes": [],
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+   "type": "recording",
+   "source-credit": "",
+   "end": "2006-06-04",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "disambiguation": "sound engineer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Siney, Philip",
+    "name": "Philip Siney",
+    "country": null,
+    "id": "08536219-b31a-45be-8dda-42b008ec93e4"
+   },
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "work": {
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "title": "Swan Lake, op. 20: Act I, no. 8: Danse des Coupes: Tempo di polacca",
+    "attributes": [],
+    "languages": [],
+    "id": "96ffa250-7241-315c-9816-1019e2a32416",
+    "language": null
+   },
+   "end": "2006-06-04",
+   "target-credit": "",
+   "ended": true,
+   "begin": "2006-05-28",
+   "attributes": [],
+   "type": "performance",
+   "source-credit": "",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work"
+  }
+ ]
+}

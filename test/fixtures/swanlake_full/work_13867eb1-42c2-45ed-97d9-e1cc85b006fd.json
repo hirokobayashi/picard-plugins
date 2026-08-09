@@ -1,0 +1,273 @@
+{
+ "attributes": [],
+ "title": "Swan Lake, op. 20",
+ "disambiguation": "1895 R. Drigo Edition",
+ "type": "Ballet",
+ "iswcs": [],
+ "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+ "aliases": [],
+ "language": null,
+ "relations": [
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "name": "Пётр Ильич Чайковский",
+    "sort-name": "Tchaikovsky, Pyotr Ilyich",
+    "disambiguation": "Russian romantic composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": "RU",
+    "id": "9ddd7abc-9e1b-471d-8031-583bc6bc8be9"
+   },
+   "ended": true,
+   "end": "1876",
+   "target-credit": "",
+   "source-credit": "",
+   "type": "composer",
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "begin": "1876",
+   "attributes": []
+  },
+  {
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "type-id": "0a1771e1-8639-4740-8a43-bdafc050c3da",
+   "type": "orchestrator",
+   "source-credit": "",
+   "begin": "1895",
+   "attributes": [],
+   "ended": true,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "composer",
+    "type": "Person",
+    "sort-name": "Drigo, Riccardo",
+    "name": "Riccardo Drigo",
+    "id": "a47c544f-5324-42ea-b08b-3dabab4c7dd8",
+    "country": "IT"
+   },
+   "end": "1895",
+   "target-credit": ""
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "artist": {
+    "disambiguation": "composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Riccardo Drigo",
+    "sort-name": "Drigo, Riccardo",
+    "country": "IT",
+    "id": "a47c544f-5324-42ea-b08b-3dabab4c7dd8"
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "source-credit": "",
+   "type": "revised by",
+   "type-id": "eeb9c319-9fde-4313-b76d-29db1576aad8",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "target-type": "place",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "place": {
+    "disambiguation": "Mariinsky Theatre",
+    "type": "Venue",
+    "type-id": "cd92781a-a73f-30e8-a430-55d7521338db",
+    "name": "Мариинский театр",
+    "area": {
+     "iso-3166-2-codes": [
+      "RU-SPE"
+     ],
+     "name": "Sankt-Peterburg",
+     "sort-name": "Sankt-Peterburg",
+     "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+     "type": "City",
+     "disambiguation": "",
+     "id": "808e1ef8-5390-4300-a615-c4df977cc349"
+    },
+    "coordinates": {
+     "longitude": 30.296111,
+     "latitude": 59.925556
+    },
+    "id": "418ba3df-a4a4-47c0-b3c6-3610eb300eef",
+    "address": "Театральная пл., 1, Санкт-Петербург, Russia, 190000"
+   },
+   "attributes": [],
+   "begin": "1895-01-27",
+   "source-credit": "",
+   "type": "premiere",
+   "type-id": "a4d2a7cb-365b-4b90-b52f-29469edf8ac0",
+   "end": "1895-01-27",
+   "target-credit": "",
+   "ended": true
+  },
+  {
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "iswcs": [],
+    "type": null,
+    "disambiguation": "ed. Drigo",
+    "type-id": null,
+    "attributes": [],
+    "title": "Swan Lake, op. 20: Act I",
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "70ce41a5-a59b-4318-84c3-8218be875493"
+   },
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 1,
+   "attributes": [
+    "act"
+   ],
+   "begin": null,
+   "direction": "forward",
+   "attribute-ids": {
+    "act": "4485dfdb-6000-4602-8b18-5f84e34d8aed"
+   },
+   "attribute-values": {},
+   "target-type": "work"
+  },
+  {
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {
+    "act": "4485dfdb-6000-4602-8b18-5f84e34d8aed"
+   },
+   "target-type": "work",
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "title": "Swan Lake, op. 20: Act II",
+    "attributes": [],
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "ed. Drigo",
+    "languages": [
+     "zxx"
+    ],
+    "id": "de767453-bc07-4029-b3db-137be23d2293",
+    "language": "zxx"
+   },
+   "ended": false,
+   "attributes": [
+    "act"
+   ],
+   "begin": null,
+   "ordering-key": 2,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a"
+  },
+  {
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 3,
+   "type": "parts",
+   "begin": null,
+   "attributes": [
+    "act"
+   ],
+   "ended": false,
+   "work": {
+    "attributes": [],
+    "title": "Swan Lake, op. 20: Act III",
+    "disambiguation": "ed. Drigo",
+    "type": null,
+    "iswcs": [],
+    "type-id": null,
+    "language": "zxx",
+    "languages": [
+     "zxx"
+    ],
+    "id": "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+   },
+   "target-credit": "",
+   "end": null,
+   "target-type": "work",
+   "attribute-ids": {
+    "act": "4485dfdb-6000-4602-8b18-5f84e34d8aed"
+   },
+   "direction": "forward",
+   "attribute-values": {}
+  },
+  {
+   "target-type": "work",
+   "attribute-ids": {
+    "act": "4485dfdb-6000-4602-8b18-5f84e34d8aed"
+   },
+   "direction": "forward",
+   "attribute-values": {},
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 4,
+   "type": "parts",
+   "begin": null,
+   "attributes": [
+    "act"
+   ],
+   "ended": false,
+   "work": {
+    "type-id": null,
+    "disambiguation": "ed. Drigo",
+    "type": null,
+    "iswcs": [],
+    "title": "Swan Lake, op. 20: Act IV",
+    "attributes": [],
+    "id": "169a3f15-a391-4bc0-a325-3ec166182a00",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx"
+   },
+   "end": null,
+   "target-credit": ""
+  },
+  {
+   "source-credit": "",
+   "type": "revision of",
+   "type-id": "4d0d6491-3c41-42c6-883f-d6c7e825b052",
+   "attributes": [],
+   "begin": null,
+   "ended": false,
+   "work": {
+    "attributes": [],
+    "title": "Swan Lake, op. 20",
+    "iswcs": [],
+    "type": "Ballet",
+    "disambiguation": "Лебединое озеро",
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "language": null,
+    "id": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "languages": []
+   },
+   "end": null,
+   "target-credit": "",
+   "target-type": "work",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  }
+ ],
+ "id": "13867eb1-42c2-45ed-97d9-e1cc85b006fd",
+ "languages": []
+}

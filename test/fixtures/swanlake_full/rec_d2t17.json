@@ -1,0 +1,186 @@
+{
+ "aliases": [
+  {
+   "locale": null,
+   "name": "Swan Lake, Op. 20 - Mariinsky Version / Act 3: Scène: Allegro agitato - Molto meno mosso - Allegro vivace",
+   "sort-name": "Swan Lake, Op. 20 - Mariinsky Version / Act 3: Scène: Allegro agitato - Molto meno mosso - Allegro vivace",
+   "begin": null,
+   "type-id": null,
+   "type": null,
+   "primary": null,
+   "end": null,
+   "ended": false
+  }
+ ],
+ "video": false,
+ "title": "Swan Lake, op. 20 - Mariinsky Version / Act 3: Scène: Allegro agitato - Molto meno mosso - Allegro vivace",
+ "relations": [
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "source-credit": "",
+   "type": "conductor",
+   "end": "2006-06-04",
+   "target-credit": "Valery Gergiev",
+   "ended": true,
+   "artist": {
+    "country": "RU",
+    "id": "87b4252d-314b-4252-9cd3-44c08f3087b6",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Gergiev, Valery",
+    "name": "Валерий Гергиев"
+   }
+  },
+  {
+   "begin": null,
+   "attributes": [],
+   "source-credit": "",
+   "type": "editor",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "target-credit": "",
+   "end": null,
+   "artist": {
+    "id": "0a4338c5-e6f3-46f1-a58a-99e8f43fcd0f",
+    "country": null,
+    "sort-name": "Watson, Ian",
+    "name": "Ian Watson",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "editor/engineer/producer"
+   },
+   "ended": false,
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "attributes": [],
+   "begin": null,
+   "source-credit": "",
+   "type": "editor",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "target-credit": "",
+   "end": null,
+   "artist": {
+    "id": "72a764f3-2923-42ec-a73d-a87c72a409ef",
+    "country": null,
+    "sort-name": "Whiteside, Jenni",
+    "name": "Jenni Whiteside",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "engineer"
+   },
+   "ended": false
+  },
+  {
+   "begin": "2006-05-28",
+   "attributes": [],
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "end": "2006-06-04",
+   "target-credit": "Orchestra of the Mariinsky Theatre",
+   "ended": true,
+   "artist": {
+    "sort-name": "Orchestra of the Mariinsky Theatre",
+    "name": "Симфонический оркестр Мариинского театра",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "disambiguation": "fka Kirov Orchestra till 1992",
+    "type": "Orchestra",
+    "id": "6c05e40f-33b2-4150-b93a-ddc2b0d88a6a",
+    "country": "RU"
+   },
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {}
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "attributes": [],
+   "begin": null,
+   "type": "producer",
+   "source-credit": "",
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "target-credit": "",
+   "end": null,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "engineer / producer",
+    "name": "Andrew Cornall",
+    "sort-name": "Cornall, Andrew",
+    "id": "8052a978-7ff9-4793-bf87-d941457e8520",
+    "country": null
+   },
+   "ended": false
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "attributes": [],
+   "begin": "2006-05-28",
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+   "type": "recording",
+   "source-credit": "",
+   "target-credit": "",
+   "end": "2006-06-04",
+   "ended": true,
+   "artist": {
+    "id": "08536219-b31a-45be-8dda-42b008ec93e4",
+    "country": null,
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "sound engineer",
+    "sort-name": "Siney, Philip",
+    "name": "Philip Siney"
+   }
+  },
+  {
+   "attributes": [],
+   "begin": "2006-05-28",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "type": "performance",
+   "source-credit": "",
+   "work": {
+    "languages": [],
+    "id": "8b81b827-2554-4f8f-b62a-0823bf4b57f4",
+    "language": null,
+    "title": "Swan Lake, op. 20: Act IV, no. 28: Scène: Allegro agitato: Molto meno mosso: Allegro vivace",
+    "attributes": [],
+    "type-id": null,
+    "iswcs": [],
+    "type": null,
+    "disambiguation": ""
+   },
+   "target-credit": "",
+   "end": "2006-06-04",
+   "ended": true,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward"
+  }
+ ],
+ "length": 179346,
+ "disambiguation": "",
+ "first-release-date": "2007-04-25",
+ "id": "3e188351-6197-462d-9a4a-a28da8ca48ee"
+}

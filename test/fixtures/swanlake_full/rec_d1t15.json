@@ -1,0 +1,186 @@
+{
+ "aliases": [
+  {
+   "ended": false,
+   "end": null,
+   "primary": null,
+   "type": null,
+   "type-id": null,
+   "sort-name": "Swan Lake, Op. 20 - Mariinsky Version / Act 1: Scene 2: Scène (Allegro moderato - Moderato - Allegro vivo)",
+   "name": "Swan Lake, Op. 20 - Mariinsky Version / Act 1: Scene 2: Scène (Allegro moderato - Moderato - Allegro vivo)",
+   "begin": null,
+   "locale": null
+  }
+ ],
+ "video": false,
+ "title": "Swan Lake, op. 20 - Mariinsky Version / Act 1: Scene 2: Scène (Allegro moderato - Moderato - Allegro vivo)",
+ "length": 246146,
+ "disambiguation": "",
+ "relations": [
+  {
+   "target-credit": "Valery Gergiev",
+   "end": "2006-06-04",
+   "artist": {
+    "id": "87b4252d-314b-4252-9cd3-44c08f3087b6",
+    "country": "RU",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "conductor",
+    "name": "Валерий Гергиев",
+    "sort-name": "Gergiev, Valery"
+   },
+   "ended": true,
+   "attributes": [],
+   "begin": "2006-05-28",
+   "type": "conductor",
+   "source-credit": "",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist"
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "attributes": [],
+   "begin": null,
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "source-credit": "",
+   "type": "editor",
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "editor/engineer/producer",
+    "name": "Ian Watson",
+    "sort-name": "Watson, Ian",
+    "id": "0a4338c5-e6f3-46f1-a58a-99e8f43fcd0f",
+    "country": null
+   }
+  },
+  {
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {},
+   "target-type": "artist",
+   "ended": false,
+   "artist": {
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "type": "Person",
+    "disambiguation": "engineer",
+    "name": "Jenni Whiteside",
+    "sort-name": "Whiteside, Jenni",
+    "id": "72a764f3-2923-42ec-a73d-a87c72a409ef",
+    "country": null
+   },
+   "end": null,
+   "target-credit": "",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "type": "editor",
+   "source-credit": "",
+   "begin": null,
+   "attributes": []
+  },
+  {
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "source-credit": "",
+   "type": "performing orchestra",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "target-credit": "Orchestra of the Mariinsky Theatre",
+   "end": "2006-06-04",
+   "artist": {
+    "disambiguation": "fka Kirov Orchestra till 1992",
+    "type": "Orchestra",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "sort-name": "Orchestra of the Mariinsky Theatre",
+    "name": "Симфонический оркестр Мариинского театра",
+    "country": "RU",
+    "id": "6c05e40f-33b2-4150-b93a-ddc2b0d88a6a"
+   },
+   "ended": true
+  },
+  {
+   "target-credit": "",
+   "end": null,
+   "ended": false,
+   "artist": {
+    "country": null,
+    "id": "8052a978-7ff9-4793-bf87-d941457e8520",
+    "sort-name": "Cornall, Andrew",
+    "name": "Andrew Cornall",
+    "disambiguation": "engineer / producer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "begin": null,
+   "attributes": [],
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "source-credit": "",
+   "type": "producer",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist"
+  },
+  {
+   "attributes": [],
+   "begin": "2006-05-28",
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+   "type": "recording",
+   "source-credit": "",
+   "end": "2006-06-04",
+   "target-credit": "",
+   "ended": true,
+   "artist": {
+    "country": null,
+    "id": "08536219-b31a-45be-8dda-42b008ec93e4",
+    "type": "Person",
+    "disambiguation": "sound engineer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Philip Siney",
+    "sort-name": "Siney, Philip"
+   },
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward",
+   "target-type": "work",
+   "work": {
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Swan Lake, op. 20: Act II, no. 11: Scene: Allegro moderato – Allegro vivo",
+    "language": null,
+    "id": "cc2e2a57-098a-320a-9644-1457eb040ec7",
+    "languages": []
+   },
+   "end": "2006-06-04",
+   "target-credit": "",
+   "ended": true,
+   "attributes": [],
+   "begin": "2006-05-28",
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0"
+  }
+ ],
+ "id": "3c8cd4ca-9bd1-4de9-812a-de375396b44d",
+ "first-release-date": "2007-04-25"
+}

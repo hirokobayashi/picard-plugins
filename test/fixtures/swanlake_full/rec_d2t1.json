@@ -1,0 +1,186 @@
+{
+ "disambiguation": "",
+ "length": 151840,
+ "relations": [
+  {
+   "source-credit": "",
+   "type": "conductor",
+   "type-id": "234670ce-5f22-4fd0-921b-ef1662695c5d",
+   "attributes": [],
+   "begin": "2006-05-28",
+   "artist": {
+    "type": "Person",
+    "disambiguation": "conductor",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "sort-name": "Gergiev, Valery",
+    "name": "Валерий Гергиев",
+    "country": "RU",
+    "id": "87b4252d-314b-4252-9cd3-44c08f3087b6"
+   },
+   "ended": true,
+   "target-credit": "Valery Gergiev",
+   "end": "2006-06-04",
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "source-credit": "",
+   "type": "editor",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "attributes": [],
+   "begin": null,
+   "artist": {
+    "id": "0a4338c5-e6f3-46f1-a58a-99e8f43fcd0f",
+    "country": null,
+    "sort-name": "Watson, Ian",
+    "name": "Ian Watson",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "editor/engineer/producer",
+    "type": "Person"
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "target-type": "artist",
+   "direction": "backward",
+   "attribute-ids": {},
+   "attribute-values": {}
+  },
+  {
+   "artist": {
+    "name": "Jenni Whiteside",
+    "sort-name": "Whiteside, Jenni",
+    "type": "Person",
+    "disambiguation": "engineer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "country": null,
+    "id": "72a764f3-2923-42ec-a73d-a87c72a409ef"
+   },
+   "ended": false,
+   "target-credit": "",
+   "end": null,
+   "type": "editor",
+   "source-credit": "",
+   "type-id": "40dff87a-e475-4aa6-b615-9935b564d756",
+   "attributes": [],
+   "begin": null,
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist"
+  },
+  {
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {},
+   "target-type": "artist",
+   "ended": true,
+   "artist": {
+    "id": "6c05e40f-33b2-4150-b93a-ddc2b0d88a6a",
+    "country": "RU",
+    "type-id": "a0b36c92-3eb1-3839-a4f9-4799823f54a5",
+    "type": "Orchestra",
+    "disambiguation": "fka Kirov Orchestra till 1992",
+    "name": "Симфонический оркестр Мариинского театра",
+    "sort-name": "Orchestra of the Mariinsky Theatre"
+   },
+   "end": "2006-06-04",
+   "target-credit": "Orchestra of the Mariinsky Theatre",
+   "type-id": "3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb",
+   "type": "performing orchestra",
+   "source-credit": "",
+   "begin": "2006-05-28",
+   "attributes": []
+  },
+  {
+   "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+   "source-credit": "",
+   "type": "producer",
+   "begin": null,
+   "attributes": [],
+   "ended": false,
+   "artist": {
+    "country": null,
+    "id": "8052a978-7ff9-4793-bf87-d941457e8520",
+    "type": "Person",
+    "disambiguation": "engineer / producer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Andrew Cornall",
+    "sort-name": "Cornall, Andrew"
+   },
+   "end": null,
+   "target-credit": "",
+   "target-type": "artist",
+   "attribute-ids": {},
+   "direction": "backward",
+   "attribute-values": {}
+  },
+  {
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward",
+   "target-type": "artist",
+   "target-credit": "",
+   "end": "2006-06-04",
+   "artist": {
+    "country": null,
+    "id": "08536219-b31a-45be-8dda-42b008ec93e4",
+    "sort-name": "Siney, Philip",
+    "name": "Philip Siney",
+    "type": "Person",
+    "disambiguation": "sound engineer",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+   },
+   "ended": true,
+   "attributes": [],
+   "begin": "2006-05-28",
+   "source-credit": "",
+   "type": "recording",
+   "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926"
+  },
+  {
+   "begin": "2006-05-28",
+   "attributes": [],
+   "source-credit": "",
+   "type": "performance",
+   "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+   "target-credit": "",
+   "end": "2006-06-04",
+   "work": {
+    "languages": [],
+    "id": "0471148d-3968-40f3-a7b8-3bdb1e4ae176",
+    "language": null,
+    "title": "Swan Lake, op. 20: Act III, no. 15: Scène: Allegro giusto",
+    "attributes": [],
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": ""
+   },
+   "ended": true,
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {}
+  }
+ ],
+ "id": "c4edfdd3-8d25-4b2d-a415-567945411e09",
+ "first-release-date": "2007-04-25",
+ "aliases": [
+  {
+   "type-id": null,
+   "type": null,
+   "locale": null,
+   "name": "Swan Lake, Op. 20 - Mariinsky Version / Act 2: Scène: (Allegro giusto)",
+   "sort-name": "Swan Lake, Op. 20 - Mariinsky Version / Act 2: Scène: (Allegro giusto)",
+   "begin": null,
+   "ended": false,
+   "primary": null,
+   "end": null
+  }
+ ],
+ "title": "Swan Lake, op. 20 - Mariinsky Version / Act 2: Scène: (Allegro giusto)",
+ "video": false
+}

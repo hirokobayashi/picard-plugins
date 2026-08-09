@@ -1,0 +1,277 @@
+{
+ "type-id": null,
+ "disambiguation": "ed. Drigo",
+ "type": null,
+ "iswcs": [],
+ "title": "Swan Lake, op. 20: Act IV",
+ "attributes": [],
+ "languages": [
+  "zxx"
+ ],
+ "id": "169a3f15-a391-4bc0-a325-3ec166182a00",
+ "relations": [
+  {
+   "attributes": [],
+   "begin": null,
+   "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+   "source-credit": "",
+   "type": "composer",
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "artist": {
+    "name": "Пётр Ильич Чайковский",
+    "sort-name": "Tchaikovsky, Pyotr Ilyich",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "disambiguation": "Russian romantic composer",
+    "type": "Person",
+    "id": "9ddd7abc-9e1b-471d-8031-583bc6bc8be9",
+    "country": "RU"
+   },
+   "target-type": "artist",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "backward"
+  },
+  {
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "artist",
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "artist": {
+    "disambiguation": "composer",
+    "type": "Person",
+    "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+    "name": "Riccardo Drigo",
+    "sort-name": "Drigo, Riccardo",
+    "country": "IT",
+    "id": "a47c544f-5324-42ea-b08b-3dabab4c7dd8"
+   },
+   "attributes": [],
+   "begin": null,
+   "type-id": "eeb9c319-9fde-4313-b76d-29db1576aad8",
+   "source-credit": "",
+   "type": "revised by"
+  },
+  {
+   "target-type": "work",
+   "direction": "backward",
+   "attribute-ids": {
+    "act": "4485dfdb-6000-4602-8b18-5f84e34d8aed"
+   },
+   "attribute-values": {},
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 4,
+   "type": "parts",
+   "attributes": [
+    "act"
+   ],
+   "begin": null,
+   "ended": false,
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "attributes": [],
+    "title": "Swan Lake, op. 20",
+    "disambiguation": "1895 R. Drigo Edition",
+    "type": "Ballet",
+    "iswcs": [],
+    "type-id": "6a90744c-1e07-3b88-b394-cd44cd68bd63",
+    "language": null,
+    "languages": [],
+    "id": "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+   }
+  },
+  {
+   "attributes": [],
+   "begin": null,
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 1,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "work": {
+    "attributes": [],
+    "title": "Swan Lake, op. 20: Act IV, no. 25: Entr'acte: Moderato",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "language": null,
+    "id": "c370363b-3d2b-41e4-8541-b752c49a6f07",
+    "languages": []
+   },
+   "end": null,
+   "target-credit": "",
+   "ended": false,
+   "target-type": "work",
+   "attribute-values": {},
+   "attribute-ids": {},
+   "direction": "forward"
+  },
+  {
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "work": {
+    "languages": [],
+    "id": "27e185cb-3078-465f-8ce1-cdfeda39aa71",
+    "language": null,
+    "title": "Swan Lake, op. 20: Variation II. Valse-bluette",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null
+   },
+   "target-credit": "",
+   "end": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 2,
+   "type": "parts",
+   "attributes": [],
+   "begin": null
+  },
+  {
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "target-type": "work",
+   "end": null,
+   "target-credit": "",
+   "work": {
+    "languages": [],
+    "id": "8b81b827-2554-4f8f-b62a-0823bf4b57f4",
+    "language": null,
+    "title": "Swan Lake, op. 20: Act IV, no. 28: Scène: Allegro agitato: Molto meno mosso: Allegro vivace",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "type": null,
+    "iswcs": []
+   },
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "type": "parts",
+   "ordering-key": 3
+  },
+  {
+   "target-type": "work",
+   "attribute-values": {},
+   "direction": "forward",
+   "attribute-ids": {},
+   "attributes": [],
+   "begin": null,
+   "ordering-key": 4,
+   "source-credit": "",
+   "type": "parts",
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "attributes": [],
+    "title": "Swan Lake, op. 20: Act IV: Scène finale. Andante",
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "ed. Drigo",
+    "type-id": null,
+    "language": "zxx",
+    "id": "96e46066-78b2-4d5f-a10f-dac2b4dc2b58",
+    "languages": [
+     "zxx"
+    ]
+   },
+   "ended": false
+  },
+  {
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "work": {
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "",
+    "type-id": null,
+    "attributes": [],
+    "title": "Swan Lake, op. 20: Variation III. Un poco di Chopin",
+    "language": null,
+    "id": "894c67c6-e999-4b8a-8913-58f627b7bcdd",
+    "languages": []
+   },
+   "target-credit": "",
+   "end": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "source-credit": "",
+   "ordering-key": 5,
+   "type": "parts",
+   "attributes": [],
+   "begin": null
+  },
+  {
+   "attribute-ids": {},
+   "direction": "forward",
+   "attribute-values": {},
+   "target-type": "work",
+   "ended": false,
+   "work": {
+    "id": "3d749164-4223-4526-b0ea-a65bc2235038",
+    "languages": [
+     "zxx"
+    ],
+    "language": "zxx",
+    "type-id": null,
+    "type": null,
+    "iswcs": [],
+    "disambiguation": "ed. Drigo",
+    "title": "Swan Lake, op. 20: Act IV: Scène finale. Allegro agitato",
+    "attributes": []
+   },
+   "target-credit": "",
+   "end": null,
+   "type-id": "ca8d3642-ce5f-49f8-91f2-125d72524e6a",
+   "type": "parts",
+   "source-credit": "",
+   "ordering-key": 6,
+   "attributes": [],
+   "begin": null
+  },
+  {
+   "target-credit": "",
+   "end": null,
+   "work": {
+    "languages": [],
+    "id": "eebafafe-5288-45d0-ba67-554ba344f737",
+    "language": null,
+    "title": "Swan Lake, op. 20: Act IV",
+    "attributes": [],
+    "type-id": null,
+    "disambiguation": "",
+    "iswcs": [],
+    "type": null
+   },
+   "ended": false,
+   "attributes": [],
+   "begin": null,
+   "source-credit": "",
+   "type": "revision of",
+   "type-id": "4d0d6491-3c41-42c6-883f-d6c7e825b052",
+   "attribute-values": {},
+   "direction": "backward",
+   "attribute-ids": {},
+   "target-type": "work"
+  }
+ ],
+ "language": "zxx",
+ "aliases": []
+}
