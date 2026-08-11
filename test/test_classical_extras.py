@@ -1411,6 +1411,307 @@ class ClassicalExtrasTestCase(PluginTestCase):
                          track.metadata.get("~cwp_work_top"))
 
 
+class InverseHierarchyCharacterizationTestCase(PluginTestCase):
+    """Characterization tests for ``PartLevels._build_inverse_hierarchy``.
+
+    These tests pin the *current* observable behaviour of the inverse-hierarchy
+    construction phase extracted from ``PartLevels.process_album`` in PR #1
+    (commit 59f02d0). The production code is intentionally not changed here;
+    each test names the production line/branch it guards.
+
+    The phase reads, for every workId in self.work_listing[album] that also
+    appears in self.parts:
+      * cwp_aliases_tag_text is split on "," and each element stripped
+        (production lines ~7023-7025);
+      * for multi-id works (len(workId) > 1) the "order" keys reorder "name",
+        with a 999 fallback for ids missing from "order" (lines ~7038-7053);
+      * aliases replace "name" when cwp_aliases is set and any of
+        cwp_aliases_all / cwp_aliases_greek (non-Latin) / tag-match holds and
+        the work has a non-empty alias (lines ~7056-7063);
+      * the inverse partof[album][parentIds] map is built from works_cache
+        with redundant-ancestor reduction (lines ~7070-7127), and self.top[album]
+        accumulates top ids (lines ~7137-7142).
+
+    This class deliberately derives directly from PluginTestCase (not from
+    ClassicalExtrasTestCase) so the ten characterization tests are discovered
+    exactly once. ClassicalExtrasTestCase and its 17 subclasses do not see
+    these methods, and nothing else inherits this class.
+    """
+
+    MOD = "classical_extras"
+    _mod = None  # cached plugin module (shared with ClassicalExtrasTestCase)
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Prevent plugin state from leaking into subsequently executed tests.
+        cls.addClassCleanup(
+            ClassicalExtrasTestCase._cleanup_global_state
+        )
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting=dict(_ALL_OPTION_DEFAULTS))
+        # Reuse the plugin module cached by ClassicalExtrasTestCase when the
+        # main suite has already run; otherwise install it once here. The
+        # cache lives on ClassicalExtrasTestCase so both classes share one
+        # installed module (unload_plugin does not fully clear sys.modules).
+        if ClassicalExtrasTestCase._mod is None:
+            ClassicalExtrasTestCase._mod = self._test_plugin_install(
+                "Classical Extras", self.MOD)
+        self.mod = ClassicalExtrasTestCase._mod
+
+    _BIH_ALBUM = "alb"
+
+    def _make_bih_pl(self, *, parts, work_listing, works_cache=None,
+                     partof=None, top=None):
+        """Build a bare PartLevels wired for _build_inverse_hierarchy.
+
+        Only the attributes the phase actually reads/writes are set; everything
+        else is left unset so a stray access surfaces as AttributeError.
+        works_cache/partof/top default to fresh containers matching the
+        production __init__ (lines 4409/4413/4476/4479).
+        """
+        PartLevels = self.mod.PartLevels
+        pl = PartLevels.__new__(PartLevels)
+        pl.parts = parts
+        pl.work_listing = collections.defaultdict(list)
+        pl.work_listing[self._BIH_ALBUM] = list(work_listing)
+        pl.works_cache = works_cache if works_cache is not None else {}
+        pl.partof = (partof if partof is not None
+                     else collections.defaultdict(dict))
+        pl.top = top if top is not None else collections.defaultdict(list)
+        return pl
+
+    # ----- T1: alias handling -----
+
+    def test_alias_replaces_name_when_cwp_aliases_all_and_alias_present(self):
+        """T1.1 - with cwp_aliases=True, cwp_aliases_all=True and a non-empty
+        alias on the work, name is replaced by a *copy* of the alias list.
+
+        Guards production lines ~7056-7063: the cwp_aliases_all branch is taken
+        (short-circuiting the greek/tag checks) and the alias list is copied
+        into name.
+        """
+        workId = ("w1",)
+        pl = self._make_bih_pl(
+            parts={workId: {"name": ["Original Name"], "alias": ["Stage Name"]}},
+            work_listing=[workId])
+        self.set_config_values(setting={
+            "cwp_aliases": True, "cwp_aliases_all": True,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        self.assertEqual(pl.parts[workId]["name"], ["Stage Name"])
+
+    def test_alias_applies_only_when_character_condition_matches(self):
+        """T1.2 - with cwp_aliases_all=False and cwp_aliases_greek=True, alias
+        replacement fires for a non-Latin name but not for an all-Latin name.
+
+        Guards production line ~7059:
+        ``config.setting['cwp_aliases_greek'] and not only_roman_chars(name_string)``.
+        The all-Latin work keeps its original name; the cyrillic work is
+        replaced by its alias.
+        """
+        latinId = ("wLatin",)
+        greekId = ("wGreek",)
+        pl = self._make_bih_pl(
+            parts={
+                latinId: {"name": ["Latin Title"], "alias": ["Latin Alias"]},
+                greekId: {"name": ["Соната"], "alias": ["Sonata"]},
+            },
+            work_listing=[latinId, greekId])
+        self.set_config_values(setting={
+            "cwp_aliases": True, "cwp_aliases_all": False,
+            "cwp_aliases_greek": True, "cwp_aliases_tag_text": "use_alias"})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        self.assertEqual(pl.parts[latinId]["name"], ["Latin Title"])
+        self.assertEqual(pl.parts[greekId]["name"], ["Sonata"])
+
+    def test_alias_tag_text_entries_are_stripped(self):
+        """T1.3 - whitespace around each comma-separated cwp_aliases_tag_text
+        entry is stripped before matching against tags.
+
+        Guards production lines ~7023-7025 (alias_tag_list[i] = tag_item.strip())
+        together with the tag-match branch at line ~7060-7061: a tag stored as
+        "use_alias" must match a cwp_aliases_tag_text of "  use_alias  ".
+        """
+        workId = ("w1",)
+        pl = self._make_bih_pl(
+            parts={workId: {"name": ["Original"], "alias": ["Alias"],
+                            "tags": ["use_alias"]}},
+            work_listing=[workId])
+        self.set_config_values(setting={
+            "cwp_aliases": True, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "  use_alias  "})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        self.assertEqual(pl.parts[workId]["name"], ["Alias"])
+
+    def test_empty_alias_is_not_substituted(self):
+        """T1.4 - an empty alias list leaves name unchanged even when the alias
+        gate (cwp_aliases_all) is open.
+
+        Guards production line ~7062: 'alias' in self.parts[workId] and
+        self.parts[workId]['alias'] is falsy for an empty list, so the
+        substitution branch is skipped.
+        """
+        workId = ("w1",)
+        pl = self._make_bih_pl(
+            parts={workId: {"name": ["Original"], "alias": []}},
+            work_listing=[workId])
+        self.set_config_values(setting={
+            "cwp_aliases": True, "cwp_aliases_all": True,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        self.assertEqual(pl.parts[workId]["name"], ["Original"])
+
+    def test_alias_substitution_uses_copy_semantics(self):
+        """T1.5 - alias replacement copies the alias list (alias[:]), so a later
+        in-place mutation of the stored alias list does not retroactively change
+        name.
+
+        Guards production line ~7063: self.parts[workId]['alias'][:] (a slice
+        copy) rather than a direct alias reference.
+        """
+        workId = ("w1",)
+        alias_list = ["Alias A", "Alias B"]
+        pl = self._make_bih_pl(
+            parts={workId: {"name": ["Original"], "alias": alias_list}},
+            work_listing=[workId])
+        self.set_config_values(setting={
+            "cwp_aliases": True, "cwp_aliases_all": True,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        self.assertEqual(pl.parts[workId]["name"], ["Alias A", "Alias B"])
+        # Mutate the alias list in place after the substitution.
+        alias_list.append("Alias C")
+        # name must NOT reflect the later mutation: it was copied, not aliased.
+        self.assertEqual(pl.parts[workId]["name"], ["Alias A", "Alias B"])
+
+    # ----- T2: self.partof[album] construction -----
+
+    def test_partof_maps_parentids_to_workid(self):
+        """T2.1 - a work present in works_cache builds a partof[album] entry
+        keyed by its parent-id tuple, mapping to a list containing the work id.
+
+        Guards production lines ~7123-7127 (the else branch: parentIds not yet
+        in partof -> create [workId]).
+
+        NB: production line ~7130 reads self.parts[parentIds] to check the
+        no_parent flag, so the parent id must itself be a key in parts (as it
+        always is on a real album where every parent work has been
+        pre-registered).
+        """
+        workId = ("w1",)
+        parentIds = ("p1",)
+        pl = self._make_bih_pl(
+            parts={workId: {"name": ["W"]},
+                   parentIds: {"name": ["Parent Work"], "no_parent": False}},
+            work_listing=[workId],
+            works_cache={workId: list(parentIds)})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        self.assertEqual(pl.partof[self._BIH_ALBUM][parentIds], [workId])
+
+    def test_partof_appends_second_work_sharing_parentids(self):
+        """T2.2 - a second work whose (reduced) parentIds is the same key as an
+        existing entry is appended to that entry's list rather than replacing
+        it.
+
+        Guards production lines ~7123-7125 (the if parentIds in self.partof
+        branch and the if workId not in ... append guard).
+
+        Legacy characterization: the append order is determined solely by the
+        iteration order of self.work_listing[album] (a list), and the
+        duplicate-guard preserves the first-seen position. The test pins that
+        order; it is not a spec guarantee but a characterization of the current
+        behaviour.
+
+        NB: production line ~7130 reads self.parts[parentIds] to check the
+        no_parent flag, so the parent id must be a key in parts.
+        """
+        w1, w2 = ("w1",), ("w2",)
+        parentIds = ("p1",)
+        # Neither parent is an ancestor of the other, so
+        # _reduce_redundant_parents is a no-op and parentIds stays unchanged
+        # (the reduction acceptance check at ~7106-7108 passes because
+        # reduced == parentIds).
+        pl = self._make_bih_pl(
+            parts={w1: {"name": ["W1"]}, w2: {"name": ["W2"]},
+                   parentIds: {"name": ["Parent Work"], "no_parent": False}},
+            work_listing=[w1, w2],
+            works_cache={w1: list(parentIds), w2: list(parentIds)})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        self.assertEqual(pl.partof[self._BIH_ALBUM][parentIds], [w1, w2])
+
+    # ----- T3: name ordering -----
+
+    def test_order_keys_sort_names_in_specified_order(self):
+        """T3.1 - for a multi-id work (len(workId) > 1) the name list is
+        reordered so that names follow the per-id order keys, ascending.
+
+        Guards production lines ~7041-7053: seq is built from
+        parts[workId]['order'] per id, names zipped with seq and sorted by the
+        seq value.
+        """
+        workId = ("a", "b", "c")
+        pl = self._make_bih_pl(
+            parts={workId: {"name": ["Name A", "Name B", "Name C"],
+                            "order": {"a": 2, "b": 0, "c": 1}}},
+            work_listing=[workId])
+        self.set_config_values(setting={
+            "cwp_aliases": False, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        # order keys: b=0, c=1, a=2 -> names ordered Name B, Name C, Name A
+        self.assertEqual(pl.parts[workId]["name"],
+                         ["Name B", "Name C", "Name A"])
+
+    def test_order_missing_ids_go_last_with_fallback_999(self):
+        """T3.2/T3.3 - ids not present in order get the 999 fallback, so their
+        names sort after all ordered names; among the unordered names the
+        original relative order is preserved (sorted is stable).
+
+        Guards production lines ~7044-7049 (the else branch appending 999) and
+        the stable-sort at ~7051. With names [N0, N1, N2, N3] and order {a:1,
+        c:0}, ids b and d get 999; sorted by seq gives c(0), a(1), then b(999),
+        d(999) in their original relative order.
+        """
+        workId = ("a", "b", "c", "d")
+        pl = self._make_bih_pl(
+            parts={workId: {"name": ["N0", "N1", "N2", "N3"],
+                            "order": {"a": 1, "c": 0}}},
+            work_listing=[workId])
+        self.set_config_values(setting={
+            "cwp_aliases": False, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        # seq: a=1, b=999, c=0, d=999 -> sorted by seq: c(0), a(1), b(999), d(999)
+        # original relative order of b(999) and d(999) is N1 then N3.
+        self.assertEqual(pl.parts[workId]["name"],
+                         ["N2", "N0", "N1", "N3"])
+
+    def test_order_fallback_999_keeps_unordered_names_after_ordered(self):
+        """T3.4 - pin the current 999 fallback behaviour: when no id has an
+        order entry, every seq is 999 and the stable sort leaves the original
+        name list untouched.
+
+        Guards production lines ~7046-7049 (the fallback append) combined with
+        the stable sort at ~7051: all-equal keys -> identity permutation.
+        """
+        workId = ("a", "b", "c")
+        pl = self._make_bih_pl(
+            parts={workId: {"name": ["First", "Second", "Third"],
+                            "order": {}}},
+            work_listing=[workId])
+        self.set_config_values(setting={
+            "cwp_aliases": False, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        # All seq values are 999 (no id present in order); stable sort is a
+        # no-op, so the original list is preserved.
+        self.assertEqual(pl.parts[workId]["name"],
+                         ["First", "Second", "Third"])
+
+
 class RecordingSessionTagsTestCase(ClassicalExtrasTestCase):
     """Recording place/date tag derivation (recording_session_tags).
 
