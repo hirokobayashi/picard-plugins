@@ -7016,20 +7016,7 @@ class PartLevels():
                     track_tops[t].add(topId)
         return track_tops
 
-    def process_album(self, release_id, album):
-        """
-        Top routine to run end-of-album processes
-        :param release_id: name for log file - usually =musicbrainz_albumid
-        unless called outside metadata processor
-        :param album:
-        :return:
-        """
-        write_log(release_id, 'debug', "PROCESS ALBUM %s", album)
-        release_status[release_id]['done-lookups'] = datetime.now()
-        # De-duplicate names in self.parts, maintaining order (in case part names have been arrived at via multiple paths)
-        for part_item in self.parts:
-            if 'name' in self.parts[part_item]:
-                self.parts[part_item]['name'] = list(collections.OrderedDict.fromkeys(str_to_list(self.parts[part_item]['name'])))
+    def _build_inverse_hierarchy(self, release_id, album):
         # populate the inverse hierarchy
         write_log(release_id, 'info', "Cache: %s", self.works_cache)
         write_log(release_id, 'info', "Work listing %s", self.work_listing)
@@ -7153,6 +7140,22 @@ class PartLevels():
                             self.top[album].append(topId)
                     else:
                         self.top[album] = [topId]
+
+    def process_album(self, release_id, album):
+        """
+        Top routine to run end-of-album processes
+        :param release_id: name for log file - usually =musicbrainz_albumid
+        unless called outside metadata processor
+        :param album:
+        :return:
+        """
+        write_log(release_id, 'debug', "PROCESS ALBUM %s", album)
+        release_status[release_id]['done-lookups'] = datetime.now()
+        # De-duplicate names in self.parts, maintaining order (in case part names have been arrived at via multiple paths)
+        for part_item in self.parts:
+            if 'name' in self.parts[part_item]:
+                self.parts[part_item]['name'] = list(collections.OrderedDict.fromkeys(str_to_list(self.parts[part_item]['name'])))
+        self._build_inverse_hierarchy(release_id, album)
         # work out the full hierarchy and part levels
         height = 0
         write_log(
