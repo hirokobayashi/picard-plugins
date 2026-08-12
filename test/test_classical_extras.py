@@ -1415,31 +1415,42 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
     """Characterization tests for ``PartLevels._build_inverse_hierarchy``.
 
     These tests pin the *current* observable behaviour of the inverse-hierarchy
-    construction phase extracted from ``PartLevels.process_album`` in PR #1
-    (commit 59f02d0). The production code is intentionally not changed here;
-    each test names the production line/branch it guards.
+    construction phase extracted from ``PartLevels.process_album``. The
+    production code is intentionally not changed here, and every expectation
+    below was read off a live run of the phase rather than derived from what
+    the behaviour arguably ought to be. Where the current behaviour looks
+    questionable the test says so and still asserts the current result.
 
-    The phase reads, for every workId in self.work_listing[album] that also
-    appears in self.parts:
-      * cwp_aliases_tag_text is split on "," and each element stripped
-        (production lines ~7023-7025);
-      * for multi-id works (len(workId) > 1) the "order" keys reorder "name",
-        with a 999 fallback for ids missing from "order" (lines ~7038-7053);
-      * aliases replace "name" when cwp_aliases is set and any of
-        cwp_aliases_all / cwp_aliases_greek (non-Latin) / tag-match holds and
-        the work has a non-empty alias (lines ~7056-7063);
-      * the inverse partof[album][parentIds] map is built from works_cache
-        with redundant-ancestor reduction (lines ~7070-7127), and self.top[album]
-        accumulates top ids (lines ~7137-7142).
+    For every workId in ``self.work_listing[album]`` that also appears in
+    ``self.parts``, the phase does the following, and each item is asserted by
+    at least one test in this class:
+
+      * splits ``cwp_aliases_tag_text`` on "," and strips each element;
+      * for multi-id works (``len(workId) > 1``) reorders "name" by the
+        per-id "order" keys, with a 999 fallback for ids absent from "order";
+      * replaces "name" with a copy of "alias" when ``cwp_aliases`` is set and
+        any of ``cwp_aliases_all`` / ``cwp_aliases_greek`` (non-Latin name) /
+        a tag match holds, and the work has a non-empty alias;
+      * builds ``self.partof[album][parentIds]`` from ``works_cache``, first
+        passing the parents through ``_reduce_redundant_parents`` and keeping
+        the reduction only when the shortened tuple ``== parentIds`` or is
+        itself a node in ``work_listing[album]``. Both reduction rules
+        (ancestor-of-another-parent, standalone-vs-embedded), both outcomes of
+        the acceptance check, and the resulting order dependence are covered;
+      * as a side effect of the ``'no_parent' in self.parts[parentIds]`` test,
+        auto-vivifies an empty ``self.parts`` entry for a parent id that was
+        never registered (``self.parts`` is a defaultdict in production);
+      * accumulates top ids in ``self.top[album]`` -- the workId itself when it
+        has no ``works_cache`` entry, else a parent tuple flagged
+        ``no_parent``, appending each top at most once.
 
     This class deliberately derives directly from PluginTestCase (not from
-    ClassicalExtrasTestCase) so the ten characterization tests are discovered
+    ClassicalExtrasTestCase) so its characterization tests are discovered
     exactly once. ClassicalExtrasTestCase and its 17 subclasses do not see
     these methods, and nothing else inherits this class.
     """
 
     MOD = "classical_extras"
-    _mod = None  # cached plugin module (shared with ClassicalExtrasTestCase)
 
     @classmethod
     def setUpClass(cls):
@@ -1468,13 +1479,32 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         """Build a bare PartLevels wired for _build_inverse_hierarchy.
 
         Only the attributes the phase actually reads/writes are set; everything
-        else is left unset so a stray access surfaces as AttributeError.
-        works_cache/partof/top default to fresh containers matching the
-        production __init__ (lines 4409/4413/4476/4479).
+        else is left unset so a stray access surfaces as AttributeError. Every
+        container matches the type PartLevels.__init__ gives it, so the fixture
+        cannot accidentally be stricter than production:
+
+          * ``parts``        defaultdict(lambda: defaultdict(dict))
+          * ``works_cache``  plain dict
+          * ``work_listing`` defaultdict(list)
+          * ``partof``       defaultdict(dict)
+          * ``top``          defaultdict(list)
+
+        The ``parts`` type matters: the phase reads
+        ``self.parts[parentIds]`` without first checking membership, so in
+        production an unregistered parent id is auto-vivified to an empty
+        entry rather than raising KeyError. A plain dict here would turn that
+        legacy side effect into an error and let a future refactor that guards
+        the access silently change production behaviour while still passing.
+        The ``parts`` mapping passed in is copied into the production shape;
+        each work's own entry becomes a ``defaultdict(dict)`` too, matching
+        what the outer default factory would have produced.
         """
         PartLevels = self.mod.PartLevels
         pl = PartLevels.__new__(PartLevels)
-        pl.parts = parts
+        pl.parts = collections.defaultdict(
+            lambda: collections.defaultdict(dict))
+        for _work_id, _entry in parts.items():
+            pl.parts[_work_id] = collections.defaultdict(dict, _entry)
         pl.work_listing = collections.defaultdict(list)
         pl.work_listing[self._BIH_ALBUM] = list(work_listing)
         pl.works_cache = works_cache if works_cache is not None else {}
@@ -1489,9 +1519,9 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         """T1.1 - with cwp_aliases=True, cwp_aliases_all=True and a non-empty
         alias on the work, name is replaced by a *copy* of the alias list.
 
-        Guards production lines ~7056-7063: the cwp_aliases_all branch is taken
-        (short-circuiting the greek/tag checks) and the alias list is copied
-        into name.
+        Guards the alias-substitution branch: ``cwp_aliases_all`` is taken
+        first, short-circuiting the greek/tag checks, and the alias list is
+        copied into name.
         """
         workId = ("w1",)
         pl = self._make_bih_pl(
@@ -1507,10 +1537,10 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         """T1.2 - with cwp_aliases_all=False and cwp_aliases_greek=True, alias
         replacement fires for a non-Latin name but not for an all-Latin name.
 
-        Guards production line ~7059:
-        ``config.setting['cwp_aliases_greek'] and not only_roman_chars(name_string)``.
-        The all-Latin work keeps its original name; the cyrillic work is
-        replaced by its alias.
+        Guards the alias gate's second disjunct,
+        ``config.setting['cwp_aliases_greek'] and not only_roman_chars(name_string)``,
+        where ``name_string`` is the "; "-joined name list. The all-Latin work
+        keeps its original name; the cyrillic work is replaced by its alias.
         """
         latinId = ("wLatin",)
         greekId = ("wGreek",)
@@ -1531,8 +1561,8 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         """T1.3 - whitespace around each comma-separated cwp_aliases_tag_text
         entry is stripped before matching against tags.
 
-        Guards production lines ~7023-7025 (alias_tag_list[i] = tag_item.strip())
-        together with the tag-match branch at line ~7060-7061: a tag stored as
+        Guards the ``alias_tag_list[i] = tag_item.strip()`` normalisation
+        together with the alias gate's tag-match disjunct: a tag stored as
         "use_alias" must match a cwp_aliases_tag_text of "  use_alias  ".
         """
         workId = ("w1",)
@@ -1550,9 +1580,9 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         """T1.4 - an empty alias list leaves name unchanged even when the alias
         gate (cwp_aliases_all) is open.
 
-        Guards production line ~7062: 'alias' in self.parts[workId] and
-        self.parts[workId]['alias'] is falsy for an empty list, so the
-        substitution branch is skipped.
+        Guards the ``'alias' in self.parts[workId] and
+        self.parts[workId]['alias']`` test, whose second operand is falsy for
+        an empty list, so the substitution branch is skipped.
         """
         workId = ("w1",)
         pl = self._make_bih_pl(
@@ -1569,8 +1599,8 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         in-place mutation of the stored alias list does not retroactively change
         name.
 
-        Guards production line ~7063: self.parts[workId]['alias'][:] (a slice
-        copy) rather than a direct alias reference.
+        Guards the ``self.parts[workId]['alias'][:]`` slice copy, as opposed
+        to binding the alias list by reference.
         """
         workId = ("w1",)
         alias_list = ["Alias A", "Alias B"]
@@ -1593,13 +1623,12 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         """T2.1 - a work present in works_cache builds a partof[album] entry
         keyed by its parent-id tuple, mapping to a list containing the work id.
 
-        Guards production lines ~7123-7127 (the else branch: parentIds not yet
-        in partof -> create [workId]).
+        Guards the else branch of the partof insertion: parentIds is not yet
+        a key in ``self.partof[album]``, so it is created as ``[workId]``.
 
-        NB: production line ~7130 reads self.parts[parentIds] to check the
-        no_parent flag, so the parent id must itself be a key in parts (as it
-        always is on a real album where every parent work has been
-        pre-registered).
+        NB: the phase reads self.parts[parentIds] to check the no_parent flag.
+        The parent is registered in parts here, as it is on a real album where
+        every parent work has been pre-registered.
         """
         workId = ("w1",)
         parentIds = ("p1",)
@@ -1616,8 +1645,8 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         existing entry is appended to that entry's list rather than replacing
         it.
 
-        Guards production lines ~7123-7125 (the if parentIds in self.partof
-        branch and the if workId not in ... append guard).
+        Guards the ``parentIds in self.partof[album]`` branch and its
+        ``workId not in ...`` append guard.
 
         Legacy characterization: the append order is determined solely by the
         iteration order of self.work_listing[album] (a list), and the
@@ -1625,15 +1654,20 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         order; it is not a spec guarantee but a characterization of the current
         behaviour.
 
-        NB: production line ~7130 reads self.parts[parentIds] to check the
-        no_parent flag, so the parent id must be a key in parts.
+        NB: the phase reads self.parts[parentIds] to check the no_parent flag.
+        The parent is registered in parts here so this test stays about the
+        append branch; the auto-vivification that happens when it is *not*
+        registered is characterized separately by
+        test_unregistered_parent_id_is_auto_vivified_in_parts.
         """
         w1, w2 = ("w1",), ("w2",)
         parentIds = ("p1",)
-        # Neither parent is an ancestor of the other, so
-        # _reduce_redundant_parents is a no-op and parentIds stays unchanged
-        # (the reduction acceptance check at ~7106-7108 passes because
-        # reduced == parentIds).
+        # No reduction happens here, and NOT because two parents were compared
+        # for ancestry: each of w1 and w2 has exactly ONE parent, the same p1.
+        # _reduce_redundant_parents returns immediately on its
+        # ``len(parentIds) <= 1`` guard, so the acceptance check passes via
+        # ``reduced == parentIds``. The multi-parent path where the ancestry
+        # walk actually runs is covered by the reduction tests below.
         pl = self._make_bih_pl(
             parts={w1: {"name": ["W1"]}, w2: {"name": ["W2"]},
                    parentIds: {"name": ["Parent Work"], "no_parent": False}},
@@ -1648,9 +1682,9 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         """T3.1 - for a multi-id work (len(workId) > 1) the name list is
         reordered so that names follow the per-id order keys, ascending.
 
-        Guards production lines ~7041-7053: seq is built from
-        parts[workId]['order'] per id, names zipped with seq and sorted by the
-        seq value.
+        Guards the ``'order' in self.parts[workId]`` reordering branch: seq is
+        built from ``parts[workId]['order']`` per id, then names are zipped
+        with seq and sorted by the seq value.
         """
         workId = ("a", "b", "c")
         pl = self._make_bih_pl(
@@ -1670,10 +1704,11 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         names sort after all ordered names; among the unordered names the
         original relative order is preserved (sorted is stable).
 
-        Guards production lines ~7044-7049 (the else branch appending 999) and
-        the stable-sort at ~7051. With names [N0, N1, N2, N3] and order {a:1,
-        c:0}, ids b and d get 999; sorted by seq gives c(0), a(1), then b(999),
-        d(999) in their original relative order.
+        Guards the else branch that appends the 999 fallback, combined with
+        the stable ``sorted(..., key=lambda x: x[1])``. With names
+        [N0, N1, N2, N3] and order {a:1, c:0}, ids b and d get 999; sorting by
+        seq gives c(0), a(1), then b(999), d(999) in their original relative
+        order.
         """
         workId = ("a", "b", "c", "d")
         pl = self._make_bih_pl(
@@ -1694,8 +1729,8 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         order entry, every seq is 999 and the stable sort leaves the original
         name list untouched.
 
-        Guards production lines ~7046-7049 (the fallback append) combined with
-        the stable sort at ~7051: all-equal keys -> identity permutation.
+        Guards the 999 fallback append combined with the stable sort:
+        all-equal keys -> identity permutation.
         """
         workId = ("a", "b", "c")
         pl = self._make_bih_pl(
@@ -1710,6 +1745,330 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         # no-op, so the original list is preserved.
         self.assertEqual(pl.parts[workId]["name"],
                          ["First", "Second", "Third"])
+
+    # ----- T4: multi-parent redundant-parent reduction -----
+    #
+    # Every fixture below gives one work TWO parents, so
+    # _reduce_redundant_parents runs past its ``len(parentIds) <= 1`` guard and
+    # its ancestry walk over works_cache actually executes. Note the walk keys
+    # works_cache by the 1-tuple ``(id,)`` while parentIds holds bare id
+    # strings, so a parent's own parents must be registered under ``(id,)``.
+
+    def test_multi_parent_ancestor_parent_dropped_when_reduced_node_known(self):
+        """T4.1 - of two parents where one is an ANCESTOR of the other, the
+        ancestor is dropped, and the shortened tuple is accepted because it is
+        itself a node in work_listing[album].
+
+        This is the Liszt "Annees de pelerinage" shape from the production
+        comment: the movement is linked both to the broad grouping work and to
+        the specific suite that is itself part of that grouping.
+
+        fixture graph (works_cache):
+            ('m',)     -> ['grouping', 'suite']   <- the movement, two parents
+            ('suite',) -> ['grouping']            <- suite is inside grouping
+            grouping has no entry                 <- top level
+        work_listing: [('m',), ('suite',), ('grouping',)]
+
+        Production conditions actually exercised:
+          * len(parentIds) > 1, so the ancestry walk runs;
+          * redundant('grouping') is True via ``x in anc[y]`` -- 'grouping' is
+            an ancestor of 'suite';
+          * redundant('suite') is False, so keep == ['suite'];
+          * the acceptance check takes the ``tuple(reduced) in
+            self.work_listing[album]`` disjunct, since ('suite',) != the
+            original ('grouping', 'suite').
+
+        Characterizes current behaviour (and here it is also the behaviour the
+        production comment argues for: the movement files under the suite, so
+        the intermediate work level survives).
+        """
+        pl = self._make_bih_pl(
+            parts={("m",): {"name": ["Movement"]},
+                   ("suite",): {"name": ["Suite"], "no_parent": False},
+                   ("grouping",): {"name": ["Grouping"], "no_parent": True}},
+            work_listing=[("m",), ("suite",), ("grouping",)],
+            works_cache={("m",): ["grouping", "suite"],
+                         ("suite",): ["grouping"]})
+        self.set_config_values(setting={
+            "cwp_aliases": False, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        # Sanity-check the reduction itself, so a failure below distinguishes
+        # "the helper changed" from "the acceptance check changed".
+        self.assertEqual(
+            tuple(pl._reduce_redundant_parents(("grouping", "suite"))),
+            ("suite",))
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        # The movement is filed under the reduced parent, NOT the fused pair.
+        self.assertEqual(pl.partof[self._BIH_ALBUM][("suite",)], [("m",)])
+        self.assertNotIn(("grouping", "suite"), pl.partof[self._BIH_ALBUM])
+        # The suite in turn is filed under the grouping, which is the top.
+        self.assertEqual(pl.partof[self._BIH_ALBUM][("grouping",)],
+                         [("suite",)])
+        self.assertEqual(pl.top[self._BIH_ALBUM], [("grouping",)])
+
+    def test_multi_parent_standalone_dropped_in_favour_of_embedded(self):
+        """T4.2 - of two parents where one is standalone (no parent of its own)
+        and the other is embedded in a larger work, the standalone one is
+        dropped.
+
+        This is the Don Giovanni "Mi tradi" shape from the production comment:
+        the aria belongs both to the standalone K. 540c grouping and to the
+        opera's Atto II. It exercises the SECOND redundancy rule, which is a
+        different branch from T4.1: here neither parent is an ancestor of the
+        other.
+
+        fixture graph (works_cache):
+            ('m',)      -> ['k540c', 'attoII']  <- the aria, two parents
+            ('attoII',) -> ['dg']               <- embedded in the opera
+            k540c has no entry                  <- standalone
+            dg has no entry                     <- top level
+        work_listing: [('m',), ('attoII',)]
+
+        Production conditions actually exercised:
+          * len(parentIds) > 1, so the ancestry walk runs;
+          * anc['k540c'] and anc['attoII'] make the ``x in anc[y]`` test False
+            BOTH ways, so the ancestor rule does not fire;
+          * redundant('k540c') is True via the second rule,
+            ``not embedded[x] and embedded[y]``;
+          * the acceptance check again takes the ``in work_listing[album]``
+            disjunct for ('attoII',).
+
+        Characterizes current behaviour.
+        """
+        pl = self._make_bih_pl(
+            parts={("m",): {"name": ["Mi tradi"]},
+                   ("attoII",): {"name": ["Atto II"], "no_parent": False},
+                   ("k540c",): {"name": ["K. 540c"], "no_parent": True},
+                   ("dg",): {"name": ["Don Giovanni"], "no_parent": True}},
+            work_listing=[("m",), ("attoII",)],
+            works_cache={("m",): ["k540c", "attoII"],
+                         ("attoII",): ["dg"]})
+        self.set_config_values(setting={
+            "cwp_aliases": False, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        self.assertEqual(
+            tuple(pl._reduce_redundant_parents(("k540c", "attoII"))),
+            ("attoII",))
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        self.assertEqual(pl.partof[self._BIH_ALBUM][("attoII",)], [("m",)])
+        self.assertNotIn(("k540c", "attoII"), pl.partof[self._BIH_ALBUM])
+        # The standalone K. 540c never becomes a parent key at all.
+        self.assertNotIn(("k540c",), pl.partof[self._BIH_ALBUM])
+        self.assertEqual(pl.top[self._BIH_ALBUM], [("dg",)])
+
+    def test_multi_parent_reduction_rejected_when_reduced_node_unknown(self):
+        """T4.3 - when the reduction produces a tuple that is NOT a node in
+        work_listing[album], the reduction is discarded and the original fused
+        parent tuple is used as the partof key.
+
+        Same graph as T4.1 except that ('suite',) has not been registered in
+        work_listing[album]. This is the rejected side of the acceptance check
+        -- the branch whose production comment describes the Tristan "Akt III"
+        failure, where accepting a reduction to a non-existent node made the
+        whole subtree drop out of the album.
+
+        fixture graph (works_cache):
+            ('m',)     -> ['grouping', 'suite']
+            ('suite',) -> ['grouping']
+        work_listing: [('m',), ('grouping',)]   <- ('suite',) absent
+
+        Production conditions actually exercised: the reduction runs and
+        returns ('suite',) exactly as in T4.1, but BOTH acceptance disjuncts
+        are False, so parentIds keeps its unreduced value.
+
+        Characterizes current behaviour. Whether keeping the fused tuple is
+        the desirable answer is not asserted either way here -- only that it is
+        what the phase currently does.
+        """
+        pl = self._make_bih_pl(
+            parts={("m",): {"name": ["Movement"]},
+                   ("grouping", "suite"): {"name": ["Fused"],
+                                           "no_parent": False},
+                   ("grouping",): {"name": ["Grouping"], "no_parent": True}},
+            work_listing=[("m",), ("grouping",)],
+            works_cache={("m",): ["grouping", "suite"],
+                         ("suite",): ["grouping"]})
+        self.set_config_values(setting={
+            "cwp_aliases": False, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        # The reduction still computes the same shortened tuple ...
+        self.assertEqual(
+            tuple(pl._reduce_redundant_parents(("grouping", "suite"))),
+            ("suite",))
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        # ... but it is rejected, so the fused pair is the key that is used.
+        self.assertEqual(pl.partof[self._BIH_ALBUM][("grouping", "suite")],
+                         [("m",)])
+        self.assertNotIn(("suite",), pl.partof[self._BIH_ALBUM])
+        self.assertEqual(pl.top[self._BIH_ALBUM], [("grouping",)])
+
+    def test_reduction_outcome_depends_on_reduced_node_registration(self):
+        """T4.4 - LEGACY BEHAVIOUR, recorded deliberately, not endorsed.
+
+        With identical ``parts`` and identical ``works_cache``, the movement is
+        filed under a DIFFERENT parent key depending only on whether the
+        reduced node ('suite',) happens to be present in work_listing[album]:
+
+            present -> partof key ('suite',)
+            absent  -> partof key ('grouping', 'suite')
+
+        work_listing[album] is filled as the asynchronous work lookups come
+        back, so on a real release this is exactly the run-to-run order
+        dependence the production comment describes ("Whether a reduction fired
+        at all depended on how much of the hierarchy had resolved, i.e. on the
+        order the async lookups came back in, so the album tagged differently
+        from run to run").
+
+        This test pins that the two orders currently disagree. It is NOT a
+        statement that they should; if the phase is ever made order-independent
+        this test is expected to fail and should be rewritten to assert the
+        single converged key.
+        """
+        parts = {("m",): {"name": ["Movement"]},
+                 ("suite",): {"name": ["Suite"], "no_parent": False},
+                 ("grouping",): {"name": ["Grouping"], "no_parent": True}}
+        works_cache = {("m",): ["grouping", "suite"],
+                       ("suite",): ["grouping"]}
+        self.set_config_values(setting={
+            "cwp_aliases": False, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+
+        def keys_for(work_listing):
+            pl = self._make_bih_pl(parts=copy.deepcopy(parts),
+                                   work_listing=work_listing,
+                                   works_cache=dict(works_cache))
+            pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+            return [k for k, v in pl.partof[self._BIH_ALBUM].items()
+                    if v == [("m",)]]
+
+        resolved = keys_for([("m",), ("suite",), ("grouping",)])
+        unresolved = keys_for([("m",), ("grouping",)])
+        self.assertEqual(resolved, [("suite",)])
+        self.assertEqual(unresolved, [("grouping", "suite")])
+        self.assertNotEqual(resolved, unresolved)
+
+    # ----- T5: self.top[album] accumulation -----
+
+    def test_top_collects_work_that_has_no_works_cache_entry(self):
+        """T5.1 - a work with no entry in works_cache has no parent, so it
+        becomes a top work itself.
+
+        Guards the ``else: topId = workId`` branch and the ``self.top[album] =
+        [topId]`` initialisation.
+
+        fixture graph: one work ('solo',); works_cache empty.
+
+        Characterizes current behaviour.
+        """
+        workId = ("solo",)
+        pl = self._make_bih_pl(
+            parts={workId: {"name": ["Standalone Work"]}},
+            work_listing=[workId],
+            works_cache={})
+        self.set_config_values(setting={
+            "cwp_aliases": False, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        self.assertEqual(pl.top[self._BIH_ALBUM], [workId])
+        # No parent, so nothing is added to the inverse map.
+        self.assertEqual(dict(pl.partof[self._BIH_ALBUM]), {})
+
+    def test_top_collects_parent_flagged_no_parent(self):
+        """T5.2 - when a work's parent carries a truthy ``no_parent`` flag, the
+        PARENT tuple (not the work) becomes the top work.
+
+        Guards the ``if 'no_parent' in self.parts[parentIds]`` /
+        ``if self.parts[parentIds]['no_parent']: topId = parentIds`` branch.
+
+        fixture graph (works_cache):
+            ('mv',) -> ['root']
+            root has no entry, and parts[('root',)]['no_parent'] is True
+        work_listing: [('mv',)]
+
+        Characterizes current behaviour.
+        """
+        pl = self._make_bih_pl(
+            parts={("mv",): {"name": ["Movement"]},
+                   ("root",): {"name": ["Root Work"], "no_parent": True}},
+            work_listing=[("mv",)],
+            works_cache={("mv",): ["root"]})
+        self.set_config_values(setting={
+            "cwp_aliases": False, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        self.assertEqual(pl.top[self._BIH_ALBUM], [("root",)])
+        self.assertEqual(pl.partof[self._BIH_ALBUM][("root",)], [("mv",)])
+
+    def test_top_appends_each_top_id_only_once(self):
+        """T5.3 - two works sharing one no_parent parent yield that parent as a
+        top work exactly once.
+
+        Guards the ``if topId not in self.top[album]`` duplicate guard on the
+        append path (as distinct from the initialisation path in T5.1/T5.2).
+
+        fixture graph (works_cache):
+            ('a',) -> ['root']
+            ('b',) -> ['root']
+            parts[('root',)]['no_parent'] is True
+        work_listing: [('a',), ('b',)]
+
+        Characterizes current behaviour.
+        """
+        pl = self._make_bih_pl(
+            parts={("a",): {"name": ["A"]}, ("b",): {"name": ["B"]},
+                   ("root",): {"name": ["Root Work"], "no_parent": True}},
+            work_listing=[("a",), ("b",)],
+            works_cache={("a",): ["root"], ("b",): ["root"]})
+        self.set_config_values(setting={
+            "cwp_aliases": False, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        self.assertEqual(pl.top[self._BIH_ALBUM], [("root",)])
+        self.assertEqual(pl.partof[self._BIH_ALBUM][("root",)],
+                         [("a",), ("b",)])
+
+    # ----- T6: self.parts auto-vivification side effect -----
+
+    def test_unregistered_parent_id_is_auto_vivified_in_parts(self):
+        """T6.1 - LEGACY BEHAVIOUR, recorded deliberately, not endorsed.
+
+        The phase tests ``'no_parent' in self.parts[parentIds]`` WITHOUT first
+        checking that parentIds is a key of self.parts. Because self.parts is a
+        ``defaultdict(lambda: defaultdict(dict))`` in production, that read is
+        not a lookup error but a MUTATION: it inserts an empty entry for a
+        parent id that no work lookup ever registered. The empty entry has no
+        'no_parent' key, so topId stays None and the work is filed under a
+        parent that exists only because reading it created it.
+
+        fixture graph (works_cache):
+            ('w1',) -> ['ghost']    <- 'ghost' is never registered in parts
+        work_listing: [('w1',)]
+
+        This test exists so the side effect cannot be removed silently: a
+        future refactor that guards the access (e.g. ``if parentIds in
+        self.parts``) would stop creating the entry, which is a real behaviour
+        change even though it looks like a pure tidy-up. If that change is made
+        deliberately, this test should be updated in the same commit.
+        """
+        ghost = ("ghost",)
+        pl = self._make_bih_pl(
+            parts={("w1",): {"name": ["W1"]}},
+            work_listing=[("w1",)],
+            works_cache={("w1",): ["ghost"]})
+        self.set_config_values(setting={
+            "cwp_aliases": False, "cwp_aliases_all": False,
+            "cwp_aliases_greek": False, "cwp_aliases_tag_text": "use_alias"})
+        # Membership tests do not vivify, so this is safe to assert first.
+        self.assertNotIn(ghost, pl.parts)
+        pl._build_inverse_hierarchy("test", self._BIH_ALBUM)
+        # The read created the key, and the created entry is empty.
+        self.assertIn(ghost, pl.parts)
+        self.assertEqual(dict(pl.parts[ghost]), {})
+        # The work is still filed under the ghost parent ...
+        self.assertEqual(pl.partof[self._BIH_ALBUM][ghost], [("w1",)])
+        # ... and because the vivified entry has no 'no_parent' key, no top
+        # work is recorded for the album at all.
+        self.assertNotIn(self._BIH_ALBUM, pl.top)
 
 
 class RecordingSessionTagsTestCase(ClassicalExtrasTestCase):
