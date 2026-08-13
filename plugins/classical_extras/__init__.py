@@ -6984,6 +6984,43 @@ class PartLevels():
             chosen_top[t] = tuple(wid) if wid else most_selected
         return most_selected, chosen_top
 
+    def _build_track_tops_and_votes(self, release_id, tracks_in_top):
+        track_tops = collections.defaultdict(set)
+        for topId, tracks in tracks_in_top.items():
+            for t in tracks:
+                track_tops[t].add(topId)
+        # Vote for each candidate top-work NAME so a track shared between several
+        # top works is tagged with the same ``top_work`` as the album's other
+        # tracks. Each track votes once for every top-work name it is a candidate
+        # for -- the names of every top whose tree contains it, including EACH
+        # name of a fused multi-parent top (a movement fused under
+        # "(ballet, suite)" votes for both the ballet and the suite; an overture
+        # fused under several opera translations votes for each translation). At
+        # tag time (process_trackback) the track takes the highest-voted of its
+        # own candidate names, so e.g. all of "The Bolt" resolves to the ballet
+        # (voted by the 2 suite-less movements too) and an opera's tracks all
+        # resolve to the one translation the album actually uses. Computed here,
+        # before the tuple-level collapse, so the fused candidates are still
+        # visible; passed to each top via top_info['votes'].
+        top_name_votes = collections.Counter()
+        for t, tops in track_tops.items():
+            cand_names = set()
+            for top in tops:
+                nm = self.parts[top]['name'] if top in self.parts else []
+                if isinstance(nm, str):
+                    nm = [nm]
+                for n in nm:
+                    if isinstance(n, str):
+                        cand_names.add(n.strip())
+            for n in cand_names:
+                top_name_votes[n] += 1
+        write_log(
+                release_id,
+                'info',
+                "Top-work name votes = %s",
+                dict(top_name_votes))
+        return track_tops, top_name_votes
+
     def _track_membership_from_trackback(self, album):
         """Return ``{track_meta: {top_id, ...}}`` -- for each track on ``album``,
         the set of surviving tops in ``self.top[album]`` whose CURRENT trackback
@@ -7200,40 +7237,8 @@ class PartLevels():
                     topId,
                     self.parts[topId]['name'],
                     collected)
-        track_tops = collections.defaultdict(set)
-        for topId, tracks in tracks_in_top.items():
-            for t in tracks:
-                track_tops[t].add(topId)
-        # Vote for each candidate top-work NAME so a track shared between several
-        # top works is tagged with the same ``top_work`` as the album's other
-        # tracks. Each track votes once for every top-work name it is a candidate
-        # for -- the names of every top whose tree contains it, including EACH
-        # name of a fused multi-parent top (a movement fused under
-        # "(ballet, suite)" votes for both the ballet and the suite; an overture
-        # fused under several opera translations votes for each translation). At
-        # tag time (process_trackback) the track takes the highest-voted of its
-        # own candidate names, so e.g. all of "The Bolt" resolves to the ballet
-        # (voted by the 2 suite-less movements too) and an opera's tracks all
-        # resolve to the one translation the album actually uses. Computed here,
-        # before the tuple-level collapse, so the fused candidates are still
-        # visible; passed to each top via top_info['votes'].
-        top_name_votes = collections.Counter()
-        for t, tops in track_tops.items():
-            cand_names = set()
-            for top in tops:
-                nm = self.parts[top]['name'] if top in self.parts else []
-                if isinstance(nm, str):
-                    nm = [nm]
-                for n in nm:
-                    if isinstance(n, str):
-                        cand_names.add(n.strip())
-            for n in cand_names:
-                top_name_votes[n] += 1
-        write_log(
-                release_id,
-                'info',
-                "Top-work name votes = %s",
-                dict(top_name_votes))
+        track_tops, top_name_votes = self._build_track_tops_and_votes(
+            release_id, tracks_in_top)
         most_selected, self.chosen_top = self._resolve_chosen_tops(
             release_id, album, track_tops)
         # Snapshot the top ids before any pruning/merging/collapsing so the

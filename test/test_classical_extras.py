@@ -2071,6 +2071,180 @@ class InverseHierarchyCharacterizationTestCase(PluginTestCase):
         self.assertNotIn(self._BIH_ALBUM, pl.top)
 
 
+class TrackTopVotesCharacterizationTestCase(PluginTestCase):
+    """Characterization tests for ``PartLevels._build_track_tops_and_votes``.
+
+    These tests pin the *current* observable behaviour of the track-top
+    membership + top-work name vote phase extracted from
+    ``PartLevels.process_album`` (the P4 extraction). The production code is
+    intentionally not changed here; every expectation below was read off a live
+    call of the extracted method rather than derived from what the behaviour
+    arguably ought to be.
+
+    The phase:
+      * inverts ``tracks_in_top`` (``{topId: {track, ...}}``) into a
+        ``collections.defaultdict(set)`` ``track_tops`` mapping each track to
+        the set of top ids whose tree contains it;
+      * for each track collects the candidate top-work NAMEs (the ``name`` of
+        every top that contains it, with a fused multi-parent top contributing
+        EACH of its names), de-duplicated within the track via a ``set``;
+      * tallies one vote per track per distinct candidate name into a
+        ``collections.Counter`` ``top_name_votes``;
+      * writes a "Top-work name votes" info log line.
+
+    This class deliberately derives directly from PluginTestCase (not from
+    ClassicalExtrasTestCase) so its characterization tests are discovered
+    exactly once. Nothing else inherits this class.
+    """
+
+    MOD = "classical_extras"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Prevent plugin state from leaking into subsequently executed tests.
+        cls.addClassCleanup(
+            ClassicalExtrasTestCase._cleanup_global_state
+        )
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting=dict(_ALL_OPTION_DEFAULTS))
+        # Reuse the plugin module cached by ClassicalExtrasTestCase when the
+        # main suite has already run; otherwise install it once here. The
+        # cache lives on ClassicalExtrasTestCase so both classes share one
+        # installed module (unload_plugin does not fully clear sys.modules).
+        if ClassicalExtrasTestCase._mod is None:
+            ClassicalExtrasTestCase._mod = self._test_plugin_install(
+                "Classical Extras", self.MOD)
+        self.mod = ClassicalExtrasTestCase._mod
+
+    _REL = "test"
+
+    def _make_btv_pl(self, parts):
+        """Build a bare PartLevels wired for _build_track_tops_and_votes.
+
+        Only the attributes the method actually reads are set; everything else
+        is left unset so a stray access surfaces as AttributeError. ``parts``
+        matches the type PartLevels.__init__ gives it
+        (``defaultdict(lambda: defaultdict(dict))``) so the fixture cannot
+        accidentally be stricter than production; each work's own entry becomes a
+        ``defaultdict(dict)`` too, matching what the outer default factory would
+        have produced.
+        """
+        PartLevels = self.mod.PartLevels
+        pl = PartLevels.__new__(PartLevels)
+        pl.parts = collections.defaultdict(
+            lambda: collections.defaultdict(dict))
+        for _work_id, _entry in parts.items():
+            pl.parts[_work_id] = collections.defaultdict(dict, _entry)
+        return pl
+
+    def _no_log_config(self):
+        """Disable all custom logging so write_log creates no files."""
+        self.set_config_values(setting={
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+        })
+
+    # ----- T1: single top, list-form name -----
+
+    def test_single_top_builds_membership_and_name_vote(self):
+        """T1 - a track under a single top with a list-form name is filed under
+        that top in ``track_tops`` and casts one vote for the top's name.
+
+        ``name`` is the list form (``["Symphony"]``) that process_album's
+        earlier de-duplication phase leaves on every work, matching the
+        production path into this method.
+        """
+        self._no_log_config()
+        pl = self._make_btv_pl(parts={("w1",): {"name": ["Symphony"]}})
+        tracks_in_top = {("w1",): {("t1", "alb")}}
+        track_tops, top_name_votes = pl._build_track_tops_and_votes(
+            self._REL, tracks_in_top)
+        self.assertIsInstance(track_tops, collections.defaultdict)
+        self.assertIs(track_tops.default_factory, set)
+        self.assertEqual(
+            dict(track_tops), {("t1", "alb"): {("w1",)}})
+        self.assertIsInstance(top_name_votes, collections.Counter)
+        self.assertEqual(top_name_votes, collections.Counter({"Symphony": 1}))
+
+    # ----- T2: shared track, multiple tops, duplicate candidate names -----
+
+    def test_shared_track_votes_each_candidate_name_once(self):
+        """T2 - a track shared between several tops votes once for EACH distinct
+        candidate name it sees, even when the same name comes from two tops.
+
+        t1 is under both "ballet" (names ["Ballet", "Shared"]) and "suite"
+        (names ["Suite", "Shared"]). ``cand_names`` is a set, so t1 contributes
+        "Shared" only once despite two tops offering it; t2 is under "ballet"
+        alone and adds a second "Shared" vote. So "Shared" totals 2, not 3.
+
+        This pins: multiple-top membership, multiple names per top, in-track
+        duplicate-name de-duplication via the cand_names set, and cross-track
+        vote accumulation.
+        """
+        self._no_log_config()
+        pl = self._make_btv_pl(parts={
+            ("ballet",): {"name": ["Ballet", "Shared"]},
+            ("suite",): {"name": ["Suite", "Shared"]},
+        })
+        tracks_in_top = {
+            ("ballet",): {("t1", "alb"), ("t2", "alb")},
+            ("suite",): {("t1", "alb")},
+        }
+        track_tops, top_name_votes = pl._build_track_tops_and_votes(
+            self._REL, tracks_in_top)
+        self.assertEqual(
+            dict(track_tops),
+            {("t1", "alb"): {("ballet",), ("suite",)},
+             ("t2", "alb"): {("ballet",)}})
+        self.assertEqual(
+            top_name_votes,
+            collections.Counter(
+                {"Ballet": 2, "Suite": 1, "Shared": 2}))
+
+    # ----- T3: empty input -----
+
+    def test_empty_input_returns_empty_typed_containers(self):
+        """T3 - empty ``tracks_in_top`` and empty ``parts`` yield empty
+        containers of the exact production types.
+
+        Note: when empty votes are passed downstream the existing first-name
+        fallback in process_trackback is used; this test characterizes ONLY
+        the new method's empty-output contract (empty defaultdict(set) and empty
+        Counter), not that downstream behaviour.
+        """
+        self._no_log_config()
+        pl = self._make_btv_pl(parts={})
+        track_tops, top_name_votes = pl._build_track_tops_and_votes(
+            self._REL, {})
+        self.assertFalse(track_tops)
+        self.assertIsInstance(track_tops, collections.defaultdict)
+        self.assertIs(track_tops.default_factory, set)
+        self.assertFalse(top_name_votes)
+        self.assertIsInstance(top_name_votes, collections.Counter)
+
+    # ----- T4 (optional, defensive branch): string-form name -----
+
+    def test_string_name_is_treated_as_single_candidate(self):
+        """T4 (defensive branch) - a ``name`` stored as a bare string is treated
+        as a single-element candidate list and votes once for that string.
+
+        process_album normally normalizes ``name`` to a list earlier in the run
+        (the de-duplication phase over self.parts), so a bare string is NOT the
+        usual production path into this method. This test directly pins the
+        defensive compatibility branch ``if isinstance(nm, str): nm = [nm]``
+        rather than normal behaviour.
+        """
+        self._no_log_config()
+        pl = self._make_btv_pl(parts={("w1",): {"name": "Symphony"}})
+        tracks_in_top = {("w1",): {("t1", "alb")}}
+        _track_tops, top_name_votes = pl._build_track_tops_and_votes(
+            self._REL, tracks_in_top)
+        self.assertEqual(top_name_votes, collections.Counter({"Symphony": 1}))
+
+
 class RecordingSessionTagsTestCase(ClassicalExtrasTestCase):
     """Recording place/date tag derivation (recording_session_tags).
 
