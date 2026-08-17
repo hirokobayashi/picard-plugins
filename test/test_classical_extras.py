@@ -5645,5 +5645,210 @@ class SwanLakeCrossAlbumMovementTotalIntegrationTestCase(ClassicalExtrasTestCase
              SwanLakeFullBalletTwoVersionsIntegrationTestCase._TRACKS}, {'43'})
 
 
+class CollectTracksFromNodeCharacterizationTestCase(unittest.TestCase):
+    """Characterization tests for ``PartLevels._collect_tracks_from_node``.
+
+    These tests pin the *current* observable behaviour of the trackback
+    track-collection helper extracted from ``PartLevels.process_album``. The
+    production code is intentionally not changed here; every expectation below
+    describes what the helper does today, not what it arguably ought to do.
+
+    The behaviour being pinned, in full:
+
+      * when the node has a ``'meta'`` key, every element of ``node['meta']``
+        is added to ``acc``; a node without ``'meta'`` contributes nothing;
+      * every element of ``node.get('children', [])`` is then visited
+        recursively, in list order -- a node without ``'children'`` simply has
+        no children (the ``[]`` default, not a KeyError);
+      * ``acc`` is mutated in place and the helper returns ``None``; entries
+        already in ``acc`` when it is called are kept;
+      * because ``acc`` is a set, a node reachable by more than one path in a
+        DAG (and a duplicated meta entry) contributes its entries only once.
+
+    Deliberately *not* pinned here, because the helper has no such behaviour to
+    pin: cycle handling (the helper keeps no visited set, so a cyclic trackback
+    is out of scope for these tests), any cross-album filtering, and any
+    contract for a malformed/None node.
+
+    Unlike the other characterization classes in this module this one derives
+    from plain ``unittest.TestCase`` rather than ``PluginTestCase``: the helper
+    is a ``staticmethod`` that touches neither ``self``, nor Picard config, nor
+    any plugin state, so nothing beyond a reference to the function is needed.
+    Getting that reference still requires the plugin module to be imported, so
+    ``setUpClass`` reuses the module the rest of the suite already installed
+    and only falls back to importing it directly (restoring the global state it
+    touches afterwards) when this class is run on its own.
+    """
+
+    _PLUGIN_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               "..", "plugins", "classical_extras")
+    _PLUGIN_MODULE = "picard.plugins.classical_extras"
+
+    _mod = None
+    _saved_config = None
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        existing = sys.modules.get(cls._PLUGIN_MODULE)
+        if existing is not None:
+            # Full-suite run: the plugin is already installed, so touch no
+            # global state at all and just borrow the module. Register no
+            # cleanup: the borrowed module's lifetime is owned elsewhere.
+            cls._mod = existing
+            return
+        cls._import_plugin_module_directly()
+
+    @classmethod
+    def _import_plugin_module_directly(cls):
+        """Import the plugin without PluginManager, PyQt or a tmp plugin dir.
+
+        The plugin reads ``config.setting[...]`` at import time and imports its
+        own submodules under the ``picard.plugins.classical_extras`` name, so a
+        config stub seeded with the option defaults and that exact module name
+        are the only prerequisites.
+
+        Ordering (so a failure mid-import still cleans up):
+          1. save the config globals that will be swapped out;
+          2. register the cleanup (idempotent and partial-state safe);
+          3. install the module into sys.modules;
+          4. exec_module (may import submodules into sys.modules).
+        """
+        import importlib.util
+        from unittest.mock import Mock
+        from picard import config as picard_config
+
+        fake_config = Mock()
+        fake_config.setting = dict(_ALL_OPTION_DEFAULTS)
+        fake_config.persist = {}
+        fake_config.profiles = {}
+        cls._saved_config = (picard_config.config, picard_config.setting,
+                             picard_config.persist, picard_config.profiles)
+        picard_config.config = fake_config
+        picard_config.setting = fake_config.setting
+        picard_config.persist = fake_config.persist
+        picard_config.profiles = fake_config.profiles
+        cls.addClassCleanup(cls._undo_direct_import)
+
+        spec = importlib.util.spec_from_file_location(
+            cls._PLUGIN_MODULE,
+            os.path.join(cls._PLUGIN_DIR, "__init__.py"))
+        mod = importlib.util.module_from_spec(spec)
+        sys.modules[cls._PLUGIN_MODULE] = mod
+        cls._mod = mod
+        # The plugin's bare ``import const`` needs the plugin directory on the
+        # path, exactly as Picard's own plugin loader provides it.
+        sys.path.insert(0, cls._PLUGIN_DIR)
+        try:
+            spec.loader.exec_module(mod)
+        finally:
+            sys.path.remove(cls._PLUGIN_DIR)
+
+    @classmethod
+    def _undo_direct_import(cls):
+        """Undo everything _import_plugin_module_directly touched globally.
+
+        Idempotent and safe in every partial state the import can leave
+        behind: module unregistered, parent only, some submodules only,
+        import failed mid-exec, extension registrations present or absent,
+        and being called more than once.
+        """
+        for module_name in list(sys.modules):
+            if (module_name == cls._PLUGIN_MODULE
+                    or module_name.startswith(cls._PLUGIN_MODULE + ".")):
+                del sys.modules[module_name]
+        try:
+            from picard.plugin import _unregister_module_extensions
+            _unregister_module_extensions("classical_extras")
+        except Exception:
+            pass
+        if cls._saved_config is not None:
+            from picard import config as picard_config
+            (picard_config.config, picard_config.setting,
+             picard_config.persist, picard_config.profiles) = cls._saved_config
+            cls._saved_config = None
+
+    @property
+    def _collect(self):
+        return self._mod.PartLevels._collect_tracks_from_node
+
+    def test_collects_meta_from_single_node(self):
+        """A leaf node's whole 'meta' list lands in acc; no 'children' key is
+        needed (node.get('children', []) supplies the empty default)."""
+        node = {"meta": [("t1", "alb"), ("t2", "alb")]}
+        acc = set()
+        # Held before the call so the assertions below are made against the
+        # object that was passed in, not against whatever the call hands back.
+        passed_in = acc
+
+        result = self._collect(node, acc)
+
+        self.assertIsNone(result)
+        self.assertIs(acc, passed_in)
+        self.assertEqual(passed_in, {("t1", "alb"), ("t2", "alb")})
+
+    def test_collects_meta_from_descendants(self):
+        """The walk descends the full 'children' chain, so meta from the root,
+        its child and its grandchild all end up in the one accumulator."""
+        grandchild = {"meta": [("t3", "alb")]}
+        child = {"meta": [("t2", "alb")], "children": [grandchild]}
+        root = {"meta": [("t1", "alb")], "children": [child]}
+        acc = set()
+        passed_in = acc
+
+        result = self._collect(root, acc)
+
+        self.assertIsNone(result)
+        self.assertIs(acc, passed_in)
+        self.assertEqual(passed_in,
+                         {("t1", "alb"), ("t2", "alb"), ("t3", "alb")})
+
+    def test_diamond_deduplicates_shared_meta(self):
+        """A DAG diamond -- root -> [left, right], both -> the same shared node
+        -- visits 'shared' twice and 'dup' once per branch, and acc being a set
+        means each tuple is present exactly once. No cycle is involved."""
+        shared = {"meta": [("shared", "alb")]}
+        left = {"meta": [("dup", "alb")], "children": [shared]}
+        right = {"meta": [("dup", "alb")], "children": [shared]}
+        root = {"meta": [("root", "alb")], "children": [left, right]}
+        acc = set()
+        passed_in = acc
+
+        result = self._collect(root, acc)
+
+        self.assertIsNone(result)
+        self.assertIs(acc, passed_in)
+        self.assertEqual(passed_in,
+                         {("root", "alb"), ("dup", "alb"), ("shared", "alb")})
+        # Spelled out separately: the shared/duplicated tuples collapsed rather
+        # than the walk having skipped a branch.
+        self.assertEqual(len(passed_in), 3)
+
+    def test_empty_node_leaves_accumulator_empty(self):
+        """Neither 'meta' nor 'children' present: no KeyError, acc untouched."""
+        node = {}
+        acc = set()
+        passed_in = acc
+
+        result = self._collect(node, acc)
+
+        self.assertIsNone(result)
+        self.assertIs(acc, passed_in)
+        self.assertEqual(passed_in, set())
+
+    def test_preserves_existing_accumulator_entries(self):
+        """acc is added to, never replaced or cleared, so entries put there by
+        an earlier call (in production: an earlier top-work subtree) survive."""
+        node = {"meta": [("new", "alb")]}
+        acc = {("existing", "alb")}
+        passed_in = acc
+
+        result = self._collect(node, acc)
+
+        self.assertIsNone(result)
+        self.assertIs(acc, passed_in)
+        self.assertEqual(passed_in, {("existing", "alb"), ("new", "alb")})
+
+
 if __name__ == "__main__":
     unittest.main()
