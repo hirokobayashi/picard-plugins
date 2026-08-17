@@ -7217,18 +7217,12 @@ class PartLevels():
         # tree that contains it and ends up tagged with whichever top work is
         # processed last. The chosen top for a shared track is the one selected
         # by the most tracks on the album.
-        def _collect_tracks(node, acc):
-            if 'meta' in node:
-                for t in node['meta']:
-                    acc.add(t)
-            for child in node.get('children', []):
-                _collect_tracks(child, acc)
         tracks_in_top = {}
         for topId in self.top[album]:
             self.create_trackback(release_id, album, topId)
             collected = set()
             if topId in self.trackback[album]:
-                _collect_tracks(self.trackback[album][topId], collected)
+                self._collect_tracks_from_node(self.trackback[album][topId], collected)
             tracks_in_top[topId] = collected
             write_log(
                     release_id,
@@ -7556,6 +7550,14 @@ class PartLevels():
                     tm['~cwp_inter_work'] = tm['~cwp_extended_inter_work'] = tm['~cwp_inter_title_work'] = inter_work
                 self.publish_metadata(release_id, album, track)
         write_log(release_id, 'debug', "PROCESS ALBUM function complete")
+
+    @staticmethod
+    def _collect_tracks_from_node(node, acc):
+        if 'meta' in node:
+            for t in node['meta']:
+                acc.add(t)
+        for child in node.get('children', []):
+            PartLevels._collect_tracks_from_node(child, acc)
 
     def create_trackback(self, release_id, album, parentId):
         """
