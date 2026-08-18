@@ -6071,5 +6071,250 @@ class BuildTracksInTopCharacterizationTestCase(PluginTestCase):
         self.assertIn(list(right), child_ids)
 
 
+class ChosenTopGuardCharacterizationTestCase(PluginTestCase):
+    """Characterization tests for the chosen_top guards in
+    ``PartLevels.process_trackback`` (depth 0) and
+    ``PartLevels.process_trackback_children`` (child level).
+
+    A track shared between several top works appears (by reference) in each
+    of those top-work trees. Both methods apply a per-track chosen-top decision
+    (decided in process_album) so the track is written only under its chosen
+    top work. These tests pin the CURRENT observable behaviour of the two
+    guards; chosen_top is set by hand (no production resolver or collapse is
+    replicated).
+
+    This class deliberately derives directly from PluginTestCase (not from
+    ClassicalExtrasTestCase) so its characterization tests are discovered
+    exactly once. ClassicalExtrasTestCase and its 17 subclasses do not see
+    these methods, and nothing else inherits this class. The plugin module
+    cache and global-state cleanup are reused from ClassicalExtrasTestCase so
+    no new plugin loader is added.
+    """
+
+    MOD = "classical_extras"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Prevent plugin state from leaking into subsequently executed tests.
+        cls.addClassCleanup(ClassicalExtrasTestCase._cleanup_global_state)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting=dict(_ALL_OPTION_DEFAULTS))
+        # Disable all custom logging so write_log creates no files (same pattern
+        # as the other dedicated characterization TestCase classes).
+        self._no_log_config()
+        # Reuse the plugin module cached by ClassicalExtrasTestCase when the
+        # main suite has already run; otherwise install it once here. The
+        # cache lives on ClassicalExtrasTestCase so both classes share one
+        # installed module (unload_plugin does not fully clear sys.modules).
+        if ClassicalExtrasTestCase._mod is None:
+            ClassicalExtrasTestCase._mod = self._test_plugin_install(
+                "Classical Extras", self.MOD)
+        self.mod = ClassicalExtrasTestCase._mod
+
+    def _no_log_config(self):
+        """Disable all custom logging so write_log creates no files."""
+        self.set_config_values(setting={
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+        })
+
+    def _make_fake_metadata(self, title, tracknumber, discnumber=1):
+        """A minimal stand-in for Picard's Metadata supporting the subset of the
+        dict protocol that process_trackback touches: __setitem__, __getitem__
+        (missing keys return '' like Picard), __contains__ and getall()."""
+        class _FakeMeta(dict):
+            def __getitem__(self, key):
+                return self.get(key, '')
+
+            def getall(self, key):
+                return [self[key]] if key in self else []
+        return _FakeMeta(title=title, tracknumber=str(tracknumber),
+                         discnumber=str(discnumber))
+
+    def _make_fake_track(self, mid, title, tracknumber, discnumber=1):
+        """A minimal stand-in for a Picard Track with a ``.metadata`` attribute."""
+        from unittest.mock import Mock
+        t = Mock(name="track-%s" % mid)
+        t.metadata = self._make_fake_metadata(title, tracknumber, discnumber)
+        # give it a stable identity so it can be a dict key / set member
+        t._id = mid
+        t.__hash__ = lambda self: hash(self._id)
+        t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+        return t
+
+    def _make_trackback_partlevels(self):
+        """A PartLevels wired only with what process_trackback needs, with the
+        tag-writing side-effects stubbed out."""
+        PartLevels = self.mod.PartLevels
+        pl = PartLevels.__new__(PartLevels)
+        pl.parts = {}
+        pl.chosen_top = {}
+        # write_tags / make_annotations pull heavily on self.options & parts; the
+        # parallel-lists bug is independent of the tags they write, so stub them.
+        pl.write_tags = lambda *a, **k: None
+        pl.make_annotations = lambda *a, **k: None
+        return pl
+
+    def _make_child_guard_partlevels(self, set_metadata_calls, child_answer):
+        """A PartLevels wired for the child-level chosen_top guard. The
+        production ``process_trackback`` is replaced by a stub that returns the
+        given ``child_answer`` (so the depth-0 guard inside the recursive call
+        is bypassed and ONLY the child-level guard in
+        process_trackback_children is exercised). ``set_metadata`` is a spy
+        recording its positional args (no production set_metadata logic is
+        replicated)."""
+        pl = self._make_trackback_partlevels()
+        pl.process_trackback = lambda *a, **k: child_answer
+        pl.set_metadata = lambda *a, **k: set_metadata_calls.append(a)
+        pl.derive_from_structure = lambda *a, **k: None
+        pl.options = collections.defaultdict(
+            lambda: {"cwp_level0_works": False})
+        return pl
+
+    def _child_guard_root(self, current_top, child_workId):
+        """A trackback node with one child, used to drive
+        process_trackback_children directly."""
+        child = {"id": list(child_workId), "depth": 0, "height": 2}
+        return {"id": list(current_top), "depth": 1, "height": 1,
+                "children": [child]}
+
+    def test_process_trackback_depth0_processes_chosen_top(self):
+        """When the track's chosen top equals the top being processed, the
+        depth-0 branch of process_trackback processes it: the track appears in
+        the returned parallel lists and the chosen-top metadata is written."""
+        pl = self._make_trackback_partlevels()
+        current_top = ("83e63350",)
+        other_top = ("53a20f2a",)
+        pl.parts[current_top] = {"name": "Spiegel im Spiegel"}
+        track = self._make_fake_track("9547dfb8", "Spiegel im Spiegel", 1)
+        pl.chosen_top[(track, "alb")] = current_top
+        top_info = {"id": current_top, "name": "Spiegel im Spiegel",
+                    "levels": 1, "single": True}
+        trackback = {"id": list(current_top), "depth": 0, "height": 1,
+                     "meta": [(track, "alb")]}
+        response = pl.process_trackback("test", "alb", trackback, 0, top_info)
+        self.assertIsNotNone(response)
+        tracks = response[1]
+        self.assertIn(track, [t[0] for t in tracks['track']])
+        self.assertEqual(len(tracks['track']), len(tracks['tracknumber']))
+        self.assertEqual(len(tracks['track']), len(tracks['title']))
+        self.assertEqual(len(tracks['track']), len(tracks['work']))
+        # chosen-top representative metadata is written at depth 0
+        self.assertEqual(track.metadata.get("~cwp_work_top"), "Spiegel im Spiegel")
+        self.assertEqual(track.metadata.get("~cwp_work_group"), "Spiegel im Spiegel")
+        self.assertEqual(track.metadata.get("~cwp_workid_top"), current_top)
+
+    def test_process_trackback_depth0_skips_non_chosen_top(self):
+        """When the track's chosen top is a DIFFERENT top, the depth-0 branch
+        skips the track entirely: it is NOT appended to the returned parallel
+        lists (the keys are absent) and the chosen-top metadata is NOT written.
+        Unlike the child-level guard, depth-0 skips the track/title/work/
+        tracknumber append too."""
+        pl = self._make_trackback_partlevels()
+        current_top = ("83e63350",)
+        other_top = ("53a20f2a",)
+        pl.parts[current_top] = {"name": "Spiegel im Spiegel"}
+        track = self._make_fake_track("9547dfb8", "Spiegel im Spiegel", 1)
+        # track is chosen for the OTHER top, but processed here under current_top
+        pl.chosen_top[(track, "alb")] = other_top
+        top_info = {"id": current_top, "name": "Spiegel im Spiegel",
+                    "levels": 1, "single": True}
+        trackback = {"id": list(current_top), "depth": 0, "height": 1,
+                     "meta": [(track, "alb")]}
+        response = pl.process_trackback("test", "alb", trackback, 0, top_info)
+        # response is still returned (for the top work), but with no tracks
+        self.assertIsNotNone(response)
+        tracks = response[1]
+        # nothing was appended: none of the parallel-list keys exist
+        self.assertNotIn('track', tracks)
+        self.assertNotIn('tracknumber', tracks)
+        self.assertNotIn('title', tracks)
+        self.assertNotIn('work', tracks)
+        # chosen-top metadata is NOT written under the non-chosen top
+        self.assertNotIn("~cwp_work_top", track.metadata)
+        self.assertNotIn("~cwp_work_group", track.metadata)
+        self.assertNotIn("~cwp_workid_top", track.metadata)
+
+    def test_process_trackback_child_calls_set_metadata_for_chosen_top(self):
+        """When a child track's chosen top equals the top being processed, the
+        child-level guard calls set_metadata for it and appends it to the
+        parallel lists. process_trackback_children is called directly, with
+        process_trackback stubbed to return the child track, so ONLY the
+        child-level guard is exercised (the depth-0 guard in the recursive
+        call is bypassed)."""
+        set_metadata_calls = []
+        current_top = ("83e63350",)
+        other_top = ("53a20f2a",)
+        child_workId = ("8af195f4",)
+        child_track = self._make_fake_track("c3445bbf", "Spiegel im Spiegel", 3)
+        # the recursive process_trackback returns this track at height 2
+        child_answer = (child_workId, {'track': [(child_track, 2)]})
+        pl = self._make_child_guard_partlevels(set_metadata_calls, child_answer)
+        pl.parts[current_top] = {"name": "Spiegel im Spiegel"}
+        pl.parts[child_workId] = {"name": "arrangement"}
+        # child track's chosen top IS the top being processed
+        pl.chosen_top[(child_track, "alb")] = current_top
+        top_info = {"id": current_top, "name": "Spiegel im Spiegel",
+                    "levels": 1, "single": True}
+        root = self._child_guard_root(current_top, child_workId)
+        tracks = collections.defaultdict(dict)
+        response = pl.process_trackback_children(
+            "test", "alb", root, 0, top_info, tracks)
+        self.assertIsNotNone(response)
+        result_tracks = response[1]
+        # set_metadata IS called for the child track (it is the chosen top)
+        self.assertTrue(any(call[5] is child_track for call in set_metadata_calls),
+                        "set_metadata not called for the chosen-top child track")
+        # the track is appended to all four parallel lists
+        self.assertIn(child_track, [t[0] for t in result_tracks['track']])
+        self.assertEqual(len(result_tracks['track']), len(result_tracks['tracknumber']))
+        self.assertEqual(len(result_tracks['track']), len(result_tracks['title']))
+        self.assertEqual(len(result_tracks['track']), len(result_tracks['work']))
+
+    def test_process_trackback_child_skips_metadata_for_non_chosen_top(self):
+        """When a child track's chosen top is a DIFFERENT top, the child-level
+        guard skips ONLY the set_metadata call -- the track is still appended
+        to the parallel lists (track/title/work/tracknumber). This is the
+        CURRENT regression-prevention contract and is intentionally ASYMMETRIC
+        with the depth-0 guard (depth-0 skips the append too). This test pins
+        the present behaviour; it does not define a desired future spec.
+
+        process_trackback_children is called directly, with process_trackback
+        stubbed to return the child track, so the depth-0 guard inside the
+        recursive call does not pre-filter the track; only the child-level
+        guard decides whether set_metadata runs."""
+        set_metadata_calls = []
+        current_top = ("83e63350",)
+        other_top = ("53a20f2a",)
+        child_workId = ("8af195f4",)
+        child_track = self._make_fake_track("c3445bbf", "Spiegel im Spiegel", 3)
+        # child track's chosen top is the OTHER top, processed under current_top
+        child_answer = (child_workId, {'track': [(child_track, 2)]})
+        pl = self._make_child_guard_partlevels(set_metadata_calls, child_answer)
+        pl.parts[current_top] = {"name": "Spiegel im Spiegel"}
+        pl.parts[child_workId] = {"name": "arrangement"}
+        pl.chosen_top[(child_track, "alb")] = other_top
+        top_info = {"id": current_top, "name": "Spiegel im Spiegel",
+                    "levels": 1, "single": True}
+        root = self._child_guard_root(current_top, child_workId)
+        tracks = collections.defaultdict(dict)
+        response = pl.process_trackback_children(
+            "test", "alb", root, 0, top_info, tracks)
+        self.assertIsNotNone(response)
+        result_tracks = response[1]
+        # set_metadata is NOT called for the child track (non-chosen top)
+        self.assertFalse(any(call[5] is child_track for call in set_metadata_calls),
+                        "set_metadata called for a non-chosen-top child track")
+        # but the track IS still appended to all four parallel lists (asymmetric
+        # with depth-0, which skips the append too)
+        self.assertIn(child_track, [t[0] for t in result_tracks['track']])
+        self.assertEqual(len(result_tracks['track']), len(result_tracks['tracknumber']))
+        self.assertEqual(len(result_tracks['track']), len(result_tracks['title']))
+        self.assertEqual(len(result_tracks['track']), len(result_tracks['work']))
+
+
 if __name__ == "__main__":
     unittest.main()
