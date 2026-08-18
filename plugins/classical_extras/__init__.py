@@ -6984,6 +6984,23 @@ class PartLevels():
             chosen_top[t] = tuple(wid) if wid else most_selected
         return most_selected, chosen_top
 
+    def _build_tracks_in_top(self, release_id, album):
+        tracks_in_top = {}
+        for topId in self.top[album]:
+            self.create_trackback(release_id, album, topId)
+            collected = set()
+            if topId in self.trackback[album]:
+                self._collect_tracks_from_node(self.trackback[album][topId], collected)
+            tracks_in_top[topId] = collected
+            write_log(
+                    release_id,
+                    'debug',
+                    "Tracks under top %s (%s): %s",
+                    topId,
+                    self.parts[topId]['name'],
+                    collected)
+        return tracks_in_top
+
     def _build_track_tops_and_votes(self, release_id, tracks_in_top):
         track_tops = collections.defaultdict(set)
         for topId, tracks in tracks_in_top.items():
@@ -7217,20 +7234,7 @@ class PartLevels():
         # tree that contains it and ends up tagged with whichever top work is
         # processed last. The chosen top for a shared track is the one selected
         # by the most tracks on the album.
-        tracks_in_top = {}
-        for topId in self.top[album]:
-            self.create_trackback(release_id, album, topId)
-            collected = set()
-            if topId in self.trackback[album]:
-                self._collect_tracks_from_node(self.trackback[album][topId], collected)
-            tracks_in_top[topId] = collected
-            write_log(
-                    release_id,
-                    'debug',
-                    "Tracks under top %s (%s): %s",
-                    topId,
-                    self.parts[topId]['name'],
-                    collected)
+        tracks_in_top = self._build_tracks_in_top(release_id, album)
         track_tops, top_name_votes = self._build_track_tops_and_votes(
             release_id, tracks_in_top)
         most_selected, self.chosen_top = self._resolve_chosen_tops(
