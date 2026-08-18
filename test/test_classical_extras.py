@@ -5850,5 +5850,226 @@ class CollectTracksFromNodeCharacterizationTestCase(unittest.TestCase):
         self.assertEqual(passed_in, {("existing", "alb"), ("new", "alb")})
 
 
+class BuildTracksInTopCharacterizationTestCase(PluginTestCase):
+    """Characterization tests for ``PartLevels._build_tracks_in_top``.
+
+    These tests pin the *current* observable behaviour of the trackback
+    tree-building + track-collection phase extracted from
+    ``PartLevels.process_album``. The production code is intentionally not
+    changed here; every expectation below was read off a live call of the
+    extracted method rather than derived from what the behaviour arguably
+    ought to be.
+
+    The phase, for each top id in ``self.top[album]`` (in order):
+      * calls ``create_trackback`` to build the inverse-hierarchy trackback
+        tree under that top (a side effect that mutates ``self.trackback``);
+      * collects every track tuple from the tree's ``meta`` lists into a
+        ``set`` via ``_collect_tracks_from_node`` (a DAG walk with no
+        visited set, so duplicates collapse by set membership);
+      * records the result in ``tracks_in_top[topId]`` and writes a
+        ``'debug'`` "Tracks under top ..." log line;
+      * returns the plain ``dict`` ``tracks_in_top``.
+
+    Deliberately *not* pinned here: cycle handling (RecursionError), any
+    cross-album filtering, the exact debug-log wording, and any contract
+    for malformed/None nodes. A dangling top (not in ``self.partof``) is
+    pinned because ``create_trackback`` auto-vivifies an empty
+    ``self.trackback[album][top]`` node for it via defaultdict -- that is
+    current behaviour, not an endorsed future contract.
+
+    This class deliberately derives directly from PluginTestCase (not from
+    ClassicalExtrasTestCase) so its characterization tests are discovered
+    exactly once. Nothing else inherits this class.
+    """
+
+    MOD = "classical_extras"
+    _ALBUM = "alb"
+    _REL = "test"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Prevent plugin state from leaking into subsequently executed tests.
+        cls.addClassCleanup(
+            ClassicalExtrasTestCase._cleanup_global_state
+        )
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting=dict(_ALL_OPTION_DEFAULTS))
+        # Reuse the plugin module cached by ClassicalExtrasTestCase when the
+        # main suite has already run; otherwise install it once here. The
+        # cache lives on ClassicalExtrasTestCase so both classes share one
+        # installed module (unload_plugin does not fully clear sys.modules).
+        if ClassicalExtrasTestCase._mod is None:
+            ClassicalExtrasTestCase._mod = self._test_plugin_install(
+                "Classical Extras", self.MOD)
+        self.mod = ClassicalExtrasTestCase._mod
+
+    def _no_log_config(self):
+        """Disable all custom logging so write_log creates no files."""
+        self.set_config_values(setting={
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+        })
+
+    def _make_pl(self, *, top, parts, partof=None, trackback=None):
+        """Build a bare PartLevels wired for _build_tracks_in_top.
+
+        Only the attributes the method (and create_trackback/append_trackback)
+        actually reads/writes are set; everything else is left unset so a
+        stray access surfaces as AttributeError. Every container matches the
+        type PartLevels.__init__ gives it, so the fixture cannot accidentally
+        be stricter than production:
+
+          * ``parts``     defaultdict(lambda: defaultdict(dict))
+          * ``partof``    defaultdict(dict)
+          * ``trackback`` defaultdict(lambda: defaultdict(dict))
+          * ``top``       defaultdict(list)
+
+        The ``parts`` and ``trackback`` types matter: create_trackback and
+        append_trackback read ``self.parts[parentId]['name']`` and auto-vivify
+        ``self.trackback[album][parentId]`` for a dangling top, exactly as in
+        production. Plain dicts here would turn those legacy side effects into
+        errors.
+        """
+        PartLevels = self.mod.PartLevels
+        pl = PartLevels.__new__(PartLevels)
+        pl.parts = collections.defaultdict(
+            lambda: collections.defaultdict(dict))
+        for _work_id, _entry in parts.items():
+            pl.parts[_work_id] = collections.defaultdict(dict, _entry)
+        pl.partof = (partof if partof is not None
+                     else collections.defaultdict(dict))
+        if trackback is not None:
+            pl.trackback = collections.defaultdict(
+                lambda: collections.defaultdict(dict))
+            for _album, _trees in trackback.items():
+                for _id, _node in _trees.items():
+                    pl.trackback[_album][_id] = _node
+        else:
+            pl.trackback = collections.defaultdict(
+                lambda: collections.defaultdict(dict))
+        pl.top = collections.defaultdict(list)
+        pl.top[self._ALBUM] = list(top)
+        return pl
+
+    def test_single_top_collects_tracks(self):
+        """A single top whose trackback node carries two track tuples in its
+        ``meta`` list yields a one-entry ``tracks_in_top`` whose value is the
+        set of those two tuples. The trackback node survives the call."""
+        self._no_log_config()
+        top = ("w1",)
+        node = {"id": list(top), "meta": [("t1", self._ALBUM),
+                                          ("t2", self._ALBUM)]}
+        pl = self._make_pl(
+            top=[top],
+            parts={top: {"name": ["Work"]}},
+            trackback={self._ALBUM: {top: node}})
+        result = pl._build_tracks_in_top(self._REL, self._ALBUM)
+        self.assertIsInstance(result, dict)
+        self.assertEqual(list(result.keys()), [top])
+        self.assertIsInstance(result[top], set)
+        self.assertEqual(result[top], {("t1", self._ALBUM),
+                                        ("t2", self._ALBUM)})
+        self.assertIn(top, pl.trackback[self._ALBUM])
+
+    def test_multiple_tops_preserve_order_and_share_track(self):
+        """Multiple tops are visited in ``self.top[album]`` order; a track
+        tuple shared between two tops appears in both sets, and each top's
+        set is independent. The returned dict is a plain dict whose key
+        order matches ``self.top[album]``."""
+        self._no_log_config()
+        top_c, top_a, top_b = ("wC",), ("wA",), ("wB",)
+        shared = ("t_shared", self._ALBUM)
+        pl = self._make_pl(
+            top=[top_c, top_a, top_b],
+            parts={top_c: {"name": ["C"]},
+                   top_a: {"name": ["A"]},
+                   top_b: {"name": ["B"]}},
+            trackback={self._ALBUM: {
+                top_c: {"id": list(top_c),
+                        "meta": [shared, ("t_c", self._ALBUM)]},
+                top_a: {"id": list(top_a),
+                        "meta": [("t_a", self._ALBUM)]},
+                top_b: {"id": list(top_b),
+                        "meta": [shared, ("t_b", self._ALBUM)]}}})
+        result = pl._build_tracks_in_top(self._REL, self._ALBUM)
+        self.assertIsInstance(result, dict)
+        self.assertEqual(list(result.keys()), [top_c, top_a, top_b])
+        for _v in result.values():
+            self.assertIsInstance(_v, set)
+        self.assertEqual(result[top_c], {shared, ("t_c", self._ALBUM)})
+        self.assertEqual(result[top_a], {("t_a", self._ALBUM)})
+        self.assertEqual(result[top_b], {shared, ("t_b", self._ALBUM)})
+
+    def test_dangling_top_creates_empty_trackback_node(self):
+        """A top that is absent from ``self.partof[album]`` (a dangling top)
+        and absent from ``self.trackback[album]`` before the call is
+        auto-vivified by ``create_trackback`` into an empty trackback node via
+        defaultdict, so ``_collect_tracks_from_node`` adds nothing and the top
+        maps to an empty set.
+
+        This pins the current defaultdict auto-vivification behaviour. It is
+        not endorsed as a desirable future contract: a dangling top arguably
+        ought to be flagged rather than silently accepted. If that behaviour
+        is intentionally changed, this test must be updated in the same
+        commit.
+        """
+        self._no_log_config()
+        dangling = ("wDangling",)
+        pl = self._make_pl(
+            top=[dangling],
+            parts={dangling: {"name": ["Dangling Work"]}})
+        self.assertNotIn(dangling, pl.trackback[self._ALBUM])
+        result = pl._build_tracks_in_top(self._REL, self._ALBUM)
+        self.assertEqual(result, {dangling: set()})
+        self.assertIn(dangling, pl.trackback[self._ALBUM])
+        self.assertEqual(pl.trackback[self._ALBUM][dangling], {})
+
+    def test_diamond_trackback_deduplicates_shared_meta(self):
+        """A diamond graph (root -> left -> shared, root -> right -> shared)
+        built by ``create_trackback`` from ``self.partof`` yields a trackback
+        tree whose ``_collect_tracks_from_node`` walk reaches the shared
+        node's meta via both paths but records it once (set membership). The
+        helper is called for real so ``create_trackback`` constructs the
+        tree, not a pre-built node passed directly to the collector."""
+        self._no_log_config()
+        root, left, right, shared = ("root",), ("left",), ("right",), ("sh",)
+        shared_track = ("t_shared", self._ALBUM)
+        root_track = ("t_root", self._ALBUM)
+        left_track = ("t_left", self._ALBUM)
+        right_track = ("t_right", self._ALBUM)
+        pl = self._make_pl(
+            top=[root],
+            parts={root: {"name": ["Root"]},
+                   left: {"name": ["Left"]},
+                   right: {"name": ["Right"]},
+                   shared: {"name": ["Shared"]}},
+            partof={self._ALBUM: {
+                root: [left, right],
+                left: [shared],
+                right: [shared]}},
+            trackback={self._ALBUM: {
+                root: {"id": list(root), "meta": [root_track]},
+                left: {"id": list(left), "meta": [left_track]},
+                right: {"id": list(right), "meta": [right_track]},
+                shared: {"id": list(shared), "meta": [shared_track]}}})
+        result = pl._build_tracks_in_top(self._REL, self._ALBUM)
+        self.assertEqual(list(result.keys()), [root])
+        self.assertIsInstance(result[root], set)
+        # shared_track is reached via both left and right but appears once.
+        self.assertEqual(result[root], {root_track, left_track, right_track,
+                                        shared_track})
+        self.assertEqual(len(result[root]), 4)
+        self.assertIn(root, pl.trackback[self._ALBUM])
+        root_node = pl.trackback[self._ALBUM][root]
+        self.assertEqual(root_node.get("id"), list(root))
+        child_ids = [c.get("id") if isinstance(c, dict) else c
+                     for c in root_node.get("children", [])]
+        self.assertIn(list(left), child_ids)
+        self.assertIn(list(right), child_ids)
+
+
 if __name__ == "__main__":
     unittest.main()
