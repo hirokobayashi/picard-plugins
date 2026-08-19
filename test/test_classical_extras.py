@@ -6316,5 +6316,289 @@ class ChosenTopGuardCharacterizationTestCase(PluginTestCase):
         self.assertEqual(len(result_tracks['track']), len(result_tracks['work']))
 
 
+class P7CleanupCharacterizationTestCase(PluginTestCase):
+    """Characterization tests for the publish / orphan / cleanup order at the
+    tail of ``PartLevels.process_album`` (the "P7" region: the normal publish
+    loop, ``self.trackback[album].clear()``, and the orphan publish loop).
+
+    The production code is intentionally NOT changed here. Every expectation
+    below records what the current code does today, not what it arguably ought
+    to do. The four tests drive the real ``process_album`` as the entry point
+    and replace only ``publish_metadata`` (and, when an orphan path needs it,
+    ``derive_from_title``) with a spy / exception stub. No production logic is
+    replicated inside the stubs.
+
+    Fixture strategy: ``self.top[album]`` is left empty so every earlier phase
+    of ``process_album`` (inverse-hierarchy build, tracks-in-top build, chosen
+    top resolution, collection pruning, duplicate merging, most-selected
+    collapse, fused-id collapse/reduce and the per-top tagging loop) runs but
+    is a no-op for an empty top list. The pre-populated ``self.tracks[album]``,
+    ``self.trackback[album]`` and (when relevant) ``self.orphan_tracks[album]``
+    therefore flow straight into the P7 publish / clear / orphan region. This
+    reaches the real P7 code without reproducing process_album's internals.
+
+    This class derives directly from ``PluginTestCase`` (not from
+    ``ClassicalExtrasTestCase``) so its tests are discovered exactly once and
+    do not multiply the inherited suite. It reuses the shared
+    ``ClassicalExtrasTestCase._mod`` module cache and the
+    ``ClassicalExtrasTestCase._cleanup_global_state`` teardown exactly like
+    the other dedicated characterization classes in this module.
+    """
+
+    MOD = "classical_extras"
+    _ALBUM = "alb"
+    _REL = "p7test"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.addClassCleanup(ClassicalExtrasTestCase._cleanup_global_state)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting=dict(_ALL_OPTION_DEFAULTS))
+        if ClassicalExtrasTestCase._mod is None:
+            ClassicalExtrasTestCase._mod = self._test_plugin_install(
+                "Classical Extras", self.MOD)
+        self.mod = ClassicalExtrasTestCase._mod
+
+    def _no_log_config(self):
+        """Disable all custom logging so write_log creates no files."""
+        self.set_config_values(setting={
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+        })
+
+    def _make_fake_track(self, mid, title="Some Title"):
+        """A minimal stand-in for a Picard Track with a ``.metadata`` that
+        supports the get/set/contains operations publish_metadata would use."""
+        from unittest.mock import Mock
+        from picard.metadata import Metadata
+        t = Mock(name="track-%s" % mid)
+        t.metadata = Metadata()
+        t.metadata['title'] = title
+        t._id = mid
+        t.__hash__ = lambda self: hash(self._id)
+        t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+        return t
+
+    def _make_pl_for_p7(self, *, tracks, trackback_node, orphan_tracks=None):
+        """Build a bare PartLevels wired so process_album's earlier phases are
+        no-ops and the P7 publish / clear / orphan region runs against the given
+        pre-populated state.
+
+        Every container matches the type ``PartLevels.__init__`` gives it, so
+        the fixture is no stricter than production. Attributes the empty-top
+        earlier phases touch are set to their empty production-equivalent
+        containers; attributes P7 reads are pre-populated.
+        """
+        PartLevels = self.mod.PartLevels
+        pl = PartLevels.__new__(PartLevels)
+        # --- earlier-phase containers (empty so each phase is a no-op) ---
+        pl.parts = collections.defaultdict(
+            lambda: collections.defaultdict(dict))
+        pl.partof = collections.defaultdict(dict)
+        pl.work_listing = collections.defaultdict(list)
+        pl.works_cache = {}
+        pl.top_works = collections.defaultdict(dict)
+        pl.child_listing = collections.defaultdict(set)
+        pl.movement_totals = collections.defaultdict(dict)
+        # top[album] empty -> every earlier phase (collapse, per-top loop) skip
+        pl.top = collections.defaultdict(list)
+        pl.top[self._ALBUM] = []
+        # --- P7-read state (pre-populated) ---
+        pl.trackback = collections.defaultdict(
+            lambda: collections.defaultdict(dict))
+        pl.trackback[self._ALBUM] = collections.defaultdict(
+            dict, trackback_node)
+        pl.tracks = collections.defaultdict(
+            lambda: collections.defaultdict(dict))
+        for _track, _info in tracks:
+            pl.tracks[self._ALBUM][_track] = dict(_info)
+        pl.orphan_tracks = collections.defaultdict(list)
+        if orphan_tracks:
+            pl.orphan_tracks[self._ALBUM] = list(orphan_tracks)
+        # options read by the orphan loop (and publish_metadata, which is
+        # stubbed) -- defaultdict(dict) auto-vivifies an empty dict for any
+        # track not explicitly configured, so cwp_derive_works_from_title must
+        # be set explicitly for every orphan track to avoid a KeyError.
+        pl.options = collections.defaultdict(dict)
+        for _orphan in (orphan_tracks or []):
+            pl.options[_orphan]['cwp_derive_works_from_title'] = False
+        return pl
+
+    def _install_publish_spy(self, pl, *, raise_on_track=None,
+                            error_cls=ValueError):
+        """Replace ``pl.publish_metadata`` with a recording spy.
+
+        Records, per call, the track that was published and whether
+        ``pl.trackback[album]`` was empty at call time. The mutable trackback
+        container itself is NOT recorded -- only the boolean snapshot, so the
+        record is unaffected by a later ``.clear()``.
+
+        If ``raise_on_track`` is set to a track object, the call for that
+        track raises ``error_cls`` (after recording the call), so the spy can
+        simulate a mid-loop publish failure without duplicating any production
+        logic.
+        """
+        calls = []
+
+        def _spy(release_id, album, track, movement_info={}):
+            trackback_empty = len(pl.trackback[album]) == 0
+            calls.append({
+                'track': track,
+                'trackback_empty_at_call': trackback_empty,
+                'movement_info_present': bool(movement_info),
+            })
+            if raise_on_track is not None and track == raise_on_track:
+                raise error_cls("spy: simulated publish failure for %r" % track)
+
+        pl.publish_metadata = _spy
+        return calls
+
+    # ------------------------------------------------------------------ #
+    # Test 1: successful publish clears the album trackback               #
+    # ------------------------------------------------------------------ #
+    def test_successful_publish_clears_album_trackback(self):
+        """On a normal successful run, after every track is published
+        ``process_album`` clears ``self.trackback[album]``.
+
+        The publish loop iterates ``self.tracks[album]`` in insertion order,
+        then ``self.trackback[album].clear()`` runs, so each publish call
+        still sees a non-empty trackback and the trackback is empty once
+        ``process_album`` returns.
+        """
+        self._no_log_config()
+        t1 = self._make_fake_track("t1")
+        t2 = self._make_fake_track("t2")
+        top_id = ("w1",)
+        trackback_node = {top_id: {"id": list(top_id), "meta": []}}
+        pl = self._make_pl_for_p7(
+            tracks=[(t1, {'movement-group': 'g1', 'movement-number': 1}),
+                    (t2, {'movement-group': 'g1', 'movement-number': 2})],
+            trackback_node=trackback_node)
+        calls = self._install_publish_spy(pl)
+
+        pl.process_album(self._REL, self._ALBUM)
+
+        # both normal tracks were published, in self.tracks[album] order
+        self.assertEqual([c['track'] for c in calls], [t1, t2])
+        # every publish happened while the trackback was still populated
+        self.assertFalse(any(c['trackback_empty_at_call'] for c in calls))
+        # process_album returned normally and cleared the trackback
+        self.assertEqual(len(pl.trackback[self._ALBUM]), 0)
+
+    # ------------------------------------------------------------------ #
+    # Test 2: a normal-publish error leaves the trackback uncleared       #
+    # ------------------------------------------------------------------ #
+    def test_publish_error_leaves_album_trackback_uncleared(self):
+        """LEGACY BEHAVIOUR:
+
+        This test records the current cleanup timing. It does NOT endorse
+        retaining trackback state after a publish error as the desired
+        long-term policy. A future intentional cleanup redesign (e.g. moving
+        the clear into a finally block) should update this test in the same
+        change.
+
+        Today the clear runs AFTER the normal publish loop and is not guarded
+        by try/except, so a publish failure mid-loop propagates straight out
+        of process_album and the clear is never reached. The trackback stays
+        populated and the remaining tracks are not published.
+        """
+        self._no_log_config()
+        t1 = self._make_fake_track("t1")
+        t2 = self._make_fake_track("t2")
+        top_id = ("w1",)
+        trackback_node = {top_id: {"id": list(top_id), "meta": []}}
+        pl = self._make_pl_for_p7(
+            tracks=[(t1, {'movement-group': 'g1', 'movement-number': 1}),
+                    (t2, {'movement-group': 'g1', 'movement-number': 2})],
+            trackback_node=trackback_node)
+        calls = self._install_publish_spy(pl, raise_on_track=t2)
+
+        with self.assertRaises(ValueError):
+            pl.process_album(self._REL, self._ALBUM)
+
+        # t1 published before the failure; t2 raised so it is still recorded
+        # as a call (the spy records before raising) but the loop stopped.
+        self.assertEqual([c['track'] for c in calls], [t1, t2])
+        # the clear was never reached: trackback still holds the pre-populated
+        # top node.
+        self.assertIn(top_id, pl.trackback[self._ALBUM])
+
+    # ------------------------------------------------------------------ #
+    # Test 3: orphan publish runs AFTER the trackback clear               #
+    # ------------------------------------------------------------------ #
+    def test_orphan_publish_runs_after_trackback_cleanup(self):
+        """The orphan publish loop runs AFTER ``self.trackback[album].clear()``
+        so a normal track is published while the trackback is still populated
+        and an orphan track is published once the trackback is already empty.
+
+        This records the current ordering (clear between the two publish
+        loops) without reproducing the orphan-detection logic: the orphan
+        track is placed directly in ``self.orphan_tracks[album]``.
+        """
+        self._no_log_config()
+        t1 = self._make_fake_track("t1")
+        orphan = self._make_fake_track("orphan")
+        top_id = ("w1",)
+        trackback_node = {top_id: {"id": list(top_id), "meta": []}}
+        pl = self._make_pl_for_p7(
+            tracks=[(t1, {'movement-group': 'g1', 'movement-number': 1})],
+            trackback_node=trackback_node,
+            orphan_tracks=[orphan])
+        calls = self._install_publish_spy(pl)
+
+        pl.process_album(self._REL, self._ALBUM)
+
+        # normal track first, orphan second
+        self.assertEqual([c['track'] for c in calls], [t1, orphan])
+        # the normal track saw a populated trackback; the orphan saw an
+        # empty one (clear ran in between).
+        self.assertFalse(calls[0]['trackback_empty_at_call'])
+        self.assertTrue(calls[1]['trackback_empty_at_call'])
+        # trackback stays empty after process_album returns
+        self.assertEqual(len(pl.trackback[self._ALBUM]), 0)
+
+    # ------------------------------------------------------------------ #
+    # Test 4: an orphan-publish error keeps the trackback cleared         #
+    # ------------------------------------------------------------------ #
+    def test_orphan_publish_error_keeps_trackback_cleared(self):
+        """LEGACY BEHAVIOUR:
+
+        Orphan publishing currently occurs after trackback cleanup, so an
+        orphan publish failure leaves the trackback empty. This records the
+        current order and does not preclude a future intentional redesign.
+
+        The normal publish loop runs to completion, the trackback is cleared,
+        then the orphan loop starts. An exception raised while publishing the
+        orphan propagates out of process_album, but because the clear already
+        ran the trackback remains empty.
+        """
+        self._no_log_config()
+        t1 = self._make_fake_track("t1")
+        orphan = self._make_fake_track("orphan")
+        top_id = ("w1",)
+        trackback_node = {top_id: {"id": list(top_id), "meta": []}}
+        pl = self._make_pl_for_p7(
+            tracks=[(t1, {'movement-group': 'g1', 'movement-number': 1})],
+            trackback_node=trackback_node,
+            orphan_tracks=[orphan])
+        calls = self._install_publish_spy(pl, raise_on_track=orphan)
+
+        with self.assertRaises(ValueError):
+            pl.process_album(self._REL, self._ALBUM)
+
+        # normal track published, orphan raised (recorded then raised)
+        self.assertEqual([c['track'] for c in calls], [t1, orphan])
+        # the normal track saw a populated trackback; the orphan saw an empty
+        # one (clear had already run).
+        self.assertFalse(calls[0]['trackback_empty_at_call'])
+        self.assertTrue(calls[1]['trackback_empty_at_call'])
+        # the clear already ran before the orphan loop, so the trackback is
+        # empty despite the exception.
+        self.assertEqual(len(pl.trackback[self._ALBUM]), 0)
+
+
 if __name__ == "__main__":
     unittest.main()
