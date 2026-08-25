@@ -6600,5 +6600,289 @@ class P7CleanupCharacterizationTestCase(PluginTestCase):
         self.assertEqual(len(pl.trackback[self._ALBUM]), 0)
 
 
+# Marker for "tag absent from metadata" in snapshots (distinct from a tag
+# present with an empty value); defined before its only consumer below.
+_SENTINEL_ABSENT = object()
+
+
+class CrossAlbumWorkCacheRegressionTestCase(PluginTestCase):
+    """Regression test for the cross-album work-cache order-dependence bug.
+
+    The plugin registers ONE ``PartLevels`` for the whole Picard session, so
+    ``self.works_cache`` (the work-id -> parent-id relation cache) is shared by
+    every album loaded in the session. When a movement work is shared by two
+    releases (here two Swan Lake editions), the first album to be processed
+    seeds the cache with the parent relation it discovered, and the second
+    album's ``add_work_info`` then takes a cache hit and skips its own lookup.
+    ``works_cache`` stores the parents of a fused multi-id node as a flat list
+    (e.g. ``works_cache[(138bcfb4, 70ce41a5)] = [11f48c5e, 13867eb1]``), so the
+    individual child->parent edges (138bcfb4->11f48c5e, 70ce41a5->13867eb1)
+    cannot be recovered from the cache alone. ``check_cache`` therefore
+    replays the fused parent tuple as one ancestor, which makes the second
+    album resolve its top work to whichever top the first album happened to
+    cache first -- the second album's result then depends on the order the two
+    albums were processed in.
+
+    This test drives the same two Swan Lake fixtures twice -- once as A then B,
+    once as B then A -- each time with a FRESH ``PartLevels`` and fresh
+    track/metadata objects, and asserts that B's resulting per-track metadata
+    is identical in both orders. It does NOT pin a specific work UUID as the
+    "right" top (that would duplicate the production resolver); it only asserts
+    order-independence.
+
+    This class deliberately derives directly from ``PluginTestCase`` (not from
+    ``ClassicalExtrasTestCase``) so its single test is discovered exactly once.
+    It reuses the plugin module cache and the global-state cleanup from
+    ``ClassicalExtrasTestCase`` (the unload_plugin / sys.modules quirks make a
+    second installed module break later tests), and reuses the Swan Lake
+    fixture-loader pattern from ``SwanLakeCrossAlbumMovementTotalIntegrationTestCase``.
+    """
+
+    MOD = "classical_extras"
+
+    _JARVI_DIR = os.path.join(os.path.dirname(__file__), "fixtures",
+                              "swanlake_jarvi")
+    _FULL_DIR = os.path.join(os.path.dirname(__file__), "fixtures",
+                             "swanlake_full")
+    _JARVI_REL = "4e93a6a0-7858-4480-8420-b96c7eece538"
+    _FULL_REL = "a1a9e501-a7df-45b4-9879-ddd9661d0f65"
+
+    # Keys that the cross-album works_cache bug makes order-dependent via top
+    # selection. ~cwp_groupheading and ~cwp_part_0 also depend on parts[name]
+    # being rebuilt, which is a separate cross-album leak (the first album's
+    # collapsed/stripped name persists in the shared self.parts); they are
+    # NOT included here because this regression targets the top-work
+    # selection path that the works_cache bypass fixes.
+    SNAP_KEYS = (
+        "~cwp_workid_top", "~cwp_work_top", "~cwp_work_group",
+        "movementnumber", "movementtotal",
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Prevent plugin state from leaking into subsequently executed tests.
+        cls.addClassCleanup(ClassicalExtrasTestCase._cleanup_global_state)
+
+    def setUp(self):
+        super().setUp()
+        # Some Picard built-ins (server_host/port, artist_locales,
+        # translate_artist_names_script_exception) are not in
+        # _ALL_OPTION_DEFAULTS (they live in PICARD_OPTIONS under a different
+        # key shape); the Swan Lake work-lookup and artist-language paths read
+        # them, so seed them exactly as the existing cross-album test does.
+        self.set_config_values(setting=dict(_ALL_OPTION_DEFAULTS))
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+        self._no_log_config()
+        # Reuse the plugin module cached by ClassicalExtrasTestCase when the
+        # main suite has already run; otherwise install it once here. The
+        # cache lives on ClassicalExtrasTestCase so both classes share one
+        # installed module (unload_plugin does not fully clear sys.modules).
+        if ClassicalExtrasTestCase._mod is None:
+            ClassicalExtrasTestCase._mod = self._test_plugin_install(
+                "Classical Extras", self.MOD)
+        self.mod = ClassicalExtrasTestCase._mod
+
+    def _no_log_config(self):
+        """Disable all custom logging so write_log creates no files."""
+        self.set_config_values(setting={
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+        })
+
+    @staticmethod
+    def _read(directory, name):
+        with open(os.path.join(directory, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def _load_album(self, pl, release_id, rows, fixdir, album_name):
+        """Run one album through the given PartLevels; return (tracks, album).
+
+        Work fixtures are looked up in BOTH albums' directories -- the two
+        releases share most of their work hierarchy, which is the point.
+        Mirrors SwanLakeCrossAlbumMovementTotalIntegrationTestCase._load_album
+        but is self-contained so this TestCase does not inherit that class's
+        test methods (which would double-discover this suite's only test).
+        """
+        from unittest.mock import Mock
+        pending = []
+
+        def get(host, port, path, cb, **kw):
+            wid = path.rsplit("/", 1)[-1]
+            for d in (self._FULL_DIR, self._JARVI_DIR):
+                fn = os.path.join(d, "work_%s.json" % wid)
+                if os.path.exists(fn):
+                    pending.append((cb, self._read(d, "work_%s.json" % wid)))
+                    return
+            raise FileNotFoundError(wid)
+
+        tagger = Mock()
+        tagger.webservice.get = get
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": True, "cwp_arrangements": True,
+            "cwp_medley": True, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        from picard.metadata import Metadata
+        tracks = {}
+        for row in rows:
+            if len(row) == 5:                      # full album: has a disc no.
+                label, disc, track, rec_id, work_id = row
+            else:
+                label, track, rec_id, work_id = row
+                disc = 1
+            recfile = "rec_%s.json" % label
+            tm = Metadata()
+            tm['musicbrainz_albumid'] = release_id
+            tm['musicbrainz_recordingid'] = rec_id
+            tm['musicbrainz_workid'] = work_id
+            tm['album'] = album_name
+            tm['title'] = label
+            tm['tracknumber'] = str(track)
+            tm['discnumber'] = str(disc)
+            tm['~ce_options'] = repr(opts)
+            # Identity-hashed Mock track stands in for Picard's Track: the
+            # plugin only reads track.metadata and keys dicts by track
+            # identity (options, chosen_top).
+            t = Mock(name=label)
+            t.metadata = tm
+            tracks[label] = t
+            album._new_tracks.append(t)
+            pl.add_work_info(album, tm,
+                             {'recording': self._read(fixdir, recfile)}, {})
+        while pending:
+            cb, resp = pending.pop(0)
+            cb(resp, None, None)
+        return tracks, album
+
+    def _shared_partlevels(self):
+        """Build a fresh PartLevels for one run, with tag-writing side-effects
+        stubbed out (the order-independence bug is upstream of artist work).
+        write_log is stubbed too: its per-release 'basic' Options log bypasses
+        the log_* flags and would otherwise open real files under
+        USER_DIR/Classical_Extras."""
+        mod = self.mod
+        saved = (mod.get_aliases, mod.close_log, mod.write_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        mod.write_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+        self.addCleanup(lambda: setattr(mod, "write_log", saved[2]))
+        pl = mod.PartLevels()
+        pl.process_work_artists = lambda *a, **k: None
+        return pl
+
+    def _snapshot(self, tracks, track_rows):
+        """Snapshot B's per-track metadata keyed by the stable track label.
+
+        Values are deep-copied so no live object reference is retained. A key
+        absent from a track's metadata is recorded distinctly from an empty
+        list. Values are read with tm.getall(k), the RAW per-tag value list
+        (Picard's Metadata.getall), so within-tag ordering or duplication
+        differences are compared value-by-value with no join-string caveat.
+        """
+        snap = {}
+        for row in track_rows:
+            label = row[0]
+            if label not in tracks:
+                continue
+            tm = tracks[label].metadata
+            entry = {}
+            for k in self.SNAP_KEYS:
+                if k in tm:
+                    entry[k] = copy.deepcopy(tm.getall(k))
+                else:
+                    entry[k] = _SENTINEL_ABSENT
+            snap[label] = entry
+        return snap
+
+    def test_b_tags_identical_for_b_after_a_and_b_before_a(self):
+        """Compare B processed AFTER A ("B after A") with B processed BEFORE
+        A ("B before A").
+
+        Two independent runs, each with a FRESH PartLevels and fresh
+        track/metadata objects:
+          Run 1 ("B after A"):  new PartLevels -> A (Jarvi) -> B (Full)
+          Run 2 ("B before A"): new PartLevels -> B (Full) -> A (Jarvi)
+        The two runs share NO mutable state (no shared PartLevels, no shared
+        track objects, no shared metadata). B's snapshot is compared across
+        the two runs; it must be identical. The assertion does not pin a
+        specific work UUID -- it only asserts order-independence, so it does
+        not duplicate the production resolver.
+        """
+        full_tracks = SwanLakeFullBalletTwoVersionsIntegrationTestCase._TRACKS
+        jarvi_tracks = SwanLakeCrossAlbumMovementTotalIntegrationTestCase._JARVI_TRACKS
+
+        # Run 1 ("B after A"): A then B, fresh instance and fresh objects.
+        pl1 = self._shared_partlevels()
+        # _load_album runs the track processor synchronously and fires the
+        # queued work lookups; call process_album explicitly afterwards so A's
+        # works_cache is committed before B loads.
+        _jarvi_tracks1, jarvi_album1 = self._load_album(
+            pl1, self._JARVI_REL, jarvi_tracks, self._JARVI_DIR, "Swan Lake")
+        pl1.process_album(self._JARVI_REL, jarvi_album1)
+        # Fixture cause-condition prerequisite: after A's processing the
+        # session-shared works_cache must hold at least one entry recording
+        # MULTIPLE parents -- otherwise the order-dependence this test
+        # targets could never be triggered and the snapshot comparison below
+        # would be vacuous. Structural fact about the fixture (holds on the
+        # buggy baseline too); pins no work id as an expected answer.
+        has_multi_parent_entry = any(
+            parents is not None and len(parents) > 1
+            for parents in pl1.works_cache.values()
+        )
+        self.assertTrue(
+            has_multi_parent_entry,
+            "The fixture must create at least one multi-parent cache entry",
+        )
+        b1, full_album1 = self._load_album(
+            pl1, self._FULL_REL, full_tracks, self._FULL_DIR,
+            "Swan Lake (complete)")
+        pl1.process_album(self._FULL_REL, full_album1)
+        snap_b_after_a = self._snapshot(b1, full_tracks)
+
+        # Run 2 ("B before A"): B then A, fresh instance and fresh objects.
+        pl2 = self._shared_partlevels()
+        b2, full_album2 = self._load_album(
+            pl2, self._FULL_REL, full_tracks, self._FULL_DIR,
+            "Swan Lake (complete)")
+        pl2.process_album(self._FULL_REL, full_album2)
+        # Snapshot B NOW -- before A is processed -- so this run captures B's
+        # result when A has NOT seeded the cache first. (Afterwards A is
+        # processed too, to match the "both albums loaded in one session"
+        # shape, but B's tags are already written and are not re-processed.)
+        snap_b_before_a = self._snapshot(b2, full_tracks)
+        jarvi_album2 = self._load_album(
+            pl2, self._JARVI_REL, jarvi_tracks, self._JARVI_DIR, "Swan Lake")[1]
+        pl2.process_album(self._JARVI_REL, jarvi_album2)
+
+        # The order-independence assertion: "B after A" == "B before A".
+        # This is the regression that fails on the unmodified plugin because
+        # A's works_cache leaks into B.
+        self.assertEqual(
+            snap_b_after_a, snap_b_before_a,
+            "B's per-track metadata differs between 'B after A' and "
+            "'B before A' in fresh PartLevels sessions. The cross-album "
+            "works_cache leak makes B's top-work selection order-dependent.")
+
+
 if __name__ == "__main__":
     unittest.main()
