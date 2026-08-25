@@ -4407,8 +4407,10 @@ class PartLevels():
 
     def __init__(self):
         self.works_cache = {}
-        # maintains list of parent of each workid, or None if no parent found,
-        # so that XML lookup need only executed if no existing record
+        # maintains the list of parents recorded for each workid, so that
+        # the XML lookup need only be executed if no existing record
+        # (a work whose lookup finds no parent gets no entry here;
+        # self.parts[workid]['no_parent'] records that case instead)
 
         self.partof = collections.defaultdict(dict)
         # the inverse of the above (immediate children of each parent)
@@ -5473,7 +5475,12 @@ class PartLevels():
                                 parent_of[workId] = add_list_uniquely(
                                     parent_of[workId] if workId in parent_of
                                     else [], list(parentIds))
-                                if wid in self.works_cache:
+                                # A cached multi-parent list lost the
+                                # child->parent edge correspondence when it was
+                                # fused, so rebuild such relations below.
+                                if (wid in self.works_cache
+                                        and self.works_cache[wid] is not None
+                                        and len(self.works_cache[wid]) <= 1):
                                     # Make sure we haven't done this
                                     # relationship before, perhaps for another
                                     # album
