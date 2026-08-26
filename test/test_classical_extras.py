@@ -6605,6 +6605,73 @@ class P7CleanupCharacterizationTestCase(PluginTestCase):
 _SENTINEL_ABSENT = object()
 
 
+class ReduceRedundantParentsAlbumScopeTestCase(PluginTestCase):
+    """Unit tests for the album-scoped ``embedded`` predicate in
+    ``_reduce_redundant_parents``.
+
+    The integration regression
+    (``CrossAlbumPartLevelRegressionTestCase``) exercises the predicate
+    end-to-end through the real ``add_work_info`` → ``process_album``
+    pipeline with production-populated ``work_listing`` entries (which are
+    id tuples, not bare strings).  These unit tests isolate the predicate
+    itself: they construct a ``PartLevels`` with a hand-built
+    ``work_listing`` and call ``_reduce_redundant_parents`` with an explicit
+    ``album`` argument, verifying that the ``(x,) in wl`` membership check
+    correctly gates the embedded classification.
+    """
+
+    MOD = "classical_extras"
+
+    _DG_ATTO2 = "18a0544b"
+    _DG_K540C = "fc146a29"
+    _DG_OPERA = "b3b1e2b3"
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting=dict(_ALL_OPTION_DEFAULTS))
+        self.set_config_values(setting={
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+        })
+        if ClassicalExtrasTestCase._mod is None:
+            ClassicalExtrasTestCase._mod = self._test_plugin_install(
+                "Classical Extras", self.MOD)
+        self.mod = ClassicalExtrasTestCase._mod
+
+    def _make_pl(self, works_cache):
+        PartLevels = self.mod.PartLevels
+        pl = PartLevels.__new__(PartLevels)
+        pl.works_cache = works_cache
+        pl.work_listing = collections.defaultdict(list)
+        return pl
+
+    def test_album_scoped_embedded_reduces(self):
+        """When ``album`` is passed, a work in the album's ``work_listing``
+        with a cached parent edge is embedded; a work absent from the listing
+        is not, so the standalone-for-embedded reduction still fires."""
+        pl = self._make_pl({(self._DG_ATTO2,): [self._DG_OPERA]})
+        pl.work_listing["alb"] = [(self._DG_ATTO2,)]
+        self.assertEqual(
+            pl._reduce_redundant_parents(
+                (self._DG_ATTO2, self._DG_K540C), album="alb"),
+            (self._DG_ATTO2,))
+        self.assertEqual(
+            pl._reduce_redundant_parents(
+                (self._DG_K540C, self._DG_ATTO2), album="alb"),
+            (self._DG_ATTO2,))
+
+    def test_album_scoped_no_false_embedded(self):
+        """If neither parent is in the album's ``work_listing``, neither is
+        classified as embedded, so both are kept.  This is the cross-album
+        leak guard: a cache-only parent does not masquerade as embedded."""
+        pl = self._make_pl({(self._DG_ATTO2,): [self._DG_OPERA]})
+        pl.work_listing["alb"] = []
+        self.assertEqual(
+            pl._reduce_redundant_parents(
+                (self._DG_ATTO2, self._DG_K540C), album="alb"),
+            (self._DG_ATTO2, self._DG_K540C))
+
+
 class CrossAlbumWorkCacheRegressionTestCase(PluginTestCase):
     """Regression test for the cross-album work-cache order-dependence bug.
 
@@ -6882,6 +6949,262 @@ class CrossAlbumWorkCacheRegressionTestCase(PluginTestCase):
             "B's per-track metadata differs between 'B after A' and "
             "'B before A' in fresh PartLevels sessions. The cross-album "
             "works_cache leak makes B's top-work selection order-dependent.")
+
+
+class CrossAlbumPartLevelRegressionTestCase(PluginTestCase):
+    """Regression test for the cross-album ``works_cache`` embedded-parent
+    leak in ``_reduce_redundant_parents``.
+
+    ``works_cache`` is a *global* (session-shared) dict: a work's parent
+    edge cached by one album is visible to every subsequent album.  The
+    ``embedded`` predicate in ``_reduce_redundant_parents`` determines
+    whether a parent work is "embedded" (has a parent of its own) or is
+    a standalone top.  Before the fix the predicate consulted only
+    ``works_cache``, so a parent edge cached *solely* by a different album
+    made a standalone work look embedded.  This caused the redundancy
+    reduction to keep a parent that should have been dropped, inflating
+    ``~cwp_part_levels`` from 2 to 3 for the affected tracks.
+
+    The fix scopes the ``embedded`` check to the current album's
+    ``work_listing``: a parent is embedded only when its singleton tuple
+    ``(x,)`` appears in ``self.work_listing[album]`` *and* a parent edge
+    exists in ``works_cache``.  A global-cache-only edge no longer
+    qualifies.
+
+    This test compares B processed after A (``Run 1``) against B processed
+    alone (``Run 2``).  B's ``~cwp_part_levels``, ``~cwp_groupheading``
+    and ``~cwp_part_0`` must be identical in both runs.  It also pins
+    ``~cwp_part_levels`` to ``["2"]`` for the five Danses des cygnes
+    movements (d1t17, d1t19-d1t22), matching the depth B yields when
+    processed alone (verified by
+    ``SwanLakeFullBalletTwoVersionsIntegrationTestCase``).  Display
+    strings and work UUIDs are not pinned.
+    """
+
+    MOD = "classical_extras"
+
+    _JARVI_DIR = os.path.join(os.path.dirname(__file__), "fixtures",
+                              "swanlake_jarvi")
+    _FULL_DIR = os.path.join(os.path.dirname(__file__), "fixtures",
+                             "swanlake_full")
+    _JARVI_REL = "4e93a6a0-7858-4480-8420-b96c7eece538"
+    _FULL_REL = "a1a9e501-a7df-45b4-9879-ddd9661d0f65"
+
+    # The tags made order-dependent by the single-parent cache leak: the
+    # part hierarchy depth changes, and the groupheading/part tags derived
+    # from it change with it.
+    SNAP_KEYS = (
+        "~cwp_part_levels",
+        "~cwp_groupheading",
+        "~cwp_part_0",
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.addClassCleanup(ClassicalExtrasTestCase._cleanup_global_state)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting=dict(_ALL_OPTION_DEFAULTS))
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+        self._no_log_config()
+        if ClassicalExtrasTestCase._mod is None:
+            ClassicalExtrasTestCase._mod = self._test_plugin_install(
+                "Classical Extras", self.MOD)
+        self.mod = ClassicalExtrasTestCase._mod
+        # Save original module functions once per test; restore once via
+        # cleanup.  This avoids the LIFO-ordering dependency that arose when
+        # _shared_partlevels saved/restored on every call.
+        self._orig_mod_funcs = (
+            self.mod.get_aliases, self.mod.close_log, self.mod.write_log)
+        self.addCleanup(self._restore_mod_funcs)
+
+    def _restore_mod_funcs(self):
+        self.mod.get_aliases, self.mod.close_log, self.mod.write_log = (
+            self._orig_mod_funcs)
+
+    def _no_log_config(self):
+        self.set_config_values(setting={
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+        })
+
+    @staticmethod
+    def _read(directory, name):
+        with open(os.path.join(directory, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def _load_album(self, pl, release_id, rows, fixdir, album_name):
+        from unittest.mock import Mock
+        pending = []
+
+        def get(host, port, path, cb, **kw):
+            wid = path.rsplit("/", 1)[-1]
+            # Search the album's own fixture dir first, then fall back
+            # to the other dir for shared ancestor works.
+            searched = set()
+            for d in (fixdir, self._FULL_DIR, self._JARVI_DIR):
+                if d in searched:
+                    continue
+                searched.add(d)
+                fn = os.path.join(d, "work_%s.json" % wid)
+                if os.path.exists(fn):
+                    pending.append((cb, self._read(d, "work_%s.json" % wid)))
+                    return
+            raise FileNotFoundError(wid)
+
+        tagger = Mock()
+        tagger.webservice.get = get
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": True, "cwp_arrangements": True,
+            "cwp_medley": True, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        from picard.metadata import Metadata
+        tracks = {}
+        for row in rows:
+            if len(row) == 5:
+                label, disc, track, rec_id, work_id = row
+            else:
+                label, track, rec_id, work_id = row
+                disc = 1
+            recfile = "rec_%s.json" % label
+            tm = Metadata()
+            tm['musicbrainz_albumid'] = release_id
+            tm['musicbrainz_recordingid'] = rec_id
+            tm['musicbrainz_workid'] = work_id
+            tm['album'] = album_name
+            tm['title'] = label
+            tm['tracknumber'] = str(track)
+            tm['discnumber'] = str(disc)
+            tm['~ce_options'] = repr(opts)
+            t = Mock(name=label)
+            t.metadata = tm
+            tracks[label] = t
+            album._new_tracks.append(t)
+            pl.add_work_info(album, tm,
+                             {'recording': self._read(fixdir, recfile)}, {})
+        while pending:
+            cb, resp = pending.pop(0)
+            cb(resp, None, None)
+        return tracks, album
+
+    def _shared_partlevels(self):
+        """Build a fresh PartLevels for one run, with tag-writing side-effects
+        stubbed out (the cross-album cache leak is upstream of artist work).
+        write_log is stubbed too: its per-release 'basic' Options log bypasses
+        the log_* flags and would otherwise open real files under
+        USER_DIR/Classical_Extras.  Module-function save/restore is handled
+        once in setUp/cleanup, so this method only sets the stubs.
+        """
+        self.mod.get_aliases = lambda *a, **k: None
+        self.mod.close_log = lambda *a, **k: None
+        self.mod.write_log = lambda *a, **k: None
+        pl = self.mod.PartLevels()
+        pl.process_work_artists = lambda *a, **k: None
+        return pl
+
+    def _snapshot(self, tracks, track_rows):
+        snap = {}
+        for row in track_rows:
+            label = row[0]
+            if label not in tracks:
+                continue
+            tm = tracks[label].metadata
+            entry = {}
+            for k in self.SNAP_KEYS:
+                if k in tm:
+                    entry[k] = copy.deepcopy(tm.getall(k))
+                else:
+                    entry[k] = _SENTINEL_ABSENT
+            snap[label] = entry
+        return snap
+
+    def test_part_hierarchy_is_invariant_under_cross_album_cache_leak(self):
+        """B's part-level hierarchy must be the same whether A is processed
+        before B or B is processed alone.
+
+        Two independent runs, each with a FRESH PartLevels and fresh
+        track/metadata objects:
+          Run 1 ("B after A"): new PartLevels -> A (Jarvi) -> B (Full)
+          Run 2 ("B alone"):   new PartLevels -> B (Full)
+
+        Run 1 exercises the cross-album leak: A seeds the global
+        ``works_cache`` with parent edges for works shared with B; when B
+        is then processed, ``_reduce_redundant_parents`` reads those cached
+        edges and (before the fix) misclassifies a standalone parent as
+        embedded, inflating ``~cwp_part_levels`` from 2 to 3.  Run 2 is
+        the clean baseline with no prior album.  B's snapshot must be
+        identical across the two runs.
+        """
+        self.maxDiff = None
+        full_tracks = SwanLakeFullBalletTwoVersionsIntegrationTestCase._TRACKS
+        jarvi_tracks = SwanLakeCrossAlbumMovementTotalIntegrationTestCase._JARVI_TRACKS
+
+        # Run 1: A then B, fresh instance and fresh objects.
+        pl1 = self._shared_partlevels()
+        _, jarvi_album1 = self._load_album(
+            pl1, self._JARVI_REL, jarvi_tracks, self._JARVI_DIR, "Swan Lake")
+        pl1.process_album(self._JARVI_REL, jarvi_album1)
+        b1, full_album1 = self._load_album(
+            pl1, self._FULL_REL, full_tracks, self._FULL_DIR,
+            "Swan Lake (complete)")
+        pl1.process_album(self._FULL_REL, full_album1)
+        snap_b_after_a = self._snapshot(b1, full_tracks)
+
+        # Run 2: B alone, fresh instance and fresh objects.
+        pl2 = self._shared_partlevels()
+        b2, full_album2 = self._load_album(
+            pl2, self._FULL_REL, full_tracks, self._FULL_DIR,
+            "Swan Lake (complete)")
+        pl2.process_album(self._FULL_REL, full_album2)
+        snap_b_alone = self._snapshot(b2, full_tracks)
+
+        self.assertEqual(
+            snap_b_after_a, snap_b_alone,
+            "B's part-level hierarchy differs between 'B after A' and "
+            "'B alone' in fresh PartLevels sessions. The cross-album "
+            "works_cache embedded-parent leak makes B's part hierarchy "
+            "order-dependent.")
+
+        # The five tracks whose part_levels changed (d1t17-d1t22, the
+        # Danses des cygnes movements) must resolve to exactly 2 levels in
+        # BOTH runs.  B alone (verified independently by
+        # SwanLakeFullBalletTwoVersionsIntegrationTestCase) yields 2; the
+        # cross-album cache leak inflates it to 3 when A is processed first.
+        # We assert the expected depth without pinning display strings or
+        # work UUIDs.
+        for label in ('d1t17', 'd1t19', 'd1t20', 'd1t21', 'd1t22'):
+            self.assertIn(
+                '~cwp_part_levels', snap_b_after_a[label],
+                "%s: ~cwp_part_levels absent in B after A run" % label)
+            self.assertIn(
+                '~cwp_part_levels', snap_b_alone[label],
+                "%s: ~cwp_part_levels absent in B alone run" % label)
+            self.assertEqual(
+                snap_b_after_a[label]['~cwp_part_levels'], ['2'],
+                "%s: ~cwp_part_levels should be 2 (B after A run)" % label)
+            self.assertEqual(
+                snap_b_alone[label]['~cwp_part_levels'], ['2'],
+                "%s: ~cwp_part_levels should be 2 (B alone run)" % label)
 
 
 if __name__ == "__main__":
