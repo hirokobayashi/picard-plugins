@@ -6712,7 +6712,7 @@ class PartLevels():
             [selected] if isinstance(selected, str) else list(selected))
         return self.parts[topId]['name'] != name
 
-    def _reduce_redundant_parents(self, parentIds):
+    def _reduce_redundant_parents(self, parentIds, album=None):
         """Return ``parentIds`` keeping only a work's most-specific,
         best-embedded direct parent(s); drop parents that are redundant given
         the others.
@@ -6735,16 +6735,32 @@ class PartLevels():
           would otherwise fuse into the intermediate work level as a spurious
           second value; the embedded parent is the one that fits the hierarchy.
 
-        Ancestry and parenthood are read from ``self.works_cache`` (each id's
-        direct parents), whose chains are fully populated by the time
-        process_album runs. A single parent, or parents that are all top-level
-        with none an ancestor of another (genuine sibling multi-parents, e.g.
-        two same-named versions of a suite, a ballet and its derived concert
+        Ancestry is read from ``self.works_cache`` (each id's direct parents),
+        whose chains are fully populated by the time ``process_album`` runs.
+        The *embedded* check additionally consults ``self.work_listing[album]``
+        so that a work whose parent edge was cached by a *different* album (and
+        therefore never processed in this album) is not misclassified as
+        embedded here.  When ``album`` is ``None`` (unit-test usage) the check
+        falls back to the global cache, preserving the original behaviour.
+        A single parent, or parents that are all top-level with none an
+        ancestor of another (genuine sibling multi-parents, e.g. two
+        same-named versions of a suite, a ballet and its derived concert
         suite), are returned unchanged.
         """
         if len(parentIds) <= 1:
             return parentIds
 
+        # Ancestry is read from the global works_cache.  A cross-album cached
+        # edge could in principle inflate ancestors(), but the only consumer
+        # of anc[] is the ``x in anc[y]`` test, which checks whether x is a
+        # *direct or transitive ancestor* of y.  An extra cached ancestor of y
+        # can only make x look redundant if x genuinely is an ancestor of y
+        # via that edge -- which is still a correct redundancy call: the
+        # movement is linked to both the grouping and the sub-work, and the
+        # grouping is reached transitively.  The cross-album bug is instead
+        # in the *embedded* check (below), where a cache-only parent edge
+        # makes a standalone work look embedded.  Scoping embedded to the
+        # album's own work_listing fixes that without touching ancestry.
         def ancestors(wid):
             seen = set()
             stack = list(self.works_cache.get((wid,), []))
@@ -6757,7 +6773,14 @@ class PartLevels():
             return seen
 
         anc = {x: ancestors(x) for x in parentIds}
-        embedded = {x: bool(self.works_cache.get((x,))) for x in parentIds}
+        if album is not None:
+            wl = self.work_listing.get(album, ())
+            embedded = {
+                x: (x,) in wl
+                and bool(self.works_cache.get((x,)))
+                for x in parentIds}
+        else:
+            embedded = {x: bool(self.works_cache.get((x,))) for x in parentIds}
 
         def redundant(x):
             for y in parentIds:
@@ -7147,7 +7170,7 @@ class PartLevels():
                     # this never touches genuine sibling multi-parents such as
                     # two same-named suite versions, where neither is an
                     # ancestor of the other.)
-                    reduced = self._reduce_redundant_parents(parentIds)
+                    reduced = self._reduce_redundant_parents(parentIds, album)
                     # Only accept the reduction if the shortened tuple is a node
                     # that actually exists. A node is identified by its id
                     # tuple, and reducing one produces a DIFFERENT key: where
