@@ -5109,7 +5109,8 @@ class PartLevels():
                                 if workId not in self.top[album]:
                                     self.top[album].append(workId)
 
-    def check_cache(self, tm, album, track, workId_tuple, not_in_cache):
+    def check_cache(self, tm, album, track, workId_tuple, not_in_cache,
+                    active_path=None):
         """
         Recursive loop to get cached works
         :param tm:
@@ -5117,16 +5118,34 @@ class PartLevels():
         :param track:
         :param workId_tuple:
         :param not_in_cache:
+        :param active_path: the cache keys on the current recursion path.
+            Internal parameter: every top-level call leaves it as None so a
+            fresh set is created per replay.
         :return:
         """
-        parentId_tuple = tuple(self.works_cache[workId_tuple])
-        if parentId_tuple not in self.work_listing[album]:
-            self.work_listing[album].append(parentId_tuple)
+        # A works_cache holding a cycle (a work cached as its own parent,
+        # or a longer loop recorded across albums) must not send this replay
+        # into unbounded recursion. The guard follows the ACTIVE recursion
+        # path only, so a key visited by an earlier, completed call (DAG
+        # convergence - several works sharing one parent) is not treated as
+        # a cycle, and nothing is shared between top-level calls.
+        if active_path is None:
+            active_path = set()
+        if workId_tuple in active_path:
+            return not_in_cache
+        active_path.add(workId_tuple)
+        try:
+            parentId_tuple = tuple(self.works_cache[workId_tuple])
+            if parentId_tuple not in self.work_listing[album]:
+                self.work_listing[album].append(parentId_tuple)
 
-        if parentId_tuple in self.works_cache:
-            self.check_cache(tm, album, track, parentId_tuple, not_in_cache)
-        else:
-            not_in_cache.append(parentId_tuple)
+            if parentId_tuple in self.works_cache:
+                self.check_cache(tm, album, track, parentId_tuple,
+                                 not_in_cache, active_path)
+            else:
+                not_in_cache.append(parentId_tuple)
+        finally:
+            active_path.discard(workId_tuple)
         return not_in_cache
 
     def work_not_in_cache(self, release_id, album, track, workId_tuple):
