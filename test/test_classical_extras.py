@@ -6672,6 +6672,347 @@ class ReduceRedundantParentsAlbumScopeTestCase(PluginTestCase):
             (self._DG_ATTO2, self._DG_K540C))
 
 
+class CheckCacheCycleRegressionTestCase(PluginTestCase):
+    """Regression tests for the missing cycle guard in
+    ``PartLevels.check_cache``.
+
+    ``check_cache`` replays cached work->parent edges (``self.works_cache``)
+    recursively.  The cache-miss side (``work_process``) drops parent
+    relations that would point back down the hierarchy (a parent that is a
+    descendant of the child, logged and tagged ``~cwp_error`` "5. ..."), but
+    the cache-hit side had no equivalent defence: a ``works_cache`` that
+    contains a cycle (self-loop, two-node, three-node, ...) made
+    ``check_cache`` recurse until ``RecursionError``, aborting the album.
+
+    These tests call the REAL ``check_cache`` on a ``PartLevels`` wired only
+    with the attributes the method touches (``works_cache`` and
+    ``work_listing``), mirroring the production shapes (plain dict /
+    defaultdict(list)).  An unguarded cyclic cache makes the real method
+    recurse until the interpreter's own recursion limit trips, so the
+    failure is observed with the ambient recursion limit - no limit
+    manipulation is needed.
+
+    This class deliberately derives directly from PluginTestCase (not from
+    ClassicalExtrasTestCase) so its tests are discovered exactly once, and it
+    reuses the shared ``ClassicalExtrasTestCase._mod`` module cache and
+    ``_cleanup_global_state`` teardown like the other dedicated classes.
+    """
+
+    MOD = "classical_extras"
+    _ALBUM = "alb"
+
+    _A = "wA"
+    _B = "wB"
+    _C = "wC"
+    _D = "wD"
+    _X_KEY = "wX"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.addClassCleanup(ClassicalExtrasTestCase._cleanup_global_state)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting=dict(_ALL_OPTION_DEFAULTS))
+        # Some Picard built-ins (server_host/port, artist_locales) are not in
+        # _ALL_OPTION_DEFAULTS; the work-lookup path of the integration test
+        # reads them, so seed them exactly as the existing cross-album
+        # integration tests do.
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+        self.set_config_values(setting={
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+        })
+        if ClassicalExtrasTestCase._mod is None:
+            ClassicalExtrasTestCase._mod = self._test_plugin_install(
+                "Classical Extras", self.MOD)
+        self.mod = ClassicalExtrasTestCase._mod
+
+    def _make_pl(self, works_cache):
+        """Build a bare PartLevels wired for check_cache.
+
+        check_cache reads and writes exactly two attributes:
+        ``self.works_cache`` (plain dict, per PartLevels.__init__) and
+        ``self.work_listing[album]`` (defaultdict(list)).  Everything else is
+        left unset so a stray access surfaces as AttributeError, keeping the
+        fixture from being stricter than production.
+        """
+        PartLevels = self.mod.PartLevels
+        pl = PartLevels.__new__(PartLevels)
+        pl.works_cache = works_cache
+        pl.work_listing = collections.defaultdict(list)
+        return pl
+
+    def _call_check_cache(self, pl, key):
+        """Call check_cache and report whether it recursed forever.
+
+        Returns ``(result, raised)``: the return value (or None if the call
+        raised) and the RecursionError instance (or None).  An unguarded
+        cyclic cache makes the real method recurse until the interpreter's
+        own recursion limit trips, so no recursion-limit manipulation is
+        needed to observe the failure.
+        """
+        from unittest.mock import Mock
+        track = Mock(name="track")
+        try:
+            return pl.check_cache(None, self._ALBUM, track, key, []), None
+        except RecursionError as exc:
+            return None, exc
+
+    def _run_self_loop_album(self):
+        """Drive the REAL add_work_info -> work_add_track -> work_process
+        pipeline for one track whose only work lists ITSELF as its parent
+        (a self-loop "parts" relation).
+
+        The webservice is stubbed to answer every /work/<id> lookup with the
+        same self-referencing work document, synchronously, via a pending
+        queue drained with a hard cap so a regression cannot hang the test
+        run forever.  Returns ``(pl, album, track, pending, calls)`` where
+        ``calls`` lists the workId_tuple of every production ``check_cache``
+        invocation observed by a delegating spy (no production logic is
+        copied - each call is recorded and forwarded to the real method,
+        which is restored again on test cleanup).
+
+        Module-level logging helpers (get_aliases / close_log / write_log)
+        are stubbed out for the duration of the call -- their per-release
+        'basic' Options log bypasses the log_* flags and would otherwise
+        open real files under USER_DIR/Classical_Extras.  The track is a
+        plain Mock keyed by object identity, which is all the pipeline
+        needs for the single track of this fixture.
+        """
+        from unittest.mock import Mock
+        from picard.metadata import Metadata
+        mod = self.mod
+        saved = (mod.get_aliases, mod.close_log, mod.write_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        mod.write_log = lambda *a, **k: None
+        self.addCleanup(self._restore_mod_funcs, mod, saved)
+        pl = mod.PartLevels()
+        pl.process_work_artists = lambda *a, **k: None
+
+        # Delegating spy: record every production check_cache call so the
+        # test can assert the self-loop really reaches the cache-hit path
+        # (the code under test), without replicating any of its logic.
+        original_check_cache = pl.check_cache
+        calls = []
+
+        def spy(tm, album, track, workId_tuple, not_in_cache,
+                active_path=None):
+            calls.append(tuple(workId_tuple))
+            return original_check_cache(
+                tm, album, track, workId_tuple, not_in_cache, active_path)
+        pl.check_cache = spy
+        self.addCleanup(
+            self._restore_bound_method, pl, 'check_cache',
+            original_check_cache)
+
+        pending = []
+        work_response = {
+            'id': self._A, 'title': 'Self Work', 'type': None,
+            'relations': [
+                {'target-type': 'artist', 'type': 'composer',
+                 'direction': 'backward', 'attributes': [],
+                 'artist': {'id': 'c1', 'name': 'Composer',
+                            'sort-name': 'Composer'}},
+                {'target-type': 'work', 'type': 'parts',
+                 'direction': 'backward', 'attributes': [],
+                 'work': {'id': self._A, 'title': 'Self Work'}},
+            ],
+            'aliases': [], 'iswcs': []}
+        rec_response = {'recording': {
+            'id': 'rec-1', 'title': 'Rec 1',
+            'relations': [
+                {'target-type': 'work', 'type': 'performance',
+                 'direction': 'forward', 'attributes': [],
+                 'work': {'id': self._A, 'title': 'Self Work'}}]}}
+
+        def get(host, port, path, cb, **kw):
+            wid = path.rsplit('/', 1)[-1]
+            if wid == self._A:
+                pending.append((cb, work_response))
+                return
+            raise FileNotFoundError(wid)
+
+        tagger = Mock()
+        tagger.webservice.get = get
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": False, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        tm = Metadata()
+        tm['musicbrainz_albumid'] = 'selfloop-rel'
+        tm['musicbrainz_recordingid'] = 'rec-1'
+        tm['musicbrainz_workid'] = self._A
+        tm['album'] = 'Self Loop Album'
+        tm['title'] = 't1'
+        tm['tracknumber'] = '1'
+        tm['discnumber'] = '1'
+        tm['totaltracks'] = '1'
+        tm['totaldiscs'] = '1'
+        tm['~ce_options'] = repr(opts)
+        t = Mock(name='t1')
+        t.metadata = tm
+        album._new_tracks.append(t)
+        pl.add_work_info(album, tm, rec_response, {})
+
+        # Hard cap so a regression (unguarded cycle) fails this test quickly
+        # instead of looping forever; the exact number of lookups is NOT
+        # part of the contract and is not asserted.
+        fired = 0
+        while pending and fired < 10:
+            cb, resp = pending.pop(0)
+            cb(resp, None, None)
+            fired += 1
+        return pl, album, t, pending, calls
+
+    @staticmethod
+    def _restore_mod_funcs(mod, saved):
+        mod.get_aliases, mod.close_log, mod.write_log = saved
+
+    @staticmethod
+    def _restore_bound_method(obj, name, method):
+        setattr(obj, name, method)
+
+    def test_self_loop_work_relation_does_not_recurse_forever(self):
+        """A work whose only parent relation points at ITSELF must survive
+        the full add_work_info -> lookup -> work_process pipeline: the cached
+        self-loop is replayed through check_cache on the very first lookup
+        completion, and before the fix that replay recursed until
+        RecursionError, aborting the whole album.
+
+        The contract of this test is limited to the cycle guard itself:
+        the lookup pipeline drains in finitely many callbacks, the
+        production check_cache is actually reached, and the self-loop work
+        tuple is replayed through it, without RecursionError.  What the
+        track ends up tagged with (or not) is NOT asserted here: that would
+        need process_album / finalize to be confirmed as run, which this
+        fixture does not observe, and adding album._requests checks or a
+        process_album test double would widen the cycle-termination duty
+        beyond the fix under test."""
+        _, _, _, pending, check_cache_calls = self._run_self_loop_album()
+        self.assertEqual(pending, [],
+                         "the pipeline must terminate in finitely many "
+                         "lookups: the self-loop parent relation must not "
+                         "keep the lookup drain open forever")
+        self.assertGreaterEqual(
+            len(check_cache_calls), 1,
+            "the self-loop fixture must exercise the production cache-hit "
+            "path (check_cache) - otherwise this test would not cover the "
+            "cycle guard at all")
+        self.assertIn(
+            (self._A,), check_cache_calls,
+            "the self-loop work itself must be replayed through check_cache")
+
+    def test_check_cache_terminates_on_self_loop(self):
+        """A self-loop cache entry (the work cached as its own parent) must
+        terminate instead of recursing forever.
+
+        Before the fix check_cache saw the parent tuple (wA,) already in
+        works_cache and recursed into itself indefinitely."""
+        pl = self._make_pl({(self._A,): [self._A]})
+        result, raised = self._call_check_cache(pl, (self._A,))
+        self.assertIsNone(raised,
+                          "check_cache must not recurse forever on a "
+                          "self-loop cache entry")
+        self.assertEqual(result, [])
+
+    def test_check_cache_terminates_on_two_node_cycle(self):
+        """A two-node cycle (wA cached under wB and wB back under wA) must
+        terminate."""
+        pl = self._make_pl({
+            (self._A,): [self._B],
+            (self._B,): [self._A],
+        })
+        result, raised = self._call_check_cache(pl, (self._A,))
+        self.assertIsNone(raised,
+                          "check_cache must not recurse forever on a "
+                          "two-node cycle")
+        self.assertEqual(result, [])
+
+    def test_check_cache_terminates_on_three_node_cycle(self):
+        """A three-node cycle (wA -> wB -> wC -> wA) must terminate."""
+        pl = self._make_pl({
+            (self._A,): [self._B],
+            (self._B,): [self._C],
+            (self._C,): [self._A],
+        })
+        result, raised = self._call_check_cache(pl, (self._A,))
+        self.assertIsNone(raised,
+                          "check_cache must not recurse forever on a "
+                          "three-node cycle")
+        self.assertEqual(result, [])
+
+    def test_check_cache_keeps_acyclic_chain(self):
+        """An acyclic chain keeps its current behaviour: every cached parent
+        tuple is appended to the album's work_listing and the chain's
+        terminal parent (the first tuple absent from works_cache) is
+        appended to not_in_cache, which the callers hand to
+        work_not_in_cache for lookup.
+
+        The accumulator's identity is part of the contract: callers receive
+        the very list they passed in."""
+        pl = self._make_pl({
+            (self._A,): [self._B],
+            (self._B,): [self._C],
+        })
+        accumulator = []
+        from unittest.mock import Mock
+        track = Mock(name="track")
+        result = pl.check_cache(
+            None, self._ALBUM, track, (self._A,), accumulator)
+        self.assertIs(result, accumulator,
+                      "check_cache must return the accumulator it was given")
+        self.assertEqual(result, [(self._C,)],
+                         "the terminal parent tuple of the acyclic chain is "
+                         "the only entry appended to not_in_cache")
+        self.assertEqual(pl.work_listing[self._ALBUM],
+                         [(self._B,), (self._C,)])
+
+    def test_check_cache_allows_dag_convergence(self):
+        """Two chains converging on the same cached parent are NOT a cycle:
+        the second top-level call must still replay the shared parent and
+        return it as its terminal, exactly like the first call.
+
+        This pins that the cycle guard follows the ACTIVE recursion path
+        only - a key visited by an earlier, completed call is not treated as
+        a cycle - so DAG convergence (different works sharing a parent)
+        keeps working, and no state is shared between top-level calls."""
+        pl = self._make_pl({
+            (self._A,): [self._B],
+            (self._B,): [self._D],
+            (self._X_KEY,): [self._D],
+        })
+        result_a, raised_a = self._call_check_cache(pl, (self._A,))
+        self.assertIsNone(raised_a)
+        self.assertEqual(result_a, [(self._D,)])
+        result_x, raised_x = self._call_check_cache(pl, (self._X_KEY,))
+        self.assertIsNone(raised_x,
+                          "a parent visited by an earlier call is not a "
+                          "cycle - the guard must follow the active path "
+                          "only")
+        self.assertEqual(result_x, [(self._D,)])
+
+
 class CrossAlbumWorkCacheRegressionTestCase(PluginTestCase):
     """Regression test for the cross-album work-cache order-dependence bug.
 
