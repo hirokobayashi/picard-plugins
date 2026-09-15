@@ -5594,8 +5594,44 @@ class PartLevels():
 
 
                                 else:
-                                    self.works_cache[wid] = parentIds
-                                    self.parts[wid]['parent'] = parentIds
+                                    # A later callback for ONE constituent
+                                    # work of a fused multi-parent node
+                                    # re-reports only that work's own
+                                    # parents, which are a strict subset of
+                                    # the node's grown cache entry (the grow
+                                    # branch above fuses the parents of every
+                                    # constituent work of the node). When that
+                                    # grown entry embeds one of the node's OWN
+                                    # constituent works as a parent, the entry
+                                    # encodes the node's internal hierarchy
+                                    # (a recording directly linked to both a
+                                    # work and that work's parent), and
+                                    # replacing it with the subset would drop
+                                    # the other constituents' child->parent
+                                    # edges from the cache and the
+                                    # corresponding intermediate work level
+                                    # from the part hierarchy. Keep the grown
+                                    # entry. Genuinely unrelated multi-parent
+                                    # entries (e.g. a movement filed under two
+                                    # parallel versions of one work, whose
+                                    # parent lists name the two version tops,
+                                    # not constituents of the node) are NOT
+                                    # protected: a later single-work callback
+                                    # narrowing them to its own version keeps
+                                    # the previous behaviour. NB the protected
+                                    # case cannot hold a stale relation either:
+                                    # the cache is session-scoped, and a
+                                    # work's lookup always returns its full
+                                    # parent set, so a strict-subset reply is
+                                    # never a genuine removal - it is just the
+                                    # fused node seen from one of its works.
+                                    if not (wid in self.works_cache
+                                            and self.works_cache[wid] is not None
+                                            and len(self.works_cache[wid]) > 1
+                                            and set(parentIds) < set(self.works_cache[wid])
+                                            and any(w in self.works_cache[wid] for w in wid)):
+                                        self.works_cache[wid] = parentIds
+                                        self.parts[wid]['parent'] = parentIds
                                     self.parts[tuple(parentIds)
                                                ]['name'] = parents
                                     self.work_listing[album].append(
