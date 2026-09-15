@@ -6967,15 +6967,63 @@ class PartLevels():
         # under the new key; its name has already been collapsed to a single
         # value by _merge/dedup so it is correct for the surviving id.
         old_part = self.parts.get(old_id)
+        existing_part = self.parts.get(new_id)
         if old_part is not None:
-            self.parts[new_id] = old_part
+            if existing_part is not None and existing_part is not old_part:
+                # The new key already has its own entry (e.g. the parent-child
+                # direct-work case, where (B,) is both a parent node and the
+                # surviving top). Aliasing would make the two keys share one
+                # dict, and the caller's kept-names write to parts[new_id]
+                # would then also rewrite the old node's own name list. Copy
+                # instead (same pattern as the fused-node growth in
+                # work_process), keeping the old entry intact.
+                new_part = copy.copy(old_part)
+                for _k, _v in list(new_part.items()):
+                    if isinstance(_v, list):
+                        new_part[_k] = _v[:]
+                self.parts[new_id] = new_part
+            else:
+                self.parts[new_id] = old_part
         # trackback: move the (grafted) tree and correct its node id so
         # process_trackback / set_metadata read the collapsed id.
         album_trees = self.trackback.get(album)
         if album_trees and old_id in album_trees:
             tree = album_trees[old_id]
-            tree['id'] = list(new_id)
-            album_trees[new_id] = tree
+            existing = album_trees.get(new_id)
+
+            def _reaches_from(start, target):
+                # minimal identity-based reachability walk (same pattern as
+                # _graft_trackback_children): id-guarded so a cyclic tree
+                # cannot loop, and bounded by this top's own subtree.
+                seen = set()
+                stack = [start]
+                while stack:
+                    node = stack.pop()
+                    if id(node) in seen:
+                        continue
+                    seen.add(id(node))
+                    if node is target:
+                        return True
+                    stack.extend(node.get('children', []))
+                return False
+
+            if (existing is not None and existing is not tree
+                    and _reaches_from(existing, tree)):
+                # The new key already owns the surviving tree AND the old node
+                # is already a child of it (the parent-child direct-work case:
+                # the recording is linked to A and to its top-level parent B,
+                # so partof[(B,)] = [(A,B)] made create_trackback((B,)) hold
+                # the fused node). The plain assignment would overwrite that
+                # tree with the childless fused node, destroying the hierarchy
+                # (part_levels collapses to 0 and the child work's name is
+                # lost). Keep the existing tree as the top instead: the old
+                # node already hangs under it by reference, so only the old
+                # key needs dropping. Its id stays the fused identity - the
+                # node is the level-0 work, not the top.
+                pass
+            else:
+                tree['id'] = list(new_id)
+                album_trees[new_id] = tree
             if new_id != old_id:
                 del album_trees[old_id]
         # top list: swap in place, then drop any duplicate the swap created.
