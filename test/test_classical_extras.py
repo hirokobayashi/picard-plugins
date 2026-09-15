@@ -7836,5 +7836,304 @@ class ParentChildDirectWorksRegressionTestCase(PluginTestCase):
             "run 2: no cycle error may be raised")
 
 
+class ParentChildTopDirectWorksRegressionTestCase(PluginTestCase):
+    """Regression test for the top-level hierarchy loss when ONE recording is
+    directly linked to BOTH a work and that work's parent, and the parent is
+    itself a TOP-LEVEL work (no parent of its own).
+
+    Minimal graph (synthetic, MB-shaped fixtures; ids are test-local
+    constants, not real MusicBrainz uuids):
+
+        work pctw-a is part of pctw-b          (a -> b)
+        work pctw-b has NO parent              (b is top-level)
+        recording rec-1 -> performance of pctw-a AND pctw-b
+
+    build_work_info fuses the two direct works into the level-0 node
+    (pctw-a, pctw-b). Because B's own lookup finds no parent, the fused
+    node itself is recorded as a top-level work, so the album ends up with
+    BOTH the fused node (A, B) and the plain (B,) node as candidate tops.
+    The duplicate-top merge folds (B,) into (A, B) (they share the B id),
+    and _reduce_fused_top_to_highest then collapses the fused top
+    (A, B) -> (B,) (A is a descendant of B, and a top is by definition the
+    highest work). At that point _reindex_top re-keys the fused node to
+    (B,) -- and the (B,) top ALREADY owns a trackback tree whose children
+    hold the fused node (built from partof[(B,)]=[(A,B)] by
+    create_trackback). The plain ``album_trees[new_id] = tree`` assignment
+    overwrites that tree with the childless bottom node, destroying the
+    two-level structure: part_levels=0, ~cwp_workid_0 = (B,), "Work A"
+    gone from every level, and no level 1 at all.
+
+    The fix under test makes _reindex_top keep the existing new-key node
+    as the surviving top and attach the old fused node under it instead of
+    overwriting it. This class pins that contract.
+
+    This class deliberately derives directly from PluginTestCase (not from
+    ClassicalExtrasTestCase) so its tests are discovered exactly once, and
+    it reuses the shared ``ClassicalExtrasTestCase._mod`` module cache and
+    ``_cleanup_global_state`` teardown like the other dedicated classes.
+    """
+
+    MOD = "classical_extras"
+
+    _A = "pctw-a"          # child work (the movement)
+    _B = "pctw-b"          # a's parent AND the top-level work
+    _NAMES = {_A: "Work A", _B: "Work B"}
+    _REL = "pctw-rel"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.addClassCleanup(ClassicalExtrasTestCase._cleanup_global_state)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting=dict(_ALL_OPTION_DEFAULTS))
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+        self.set_config_values(setting={
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+        })
+        if ClassicalExtrasTestCase._mod is None:
+            ClassicalExtrasTestCase._mod = self._test_plugin_install(
+                "Classical Extras", self.MOD)
+        self.mod = ClassicalExtrasTestCase._mod
+
+    def _work_response(self, wid, parents):
+        """MB /ws/2/work/<id>?inc=work-rels shape for the synthetic graph.
+
+        ``parents`` is a list of work ids the looked-up work is part of.
+        """
+        rels = []
+        for p in parents:
+            rels.append({
+                "target-type": "work", "type": "parts",
+                "direction": "backward", "attributes": [],
+                "work": {"id": p, "title": self._NAMES[p]},
+            })
+        return {"id": wid, "title": self._NAMES[wid],
+                "relations": rels, "aliases": [], "iswcs": []}
+
+    def _work_graph(self):
+        return {
+            self._A: self._work_response(self._A, [self._B]),
+            self._B: self._work_response(self._B, []),
+        }
+
+    def _recording_response(self, direct_works):
+        rels = []
+        for w in direct_works:
+            rels.append({
+                "target-type": "work", "type": "performance",
+                "direction": "forward", "attributes": [],
+                "work": {"id": w, "title": self._NAMES[w]},
+            })
+        return {"recording": {"id": "pctw-rec", "title": "Rec 1",
+                              "relations": rels}}
+
+    def _run_pipeline(self, direct_works, callback_order=None):
+        """Drive the REAL add_work_info -> work lookups -> work_process ->
+        process_album pipeline for one track whose recording is directly
+        related to ``direct_works`` (in that order).
+
+        ``callback_order`` optionally overrides the order in which queued
+        work lookups are answered (a list of work ids); None answers them
+        in queue order.
+
+        Returns the track's Metadata after the album finished.  No
+        production logic is copied or stubbed; only side-effect helpers
+        (get_aliases / close_log / write_log, and the tag-publishing step
+        extend_metadata / publish_metadata / process_work_artists) are
+        stubbed, exactly like the existing integration tests.
+        """
+        from unittest.mock import Mock
+        from picard.metadata import Metadata
+        mod = self.mod
+        saved = (mod.get_aliases, mod.close_log, mod.write_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        mod.write_log = lambda *a, **k: None
+        self.addCleanup(self._restore_mod_funcs, mod, saved)
+        pl = mod.PartLevels()
+        pl.extend_metadata = lambda *a, **k: None
+        pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+
+        works = self._work_graph()
+        pending = []
+
+        def get(host, port, path, cb, **kw):
+            wid = path.rsplit("/", 1)[-1]
+            if wid in works:
+                pending.append((wid, cb, works[wid]))
+                return
+            raise FileNotFoundError(wid)
+
+        tagger = Mock()
+        tagger.webservice.get = get
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_partial": False, "cwp_arrangements": False,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        tm = Metadata()
+        tm['musicbrainz_albumid'] = self._REL
+        tm['musicbrainz_recordingid'] = 'pctw-rec'
+        tm['musicbrainz_workid'] = "; ".join(direct_works)
+        tm['album'] = 'Parent Child Top Direct Works'
+        tm['title'] = 't1'
+        tm['tracknumber'] = '1'
+        tm['discnumber'] = '1'
+        tm['totaltracks'] = '1'
+        tm['totaldiscs'] = '1'
+        tm['~ce_options'] = repr(opts)
+        t = Mock(name='t1')
+        t.metadata = tm
+        album._new_tracks.append(t)
+
+        pl.add_work_info(album, tm, self._recording_response(direct_works),
+                         {})
+
+        # Hard cap so a regression cannot hang the run forever; the exact
+        # number of lookups is NOT part of the contract and is not asserted.
+        fired = 0
+        while pending and fired < 25:
+            if callback_order:
+                # answer the first queued lookup whose id comes earliest in
+                # callback_order
+                pending.sort(key=lambda item: callback_order.index(item[0])
+                             if item[0] in callback_order else len(callback_order))
+            wid, cb, resp = pending.pop(0)
+            cb(resp, None, None)
+            fired += 1
+        # The album pipeline must have completed: process_album is invoked
+        # from work_process when the pending request count reaches zero.
+        self.assertEqual(pending, [],
+                         "the pipeline must terminate in finitely many "
+                         "lookups")
+        return tm
+
+    @staticmethod
+    def _restore_mod_funcs(mod, saved):
+        mod.get_aliases, mod.close_log, mod.write_log = saved
+
+    def _assert_hierarchy(self, tm, label):
+        """The two-level A -> B hierarchy contract for this graph.
+
+        NB this fix guarantees the hierarchy itself (part_levels=1, the
+        fused level-0 node identity, B at level 1, top=B). It does NOT
+        attempt to narrow the level-0 display names to "Work A" alone:
+        which names the fused node shows at level 0 depends on the
+        per-id parent_of branch restriction, which has no entry for a
+        parentless B in this two-level graph. "Work B" may therefore also
+        appear at level 0; that display-narrowing is a separate concern
+        outside this fix.
+        """
+        self.assertEqual(
+            tm.getall('~cwp_part_levels'), ['1'],
+            label + ": part_levels must count the top work level: the "
+            "recording is directly linked to both A and B, and A is part "
+            "of B, so the track sits one level under the top B")
+        self.assertEqual(
+            set(self.mod.str_to_list(tm['~cwp_workid_0'])),
+            {self._A, self._B},
+            label + ": the fused level-0 node must keep BOTH direct work "
+            "ids - that tuple is the node's identity")
+        self.assertIn(
+            'Work A', tm.getall('~cwp_work_0'),
+            label + ": 'Work A' must survive in the level-0 work names - "
+            "the deepest work's name may not be lost from the hierarchy")
+        self.assertEqual(
+            self.mod.str_to_list(tm['~cwp_workid_1']), [self._B],
+            label + ": the top work B must appear at level 1")
+        self.assertEqual(
+            tm.getall('~cwp_work_1'), ['Work B'],
+            label + ": the level-1 work name must be Work B")
+        self.assertEqual(
+            self.mod.str_to_list(tm['~cwp_workid_top']), [self._B],
+            label + ": the single top work of this album is B")
+        self.assertEqual(
+            tm.getall('~cwp_work_top'), ['Work B'],
+            label + ": the top work name must be Work B")
+        self.assertNotIn(
+            '~cwp_error', tm,
+            label + ": no cycle error may be raised for a plain "
+            "parent/child chain")
+
+    def _assert_track_registered_once(self, direct_works, label):
+        """The track's (track, album) pair must be registered exactly once
+        across the trees the album publishes: the recording has exactly one
+        work-relation node, and a duplicate registration would publish the
+        track twice (double movement numbering / doubled parallel lists).
+
+        The trackback trees are cleared at the end of process_album, so
+        this is observed through the tag side effects instead: the
+        published tag values are single-valued. ~cwp_part_levels is a
+        plain str (set per (track, height) visit), so a second visit at a
+        different height would leave two values.
+        """
+        tm = self._run_pipeline(direct_works)
+        self.assertEqual(
+            tm.getall('~cwp_part_levels'), ['1'],
+            label + ": the track must be published from exactly one "
+            "level of the tree (a duplicate registration at another "
+            "height would yield more than one part_levels value)")
+        return tm
+
+    def test_parent_child_direct_works_preserve_top_parent_hierarchy(self):
+        """One recording directly related to a work (A) AND that work's
+        top-level parent (B) must publish the two-level A -> B hierarchy:
+        part_levels=1, the fused (A, B) node at level 0 with "Work A"
+        visible, and B at level 1 under the single top B.
+
+        Expected RED before the fix: part_levels=0, ~cwp_workid_0 = (B,),
+        "Work A" lost from every level's display name, and no level 1 at
+        all (the (B,) top's trackback tree is overwritten by the childless
+        fused node in _reindex_top).
+        """
+        # ---- Run 1: recording -> A, B (child first) ----
+        tm1 = self._assert_track_registered_once(
+            [self._A, self._B], "run 1")
+        self._assert_hierarchy(tm1, "run 1")
+
+        # ---- Run 2: recording -> B, A (parent first) ----
+        # The tuple's internal order follows the input order of the direct
+        # relations (node identity keeps first-seen order), so the level-0
+        # node identity is compared as a SET. The hierarchy depth and the
+        # non-loss of "Work A" must be the same for both orderings.
+        tm2 = self._assert_track_registered_once(
+            [self._B, self._A], "run 2")
+        self._assert_hierarchy(tm2, "run 2")
+
+        # ---- Run 3: B's lookup answered before A's (callback order) ----
+        # The plugin queues a lookup per constituent work id and whichever
+        # reply arrives first decides which cache-grow branch runs; the
+        # queue order answers A first for [A, B], so force B first instead.
+        # The published hierarchy must not depend on the reply order.
+        tm3 = self._run_pipeline([self._A, self._B],
+                                 callback_order=[self._B, self._A])
+        self.assertEqual(
+            tm3.getall('~cwp_part_levels'), ['1'],
+            "run 3 (B callback first): the track must be published from "
+            "exactly one level of the tree")
+        self._assert_hierarchy(tm3, "run 3 (B callback first)")
+
+
 if __name__ == "__main__":
     unittest.main()
