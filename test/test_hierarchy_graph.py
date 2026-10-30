@@ -612,9 +612,10 @@ class FixtureGraphTestCase(unittest.TestCase):
         hierarchy above it, so the top works of an album are those reached
         from the works its tracks point at.
 
-        Pinning them here means a change that moves a work between levels --
-        and so changes the tags the user gets -- is caught here rather than
-        in the field.
+        This pins which work heads each track's hierarchy. A change that
+        moves a work to a different top work is caught here; a change that
+        only moves a work between the levels below the top is caught by
+        ``test_siblings_stay_at_the_same_level``.
         """
         fixdir = os.path.join(self.FIXTURE_ROOT, "tristan")
         if not os.path.isdir(fixdir):
