@@ -35,6 +35,14 @@ def w(mbid):
     return WorkId(mbid)
 
 
+#: How many random graphs the property tests check.
+#:
+#: The cycle breaking is verified against a brute force reference on this
+#: many random graphs, which is what backs the claim that the kept edge set
+#: is always acyclic and always maximal.
+_PROPERTY_SEEDS = 5000
+
+
 class WorkGraphTestCase(unittest.TestCase):
     """Construction and relation typing."""
 
@@ -418,7 +426,7 @@ class PropertyTestCase(unittest.TestCase):
         return graph, edges
 
     def test_kept_edges_are_always_acyclic(self):
-        for seed in range(200):
+        for seed in range(_PROPERTY_SEEDS):
             graph, _ = self._random_graph(seed)
             kept = {
                 (child, parent)
@@ -436,7 +444,7 @@ class PropertyTestCase(unittest.TestCase):
         album and cost the user their tags, so every dropped edge must be
         genuinely required to break a cycle.
         """
-        for seed in range(200):
+        for seed in range(_PROPERTY_SEEDS):
             graph, original = self._random_graph(seed)
             kept = {
                 (child, parent)
@@ -450,7 +458,7 @@ class PropertyTestCase(unittest.TestCase):
                     % (edge, seed))
 
     def test_result_is_independent_of_insertion_order(self):
-        for seed in range(50):
+        for seed in range(_PROPERTY_SEEDS // 4):
             graph, original = self._random_graph(seed)
             rng = random.Random(seed + 1000)
             shuffled = list(original)
@@ -595,6 +603,53 @@ class FixtureGraphTestCase(unittest.TestCase):
             self.assertEqual(
                 graph.dropped_edges, other.dropped_edges,
                 "fixture %s: the dropped edge depended on edge order" % name)
+
+    def test_tristan_tops_match_the_legacy(self):
+        """The projection must find the same top works as the legacy code.
+
+        The legacy pipeline was run over this fixture and produced six top
+        works. The top work of a track is the work at the top of the
+        hierarchy above it, so the top works of an album are those reached
+        from the works its tracks point at.
+
+        Pinning them here means a change that moves a work between levels --
+        and so changes the tags the user gets -- is caught here rather than
+        in the field.
+        """
+        fixdir = os.path.join(self.FIXTURE_ROOT, "tristan")
+        if not os.path.isdir(fixdir):
+            self.skipTest("no tristan fixture")
+        graph = self._build(fixdir)
+        hierarchy = project(graph)
+
+        track_works = set()
+        for path in glob.glob(os.path.join(fixdir, "rec_*.json")):
+            with open(path, encoding="utf-8") as handle:
+                data = json.load(handle)
+            for relation in data.get("relations", []):
+                target = relation.get("work")
+                if target and target.get("id"):
+                    track_works.add(WorkId(target["id"]))
+
+        tops = set()
+        for work in track_works:
+            node = hierarchy.node_of.get(work)
+            if node is None:
+                continue
+            path = hierarchy.path_to_top(node)
+            if path:
+                tops |= {member.mbid for member in path[-1].works}
+
+        self.assertEqual(
+            tops,
+            {
+                "315a0fe2-4e5a-477f-a4b7-e9c66523b70e",  # Rienzi
+                "1d774427-c5f5-4bc9-9fd6-040f8ff4381c",  # Lohengrin
+                "cb3cd3bb-b471-46e9-94dc-6cd04ea94414",  # Wesendonck-Lieder
+                "4d644732-9876-4b0d-9c2c-b6a738d6530e",  # Die Meistersinger
+                "ae217ba8-0b07-4b0b-aed6-c80535dcd94b",  # Tristan und Isolde
+                "597e017a-2c97-40c0-9eeb-430a0461e4ad",  # Der Ring
+            })
 
     def test_every_work_reaches_a_root(self):
         """No work may be stranded by the projection.

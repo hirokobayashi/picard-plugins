@@ -132,7 +132,8 @@ test that both scans the sources and blocks the import.
 ### Cycle breaking
 Uses the DFS back-edge rule: drop the edges pointing back to a work already
 on the current search path. Validated as acyclic AND maximal on 5000 random
-graphs (no dropped edge could have been kept).
+graphs (`_PROPERTY_SEEDS` in the test file; no dropped edge could have been
+kept).
 - The obvious per-edge alternative ("drop this parent if the child is an
   ancestor of the parent") is WRONG: inside a cycle every edge satisfies it,
   so the whole cycle is removed and the work is disconnected from its album.
@@ -143,4 +144,6 @@ graphs (no dropped edge could have been kept).
 ### Verified against the legacy
 On the Tristan fixture the new model finds exactly the same six top works as
 the legacy pipeline, and produces the legacy's tree without the legacy's
-duplicate entries.
+duplicate entries. That equivalence is pinned by
+`test_tristan_tops_match_the_legacy`, so a change that moves a work between
+levels is caught in the test suite rather than in the field.

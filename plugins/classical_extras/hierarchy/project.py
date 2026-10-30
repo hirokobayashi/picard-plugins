@@ -69,7 +69,7 @@ class Hierarchy:
     nodes: Dict[NodeId, Node] = field(default_factory=dict)
     #: The node each work belongs to.
     node_of: Dict[WorkId, NodeId] = field(default_factory=dict)
-    #: The top level nodes, in discovery order.
+    #: The top level nodes, in node-id order.
     tops: List[NodeId] = field(default_factory=list)
 
     def node(self, node_id: NodeId) -> Node:
@@ -139,7 +139,7 @@ def reduce_redundant_parents(
     A parent ``x`` is dropped when another parent ``y`` is a better placement
     for the work, in either of two ways:
 
-    * ``x`` is an *ancestor* of ``y*. The work is linked both to a broad
+    * ``x`` is an *ancestor* of ``y``. The work is linked both to a broad
       grouping work and to a specific sub-work that is itself part of that
       grouping, so the direct link to the grouping is redundant: it would
       otherwise fuse two levels of the hierarchy into one.
