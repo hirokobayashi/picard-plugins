@@ -116,11 +116,21 @@ class CycleBreakingTestCase(unittest.TestCase):
         graph.add_parent_edge(w("scene"), w("opera"))
         graph.add_parent_edge(w("movement"), w("scene"))
         edges = self._edges(graph)
-        # The movement is still attached to the scene...
-        self.assertIn((w("movement"), w("scene")), edges)
-        # ...and the scene is still attached to the cycle.
-        self.assertTrue(
-            (w("scene"), w("opera")) in edges or (w("scene"), w("act")) in edges)
+        # Exactly one edge of the cycle is dropped, and every other edge
+        # survives, so the movement is still attached to the scene and the
+        # scene is still attached to the cycle.
+        self.assertEqual(
+            edges,
+            {(w("act"), w("scene")),
+             (w("scene"), w("opera")),
+             (w("movement"), w("scene"))})
+        self.assertEqual(len(graph.dropped_edges), 1)
+        # The dropped edge is chosen deterministically: the search starts at
+        # the alphabetically first work, so "opera" is on the path when its
+        # own parent is considered.
+        self.assertEqual(
+            (graph.dropped_edges[0].child, graph.dropped_edges[0].parent),
+            (w("opera"), w("act")))
 
     def test_cycle_does_not_orphan_descendants(self):
         graph = WorkGraph()
@@ -161,13 +171,13 @@ class DeepHierarchyTestCase(unittest.TestCase):
         self.assertEqual(sum(len(v) for v in result.values()), depth)
         self.assertEqual(graph.dropped_edges, [])
 
-    def test_deep_chain_descendants_do_not_overflow(self):
+    def test_deep_chain_ancestors_do_not_overflow(self):
         depth = 5000
         graph = WorkGraph()
         for index in range(depth):
             graph.add_parent_edge(
                 w("w%06d" % index), w("w%06d" % (index + 1)))
-        self.assertEqual(len(graph.descendants(w("w000000"))), depth)
+        self.assertEqual(len(graph.ancestors(w("w000000"))), depth)
 
 
 class ConvergentPathTestCase(unittest.TestCase):
@@ -300,20 +310,66 @@ class NodeIdTestCase(unittest.TestCase):
 
 class DescendantsTestCase(unittest.TestCase):
 
-    def test_descendants_terminates_on_cycle(self):
+    def test_ancestors_terminates_on_cycle(self):
         graph = WorkGraph()
         graph.add_parent_edge(w("a"), w("b"))
         graph.add_parent_edge(w("b"), w("c"))
         graph.add_parent_edge(w("c"), w("a"))
-        result = graph.descendants(w("a"))
+        result = graph.ancestors(w("a"))
         # The cycle is closed, so "a" is genuinely reachable from "a"; the
         # traversal must terminate and report every member of the cycle.
         self.assertEqual(result, frozenset({w("a"), w("b"), w("c")}))
 
-    def test_descendants_terminates_on_self_loop(self):
+    def test_ancestors_terminates_on_self_loop(self):
         graph = WorkGraph()
         graph.add_parent_edge(w("a"), w("a"))
-        self.assertEqual(graph.descendants(w("a")), frozenset({w("a")}))
+        self.assertEqual(graph.ancestors(w("a")), frozenset({w("a")}))
+
+    def test_ancestors_follows_parents_upwards(self):
+        graph = WorkGraph()
+        graph.add_parent_edge(w("movement"), w("act"))
+        graph.add_parent_edge(w("act"), w("opera"))
+        self.assertEqual(
+            graph.ancestors(w("movement")), frozenset({w("act"), w("opera")}))
+
+    def test_descendants_follows_children_downwards(self):
+        graph = WorkGraph()
+        graph.add_parent_edge(w("movement"), w("act"))
+        graph.add_parent_edge(w("act"), w("opera"))
+        self.assertEqual(
+            graph.descendants(w("opera")), frozenset({w("act"), w("movement")}))
+
+    def test_hierarchy_ancestors_ignores_dropped_edges(self):
+        """The hierarchy walk must not follow a cycle-closing edge."""
+        graph = WorkGraph()
+        graph.add_parent_edge(w("a"), w("b"))
+        graph.add_parent_edge(w("b"), w("a"))
+        graph.add_parent_edge(w("c"), w("b"))
+        # The raw graph still lets a reach b and back to a.
+        self.assertIn(w("b"), graph.ancestors(w("a")))
+        # The hierarchy walk must terminate and stay consistent.
+        result = graph.hierarchy_ancestors(w("a"))
+        self.assertIn(w("b"), result)
+        for work in result:
+            self.assertNotEqual(
+                work, w("a"),
+                "hierarchy ancestors must not return the start work")
+
+    def test_hierarchy_descendants_ignores_dropped_edges(self):
+        """The hierarchy walk must not follow a cycle-closing edge.
+
+        Here the cycle is broken by dropping the edge b -> a, so "a" is a
+        child of "b" but not a descendant of itself.
+        """
+        graph = WorkGraph()
+        graph.add_parent_edge(w("a"), w("b"))
+        graph.add_parent_edge(w("b"), w("a"))
+        graph.add_parent_edge(w("c"), w("b"))
+        result = graph.hierarchy_descendants(w("b"))
+        self.assertIn(w("c"), result)
+        self.assertIn(w("a"), result)
+        # The dropped edge b -> a means "a" has no child "b" below it.
+        self.assertNotIn(w("b"), graph.hierarchy_descendants(w("a")))
 
 
 class PropertyTestCase(unittest.TestCase):

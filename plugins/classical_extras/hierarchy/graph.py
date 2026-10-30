@@ -161,8 +161,11 @@ class WorkGraph:
         """Every work known to the graph."""
         return set(self.parents) | set(self.children)
 
-    def descendants(self, work: WorkId) -> FrozenSet[WorkId]:
+    def ancestors(self, work: WorkId) -> FrozenSet[WorkId]:
         """Works reachable from ``work`` by following parent edges upwards.
+
+        These are the works that contain ``work``: for a movement, its part,
+        its act and its opera.
 
         The start work is included in the result when it is reachable from
         itself, which happens exactly when the graph contains a cycle through
@@ -171,6 +174,10 @@ class WorkGraph:
         Reachability is computed iteratively, so a deep or cyclic graph cannot
         exhaust the interpreter stack, and a cycle terminates rather than
         looping forever.
+
+        This walks the raw graph, so a cycle-closing edge is included. Code
+        that walks the *hierarchy* should use
+        :meth:`hierarchy_ancestors` instead, which ignores those edges.
         """
         found: Set[WorkId] = set()
         stack: List[WorkId] = [work]
@@ -180,6 +187,64 @@ class WorkGraph:
                 if parent not in found:
                     found.add(parent)
                     stack.append(parent)
+        return frozenset(found)
+
+    def descendants(self, work: WorkId) -> FrozenSet[WorkId]:
+        """Works contained by ``work``, found by following child edges down.
+
+        This is the counterpart of :meth:`ancestors`: for an opera, its acts,
+        its scenes and its movements.
+
+        As with :meth:`ancestors`, this walks the raw graph. Use
+        :meth:`hierarchy_descendants` to walk the projected hierarchy.
+        """
+        found: Set[WorkId] = set()
+        stack: List[WorkId] = [work]
+        while stack:
+            node = stack.pop()
+            for child in self.children.get(node, ()):
+                if child not in found:
+                    found.add(child)
+                    stack.append(child)
+        return frozenset(found)
+
+    def hierarchy_ancestors(self, work: WorkId) -> FrozenSet[WorkId]:
+        """Ancestors of ``work`` within the projected hierarchy.
+
+        Unlike :meth:`ancestors` this ignores the parent edges that were
+        dropped to break a cycle, so the result is always acyclic and code
+        that walks it cannot become cycle-dependent.
+        """
+        accepted = self.acyclic_parent_edges()
+        found: Set[WorkId] = set()
+        stack: List[WorkId] = [work]
+        while stack:
+            node = stack.pop()
+            for parent in accepted.get(node, ()):
+                if parent not in found:
+                    found.add(parent)
+                    stack.append(parent)
+        return frozenset(found)
+
+    def hierarchy_descendants(self, work: WorkId) -> FrozenSet[WorkId]:
+        """Descendants of ``work`` within the projected hierarchy.
+
+        The counterpart of :meth:`hierarchy_ancestors`, and free of the
+        cycle-dependence that :meth:`descendants` can carry.
+        """
+        accepted = self.acyclic_parent_edges()
+        children: Dict[WorkId, Set[WorkId]] = {}
+        for child, parents in accepted.items():
+            for parent in parents:
+                children.setdefault(parent, set()).add(child)
+        found: Set[WorkId] = set()
+        stack: List[WorkId] = [work]
+        while stack:
+            node = stack.pop()
+            for child in children.get(node, ()):
+                if child not in found:
+                    found.add(child)
+                    stack.append(child)
         return frozenset(found)
 
     def acyclic_parent_edges(self) -> Dict[WorkId, FrozenSet[WorkId]]:
