@@ -1145,14 +1145,15 @@ class ProjectionTestCase(unittest.TestCase):
         Two parents can reach the same work by chains of the same length.
         Neither is then the flatter of the two, so neither is dropped. The
         rule that drops the flatter branch must check that the converse does
-        not hold, otherwise both parents would be dropped for being each
-        other's flatter branch.
+        not hold, otherwise one of them would be dropped even though it is
+        no flatter than the other.
         """
         graph = self._graph([
             (w("work"), w("branchA")),
             (w("work"), w("branchB")),
-            # branchA reaches the shared work directly and by another route,
-            # branchB reaches it directly.
+            # branchA also has a parent branchB cannot reach, so the "all"
+            # check already spares branchA; only the symmetry check spares
+            # branchB.
             (w("branchA"), w("shared")),
             (w("branchA"), w("other")),
             (w("branchB"), w("shared")),
