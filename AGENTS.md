@@ -178,8 +178,8 @@ reproducing its lookup order, which is what this model exists to remove.
 
 ### The tree is a tree, not a chain
 A track's level chain (`work_0 .. work_N`) is the path from the track's work
-up to the top. The tree around it is wider than that path: two different
-tracks under one top have separate branches that only meet at the top.
+up to the top. The tree around it is wider than that path: two tracks under
+one top have separate branches that meet only above them.
 
 The Tristan album shows the difference. Top down from the opera:
 
@@ -241,7 +241,12 @@ the opera, and "Akt I, Vorspiel" is still a node of its own. Only the
    Every one of the flatter parent's own parents must be reachable that
    way - a parent that also leads somewhere the other one cannot reach
    carries a branch of its own, and dropping it would lose that branch.
-   (Regression test: `test_a_parent_that_carries_its_own_branch_is_kept`.)
+   The converse check is what keeps the rule symmetric: when both parents
+   reach a shared work at the same depth, neither is the flatter one, so
+   neither is dropped.
+   (Regression tests:
+   `test_a_parent_that_carries_its_own_branch_is_kept` and
+   `test_parents_reaching_a_shared_work_at_the_same_depth_are_kept`.)
 
 The reduction must also be applied to the **container's** parent set, not
 only to a work's own parents. Without that the Tristan chain visited the
