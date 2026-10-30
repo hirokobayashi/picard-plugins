@@ -93,3 +93,54 @@
   tracknumber). Tests: `test_process_trackback_depth0_keeps_all_tracks_parallel`,
   `test_process_trackback_children_then_root_stays_parallel`,
   `test_process_trackback_fur_alina_tracks_kept`.
+
+## New work-hierarchy model (`plugins/classical_extras/hierarchy/`)
+Picard-independent replacement for the legacy hierarchy model, in preparation
+for a Picard 3 port. No `import picard` anywhere in the package - enforced by a
+test that both scans the sources and blocks the import.
+
+### Legacy semantics that had to be reproduced (do not "simplify" these away)
+- **Parent resolution is an ordered fallback**, not just `parts` relations:
+  `parts` (backward) -> `arrangement` (backward) -> `medley`. The first type
+  that yields a parent wins. This matters for the Tristan album, where
+  "Prelude and Liebestod" reaches the opera only via an `arrangement`
+  relation, so treating arrangements as non-hierarchical leaves it with no
+  top work. A `part of collection` relation names a grouping work, not a
+  genuine parent, so it is skipped when collections are disabled.
+- **Redundant parent reduction**: drop a parent that is an ancestor of another
+  parent, and drop a top-level parent when another parent is embedded in a
+  larger work. Without it a work sits one level flatter than its siblings.
+  Verified against the Liszt fixture (drops the broad "Annees de pelerinage"
+  in favour of the specific "Premiere annee: Suisse").
+- **Legacy node keys are the work's OWN id tuple**, with `['parent']` holding
+  the parent ids. `partof[PARENT_KEY] = [CHILD_KEY]`.
+
+### Node model
+- Each work is a node of its own: `NodeId(frozenset({work}))`.
+- The node CONTAINING a work is `NodeId(frozenset(parents(work)))`. A work
+  with two parents is therefore contained by a fused node holding both.
+- **A fused container must itself be linked upward**, to the node holding the
+  parents of the works it holds. Omitting this makes the container an orphan
+  root: the movement below it is invisible from the top, `path_to_top` stops
+  short and does not end in `tops`. That is the "track lost its top work"
+  defect resurfacing. Regression test:
+  `test_work_reachable_by_two_routes_still_reaches_the_top`.
+- `NodeId` uses a `frozenset` so `('a','b')` and `('b','a')` are the same
+  node. The legacy tuple keys made them different, which is why the same
+  movement could be filed twice under two key spellings.
+
+### Cycle breaking
+Uses the DFS back-edge rule: drop the edges pointing back to a work already
+on the current search path. Validated as acyclic AND maximal on 5000 random
+graphs (no dropped edge could have been kept).
+- The obvious per-edge alternative ("drop this parent if the child is an
+  ancestor of the parent") is WRONG: inside a cycle every edge satisfies it,
+  so the whole cycle is removed and the work is disconnected from its album.
+- The traversal is iterative (a deep hierarchy must not exhaust the stack)
+  and visits works in sorted id order, so the result does not depend on the
+  order the MusicBrainz lookups return in.
+
+### Verified against the legacy
+On the Tristan fixture the new model finds exactly the same six top works as
+the legacy pipeline, and produces the legacy's tree without the legacy's
+duplicate entries.
