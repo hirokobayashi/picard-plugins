@@ -151,3 +151,46 @@ than just the set of top works, is what makes the check bite: re-heading a
 single track under a different top work is caught even though every top
 work still appears on the album. The tree comparison itself was checked by
 hand and is not pinned by a test.
+
+### Level chains (work_0 .. work_N)
+The legacy's per track chain of `~cwp_work_N` levels was measured against the
+new model's chain for 180 tracks across 7 fixtures. 135 of them (75%) are
+identical. The differences are two known classes:
+
+- **Two editions of one work** (Swan Lake's op. 20 and the 1895 R. Drigo
+  edition, 35 tracks). The legacy picks one of the two as the
+  representative; the new model keeps both in one level. The legacy's pick
+  comes from its work cache, and the plugin's own
+  `CrossAlbumWorkCacheRegressionTestCase` documents that the choice
+  depends on which album was processed first - it asserts order
+  independence but deliberately does not pin a specific work id. The new
+  model's answer is deterministic and keeps both editions.
+- **An intermediate level the legacy drops** (Gayne's 6 tracks). The
+  movement "Carpet-making" is listed under both "Act I" and "Act I, Scene I
+  (Spring)". The legacy keeps "Act I" and drops the scene level; the new
+  model keeps the scene. The legacy drops it because it never resolved the
+  scene's own chain, so it could not see that the scene sits under the act.
+  The new model has the whole graph and keeps the more specific level.
+
+Neither difference is pinned by a test: they are decisions about what the
+tags should say, not defects. Reproducing the legacy exactly would mean
+reproducing its lookup order, which is what this model exists to remove.
+
+### Reduction of a redundant parent
+`reduce_parents` applies three rules, in this order:
+
+1. A parent that is an **ancestor** of another parent is dropped (the more
+   specific one is kept). This is the Liszt case.
+2. A **top level** parent is dropped when another parent is embedded.
+3. A parent whose own parent is an **ancestor of the other parent** is
+   dropped, when the converse does not hold. That is the "flatter branch"
+   rule: the parent that reaches the shared work in one step adds nothing
+   over the one that reaches it through a longer chain.
+
+The reduction must also be applied to the **container's** parent set, not
+only to a work's own parents. Without that the Tristan chain visited the
+opera twice: "Prelude and Liebestod" is reached through the Akt I Vorspiel
+and through the Akt III Liebestod, and the two routes run at different
+depths. Regression test:
+`test_a_work_appears_at_most_once_in_a_chain` (against the real fixture -
+the synthetic shapes that reproduce it are handled by the work level rule).

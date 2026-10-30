@@ -125,24 +125,24 @@ class Hierarchy:
         return best
 
 
-def reduce_redundant_parents(
-        graph: WorkGraph,
-        work: WorkId,
+def reduce_parents(
         parents: FrozenSet[WorkId],
-        embedded_works: FrozenSet[WorkId] | None = None,
-        use_arrangements: bool = True,
-        use_medleys: bool = True,
-        use_collections: bool = True,
-        accepted: Dict[WorkId, FrozenSet[WorkId]] | None = None) -> FrozenSet[WorkId]:
-    """Drop the parents of ``work`` that are redundant given the others.
+        accepted: Dict[WorkId, FrozenSet[WorkId]],
+        ancestors: Dict[WorkId, FrozenSet[WorkId]],
+        embedded_works: FrozenSet[WorkId] | None = None) -> FrozenSet[WorkId]:
+    """Drop the parents that are redundant given the others.
 
     A parent ``x`` is dropped when another parent ``y`` is a better placement
-    for the work, in either of two ways:
+    for the work:
 
     * ``x`` is an *ancestor* of ``y``. The work is linked both to a broad
       grouping work and to a specific sub-work that is itself part of that
       grouping, so the direct link to the grouping is redundant: it would
       otherwise fuse two levels of the hierarchy into one.
+    * ``x``'s own parent is an ancestor of ``y``. Both parents lead to the
+      same work, but ``x`` gets there in one step while ``y`` gets there
+      through a longer chain, so ``x`` is the flatter of the two and the
+      longer chain is the more specific placement.
     * ``x`` is a *top level* work while ``y`` is *embedded* in a larger work.
       The work is linked both to a standalone work and to a movement of a
       bigger work that contains it; the embedded parent is the one that fits
@@ -156,9 +156,55 @@ def reduce_redundant_parents(
     for a different album would otherwise make a standalone work look
     embedded. When it is not given, any work with a parent counts as
     embedded.
+    """
+    if len(parents) <= 1:
+        return parents
 
-    ``accepted`` may be supplied to avoid recomputing the parent edges for
-    every call.
+    embedded = {
+        candidate: bool(accepted.get(candidate))
+        and (embedded_works is None or candidate in embedded_works)
+        for candidate in parents}
+
+    redundant: Set[WorkId] = set()
+    for candidate in parents:
+        for other in parents:
+            if candidate == other:
+                continue
+            if candidate in ancestors.get(other, frozenset()):
+                redundant.add(candidate)
+                continue
+            if not embedded[candidate] and embedded[other]:
+                redundant.add(candidate)
+                continue
+            # The candidate reaches the other one's ancestor in a single step
+            # while the other one reaches it through a longer chain, so the
+            # candidate is the flatter of the two placements.
+            candidate_parents = accepted.get(candidate, frozenset())
+            other_ancestors = ancestors.get(other, frozenset())
+            if candidate_parents and other_ancestors:
+                if any(parent in other_ancestors
+                       for parent in candidate_parents):
+                    if not any(parent in ancestors.get(candidate, frozenset())
+                               for parent in accepted.get(other, frozenset())):
+                        redundant.add(candidate)
+
+    keep = frozenset(
+        candidate for candidate in parents if candidate not in redundant)
+    return keep if keep else parents
+
+
+def reduce_redundant_parents(
+        graph: WorkGraph,
+        work: WorkId,
+        parents: FrozenSet[WorkId],
+        embedded_works: FrozenSet[WorkId] | None = None,
+        use_arrangements: bool = True,
+        use_medleys: bool = True,
+        use_collections: bool = True,
+        accepted: Dict[WorkId, FrozenSet[WorkId]] | None = None) -> FrozenSet[WorkId]:
+    """Drop the parents of ``work`` that are redundant given the others.
+
+    See :func:`reduce_parents` for the rules.
     """
     if len(parents) <= 1:
         return parents
@@ -169,28 +215,18 @@ def reduce_redundant_parents(
             use_medleys=use_medleys,
             use_collections=use_collections)
 
-    ancestors = {
-        candidate: _ancestors_in(accepted, candidate)
-        for candidate in parents}
+    return reduce_parents(
+        parents,
+        accepted,
+        _ancestors_for(accepted, parents),
+        embedded_works=embedded_works)
 
-    embedded = {
-        candidate: bool(accepted.get(candidate))
-        and (embedded_works is None or candidate in embedded_works)
-        for candidate in parents}
 
-    def redundant(candidate: WorkId) -> bool:
-        for other in parents:
-            if other == candidate:
-                continue
-            if candidate in ancestors[other]:
-                return True
-            if not embedded[candidate] and embedded[other]:
-                return True
-        return False
-
-    keep = frozenset(
-        candidate for candidate in parents if not redundant(candidate))
-    return keep if keep else parents
+def _ancestors_for(
+        accepted: Dict[WorkId, FrozenSet[WorkId]],
+        works: FrozenSet[WorkId]) -> Dict[WorkId, FrozenSet[WorkId]]:
+    """The ancestors of each of ``works`` within the given parent edges."""
+    return {work: _ancestors_in(accepted, work) for work in works}
 
 
 def _ancestors_in(
@@ -285,6 +321,11 @@ def project(
     # parents -- is itself contained by the node holding the parents of
     # those works. Without this the container would be an orphan root and
     # everything below it would be invisible from the top of the tree.
+    #
+    # The parents of that container are reduced as well. A work reached by
+    # two routes can have two parents that lead to the same work by
+    # different chains, and keeping both would put the same work twice in
+    # one chain.
     pending = list(hierarchy.nodes)
     while pending:
         node_id = pending.pop()
@@ -294,6 +335,12 @@ def project(
             container_works |= accepted.get(work, frozenset())
         if not container_works:
             continue
+        container_works = reduce_parents(
+            frozenset(container_works),
+            accepted,
+            _ancestors_for(accepted, frozenset(container_works)),
+            embedded_works=embedded_works) if reduce_redundant else frozenset(
+                container_works)
         container = NodeId(frozenset(container_works))
         if container == node_id:
             continue
