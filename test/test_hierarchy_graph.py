@@ -662,6 +662,37 @@ class FixtureGraphTestCase(unittest.TestCase):
             actual,
             {label: {top} for label, top in expected.items()})
 
+    def test_a_work_appears_at_most_once_in_a_chain(self):
+        """A chain must not repeat a work.
+
+        On the Tristan album "Prelude and Liebestod" is reached by two
+        routes: through the Akt I Vorspiel and through the Akt III
+        Liebestod. The two routes run at different depths, so the container
+        of that work held both of them as parents. Keeping both put the
+        opera twice in one chain, so the track was tagged with a level that
+        repeated the level above it.
+
+        This checks the real fixture rather than a synthetic shape, because
+        the shape that reproduces it is not obvious: the work level
+        reduction already handles the simpler cases.
+        """
+        fixdir = os.path.join(self.FIXTURE_ROOT, "tristan")
+        if not os.path.isdir(fixdir):
+            self.skipTest("no tristan fixture")
+        graph = self._build(fixdir)
+        hierarchy = project(graph)
+        movement = w("7b4b0ef2-7928-3c37-8107-1355eb043855")
+        self.assertIn(movement, hierarchy.node_of)
+        path = hierarchy.path_to_top(hierarchy.node_of[movement])
+        works = [work for node in path for work in node.works]
+        self.assertEqual(
+            len(works), len(set(works)),
+            "a work appears twice in the chain %r" % (path,))
+        # The chain reaches the opera, once.
+        self.assertEqual(
+            [work.mbid for work in path[-1].works],
+            ["ae217ba8-0b07-4b0b-aed6-c80535dcd94b"])
+
     def test_every_work_reaches_a_root(self):
         """No work may be stranded by the projection.
 
