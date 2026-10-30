@@ -1013,6 +1013,62 @@ class ProjectionTestCase(unittest.TestCase):
         self.assertNotEqual(
             container_of(w("m1")), container_of(w("m2")))
 
+    def test_the_flatter_branch_is_dropped(self):
+        """The parent that reaches the shared work in fewer steps is dropped.
+
+        A work reached by two routes has a container holding both routes.
+        When one route reaches the shared work in a single step and the other
+        reaches it through a longer chain, the single step route is the
+        flatter of the two and adds nothing, so it is dropped. Keeping both
+        would leave the shared work at two levels of the chain.
+        """
+        graph = self._graph([
+            (w("movement"), w("viaAct1")),
+            (w("movement"), w("viaScene3")),
+            (w("viaAct1"), w("act1")),
+            (w("act1"), w("opera")),
+            (w("viaScene3"), w("scene3")),
+            (w("scene3"), w("act3")),
+            (w("act3"), w("opera")),
+        ])
+        hierarchy = project(graph)
+        path = hierarchy.path_to_top(hierarchy.node_of[w("movement")])
+        levels = [sorted(work.mbid for work in node.works) for node in path]
+        self.assertEqual(
+            levels,
+            [["movement"], ["viaAct1", "viaScene3"], ["scene3"], ["act3"],
+             ["opera"]])
+
+    def test_a_parent_that_carries_its_own_branch_is_kept(self):
+        """A parent is not dropped when it leads somewhere the other cannot.
+
+        A parent can have several parents of its own, one of which the other
+        parent also reaches and one of which only it reaches. Dropping it
+        would lose the branch that only it leads to, so the rule that drops
+        the flatter of two parents must not fire here.
+        """
+        graph = self._graph([
+            (w("movement"), w("branchA")),
+            (w("movement"), w("branchB")),
+            # branchA leads to both tops.
+            (w("branchA"), w("top1")),
+            (w("branchA"), w("top2")),
+            # branchB reaches top1 through a longer chain.
+            (w("branchB"), w("mid")),
+            (w("mid"), w("top1")),
+        ])
+        hierarchy = project(graph)
+        # The movement is filed under both branches, so the chain keeps the
+        # one that leads to top2.
+        movement = hierarchy.node_of[w("movement")]
+        container = next(iter(hierarchy.nodes[movement].parents))
+        self.assertEqual(
+            sorted(work.mbid for work in container.works),
+            ["branchA", "branchB"])
+        # top2 is only reachable through branchA.
+        tops = {work.mbid for node in hierarchy.tops for work in node.works}
+        self.assertIn("top2", tops)
+
     def test_path_to_top_is_deterministic(self):
         edges = [
             (w("movement"), w("b")),

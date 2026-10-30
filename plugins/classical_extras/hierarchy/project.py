@@ -139,14 +139,15 @@ def reduce_parents(
       grouping work and to a specific sub-work that is itself part of that
       grouping, so the direct link to the grouping is redundant: it would
       otherwise fuse two levels of the hierarchy into one.
-    * ``x``'s own parent is an ancestor of ``y``. Both parents lead to the
-      same work, but ``x`` gets there in one step while ``y`` gets there
-      through a longer chain, so ``x`` is the flatter of the two and the
-      longer chain is the more specific placement.
     * ``x`` is a *top level* work while ``y`` is *embedded* in a larger work.
       The work is linked both to a standalone work and to a movement of a
       bigger work that contains it; the embedded parent is the one that fits
       the hierarchy.
+    * ``x`` reaches ``y``'s ancestors in a single step while ``y`` reaches
+      them through a longer chain, so ``x`` is the flatter of the two
+      placements. Every one of ``x``'s parents must be reachable that way:
+      a parent that also leads somewhere ``y`` cannot reach carries a
+      branch of its own, and dropping it would lose that branch.
 
     The reduction never returns an empty set, so a work always keeps at
     least one parent even if the data is cyclic.
@@ -176,13 +177,18 @@ def reduce_parents(
             if not embedded[candidate] and embedded[other]:
                 redundant.add(candidate)
                 continue
-            # The candidate reaches the other one's ancestor in a single step
-            # while the other one reaches it through a longer chain, so the
+            # The candidate reaches the other one's ancestors in a single step
+            # while the other one reaches them through a longer chain, so the
             # candidate is the flatter of the two placements.
+            #
+            # Every one of the candidate's parents must be reachable that way.
+            # A candidate that also leads somewhere the other one cannot reach
+            # carries a branch of its own, and dropping it would lose that
+            # branch from the tree.
             candidate_parents = accepted.get(candidate, frozenset())
             other_ancestors = ancestors.get(other, frozenset())
             if candidate_parents and other_ancestors:
-                if any(parent in other_ancestors
+                if all(parent in other_ancestors
                        for parent in candidate_parents):
                     if not any(parent in ancestors.get(candidate, frozenset())
                                for parent in accepted.get(other, frozenset())):
@@ -265,9 +271,11 @@ def project(
 
     When ``reduce_redundant`` is set, a work's parents are reduced first:
     a parent that is an ancestor of another parent is dropped, as is a top
-    level parent when another parent is embedded in a larger work. Without
+    level parent when another parent is embedded in a larger work, as is the
+    flatter of two parents that reach the same work by chains of different
+    length. The parents of a container are reduced the same way. Without
     that reduction such a work would sit one level flatter than its
-    siblings.
+    siblings, and a chain could visit the same work twice.
 
     ``embedded_works`` limits the reduction to the works of one album. The
     legacy implementation needed that scope because a parent edge cached

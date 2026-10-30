@@ -182,15 +182,18 @@ reproducing its lookup order, which is what this model exists to remove.
 1. A parent that is an **ancestor** of another parent is dropped (the more
    specific one is kept). This is the Liszt case.
 2. A **top level** parent is dropped when another parent is embedded.
-3. A parent whose own parent is an **ancestor of the other parent** is
-   dropped, when the converse does not hold. That is the "flatter branch"
-   rule: the parent that reaches the shared work in one step adds nothing
-   over the one that reaches it through a longer chain.
+3. The **flatter branch** rule: a parent that reaches the other parent's
+   ancestors in a single step is dropped, when the converse does not hold.
+   Every one of the flatter parent's own parents must be reachable that
+   way - a parent that also leads somewhere the other one cannot reach
+   carries a branch of its own, and dropping it would lose that branch.
+   (Regression test: `test_a_parent_that_carries_its_own_branch_is_kept`.)
 
 The reduction must also be applied to the **container's** parent set, not
 only to a work's own parents. Without that the Tristan chain visited the
 opera twice: "Prelude and Liebestod" is reached through the Akt I Vorspiel
 and through the Akt III Liebestod, and the two routes run at different
-depths. Regression test:
-`test_a_work_appears_at_most_once_in_a_chain` (against the real fixture -
-the synthetic shapes that reproduce it are handled by the work level rule).
+depths. Regression tests:
+`test_a_work_appears_at_most_once_in_a_chain` (against the real fixture) and
+`test_the_flatter_branch_is_dropped` (against a synthetic shape, since the
+fixture alone does not isolate rule 3).
