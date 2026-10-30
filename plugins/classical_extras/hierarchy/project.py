@@ -129,13 +129,17 @@ def reduce_redundant_parents(
         graph: WorkGraph,
         work: WorkId,
         parents: FrozenSet[WorkId],
-        embedded_works: FrozenSet[WorkId] | None = None) -> FrozenSet[WorkId]:
+        embedded_works: FrozenSet[WorkId] | None = None,
+        use_arrangements: bool = True,
+        use_medleys: bool = True,
+        use_collections: bool = True,
+        accepted: Dict[WorkId, FrozenSet[WorkId]] | None = None) -> FrozenSet[WorkId]:
     """Drop the parents of ``work`` that are redundant given the others.
 
     A parent ``x`` is dropped when another parent ``y`` is a better placement
     for the work, in either of two ways:
 
-    * ``x`` is an *ancestor* of ``y``. The work is linked both to a broad
+    * ``x`` is an *ancestor* of ``y*. The work is linked both to a broad
       grouping work and to a specific sub-work that is itself part of that
       grouping, so the direct link to the grouping is redundant: it would
       otherwise fuse two levels of the hierarchy into one.
@@ -146,23 +150,33 @@ def reduce_redundant_parents(
 
     The reduction never returns an empty set, so a work always keeps at
     least one parent even if the data is cyclic.
+
+    ``embedded_works`` limits the reduction to the works of one album. The
+    legacy implementation needed that scope because a parent edge cached
+    for a different album would otherwise make a standalone work look
+    embedded. When it is not given, any work with a parent counts as
+    embedded.
+
+    ``accepted`` may be supplied to avoid recomputing the parent edges for
+    every call.
     """
     if len(parents) <= 1:
         return parents
 
+    if accepted is None:
+        accepted = graph.acyclic_parent_edges(
+            use_arrangements=use_arrangements,
+            use_medleys=use_medleys,
+            use_collections=use_collections)
+
     ancestors = {
-        candidate: graph.hierarchy_ancestors(candidate)
+        candidate: _ancestors_in(accepted, candidate)
         for candidate in parents}
 
-    if embedded_works is None:
-        embedded = {
-            candidate: bool(graph.resolve_parents().get(candidate))
-            for candidate in parents}
-    else:
-        embedded = {
-            candidate: candidate in embedded_works
-            and bool(graph.resolve_parents().get(candidate))
-            for candidate in parents}
+    embedded = {
+        candidate: bool(accepted.get(candidate))
+        and (embedded_works is None or candidate in embedded_works)
+        for candidate in parents}
 
     def redundant(candidate: WorkId) -> bool:
         for other in parents:
@@ -179,11 +193,28 @@ def reduce_redundant_parents(
     return keep if keep else parents
 
 
+def _ancestors_in(
+        accepted: Dict[WorkId, FrozenSet[WorkId]],
+        work: WorkId) -> FrozenSet[WorkId]:
+    """The ancestors of ``work`` within the given parent edges."""
+    found: Set[WorkId] = set()
+    stack: List[WorkId] = [work]
+    while stack:
+        node = stack.pop()
+        for parent in accepted.get(node, frozenset()):
+            if parent not in found:
+                found.add(parent)
+                stack.append(parent)
+    return frozenset(found)
+
+
 def project(
         graph: WorkGraph,
         use_arrangements: bool = True,
         use_medleys: bool = True,
-        use_collections: bool = True) -> Hierarchy:
+        use_collections: bool = True,
+        embedded_works: FrozenSet[WorkId] | None = None,
+        reduce_redundant: bool = True) -> Hierarchy:
     """Project a work graph into a hierarchy.
 
     Each work forms a node of its own. The node containing a work is the
@@ -195,11 +226,36 @@ def project(
     The parent edges used are the cycle-free ones from
     :meth:`~hierarchy.graph.WorkGraph.acyclic_parent_edges`, so the
     projection cannot contain a cycle.
+
+    When ``reduce_redundant`` is set, a work's parents are reduced first:
+    a parent that is an ancestor of another parent is dropped, as is a top
+    level parent when another parent is embedded in a larger work. Without
+    that reduction such a work would sit one level flatter than its
+    siblings.
+
+    ``embedded_works`` limits the reduction to the works of one album. The
+    legacy implementation needed that scope because a parent edge cached
+    for a different album would otherwise make a standalone work look
+    embedded.
     """
     accepted = graph.acyclic_parent_edges(
         use_arrangements=use_arrangements,
         use_medleys=use_medleys,
         use_collections=use_collections)
+
+    if reduce_redundant:
+        reduced: Dict[WorkId, FrozenSet[WorkId]] = {}
+        for work, parents in accepted.items():
+            if len(parents) <= 1:
+                reduced[work] = parents
+                continue
+            reduced[work] = reduce_redundant_parents(
+                graph,
+                work,
+                parents,
+                embedded_works=embedded_works,
+                accepted=accepted)
+        accepted = reduced
 
     hierarchy = Hierarchy()
 
@@ -225,11 +281,34 @@ def project(
         hierarchy.nodes[container].children = (
             hierarchy.nodes[container].children | {node_of[work]})
 
+    # A node holding several works -- the container of a work with two
+    # parents -- is itself contained by the node holding the parents of
+    # those works. Without this the container would be an orphan root and
+    # everything below it would be invisible from the top of the tree.
+    pending = list(hierarchy.nodes)
+    while pending:
+        node_id = pending.pop()
+        node = hierarchy.nodes[node_id]
+        container_works: Set[WorkId] = set()
+        for work in node.works:
+            container_works |= accepted.get(work, frozenset())
+        if not container_works:
+            continue
+        container = NodeId(frozenset(container_works))
+        if container == node_id:
+            continue
+        if container not in hierarchy.nodes:
+            hierarchy.nodes[container] = Node(id=container, works=container.works)
+            pending.append(container)
+        node.parents = frozenset({container})
+        hierarchy.nodes[container].children = (
+            hierarchy.nodes[container].children | {node_id})
+
     hierarchy.node_of = node_of
 
-    # The top level nodes are the works that nothing contains.
+    # The top level nodes are the ones nothing contains.
     hierarchy.tops = sorted(
-        node_of[work] for work in graph.works()
-        if not accepted.get(work, frozenset()))
+        node_id for node_id, node in hierarchy.nodes.items()
+        if not node.parents)
 
     return hierarchy

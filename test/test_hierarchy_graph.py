@@ -507,7 +507,8 @@ class FixtureGraphTestCase(unittest.TestCase):
                     source,
                     relation.get("type"),
                     relation.get("direction"),
-                    WorkId(target["id"]))
+                    WorkId(target["id"]),
+                    relation.get("attributes") or [])
         return graph
 
     def test_fixtures_are_available(self):
@@ -849,12 +850,71 @@ class ProjectionTestCase(unittest.TestCase):
         ])
         hierarchy = project(graph)
         path = hierarchy.path_to_top(hierarchy.node_of[w("movement")])
-        # The movement is contained by the node holding its parents, so the
-        # shortest path to a top level node goes straight to the node holding
-        # both "act" and "direct".
+        self.assertEqual(path[-1], hierarchy.node_of[w("opera")])
+        self.assertIn(path[-1], hierarchy.tops)
+        self.assertEqual(len(path), 3)
+
+    def test_work_reachable_by_two_routes_still_reaches_the_top(self):
+        """A work under a fused container must not be lost.
+
+        The container of a work with two parents holds both of them, and is
+        itself contained by the node holding their parents. If that link is
+        missing the container becomes an orphan root and everything below it
+        is invisible from the top of the tree, which is the "the track lost
+        its top work" defect.
+        """
+        graph = self._graph([
+            (w("movement"), w("act")),
+            (w("movement"), w("direct")),
+            (w("act"), w("opera")),
+            (w("direct"), w("opera")),
+        ])
+        hierarchy = project(graph)
+        movement = hierarchy.node_of[w("movement")]
+        self.assertIn(
+            hierarchy.node_of[w("opera")], hierarchy.ancestors(movement))
+        path = hierarchy.path_to_top(movement)
+        self.assertEqual(path[-1], hierarchy.node_of[w("opera")])
+        self.assertIn(path[-1], hierarchy.tops)
+        self.assertIn(
+            movement, hierarchy.descendants(hierarchy.node_of[w("opera")]))
+
+    def test_siblings_stay_at_the_same_level(self):
+        """A work with a redundant parent must not sit flatter than its
+        siblings.
+
+        Without the reduction the work below both the specific and the broad
+        parent is contained by a node holding both, one level higher than a
+        sibling that only has the specific parent.
+        """
+        graph = self._graph([
+            (w("specific"), w("grouping")),
+            (w("m1"), w("specific")),
+            (w("m1"), w("grouping")),
+            (w("m2"), w("specific")),
+        ])
+        hierarchy = project(graph)
+
+        def container_of(work):
+            return hierarchy.nodes[hierarchy.node_of[work]].parents
+
         self.assertEqual(
-            path[-1], NodeId(frozenset({w("act"), w("direct")})))
-        self.assertEqual(len(path), 2)
+            container_of(w("m1")), container_of(w("m2")))
+
+    def test_reduction_can_be_switched_off(self):
+        graph = self._graph([
+            (w("specific"), w("grouping")),
+            (w("m1"), w("specific")),
+            (w("m1"), w("grouping")),
+            (w("m2"), w("specific")),
+        ])
+        hierarchy = project(graph, reduce_redundant=False)
+
+        def container_of(work):
+            return hierarchy.nodes[hierarchy.node_of[work]].parents
+
+        self.assertNotEqual(
+            container_of(w("m1")), container_of(w("m2")))
 
     def test_path_to_top_is_deterministic(self):
         edges = [
