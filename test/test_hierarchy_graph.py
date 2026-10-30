@@ -604,18 +604,18 @@ class FixtureGraphTestCase(unittest.TestCase):
                 graph.dropped_edges, other.dropped_edges,
                 "fixture %s: the dropped edge depended on edge order" % name)
 
-    def test_tristan_tops_match_the_legacy(self):
-        """The projection must find the same top works as the legacy code.
+    def test_tristan_track_tops_match_the_legacy(self):
+        """The projection must put every track under the same top work.
 
-        The legacy pipeline was run over this fixture and produced six top
-        works. The top work of a track is the work at the top of the
-        hierarchy above it, so the top works of an album are those reached
-        from the works its tracks point at.
+        The legacy pipeline was run over this fixture and its
+        ``chosen_top`` mapping was recorded: which work each track is
+        tagged with. Pinning that mapping per track, rather than just the
+        set of top works, is what makes the check meaningful -- a change
+        that re-heads one track under a different top work is caught even
+        when every top work still appears somewhere on the album.
 
-        This pins which work heads each track's hierarchy. A change that
-        moves a work to a different top work is caught here; a change that
-        only moves a work between the levels below the top is caught by
-        ``test_siblings_stay_at_the_same_level``.
+        The top work of a track is the work at the top of the hierarchy
+        above it.
         """
         fixdir = os.path.join(self.FIXTURE_ROOT, "tristan")
         if not os.path.isdir(fixdir):
@@ -623,34 +623,44 @@ class FixtureGraphTestCase(unittest.TestCase):
         graph = self._build(fixdir)
         hierarchy = project(graph)
 
-        track_works = set()
-        for path in glob.glob(os.path.join(fixdir, "rec_*.json")):
+        # The legacy's chosen top for each track, recorded from a run of the
+        # legacy pipeline over this fixture.
+        expected = {
+            "t1": "315a0fe2-4e5a-477f-a4b7-e9c66523b70e",  # Rienzi
+            "t2": "ae217ba8-0b07-4b0b-aed6-c80535dcd94b",  # Tristan und Isolde
+            "t3": "1d774427-c5f5-4bc9-9fd6-040f8ff4381c",  # Lohengrin
+            "t4": "1d774427-c5f5-4bc9-9fd6-040f8ff4381c",
+            "t5": "cb3cd3bb-b471-46e9-94dc-6cd04ea94414",  # Wesendonck-Lieder
+            "t6": "cb3cd3bb-b471-46e9-94dc-6cd04ea94414",
+            "t7": "cb3cd3bb-b471-46e9-94dc-6cd04ea94414",
+            "t8": "cb3cd3bb-b471-46e9-94dc-6cd04ea94414",
+            "t9": "cb3cd3bb-b471-46e9-94dc-6cd04ea94414",
+            "t10": "4d644732-9876-4b0d-9c2c-b6a738d6530e",  # Meistersinger
+            "t11": "597e017a-2c97-40c0-9eeb-430a0461e4ad",  # Der Ring
+        }
+
+        actual = {}
+        for path in sorted(glob.glob(os.path.join(fixdir, "rec_*.json"))):
+            label = os.path.basename(path)[len("rec_"):-len(".json")]
             with open(path, encoding="utf-8") as handle:
                 data = json.load(handle)
+            work = None
             for relation in data.get("relations", []):
                 target = relation.get("work")
                 if target and target.get("id"):
-                    track_works.add(WorkId(target["id"]))
-
-        tops = set()
-        for work in track_works:
+                    work = WorkId(target["id"])
+                    break
+            self.assertIsNotNone(work, "%s points at no work" % label)
             node = hierarchy.node_of.get(work)
-            if node is None:
-                continue
-            path = hierarchy.path_to_top(node)
-            if path:
-                tops |= {member.mbid for member in path[-1].works}
+            self.assertIsNotNone(
+                node, "%s: the work is missing from the hierarchy" % label)
+            top = hierarchy.path_to_top(node)
+            self.assertTrue(top, "%s: the work has no path to a top" % label)
+            actual[label] = {member.mbid for member in top[-1].works}
 
         self.assertEqual(
-            tops,
-            {
-                "315a0fe2-4e5a-477f-a4b7-e9c66523b70e",  # Rienzi
-                "1d774427-c5f5-4bc9-9fd6-040f8ff4381c",  # Lohengrin
-                "cb3cd3bb-b471-46e9-94dc-6cd04ea94414",  # Wesendonck-Lieder
-                "4d644732-9876-4b0d-9c2c-b6a738d6530e",  # Die Meistersinger
-                "ae217ba8-0b07-4b0b-aed6-c80535dcd94b",  # Tristan und Isolde
-                "597e017a-2c97-40c0-9eeb-430a0461e4ad",  # Der Ring
-            })
+            actual,
+            {label: {top} for label, top in expected.items()})
 
     def test_every_work_reaches_a_root(self):
         """No work may be stranded by the projection.

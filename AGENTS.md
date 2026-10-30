@@ -142,9 +142,12 @@ kept).
   order the MusicBrainz lookups return in.
 
 ### Verified against the legacy
-On the Tristan fixture the new model finds exactly the same six top works as
-the legacy pipeline, and produces the legacy's tree without the legacy's
-duplicate entries. The top work equivalence is pinned by
-`test_tristan_tops_match_the_legacy`, so a change that moves a work to a
-different top work is caught in the test suite rather than in the field.
-The tree comparison itself was checked by hand and is not pinned by a test.
+On the Tristan fixture the new model puts every track under the same top
+work as the legacy pipeline, and produces the legacy's tree without the
+legacy's duplicate entries. That per track mapping is pinned by
+`test_tristan_track_tops_match_the_legacy`, which records the legacy's
+`chosen_top` mapping track by track. Pinning the mapping per track, rather
+than just the set of top works, is what makes the check bite: re-heading a
+single track under a different top work is caught even though every top
+work still appears on the album. The tree comparison itself was checked by
+hand and is not pinned by a test.
