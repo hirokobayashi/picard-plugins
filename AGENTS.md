@@ -243,7 +243,9 @@ the opera, and "Akt I, Vorspiel" is still a node of its own. Only the
    carries a branch of its own, and dropping it would lose that branch.
    The converse check is what keeps the rule symmetric: when both parents
    reach a shared work at the same depth, neither is the flatter one, so
-   neither is dropped.
+   neither is dropped. The converse is checked with "any", not "all": it
+   only asks whether the other parent also reaches back, which is enough
+   to tell the two parents apart.
    (Regression tests:
    `test_a_parent_that_carries_its_own_branch_is_kept` and
    `test_parents_reaching_a_shared_work_at_the_same_depth_are_kept`.)
