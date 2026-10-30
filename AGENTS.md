@@ -176,6 +176,60 @@ Neither difference is pinned by a test: they are decisions about what the
 tags should say, not defects. Reproducing the legacy exactly would mean
 reproducing its lookup order, which is what this model exists to remove.
 
+### The tree is a tree, not a chain
+A track's level chain (`work_0 .. work_N`) is the path from the track's work
+up to the top. The tree around it is wider than that path: two different
+tracks under one top have separate branches that only meet at the top.
+
+The Tristan album shows the difference. Top down from the opera:
+
+```
+Tristan und Isolde, WWV 90
+  Akt I
+    Akt I, Vorspiel
+  Akt III
+    Akt III, Szene III
+      {Akt III Szene III excerpt, Akt I, Vorspiel}   <- the fused node
+        Prelude and Liebestod
+      {Akt III Szene III excerpt}
+```
+
+The node at depth 3 holds an Akt III branch work and an Akt I branch work in
+one group. That is the fused container, and it is deliberate: it is what
+keeps "Prelude and Liebestod" in one place in the tree even though it is
+reached by two routes. Without it the movement would appear twice.
+
+The container's own parent is the single work `{Akt III, Szene III}`. The
+other member of the container, "Akt I, Vorspiel", leads to "Akt I", which
+reaches the opera in one step while "Akt III, Szene III" reaches it in two,
+so the flatter branch rule drops "Akt I" from the container's parent set.
+
+That is why the chain from the movement is
+
+```
+Prelude and Liebestod
+  {Akt III Szene III excerpt, Akt I, Vorspiel}
+  Akt III, Szene III
+  Akt III
+  Tristan und Isolde, WWV 90
+```
+
+which is the same five level chain the legacy produces for this track. The
+legacy reaches it by merging the two routes into one tuple and reducing
+that tuple; the new model keeps the routes apart and reduces the
+container's parent set instead.
+
+The two branches are siblings at the top of the tree, and the fused node
+holds the material of both - but the fused node has exactly one parent, so
+the levels above it are single works. Every node in the hierarchy has at
+most one parent, in every fixture: that is what makes the chain to a track
+unambiguous. (Test:
+`test_every_node_has_at_most_one_parent`.)
+
+The "Akt I" branch is not lost from the tree: "Akt I" is still a node under
+the opera, and "Akt I, Vorspiel" is still a node of its own. Only the
+*chain* to the movement goes through the Akt III branch.
+
 ### Reduction of a redundant parent
 `reduce_parents` applies three rules, in this order:
 

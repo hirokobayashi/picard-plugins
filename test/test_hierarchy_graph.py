@@ -662,6 +662,82 @@ class FixtureGraphTestCase(unittest.TestCase):
             actual,
             {label: {top} for label, top in expected.items()})
 
+    def test_every_node_has_at_most_one_parent(self):
+        """The hierarchy is a tree, so every node has at most one parent.
+
+        A node that held several parents would make the chain to a track
+        ambiguous: the track would sit under more than one level at once.
+        The projection merges the parents of a work into a single node
+        precisely to avoid that.
+        """
+        for name in sorted(os.listdir(self.FIXTURE_ROOT)):
+            fixdir = os.path.join(self.FIXTURE_ROOT, name)
+            if not os.path.isdir(fixdir):
+                continue
+            if not glob.glob(os.path.join(fixdir, "work_*.json")):
+                continue
+            hierarchy = project(self._build(fixdir))
+            for node_id, node in hierarchy.nodes.items():
+                self.assertLessEqual(
+                    len(node.parents), 1,
+                    "%s: node %s has %d parents"
+                    % (name, node_id, len(node.parents)))
+                # The children must be the mirror of the parents: a node
+                # that is a child of two nodes is no longer a tree.
+                for child in node.children:
+                    self.assertIn(
+                        node_id, hierarchy.nodes[child].parents,
+                        "%s: node %s is a child of %s but does not list it"
+                        % (name, child, node_id))
+
+    def test_the_tree_keeps_both_branches_of_a_fused_node(self):
+        """The tree is wider than the chain to any one track.
+
+        On the Tristan album the movement "Prelude and Liebestod" is reached
+        through the Akt I Vorspiel and through the Akt III Liebestod. The
+        node holding those two works is a fused node, and the tree below it
+        keeps both branches: "Akt I" is still a node under the opera and
+        "Akt I, Vorspiel" is still a node of its own.
+
+        Only the chain to the movement goes through one branch. Reducing the
+        fused node's parent set must not remove the other branch from the
+        tree.
+        """
+        fixdir = os.path.join(self.FIXTURE_ROOT, "tristan")
+        if not os.path.isdir(fixdir):
+            self.skipTest("no tristan fixture")
+        graph = self._build(fixdir)
+        hierarchy = project(graph)
+
+        akt1 = w("30a37617-1426-4f1d-be7d-12af1790590e")
+        vorspiel = w("52836ec3-2272-37cd-a4af-20ab3bf56b88")
+        opera = w("ae217ba8-0b07-4b0b-aed6-c80535dcd94b")
+
+        # Both works are in the tree.
+        self.assertIn(akt1, hierarchy.node_of)
+        self.assertIn(vorspiel, hierarchy.node_of)
+
+        # "Akt I" is reachable from the opera.
+        reachable = set()
+        stack = [hierarchy.node_of[opera]]
+        while stack:
+            node = stack.pop()
+            if node in reachable:
+                continue
+            reachable.add(node)
+            stack.extend(hierarchy.nodes[node].children)
+        self.assertTrue(
+            any(akt1 in hierarchy.nodes[node].works for node in reachable),
+            "the Akt I branch is no longer reachable from the opera")
+
+        # The movement's chain reaches the opera through one branch only,
+        # and the fused node is on it.
+        movement = w("7b4b0ef2-7928-3c37-8107-1355eb043855")
+        path = hierarchy.path_to_top(hierarchy.node_of[movement])
+        self.assertTrue(
+            any(vorspiel in node.works for node in path),
+            "the fused node is not on the chain to the movement")
+
     def test_a_work_appears_at_most_once_in_a_chain(self):
         """A chain must not repeat a work.
 
