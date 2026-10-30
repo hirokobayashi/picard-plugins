@@ -695,13 +695,11 @@ class FixtureGraphTestCase(unittest.TestCase):
 
         On the Tristan album the movement "Prelude and Liebestod" is reached
         through the Akt I Vorspiel and through the Akt III Liebestod. The
-        node holding those two works is a fused node, and the tree below it
-        keeps both branches: "Akt I" is still a node under the opera and
-        "Akt I, Vorspiel" is still a node of its own.
+        node holding those two works is a fused node, and the tree keeps both
+        branches: "Akt I" is a node under the opera, and "Akt I, Vorspiel" is
+        a node of its own whose parent is "Akt I".
 
-        Only the chain to the movement goes through one branch. Reducing the
-        fused node's parent set must not remove the other branch from the
-        tree.
+        Only the chain to the movement goes through one branch.
         """
         fixdir = os.path.join(self.FIXTURE_ROOT, "tristan")
         if not os.path.isdir(fixdir):
@@ -713,22 +711,18 @@ class FixtureGraphTestCase(unittest.TestCase):
         vorspiel = w("52836ec3-2272-37cd-a4af-20ab3bf56b88")
         opera = w("ae217ba8-0b07-4b0b-aed6-c80535dcd94b")
 
-        # Both works are in the tree.
-        self.assertIn(akt1, hierarchy.node_of)
-        self.assertIn(vorspiel, hierarchy.node_of)
+        # "Akt I, Vorspiel" is a node of its own, and it hangs off "Akt I".
+        vorspiel_node = hierarchy.node_of[vorspiel]
+        self.assertEqual(
+            hierarchy.nodes[vorspiel_node].parents,
+            frozenset({hierarchy.node_of[akt1]}),
+            "the Akt I branch is no longer attached to the Akt I node")
 
-        # "Akt I" is reachable from the opera.
-        reachable = set()
-        stack = [hierarchy.node_of[opera]]
-        while stack:
-            node = stack.pop()
-            if node in reachable:
-                continue
-            reachable.add(node)
-            stack.extend(hierarchy.nodes[node].children)
-        self.assertTrue(
-            any(akt1 in hierarchy.nodes[node].works for node in reachable),
-            "the Akt I branch is no longer reachable from the opera")
+        # "Akt I" is a child of the opera.
+        self.assertIn(
+            hierarchy.node_of[akt1],
+            hierarchy.nodes[hierarchy.node_of[opera]].children,
+            "the Akt I branch is no longer under the opera")
 
         # The movement's chain reaches the opera through one branch only,
         # and the fused node is on it.
@@ -1144,6 +1138,32 @@ class ProjectionTestCase(unittest.TestCase):
         # top2 is only reachable through branchA.
         tops = {work.mbid for node in hierarchy.tops for work in node.works}
         self.assertIn("top2", tops)
+
+    def test_parents_reaching_a_shared_work_at_the_same_depth_are_kept(self):
+        """Neither parent is dropped when both reach a shared work.
+
+        Two parents can reach the same work by chains of the same length.
+        Neither is then the flatter of the two, so neither is dropped. The
+        rule that drops the flatter branch must check that the converse does
+        not hold, otherwise both parents would be dropped for being each
+        other's flatter branch.
+        """
+        graph = self._graph([
+            (w("work"), w("branchA")),
+            (w("work"), w("branchB")),
+            # branchA reaches the shared work directly and by another route,
+            # branchB reaches it directly.
+            (w("branchA"), w("shared")),
+            (w("branchA"), w("other")),
+            (w("branchB"), w("shared")),
+        ])
+        hierarchy = project(graph)
+        work = hierarchy.node_of[w("work")]
+        container = next(iter(hierarchy.nodes[work].parents))
+        self.assertEqual(
+            sorted(work.mbid for work in container.works),
+            ["branchA", "branchB"],
+            "a parent was dropped even though both reach the shared work")
 
     def test_path_to_top_is_deterministic(self):
         edges = [
