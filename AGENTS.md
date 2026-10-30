@@ -144,6 +144,7 @@ kept).
 ### Verified against the legacy
 On the Tristan fixture the new model finds exactly the same six top works as
 the legacy pipeline, and produces the legacy's tree without the legacy's
-duplicate entries. That equivalence is pinned by
-`test_tristan_tops_match_the_legacy`, so a change that moves a work between
-levels is caught in the test suite rather than in the field.
+duplicate entries. The top work equivalence is pinned by
+`test_tristan_tops_match_the_legacy`, so a change that moves a work to a
+different top work is caught in the test suite rather than in the field.
+The tree comparison itself was checked by hand and is not pinned by a test.
