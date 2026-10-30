@@ -34,10 +34,19 @@ the hierarchy.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, FrozenSet, Iterator, List, Set, Tuple
+from typing import Dict, FrozenSet, Iterable, Iterator, List, Set, Tuple
 
 #: Relation type that carries hierarchical parenthood.
 PARTS_RELATION = 'parts'
+
+#: Relation type for a work that is an arrangement of another work.
+ARRANGEMENT_RELATION = 'arrangement'
+
+#: Relation type for a work that is a medley of other works.
+MEDLEY_RELATION = 'medley'
+
+#: Attribute marking a "part of collection" relation.
+COLLECTION_ATTRIBUTE = 'part of collection'
 
 #: Direction of a ``parts`` relation that points from a work to its parent.
 BACKWARD = 'backward'
@@ -77,6 +86,29 @@ class NodeId:
     def __str__(self) -> str:
         return '{%s}' % ', '.join(sorted(w.mbid for w in self.works))
 
+    def _sort_key(self) -> Tuple[str, ...]:
+        return tuple(sorted(w.mbid for w in self.works))
+
+    def __lt__(self, other: "NodeId") -> bool:
+        if not isinstance(other, NodeId):
+            return NotImplemented
+        return self._sort_key() < other._sort_key()
+
+    def __le__(self, other: "NodeId") -> bool:
+        if not isinstance(other, NodeId):
+            return NotImplemented
+        return self._sort_key() <= other._sort_key()
+
+    def __gt__(self, other: "NodeId") -> bool:
+        if not isinstance(other, NodeId):
+            return NotImplemented
+        return self._sort_key() > other._sort_key()
+
+    def __ge__(self, other: "NodeId") -> bool:
+        if not isinstance(other, NodeId):
+            return NotImplemented
+        return self._sort_key() >= other._sort_key()
+
     @property
     def single(self) -> WorkId | None:
         """The only work of this node, or None if it fuses several works."""
@@ -88,6 +120,22 @@ class NodeId:
     def is_fused(self) -> bool:
         """True when this node stands for more than one work."""
         return len(self.works) > 1
+
+
+@dataclass(frozen=True)
+class Relation:
+    """A single relation read from MusicBrainz."""
+
+    source: WorkId
+    relation_type: str
+    direction: str
+    target: WorkId
+    attributes: FrozenSet[str] = frozenset()
+
+    @property
+    def is_collection(self) -> bool:
+        """True for a "part of collection" relation."""
+        return COLLECTION_ATTRIBUTE in self.attributes
 
 
 @dataclass(frozen=True)
@@ -115,6 +163,7 @@ class WorkGraph:
     parents: Dict[WorkId, Set[WorkId]] = field(default_factory=dict)
     children: Dict[WorkId, Set[WorkId]] = field(default_factory=dict)
     other_edges: Dict[WorkId, Dict[str, Set[WorkId]]] = field(default_factory=dict)
+    relations: List[Relation] = field(default_factory=list)
     dropped_edges: List[DroppedEdge] = field(default_factory=list)
 
     # -- construction ----------------------------------------------------
@@ -126,10 +175,7 @@ class WorkGraph:
 
     def add_parent_edge(self, child: WorkId, parent: WorkId) -> None:
         """Record that ``child`` is a part of ``parent``."""
-        self.add_work(child)
-        self.add_work(parent)
-        self.parents[child].add(parent)
-        self.children[parent].add(child)
+        self.add_relation(child, PARTS_RELATION, BACKWARD, parent)
 
     def add_other_edge(self, source: WorkId, relation_type: str, target: WorkId) -> None:
         """Record a non-hierarchical relation (arrangement, based on, ...)."""
@@ -142,18 +188,101 @@ class WorkGraph:
             source: WorkId,
             relation_type: str,
             direction: str,
-            target: WorkId) -> None:
+            target: WorkId,
+            attributes: Iterable[str] = ()) -> None:
         """Record a relation as read from MusicBrainz.
 
-        Only ``parts`` relations contribute to the hierarchy. Everything else
-        is retained under :attr:`other_edges`.
+        Only ``parts`` relations contribute to the hierarchy directly.
+        Everything else is retained so that the parent resolution can fall
+        back to it, and so that the relations remain available for the
+        artist and genre handling.
         """
+        relation = Relation(
+            source=source,
+            relation_type=relation_type,
+            direction=direction,
+            target=target,
+            attributes=frozenset(attributes))
+        self.relations.append(relation)
+        self.add_work(source)
+        self.add_work(target)
         if relation_type == PARTS_RELATION and direction == BACKWARD:
-            self.add_parent_edge(source, target)
+            self.parents[source].add(target)
+            self.children[target].add(source)
         elif relation_type == PARTS_RELATION and direction == FORWARD:
-            self.add_parent_edge(target, source)
+            self.parents[target].add(source)
+            self.children[source].add(target)
         else:
-            self.add_other_edge(source, relation_type, target)
+            self.other_edges.setdefault(source, {}).setdefault(
+                relation_type, set()).add(target)
+
+    def relations_of(
+            self,
+            work: WorkId,
+            relation_type: str,
+            direction: str | None = None) -> List[Relation]:
+        """The relations of the given type leaving ``work``."""
+        return [
+            relation for relation in self.relations
+            if relation.source == work
+            and relation.relation_type == relation_type
+            and (direction is None or relation.direction == direction)
+        ]
+
+    def relation_targets(
+            self,
+            work: WorkId,
+            relation_type: str,
+            direction: str | None = None) -> Set[WorkId]:
+        """The targets of the given relation type leaving ``work``."""
+        return {
+            relation.target
+            for relation in self.relations_of(work, relation_type, direction)
+        }
+
+    def resolve_parents(
+            self,
+            use_arrangements: bool = True,
+            use_medleys: bool = True,
+            use_collections: bool = True) -> Dict[WorkId, FrozenSet[WorkId]]:
+        """The parent of every work, following MusicBrainz's conventions.
+
+        A work's parent is found by trying the relation types in order:
+
+        1. ``parts`` relations, the ordinary case.
+        2. ``arrangement`` relations, for a work that is an arrangement of
+           another. Only used when arrangements are enabled.
+        3. ``medley`` relations, for a work that is a medley of others. Only
+           used when medleys are enabled.
+
+        The first type that yields a parent wins, so a work that has both a
+        ``parts`` and an ``arrangement`` relation is treated as a part, which
+        is what MusicBrainz intends.
+
+        A ``part of collection`` relation names a grouping work rather than a
+        genuine parent, so it is ignored when collections are disabled.
+        """
+        resolved: Dict[WorkId, FrozenSet[WorkId]] = {}
+        for work in self.works():
+            parents: Set[WorkId] = set()
+
+            for relation in self.relations_of(work, PARTS_RELATION, BACKWARD):
+                if relation.is_collection and not use_collections:
+                    continue
+                parents.add(relation.target)
+
+            if not parents and use_arrangements:
+                parents = self.relation_targets(
+                    work, ARRANGEMENT_RELATION, BACKWARD)
+
+            if not parents and use_medleys:
+                for relation in self.relations_of(work, MEDLEY_RELATION):
+                    if relation.direction == BACKWARD:
+                        continue
+                    parents.add(relation.target)
+
+            resolved[work] = frozenset(parents)
+        return resolved
 
     # -- queries ---------------------------------------------------------
 
@@ -175,9 +304,9 @@ class WorkGraph:
         exhaust the interpreter stack, and a cycle terminates rather than
         looping forever.
 
-        This walks the raw graph, so a cycle-closing edge is included. Code
-        that walks the *hierarchy* should use
-        :meth:`hierarchy_ancestors` instead, which ignores those edges.
+        This walks the raw ``parts`` relations, so a cycle-closing edge is
+        included and an arrangement is not followed. Code that walks the
+        *hierarchy* should use :meth:`hierarchy_ancestors` instead.
         """
         found: Set[WorkId] = set()
         stack: List[WorkId] = [work]
@@ -211,9 +340,10 @@ class WorkGraph:
     def hierarchy_ancestors(self, work: WorkId) -> FrozenSet[WorkId]:
         """Ancestors of ``work`` within the projected hierarchy.
 
-        Unlike :meth:`ancestors` this ignores the parent edges that were
-        dropped to break a cycle, so the result is always acyclic and code
-        that walks it cannot become cycle-dependent.
+        Unlike :meth:`ancestors` this follows the resolved parents (so an
+        arrangement is followed) and ignores the parent edges that were
+        dropped to break a cycle. The result is therefore always acyclic and
+        code that walks it cannot become cycle-dependent.
         """
         accepted = self.acyclic_parent_edges()
         found: Set[WorkId] = set()
@@ -247,8 +377,15 @@ class WorkGraph:
                     stack.append(child)
         return frozenset(found)
 
-    def acyclic_parent_edges(self) -> Dict[WorkId, FrozenSet[WorkId]]:
+    def acyclic_parent_edges(
+            self,
+            use_arrangements: bool = True,
+            use_medleys: bool = True,
+            use_collections: bool = True) -> Dict[WorkId, FrozenSet[WorkId]]:
         """Parent edges that do not close a cycle.
+
+        The parents are resolved first (see :meth:`resolve_parents`), so an
+        arrangement or a medley counts as a parent when those are enabled.
 
         A depth-first search over the parent edges visits works in a
         deterministic order (sorted by id) and drops exactly those edges that
@@ -269,7 +406,13 @@ class WorkGraph:
         The search is iterative, so a deeply nested work hierarchy cannot
         exhaust the interpreter stack.
         """
-        accepted: Dict[WorkId, Set[WorkId]] = {work: set() for work in self.works()}
+        resolved = self.resolve_parents(
+            use_arrangements=use_arrangements,
+            use_medleys=use_medleys,
+            use_collections=use_collections)
+
+        accepted: Dict[WorkId, Set[WorkId]] = {
+            work: set() for work in self.works()}
         colour: Dict[WorkId, int] = {work: _WHITE for work in self.works()}
         dropped: Set[Tuple[WorkId, WorkId]] = set()
 
@@ -280,7 +423,7 @@ class WorkGraph:
             # resumes where the previous one stopped, which is what gives the
             # traversal its depth-first character.
             stack: List[Tuple[WorkId, Iterator[WorkId]]] = [
-                (root, iter(sorted(self.parents.get(root, ()))))
+                (root, iter(sorted(resolved.get(root, frozenset()))))
             ]
             colour[root] = _GREY
             while stack:
@@ -298,7 +441,7 @@ class WorkGraph:
                 if colour[parent] == _WHITE:
                     colour[parent] = _GREY
                     stack.append(
-                        (parent, iter(sorted(self.parents.get(parent, ())))))
+                        (parent, iter(sorted(resolved.get(parent, frozenset())))))
 
         self.dropped_edges = [
             DroppedEdge(
