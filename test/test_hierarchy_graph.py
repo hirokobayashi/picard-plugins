@@ -662,6 +662,43 @@ class FixtureGraphTestCase(unittest.TestCase):
             actual,
             {label: {top} for label, top in expected.items()})
 
+    def test_the_scene_level_is_kept(self):
+        """The Gayne movements keep the scene they belong to.
+
+        The movements of "Act I, Scene I (Spring)" are listed under both
+        the scene and the act. The scene is itself a part of the act, so
+        the act is an ancestor of the scene and the reduction drops the
+        ancestor - the scene, which is the more specific placement, is
+        kept.
+
+        The legacy flattens these to the act, because it never resolved
+        the scene's own chain and so could not see the scene sits under
+        the act. The scene is where the movements really live, so the
+        extra level is kept.
+        """
+        fixdir = os.path.join(self.FIXTURE_ROOT, "gayne")
+        if not os.path.isdir(fixdir):
+            self.skipTest("no gayne fixture")
+        hierarchy = project(self._build(fixdir))
+
+        scene = w("697f1f18-1a3c-4981-85ee-eb2c43e9c971")
+        act = w("9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad")
+        ballet = w("693e681e-98a1-4d21-9bc8-e084a248461d")
+        movement = w("fb479c25-21be-4fba-aaa5-78693fcaafdd")
+
+        # The movement's chain reaches the ballet through the scene and
+        # the act, both of them.
+        path = hierarchy.path_to_top(hierarchy.node_of[movement])
+        self.assertTrue(path)
+        on_path = [frozenset(work.mbid for work in node.works) for node in path]
+        self.assertIn(scene.mbid, on_path[1],
+                      "the scene is not on the movement's chain")
+        self.assertIn(act.mbid, on_path[2],
+                      "the act is not on the movement's chain")
+        self.assertIn(ballet.mbid, on_path[3],
+                      "the ballet is not the top of the movement's chain")
+        self.assertEqual(len(path), 4, "the chain lost or gained a level")
+
     def test_every_node_has_at_most_one_parent(self):
         """The hierarchy is a tree, so every node has at most one parent.
 
