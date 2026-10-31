@@ -182,6 +182,19 @@ identical. The differences are two known classes:
   (`13867eb1`, a top level work) in favour of the embedded "Swan Lake,
   op. 20: Act II" (`f9bdafff`, which sits under the original `11f48c5e`),
   so the chain continues through one edition only.
+
+  **This is worse than the legacy in one respect.** The legacy produces a
+  single `~cwp_work_top` and a single `~cwp_work_group` for the whole
+  album (verified: all 43 tracks of the complete ballet get
+  "Swan Lake, op. 20"). The new model would produce three different tops
+  for the same album, and `~cwp_work_group` is the shuffle key that the
+  plugin guarantees to be single-valued across the album. So the two
+  editions have to be merged into one top before the level chains can be
+  used as tags - that merging is a step the new model does not have yet.
+
+  The merge is not the same as the legacy's pick. The legacy picks one
+  edition and discards the other; a merge would keep both ids in one top
+  node and give it one name, so the album still has one top.
 - **An intermediate level the legacy drops** (Gayne's 6 tracks). The
   movement "Carpet-making" is listed under both "Act I" and "Act I, Scene I
   (Spring)". The legacy keeps "Act I" and drops the scene level; the new
