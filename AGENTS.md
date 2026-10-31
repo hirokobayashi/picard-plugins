@@ -259,10 +259,12 @@ the *recording* id, not a work id at all.
   `~cwp_work_top` is allowed to have several values, so the top ids may
   differ between tracks of one album without splitting the group.
 - **An intermediate level the legacy drops** (Gayne's 6 tracks). The six
-  movements of "Act I, Scene I (Spring)" - "Carpet-making", "Lezghinka",
-  "Dance of Nuns", "Gayaneh's Dance", "Awaiting the Hunters" and "Duet of
-  Gayaneh and Armen", tracks d1t6 to d1t11 - are each listed under *both*
-  the scene and the act, so the two are the movement's two `parts` parents.
+  album movements of "Act I, Scene I (Spring)" - "Carpet-making",
+  "Lezghinka", "Dance of Nuneh and Girls", "Gayaneh's Dance", "Awaiting
+  the Hunters" and "Duet of Gayaneh and Armen", tracks d1t6 to d1t11 -
+  are each listed under *both* the scene and the act, so the two are the
+  movement's two `parts` parents. (The scene has a seventh `parts` child,
+  which is not on this release and not in the fixture.)
   The scene is itself a part of the act, so the act is an ancestor of the
   scene and the first reduction rule applies: the ancestor is dropped and
   the more specific scene is kept. That gives the new model a fourth
