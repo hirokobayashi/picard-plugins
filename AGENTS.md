@@ -322,8 +322,6 @@ Every group set and every track count is identical to the legacy.
   op. 20: Act II" (`f9bdafff`, which sits under the original `11f48c5e`),
   so the chain continues through one edition only.
 
-  The group's name is what unifies the album: the two editions carry the
-  same name, so they group together even though they are different works.
   The legacy's name selection de-duplicates by name -
   `_select_top_work_names` keeps a name only once, so a fused top holding
   both editions collapses to the single name "Swan Lake, op. 20" before the
