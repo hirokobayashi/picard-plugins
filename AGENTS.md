@@ -176,10 +176,12 @@ identical. The differences are two known classes:
   So the legacy names one edition for the whole album, and which one
   differs between the two albums. The new model keeps both editions in one
   level for most tracks. Where it names a single edition, that is not
-  because only one route reaches it: for example the five tracks
-  d1t17 and d1t19 to d1t22 reach both editions, and the single name comes
-  from the reduction collapsing the shared intermediate work ("Swan Lake,
-  op. 20: Act II", which exists in two editions) onto one of them.
+  always because only one route reaches it: the five tracks d1t17 and
+  d1t19 to d1t22 reach both editions and still resolve to one. For them
+  the container-level reduction drops the unembedded Drigo root
+  (`13867eb1`, a top level work) in favour of the embedded "Swan Lake,
+  op. 20: Act II" (`f9bdafff`, which sits under the original `11f48c5e`),
+  so the chain continues through one edition only.
 - **An intermediate level the legacy drops** (Gayne's 6 tracks). The
   movement "Carpet-making" is listed under both "Act I" and "Act I, Scene I
   (Spring)". The legacy keeps "Act I" and drops the scene level; the new
