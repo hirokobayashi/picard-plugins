@@ -258,12 +258,20 @@ the *recording* id, not a work id at all.
 
   `~cwp_work_top` is allowed to have several values, so the top ids may
   differ between tracks of one album without splitting the group.
-- **An intermediate level the legacy drops** (Gayne's 6 tracks). The
-  movement "Carpet-making" is listed under both "Act I" and "Act I, Scene I
-  (Spring)". The legacy keeps "Act I" and drops the scene level; the new
-  model keeps the scene. The legacy drops it because it never resolved the
-  scene's own chain, so it could not see that the scene sits under the act.
-  The new model has the whole graph and keeps the more specific level.
+- **An intermediate level the legacy drops** (Gayne's 6 tracks). The six
+  movements of "Act I, Scene I (Spring)" - "Carpet-making", "Lezghinka",
+  "Dance of Nuns", "Gayaneh's Dance", "Awaiting the Hunters" and "Duet of
+  Gayaneh and Armen", tracks d1t6 to d1t11 - are each listed under *both*
+  the scene and the act, so the two are the movement's two `parts` parents.
+  The scene is itself a part of the act, so the act is an ancestor of the
+  scene and the first reduction rule applies: the ancestor is dropped and
+  the more specific scene is kept. That gives the new model a fourth
+  level, "Act I, Scene I (Spring)", where the legacy has only "Act I".
+
+  The legacy keeps "Act I" and drops the scene level, because it never
+  resolved the scene's own chain and so could not see that the scene sits
+  under the act. The new model has the whole graph and keeps the more
+  specific level.
 
 Neither difference is pinned by a test: they are decisions about what the
 tags should say, not defects. Reproducing the legacy exactly would mean
