@@ -364,12 +364,11 @@ recording of the album yields the identical string.
 | gayne | identical | 45 / 51 | 45 / 51 |
 
 "chains matching the decisions" counts a chain as matching when the new
-model's chain is the legacy's with the two documented decisions applied:
-the Gayne scene level is kept, and the top may hold several works where
-the legacy picks one. The twelve chains that still differ are the six
-Gayne tracks of the scene level and the six Swan Lake tracks of the
-container level reduction, both of which are decisions rather than
-defects.
+model's chain is the legacy's with the top allowed to hold several works
+where the legacy picks one. The twelve chains that differ are the six
+Gayne tracks of the scene level - which is kept, a deliberate decision -
+and the six Swan Lake tracks of the container level reduction. Both are
+decisions rather than defects.
 
 - **Two editions of one work** (Swan Lake's op. 20 and the 1895 R. Drigo
   edition, 35 tracks). The legacy picks one of the two as the
