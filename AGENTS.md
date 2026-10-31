@@ -194,12 +194,13 @@ lands in the "Planets Suite extension" group instead of "The Planets,
 op. 32".
 
 The two works of a recording need not be peers. The Firebird album's
-track 5 performs a movement of the 1919 suite *and* the full ballet, and
-the two are in different branches: the movement sits under "L'Oiseau de
-feu, suite de 1919", while the ballet is a top level work of its own (the
-suite is only "based on" it, not a part of it).
+track 5 carries a performance relation to a movement of the 1919 suite
+*and* a second one to the full ballet, and the two are in different
+branches: the movement sits under "L'Oiseau de feu, suite de 1919", while
+the ballet is a top level work of its own (the suite is only "based on"
+it, not a part of it).
 
-That second relation also carries the attribute **partial** - it is a
+That second relation carries the attribute **partial** - it is a
 *partial recording of* the ballet, not a full performance of it. The
 legacy treats that with the `cwp_partial` option: it invents a
 **recording id stand-in** for the work slot and writes the recording's own
