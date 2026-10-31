@@ -253,9 +253,26 @@ clear: the legacy gives them different `~cwp_workid_top` (`13867eb1` for
 the complete ballet, `11f48c5e` for the Jarvi release) but the same
 `~cwp_work_group`, "Swan Lake, op. 20", for every track of both albums.
 
-That is why the two editions group together even though they are
-different works, and why the new model can keep both: the group name is
-the same either way.
+The three tags on the Swan Lake album:
+
+| tag | d1t1 | d1t18 | d2t2 |
+|---|---|---|---|
+| `~cwp_workid_top` | `('11f48c5e', '13867eb1')` | `('13867eb1',)` | `('11f48c5e',)` |
+| `~cwp_work_top` | `'Swan Lake, op. 20'` | `'Swan Lake, op. 20'` | `'Swan Lake, op. 20'` |
+| `~cwp_work_group` | `'Swan Lake, op. 20'` | `'Swan Lake, op. 20'` | `'Swan Lake, op. 20'` |
+
+So the work ids may differ from track to track, and the group name is the
+same for all of them. The two editions group together because they carry
+the same name, and the new model can keep both ids without affecting the
+group.
+
+The group name is the candidate name when the candidates share one name -
+no choice needed. Only when the candidates have *different* names does the
+group have to pick, and it picks the album-wide vote winner. Measured over
+the tracked fixtures, only three tracks have more than one candidate name
+at all (firebird t5, nutcracker d1t1, planets t7) and none of them ties,
+so the tie break does not affect any fixture. The legacy breaks a tie by
+lowest normalised name.
 
 The legacy narrows a fused top's candidates with three passes, in this
 order in `process_album`:
