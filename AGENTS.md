@@ -170,6 +170,30 @@ So the 135/180 figure is an upper bound on the agreement, and the gap is
 larger than the two classes below. Modelling a track's work as a *set* of
 works is the next thing the model needs.
 
+### Two different fusions
+There are two distinct things that put several works in one node, and they
+must not be confused:
+
+* **A work with two parents** (Tristan's "Prelude and Liebestod"). The
+  recording performs one work; that work has two parents, so the node one
+  level up holds both of them. This is the fusion the model is built
+  around: it is what keeps a movement reached by two routes in one place
+  in the tree.
+* **A recording that performs two works** (Planets' track 7, which
+  performs both suites' "Neptune"). The two works are peers, not a
+  movement and its two containers.
+
+The legacy fuses the second case as well, and does it by making the two
+works a node of their own - the legacy's tree has the key
+`('254f397b','4be2ad86')` holding both Neptune works, under the fused key
+`('5a75e61c','439c1605')`.
+
+Keeping the two works in separate nodes instead would leave the recording
+with two chains rather than one, so a level tag would have to pick one of
+them. That is what the model does now, and it is why Planets' track 7
+lands in the "Planets Suite extension" group instead of "The Planets,
+op. 32".
+
 - **Two editions of one work** (Swan Lake's op. 20 and the 1895 R. Drigo
   edition, 35 tracks). The legacy picks one of the two as the
   representative; the new model keeps both in one level. The legacy's pick
