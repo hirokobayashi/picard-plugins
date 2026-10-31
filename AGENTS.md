@@ -189,9 +189,11 @@ works a node of their own - the legacy's tree has the key
 
 Keeping the two works in separate nodes instead would leave the recording
 with two chains rather than one, so a level tag would have to pick one of
-them. That is what the model does now, and it is why Planets' track 7
-lands in the "Planets Suite extension" group instead of "The Planets,
-op. 32".
+them. That is what the model does now. It does not change the *group*,
+though: Planets' track 7 has the same group as the rest of the album,
+"The Planets, op. 32", because the group is the vote winner among the
+track's candidate names. Only track 8, which reaches only the
+extension, sits in the "Planets Suite extension" group.
 
 The two works of a recording need not be peers. The Firebird album's
 track 5 carries a performance relation to a movement of the 1919 suite
@@ -253,7 +255,9 @@ clear: the legacy gives them different `~cwp_workid_top` (`13867eb1` for
 the complete ballet, `11f48c5e` for the Jarvi release) but the same
 `~cwp_work_group`, "Swan Lake, op. 20", for every track of both albums.
 
-The three tags on the Swan Lake album:
+The three tags on the Swan Lake album, as the new model would write them
+(the legacy gives `~cwp_workid_top` a single id, `13867eb1`, for all 43
+tracks):
 
 | tag | d1t1 | d1t18 | d2t2 |
 |---|---|---|---|
@@ -290,10 +294,12 @@ order in `process_album`:
    `_select_work_group_name` commits the group to a single value.
 
 The new model does the equivalent of (2) - its reduction drops an ancestor
-in favour of the more specific descendant. Passes (1) and (3) are about
-naming one top for the album, and they are only needed because the group
-is a single value: the new model can leave the candidates in place and
-let the group name be the vote winner among them.
+in favour of the more specific descendant, which leaves the same work at
+the top. Pass (1) is skipped entirely, and of (3) only the vote is kept:
+the group name is the vote winner among the track's candidates, while the
+candidates stay in place and `~cwp_work_top` keeps them all. The legacy
+instead collapses to one name, because its group has to agree with its
+top name.
 
 **Measured: the groups match the legacy exactly.** With the recording's
 works treated as one node - so a track's candidates are the union of its
