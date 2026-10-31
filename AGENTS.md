@@ -190,9 +190,9 @@ works a node of their own - the legacy's tree has the key
 Keeping the two works in separate nodes instead would leave the recording
 with two chains rather than one, so a level tag would have to pick one of
 them. That is what the model does now. It does not change the *group*,
-though: Planets' track 7 has the same group as the rest of the album,
-"The Planets, op. 32", because the group is the vote winner among the
-track's candidate names. Only track 8, which reaches only the
+though: Planets' track 7 has the same group as the other suite tracks
+(tracks 1-6), "The Planets, op. 32", because the group is the vote winner
+among the track's candidate names. Only track 8, which reaches only the
 extension, sits in the "Planets Suite extension" group.
 
 The two works of a recording need not be peers. The Firebird album's
@@ -295,11 +295,11 @@ order in `process_album`:
 
 The new model does the equivalent of (2) - its reduction drops an ancestor
 in favour of the more specific descendant, which leaves the same work at
-the top. Pass (1) is skipped entirely, and of (3) only the vote is kept:
-the group name is the vote winner among the track's candidates, while the
-candidates stay in place and `~cwp_work_top` keeps them all. The legacy
-instead collapses to one name, because its group has to agree with its
-top name.
+the top. Pass (1) is skipped entirely, and of (3) the vote is kept but
+not the collapse: the group name is the vote winner among the track's
+candidates, while the candidates stay in place and `~cwp_work_top` keeps
+them all. The legacy collapses to one name instead, because its group
+has to agree with its top name.
 
 **Measured: the groups match the legacy exactly.** With the recording's
 works treated as one node - so a track's candidates are the union of its
