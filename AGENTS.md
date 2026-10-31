@@ -165,6 +165,17 @@ identical. The differences are two known classes:
   depends on which album was processed first - it asserts order
   independence but deliberately does not pin a specific work id. The new
   model's answer is deterministic and keeps both editions.
+
+  The two Swan Lake albums show how the legacy's pick varies:
+
+  | album | legacy top | new model |
+  |---|---|---|
+  | complete ballet (43 tracks) | `13867eb1` (Drigo edition) | 29 tracks at `{11f48c5e, 13867eb1}`, 8 at `13867eb1`, 6 at `11f48c5e` |
+  | Jarvi (19 tracks) | `11f48c5e` (original op. 20) | 13 tracks at `{11f48c5e, 13867eb1}`, 6 at `11f48c5e` |
+
+  So the legacy names one edition for the whole album, and which one
+  differs between the two albums. The new model keeps both in one level
+  for most tracks, and names one where only one route reaches it.
 - **An intermediate level the legacy drops** (Gayne's 6 tracks). The
   movement "Carpet-making" is listed under both "Act I" and "Act I, Scene I
   (Spring)". The legacy keeps "Act I" and drops the scene level; the new
