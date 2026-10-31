@@ -208,6 +208,77 @@ id into `~cwp_workid_0`. The Firebird album's track 5 shows it:
 `~cwp_workid_0` is `('a06c71e7-...', '036a332c-...')`, and `036a332c` is
 the *recording* id, not a work id at all.
 
+### What a recording with several works means
+Every recording with more than one work relation was enumerated over the
+fixtures in the repository. There are eighteen of them, and they fall into
+two groups:
+
+* **The same work twice** (daphnis, all ten of them). MusicBrainz allows
+  two relations between one recording and one work, and this release uses
+  that: a 'partial' performance relation and a plain one, both pointing at
+  the same work. The legacy's `cwp_partial` handling replaces the work id
+  of the partial relation with the *recording* id, so the two relations
+  then name the same work twice and de-duplicate to one - the recording
+  id. The work itself is promoted to level 1.
+* **Two distinct works** (daphnis 4, firebird 1, nutcracker 1, planets 1,
+  requiem 1). The legacy fuses them into one level 0 node whose id is the
+  tuple of the works - Nutcracker's track 1 gives
+  `('91421046-...', 'fce0c96b-...')` - and the node's parent is the union
+  of the members' parents, reduced by the same rules as any other node.
+
+So one rule covers both groups: **the recording's works form one node**,
+whose members are the works (with a 'partial' relation contributing the
+recording id instead of the work id), and whose parent is the union of the
+members' parents.
+
+The `partial` attribute and the `live` attribute are separate: Requiem's
+track 1 carries two *distinct* works for the same music, one of them
+marked 'live', and both are kept as works.
+
+The rule should not assume a pair: a recording may perform more than two
+works, and the union of their parents may be several works too.
+
+**The union is kept in the tree, but the tag names one of them.** The
+legacy's tree key for Requiem's track 1 is the tuple
+`('d0be6882-...', '5ba9868e-...')` - both candidates for the level above
+the movement - yet `~cwp_workid_1` holds only `d0be6882`.
+
+The legacy has three separate passes that narrow a fused top, and they
+run in this order in `process_album`:
+
+1. `_collapse_fused_top_ids` - keep only the parent ids **common to every
+   track** under that top. "The version of the work this release actually
+   is": if some track under the top belongs to only a subset of the
+   parents, that subset is the release's genuine top work.
+2. `_reduce_fused_top_to_highest` - drop a constituent that is a
+   **descendant** of another constituent. A top work is by definition the
+   highest level work, so "Akt III" fused with the opera it is part of
+   becomes just the opera.
+3. The **vote by name** that `_select_top_work_names` applies to the
+   *names* of the remaining candidates, so the group name is single valued.
+
+The new model does the equivalent of (2) - its reduction drops an ancestor
+in favour of the more specific descendant - but it has no (1) and no (3).
+That is why a track's chain can end in either of two tops, and why the
+group name can differ between tracks of one album.
+
+**What the new model does with the same recordings.** The union of the
+members' parents is the recording's *candidate* level, and it is reduced
+like any other node's parent set. Measured:
+
+| album | the members' parents | the legacy's level 1 |
+|---|---|---|
+| requiem t1 | `d0be6882`, `5ba9868e` - two editions | `d0be6882` |
+| planets t7 | `439c1605`, `5a75e61c` - op. 32 and the extension | `439c1605` |
+| nutcracker d1t1 | `f3281e81`, `fd337fdc` - the ballet and the suite | `f3281e81` |
+| firebird t5 | `1a00a184` - one | `1a00a184` |
+
+In every case the two candidates are top level works with no parent of
+their own, so none of the reduction rules can separate them - they are
+siblings, not an ancestor and a descendant. The legacy separates them by
+(1) and (3); the new model has no way to, and keeps both. That is the
+whole of the remaining gap for these recordings.
+
 - **Two editions of one work** (Swan Lake's op. 20 and the 1895 R. Drigo
   edition, 35 tracks). The legacy picks one of the two as the
   representative; the new model keeps both in one level. The legacy's pick
