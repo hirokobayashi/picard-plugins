@@ -230,13 +230,16 @@ The "Akt I" branch is not lost from the tree: "Akt I" is still a node under
 the opera, and "Akt I, Vorspiel" is still a node of its own. Only the
 *chain* to the movement goes through the Akt III branch.
 
-Note that the movement's two links are both `arrangement` relations, not
-`parts`: MusicBrainz records "Prelude and Liebestod" as an arrangement of
-both "Akt I, Vorspiel" and "Excerpt from Akt III, Szene III. Liebestod".
-That is why one level holds two works - they are two arrangements of the
-same music. The `parts` links are what give each of them a place in the
-hierarchy, and those are separate: "Akt I, Vorspiel" is under "Akt I", the
-Akt III excerpt under "Akt III, Szene III".
+Note that the movement's two links to "Akt I, Vorspiel" and to the Akt III
+Liebestod excerpt are both `arrangement` relations, not `parts`:
+MusicBrainz records "Prelude and Liebestod" as an arrangement of both of
+them. The movement has no `parts` relation at all, so the parent resolution
+falls through to `arrangement` and finds two parents instead of one. That
+is why one level holds two works - one work with two
+`arrangement`-relation parents, rather than one parent. The `parts` links
+are what give each of those two works a place in the hierarchy, and those
+are separate: "Akt I, Vorspiel" is under "Akt I", the Akt III excerpt under
+"Akt III, Szene III".
 
 ### Reduction of a redundant parent
 `reduce_parents` applies three rules, in this order:
