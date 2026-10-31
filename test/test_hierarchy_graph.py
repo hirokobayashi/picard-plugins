@@ -687,17 +687,14 @@ class FixtureGraphTestCase(unittest.TestCase):
         movement = w("fb479c25-21be-4fba-aaa5-78693fcaafdd")
 
         # The movement's chain reaches the ballet through the scene and
-        # the act, both of them.
+        # the act, both of them. The exact chain is asserted, not just the
+        # presence of each work: a chain that fused the scene with the act
+        # would still contain both, but the scene level would be gone.
         path = hierarchy.path_to_top(hierarchy.node_of[movement])
-        self.assertTrue(path)
-        on_path = [frozenset(work.mbid for work in node.works) for node in path]
-        self.assertIn(scene.mbid, on_path[1],
-                      "the scene is not on the movement's chain")
-        self.assertIn(act.mbid, on_path[2],
-                      "the act is not on the movement's chain")
-        self.assertIn(ballet.mbid, on_path[3],
-                      "the ballet is not the top of the movement's chain")
-        self.assertEqual(len(path), 4, "the chain lost or gained a level")
+        self.assertEqual(
+            [sorted(work.mbid for work in node.works) for node in path],
+            [[movement.mbid], [scene.mbid], [act.mbid], [ballet.mbid]],
+            "the movement's chain is not movement, scene, act, ballet")
 
     def test_every_node_has_at_most_one_parent(self):
         """The hierarchy is a tree, so every node has at most one parent.
