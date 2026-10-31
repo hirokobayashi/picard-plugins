@@ -6,6 +6,12 @@ plugins/*.zip
 __pycache__/
 *.py[cod]
 
+# Test run output
+.coverage
+test/fixtures/relache/
+test/fixtures/walkure/
+test/fixtures/release_*.json
+
 # Distribution / packaging / development
 .venv/
 .vscode/
