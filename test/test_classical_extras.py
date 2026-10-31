@@ -4650,10 +4650,12 @@ class FirebirdPartialTopWorkIntegrationTestCase(ClassicalExtrasTestCase):
             tracks = self._run_full_album(drain=order)
             result = {
                 label: (self.mod.str_to_list(
-                            tracks[label].metadata['~cwp_work_top']),
-                        self.mod.str_to_list(
-                            tracks[label].metadata['~cwp_work_0']),
-                        tracks[label].metadata['~cwp_part_levels'])
+                    tracks[label].metadata['~cwp_work_top']),
+                    self.mod.str_to_list(
+                        tracks[label].metadata['~cwp_work_0']),
+                    self.mod.str_to_list(
+                        tracks[label].metadata['~cwp_workid_0']),
+                    tracks[label].metadata['~cwp_part_levels'])
                 for label, _t, _r, _w in self._TRACKS}
             if baseline is None:
                 baseline = result
