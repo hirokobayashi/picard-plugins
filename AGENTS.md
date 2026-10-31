@@ -275,9 +275,15 @@ the *recording* id, not a work id at all.
   under the act. The new model has the whole graph and keeps the more
   specific level.
 
-Neither difference is pinned by a test: they are decisions about what the
-tags should say, not defects. Reproducing the legacy exactly would mean
-reproducing its lookup order, which is what this model exists to remove.
+  **Decision: keep the scene level.** The scene is where the movements
+  really live, and the legacy's flatter answer is a side effect of its
+  lookup order rather than a considered choice. Pinned by
+  `test_the_scene_level_is_kept`.
+
+The Swan Lake difference is not pinned by a test: it is a decision about
+what the tags should say, not a defect. Reproducing the legacy exactly
+would mean reproducing its lookup order, which is what this model exists to
+remove.
 
 ### The tree is a tree, not a chain
 A track's level chain (`work_0 .. work_N`) is the path from the track's work
