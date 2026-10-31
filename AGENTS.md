@@ -155,7 +155,20 @@ hand and is not pinned by a test.
 ### Level chains (work_0 .. work_N)
 The legacy's per track chain of `~cwp_work_N` levels was measured against the
 new model's chain for 180 tracks across 7 fixtures. 135 of them (75%) are
-identical. The differences are two known classes:
+identical.
+
+**That measurement took only the first work of each recording.** A recording
+can perform two works, and then the legacy fuses them into one level: the
+Planets album's track 7 performs both suites' "Neptune", and the legacy's
+level 0 is the pair `(254f397b, 4be2ad86)`. The new model has no
+representation for that - `node_of` maps each work to a node of its own, so
+a track with two works has no single chain. Five fixtures have such
+recordings (daphnis 14, firebird 1, nutcracker 1, planets 1, requiem 1), and
+the measurement above took the first of each pair.
+
+So the 135/180 figure is an upper bound on the agreement, and the gap is
+larger than the two classes below. Modelling a track's work as a *set* of
+works is the next thing the model needs.
 
 - **Two editions of one work** (Swan Lake's op. 20 and the 1895 R. Drigo
   edition, 35 tracks). The legacy picks one of the two as the
@@ -183,18 +196,30 @@ identical. The differences are two known classes:
   op. 20: Act II" (`f9bdafff`, which sits under the original `11f48c5e`),
   so the chain continues through one edition only.
 
-  **This is worse than the legacy in one respect.** The legacy produces a
-  single `~cwp_work_top` and a single `~cwp_work_group` for the whole
-  album (verified: all 43 tracks of the complete ballet get
-  "Swan Lake, op. 20"). The new model would produce three different tops
-  for the same album, and `~cwp_work_group` is the shuffle key that the
-  plugin guarantees to be single-valued across the album. So the two
-  editions have to be merged into one top before the level chains can be
-  used as tags - that merging is a step the new model does not have yet.
+  **The group is a name, not an id.** `~cwp_work_group` is the shuffle key
+  and is matched by exact string equality, so what matters is the *name*
+  of the top, not which work id it holds. The two Swan Lake albums make
+  that clear: the legacy gives them different `~cwp_workid_top`
+  (`13867eb1` for the complete ballet, `11f48c5e` for the Jarvi release)
+  but the same `~cwp_work_group`, "Swan Lake, op. 20", for every track of
+  both albums. The two editions carry the same name, so they group
+  together even though they are different works.
 
-  The merge is not the same as the legacy's pick. The legacy picks one
-  edition and discards the other; a merge would keep both ids in one top
-  node and give it one name, so the album still has one top.
+  The legacy's name selection de-duplicates by name: `_select_top_work_names`
+  keeps a name only once, so a fused top holding both editions collapses
+  to the single name "Swan Lake, op. 20" before the tag is written. On the
+  new model's chains the same de-duplication gives one group per album:
+  the 29 tracks whose top node holds both editions and the 14 whose top
+  node holds one all have the name "Swan Lake, op. 20" (the fused node
+  contributes that name twice, which de-duplication collapses).
+
+  So the new model does not need a top-merging step for the group: the
+  name already unifies the album. What it does need is the same
+  de-duplication when it writes the name, so the fused top contributes
+  one name rather than the pair.
+
+  `~cwp_work_top` is allowed to have several values, so the top ids may
+  differ between tracks of one album without splitting the group.
 - **An intermediate level the legacy drops** (Gayne's 6 tracks). The
   movement "Carpet-making" is listed under both "Act I" and "Act I, Scene I
   (Spring)". The legacy keeps "Act I" and drops the scene level; the new
