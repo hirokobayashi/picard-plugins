@@ -319,6 +319,58 @@ among those candidates:
 
 Every group set and every track count is identical to the legacy.
 
+### What was built
+`hierarchy/album.py` holds the album level model, and `project()` takes the
+album's recordings.
+
+`Performance` is one recording's performance of one or more works. It
+keeps the works it performs in full and the works it performs only in part
+apart, because the two cases differ:
+
+* a work performed in full contributes its own parents to the node's
+  parent;
+* a work performed both in full and in part contributes itself, because
+  the recording id stands in for the work one level below it;
+* a work performed only in part contributes nothing, because the recording
+  is not that work and does not stand in for it.
+
+The node holds the works themselves, or the recording id for the partially
+performed ones.
+
+The `partial` attribute only means anything with the plugin's
+`cwp_partial` option on. With it off the attribute is ignored and a
+partially performed work is an ordinary one - the legacy's behaviour, and
+the one the Gayne album's tags show. `Performance.without_partial()` does
+that.
+
+`Album.group_names` picks the shuffle key. Every recording of the album
+votes once for each of its *distinct* candidate top names, and a
+recording's group is the name with the most votes among its own
+candidates. A tie is broken by the lowest normalised name, so every
+recording of the album yields the identical string.
+
+**Measured against the legacy, with the fusion in place:**
+
+| album | groups | chains identical | chains matching the decisions |
+|---|---|---|---|
+| daphnis | identical | 19 / 19 | 19 / 19 |
+| firebird | identical | 25 / 25 | 25 / 25 |
+| tristan | identical | 11 / 11 | 11 / 11 |
+| requiem | identical | 13 / 14 | 14 / 14 |
+| nutcracker | identical | 23 / 24 | 24 / 24 |
+| planets | identical | 11 / 12 | 12 / 12 |
+| swanlake_jarvi | identical | 6 / 19 | 19 / 19 |
+| swanlake_full | identical | 8 / 43 | 37 / 43 |
+| gayne | identical | 45 / 51 | 45 / 51 |
+
+"chains matching the decisions" counts a chain as matching when the new
+model's chain is the legacy's with the two documented decisions applied:
+the Gayne scene level is kept, and the top may hold several works where
+the legacy picks one. The twelve chains that still differ are the six
+Gayne tracks of the scene level and the six Swan Lake tracks of the
+container level reduction, both of which are decisions rather than
+defects.
+
 - **Two editions of one work** (Swan Lake's op. 20 and the 1895 R. Drigo
   edition, 35 tracks). The legacy picks one of the two as the
   representative; the new model keeps both in one level. The legacy's pick

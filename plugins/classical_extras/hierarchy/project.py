@@ -32,9 +32,12 @@ except that the tuple order no longer matters.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, FrozenSet, List, Set
+from typing import Dict, FrozenSet, List, Sequence, Set, TYPE_CHECKING
 
 from .graph import NodeId, WorkGraph, WorkId
+
+if TYPE_CHECKING:  # pragma: no cover - import cycle only needed for typing
+    from .album import Performance
 
 
 @dataclass
@@ -69,6 +72,8 @@ class Hierarchy:
     nodes: Dict[NodeId, Node] = field(default_factory=dict)
     #: The node each work belongs to.
     node_of: Dict[WorkId, NodeId] = field(default_factory=dict)
+    #: The node each recording's performance belongs to.
+    node_of_performance: Dict[WorkId, NodeId] = field(default_factory=dict)
     #: The top level nodes, in node-id order.
     tops: List[NodeId] = field(default_factory=list)
 
@@ -250,13 +255,65 @@ def _ancestors_in(
     return frozenset(found)
 
 
+def _performance_node(
+        performance: "Performance",
+        accepted: Dict[WorkId, FrozenSet[WorkId]],
+        hierarchy: Hierarchy) -> NodeId:
+    """The node of a recording's performance, and its place in the tree.
+
+    The node holds the ids standing for the works the recording performs: the
+    work itself, or the recording id when the work is only partially
+    performed, because such a recording is not the work.
+
+    Its parent holds the union of what those works contribute:
+
+    * a work performed in full contributes its own parents;
+    * a work performed both in full and in part contributes itself, because
+      the recording id stands in for the work one level below it;
+    * a work performed only in part contributes nothing, because the
+      recording is not that work and does not stand in its place.
+
+    The parent's members are reduced like any other node's parent set.
+    """
+    members = performance.members
+    node_id = NodeId(members)
+    if node_id not in hierarchy.nodes:
+        hierarchy.nodes[node_id] = Node(id=node_id, works=members)
+
+    contributions: Set[WorkId] = set()
+    for work in performance.works:
+        kind = performance.contribution(work)
+        if kind == 'self':
+            contributions.add(work)
+        elif kind == 'parents':
+            contributions |= accepted.get(work, frozenset())
+    if not contributions:
+        return node_id
+
+    reduced = reduce_parents(
+        frozenset(contributions),
+        accepted,
+        _ancestors_for(accepted, frozenset(contributions)))
+    container = NodeId(reduced)
+    if container == node_id:
+        return node_id
+    if container not in hierarchy.nodes:
+        hierarchy.nodes[container] = Node(id=container, works=container.works)
+    node = hierarchy.nodes[node_id]
+    node.parents = frozenset({container})
+    hierarchy.nodes[container].children = (
+        hierarchy.nodes[container].children | {node_id})
+    return node_id
+
+
 def project(
         graph: WorkGraph,
         use_arrangements: bool = True,
         use_medleys: bool = True,
         use_collections: bool = True,
         embedded_works: FrozenSet[WorkId] | None = None,
-        reduce_redundant: bool = True) -> Hierarchy:
+        reduce_redundant: bool = True,
+        performances: Sequence["Performance"] | None = None) -> Hierarchy:
     """Project a work graph into a hierarchy.
 
     Each work forms a node of its own. The node containing a work is the
@@ -281,6 +338,13 @@ def project(
     legacy implementation needed that scope because a parent edge cached
     for a different album would otherwise make a standalone work look
     embedded.
+
+    ``performances`` are the recordings of the album. A recording that
+    performs several works has one node holding all of them, so it has one
+    chain rather than one per work - see :class:`hierarchy.album.Performance`
+    for what a performance's node holds and what its parent holds. Without
+    them every work forms a node of its own, which is the plain work level
+    view of the hierarchy.
     """
     accepted = graph.acyclic_parent_edges(
         use_arrangements=use_arrangements,
@@ -325,6 +389,14 @@ def project(
         hierarchy.nodes[container].children = (
             hierarchy.nodes[container].children | {node_of[work]})
 
+    # A recording's performance forms a node of its own, holding the works
+    # it performs. A recording that performs several works therefore has one
+    # node and one chain, instead of one chain per work.
+    node_of_performance: Dict[WorkId, NodeId] = {}
+    for performance in performances or ():
+        node = _performance_node(performance, accepted, hierarchy)
+        node_of_performance[performance.key] = node
+
     # A node holding several works -- the container of a work with two
     # parents -- is itself contained by the node holding the parents of
     # those works. Without this the container would be an orphan root and
@@ -335,9 +407,15 @@ def project(
     # different chains, and keeping both would put the same work twice in
     # one chain.
     pending = list(hierarchy.nodes)
+    performance_nodes = frozenset(node_of_performance.values())
     while pending:
         node_id = pending.pop()
         node = hierarchy.nodes[node_id]
+        if node_id in performance_nodes:
+            # A performance node's parent was worked out from what its works
+            # contribute, which is not the same as the parents of the works
+            # it holds.
+            continue
         container_works: Set[WorkId] = set()
         for work in node.works:
             container_works |= accepted.get(work, frozenset())
@@ -360,6 +438,7 @@ def project(
             hierarchy.nodes[container].children | {node_id})
 
     hierarchy.node_of = node_of
+    hierarchy.node_of_performance = node_of_performance
 
     # The top level nodes are the ones nothing contains.
     hierarchy.tops = sorted(
