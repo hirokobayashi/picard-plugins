@@ -210,8 +210,9 @@ the *recording* id, not a work id at all.
 
 ### What a recording with several works means
 Every recording with more than one work relation was enumerated over the
-fixtures in the repository. There are eighteen of them, and they fall into
-two groups:
+tracked fixtures. There are eighteen of them, and they fall into two groups.
+(The untracked `relache` and `walkure` directories are test run artefacts,
+not fixtures, and are not counted.)
 
 * **The same work twice** (daphnis, all ten of them). MusicBrainz allows
   two relations between one recording and one work, and this release uses
@@ -227,9 +228,10 @@ two groups:
   of the members' parents, reduced by the same rules as any other node.
 
 So one rule covers both groups: **the recording's works form one node**,
-whose members are the works (with a 'partial' relation contributing the
-recording id instead of the work id), and whose parent is the union of the
-members' parents.
+and its parent is the union of the members' parents. Each work contributes
+itself - but a work that any 'partial' relation points to contributes the
+*recording* id instead, however many relations point at it, and duplicate
+ids collapse.
 
 The `partial` attribute and the `live` attribute are separate: Requiem's
 track 1 carries two *distinct* works for the same music, one of them
@@ -255,7 +257,8 @@ run in this order in `process_album`:
    highest level work, so "Akt III" fused with the opera it is part of
    becomes just the opera.
 3. The **vote by name** that `_select_top_work_names` applies to the
-   *names* of the remaining candidates, so the group name is single valued.
+   *names* of the remaining candidates, after which
+   `_select_work_group_name` commits the group to a single value.
 
 The new model does the equivalent of (2) - its reduction drops an ancestor
 in favour of the more specific descendant - but it has no (1) and no (3).
@@ -271,13 +274,19 @@ like any other node's parent set. Measured:
 | requiem t1 | `d0be6882`, `5ba9868e` - two editions | `d0be6882` |
 | planets t7 | `439c1605`, `5a75e61c` - op. 32 and the extension | `439c1605` |
 | nutcracker d1t1 | `f3281e81`, `fd337fdc` - the ballet and the suite | `f3281e81` |
-| firebird t5 | `1a00a184` - one | `1a00a184` |
+| firebird t5 | `2fbaaf2d`, `1a00a184` - the ballet and the suite | `1a00a184` |
+
+Firebird's row is not the union of the two members' parents in the same
+way as the others: the ballet `2fbaaf2d` has no hierarchical parent at
+all, but the legacy's `cwp_partial` handling records it as the parent of
+the recording-id stand-in, so the fused node ends up under the pair
+`('2fbaaf2d', '1a00a184')`. The legacy still reduces that to the suite
+alone.
 
 In every case the two candidates are top level works with no parent of
 their own, so none of the reduction rules can separate them - they are
 siblings, not an ancestor and a descendant. The legacy separates them by
-(1) and (3); the new model has no way to, and keeps both. That is the
-whole of the remaining gap for these recordings.
+(1) and (3); the new model has no way to, and keeps both.
 
 - **Two editions of one work** (Swan Lake's op. 20 and the 1895 R. Drigo
   edition, 35 tracks). The legacy picks one of the two as the
