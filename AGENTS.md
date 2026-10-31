@@ -180,8 +180,7 @@ must not be confused:
   around: it is what keeps a movement reached by two routes in one place
   in the tree.
 * **A recording that performs two works** (Planets' track 7, which
-  performs both suites' "Neptune"). The two works are peers, not a
-  movement and its two containers.
+  performs both suites' "Neptune"). Here the two works are peers.
 
 The legacy fuses the second case as well, and does it by making the two
 works a node of their own - the legacy's tree has the key
@@ -193,6 +192,20 @@ with two chains rather than one, so a level tag would have to pick one of
 them. That is what the model does now, and it is why Planets' track 7
 lands in the "Planets Suite extension" group instead of "The Planets,
 op. 32".
+
+The two works of a recording need not be peers. The Firebird album's
+track 5 performs a movement of the 1919 suite *and* the full ballet, and
+the two are in different branches: the movement sits under "L'Oiseau de
+feu, suite de 1919", while the ballet is a top level work of its own (the
+suite is only "based on" it, not a part of it).
+
+That second relation also carries the attribute **partial** - it is a
+*partial recording of* the ballet, not a full performance of it. The
+legacy treats that with the `cwp_partial` option: it invents a
+**recording id stand-in** for the work slot and writes the recording's own
+id into `~cwp_workid_0`. The Firebird album's track 5 shows it:
+`~cwp_workid_0` is `('a06c71e7-...', '036a332c-...')`, and `036a332c` is
+the *recording* id, not a work id at all.
 
 - **Two editions of one work** (Swan Lake's op. 20 and the 1895 R. Drigo
   edition, 35 tracks). The legacy picks one of the two as the
