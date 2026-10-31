@@ -174,8 +174,12 @@ identical. The differences are two known classes:
   | Jarvi (19 tracks) | `11f48c5e` (original op. 20) | 13 tracks at `{11f48c5e, 13867eb1}`, 6 at `11f48c5e` |
 
   So the legacy names one edition for the whole album, and which one
-  differs between the two albums. The new model keeps both in one level
-  for most tracks, and names one where only one route reaches it.
+  differs between the two albums. The new model keeps both editions in one
+  level for most tracks. Where it names a single edition, that is not
+  because only one route reaches it: for example the five tracks
+  d1t17 and d1t19 to d1t22 reach both editions, and the single name comes
+  from the reduction collapsing the shared intermediate work ("Swan Lake,
+  op. 20: Act II", which exists in two editions) onto one of them.
 - **An intermediate level the legacy drops** (Gayne's 6 tracks). The
   movement "Carpet-making" is listed under both "Act I" and "Act I, Scene I
   (Spring)". The legacy keeps "Act I" and drops the scene level; the new
