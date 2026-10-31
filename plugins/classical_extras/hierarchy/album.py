@@ -171,7 +171,11 @@ class Album:
         return groups
 
     def _candidate_names(self, tops: FrozenSet[WorkId]) -> List[str]:
-        """The distinct names of the given top works, in discovery order."""
+        """The distinct names of the given top works, in work id order.
+
+        The order is by work id rather than by discovery, so the names do
+        not depend on the order the works were found in.
+        """
         names: List[str] = []
         for top in sorted(tops, key=lambda w: w.mbid):
             name = self.name_of(top)

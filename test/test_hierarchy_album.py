@@ -154,6 +154,24 @@ class GroupNameTestCase(unittest.TestCase):
         self.assertEqual(groups[w("rec1")], "Swan Lake, op. 20")
         self.assertEqual(groups[w("rec2")], "Swan Lake, op. 20")
 
+    def test_a_tie_is_broken_deterministically(self):
+        """Two candidate names that normalise to the same thing tie.
+
+        The answer must not depend on which work the name came from or on
+        the order the candidates arrive in, or the group would change when
+        the ids change.
+        """
+        album = Album(names={
+            w("aaa"): "beta",
+            w("zzz"): "Beta",
+        })
+        first = album.group_names(
+            {w("recording"): frozenset({w("aaa"), w("zzz")})})
+        second = album.group_names(
+            {w("recording"): frozenset({w("zzz"), w("aaa")})})
+        self.assertEqual(first[w("recording")], second[w("recording")])
+        self.assertEqual(first[w("recording")], "Beta")
+
     def test_normalise_name_matches_the_legacy(self):
         self.assertEqual(normalise_name("  Swan   Lake, op. 20 "),
                          "swan lake, op. 20")
@@ -360,8 +378,13 @@ class AlbumFixtureTestCase(unittest.TestCase):
 
     def test_the_group_is_one_value_for_every_track_of_an_album(self):
         """The group is the shuffle key: every track of an album must carry
-        the identical string, or the album is split into several groups."""
+        the identical string, or the album is split into several groups.
+
+        The counts are the legacy's, measured by running it over each
+        album.
+        """
         for fixture, expected in (
+                ("daphnis", 1),
                 ("swanlake_full", 1),
                 ("swanlake_jarvi", 1),
                 ("gayne", 1),
