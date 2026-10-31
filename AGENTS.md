@@ -240,13 +240,25 @@ marked 'live', and both are kept as works.
 The rule should not assume a pair: a recording may perform more than two
 works, and the union of their parents may be several works too.
 
-**The union is kept in the tree, but the tag names one of them.** The
-legacy's tree key for Requiem's track 1 is the tuple
+**The union is kept in the tree, but the group names one of them.**
+The legacy's tree key for Requiem's track 1 is the tuple
 `('d0be6882-...', '5ba9868e-...')` - both candidates for the level above
 the movement - yet `~cwp_workid_1` holds only `d0be6882`.
 
-The legacy has three separate passes that narrow a fused top, and they
-run in this order in `process_album`:
+**Decision: `top_work` may hold several works; `work_group` is the
+shuffle key and holds one.** The group is matched by exact string
+equality on a *name*, not on an id, so what matters is the name of the
+top, not which work id it holds. The two Swan Lake albums make that
+clear: the legacy gives them different `~cwp_workid_top` (`13867eb1` for
+the complete ballet, `11f48c5e` for the Jarvi release) but the same
+`~cwp_work_group`, "Swan Lake, op. 20", for every track of both albums.
+
+That is why the two editions group together even though they are
+different works, and why the new model can keep both: the group name is
+the same either way.
+
+The legacy narrows a fused top's candidates with three passes, in this
+order in `process_album`:
 
 1. `_collapse_fused_top_ids` - keep only the parent ids **common to every
    track** under that top. "The version of the work this release actually
@@ -261,32 +273,28 @@ run in this order in `process_album`:
    `_select_work_group_name` commits the group to a single value.
 
 The new model does the equivalent of (2) - its reduction drops an ancestor
-in favour of the more specific descendant - but it has no (1) and no (3).
-That is why a track's chain can end in either of two tops, and why the
-group name can differ between tracks of one album.
+in favour of the more specific descendant. Passes (1) and (3) are about
+naming one top for the album, and they are only needed because the group
+is a single value: the new model can leave the candidates in place and
+let the group name be the vote winner among them.
 
-**What the new model does with the same recordings.** The union of the
-members' parents is the recording's *candidate* level, and it is reduced
-like any other node's parent set. Measured:
+**Measured: the groups match the legacy exactly.** With the recording's
+works treated as one node - so a track's candidates are the union of its
+works' chain tops - and the group name chosen by the album-wide vote
+among those candidates:
 
-| album | the members' parents | the legacy's level 1 |
+| album | legacy | new model |
 |---|---|---|
-| requiem t1 | `d0be6882`, `5ba9868e` - two editions | `d0be6882` |
-| planets t7 | `439c1605`, `5a75e61c` - op. 32 and the extension | `439c1605` |
-| nutcracker d1t1 | `f3281e81`, `fd337fdc` - the ballet and the suite | `f3281e81` |
-| firebird t5 | `2fbaaf2d`, `1a00a184` - the ballet and the suite | `1a00a184` |
+| swanlake_full | 1 group, 43 tracks | 1 group, 43 tracks |
+| swanlake_jarvi | 1 group, 19 tracks | 1 group, 19 tracks |
+| planets | 6 groups, 12 tracks | 6 groups, 12 tracks |
+| requiem | 1 group, 14 tracks | 1 group, 14 tracks |
+| nutcracker | 1 group, 24 tracks | 1 group, 24 tracks |
+| firebird | 3 groups, 25 tracks | 3 groups, 25 tracks |
+| tristan | 6 groups, 11 tracks | 6 groups, 11 tracks |
+| gayne | 1 group, 51 tracks | 1 group, 51 tracks |
 
-Firebird's row is not the union of the two members' parents in the same
-way as the others: the ballet `2fbaaf2d` has no hierarchical parent at
-all, but the legacy's `cwp_partial` handling records it as the parent of
-the recording-id stand-in, so the fused node ends up under the pair
-`('2fbaaf2d', '1a00a184')`. The legacy still reduces that to the suite
-alone.
-
-In every case the two candidates are top level works with no parent of
-their own, so none of the reduction rules can separate them - they are
-siblings, not an ancestor and a descendant. The legacy separates them by
-(1) and (3); the new model has no way to, and keeps both.
+Every group set and every track count is identical to the legacy.
 
 - **Two editions of one work** (Swan Lake's op. 20 and the 1895 R. Drigo
   edition, 35 tracks). The legacy picks one of the two as the
@@ -314,27 +322,12 @@ siblings, not an ancestor and a descendant. The legacy separates them by
   op. 20: Act II" (`f9bdafff`, which sits under the original `11f48c5e`),
   so the chain continues through one edition only.
 
-  **The group is a name, not an id.** `~cwp_work_group` is the shuffle key
-  and is matched by exact string equality, so what matters is the *name*
-  of the top, not which work id it holds. The two Swan Lake albums make
-  that clear: the legacy gives them different `~cwp_workid_top`
-  (`13867eb1` for the complete ballet, `11f48c5e` for the Jarvi release)
-  but the same `~cwp_work_group`, "Swan Lake, op. 20", for every track of
-  both albums. The two editions carry the same name, so they group
-  together even though they are different works.
-
-  The legacy's name selection de-duplicates by name: `_select_top_work_names`
-  keeps a name only once, so a fused top holding both editions collapses
-  to the single name "Swan Lake, op. 20" before the tag is written. On the
-  new model's chains the same de-duplication gives one group per album:
-  the 29 tracks whose top node holds both editions and the 14 whose top
-  node holds one all have the name "Swan Lake, op. 20" (the fused node
-  contributes that name twice, which de-duplication collapses).
-
-  So the new model does not need a top-merging step for the group: the
-  name already unifies the album. What it does need is the same
-  de-duplication when it writes the name, so the fused top contributes
-  one name rather than the pair.
+  The group's name is what unifies the album: the two editions carry the
+  same name, so they group together even though they are different works.
+  The legacy's name selection de-duplicates by name -
+  `_select_top_work_names` keeps a name only once, so a fused top holding
+  both editions collapses to the single name "Swan Lake, op. 20" before the
+  tag is written.
 
   `~cwp_work_top` is allowed to have several values, so the top ids may
   differ between tracks of one album without splitting the group.
