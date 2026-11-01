@@ -1564,14 +1564,19 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
             name: sys.modules.pop(name)
             for name in list(sys.modules)
             if name == "picard" or name.startswith("picard.")}
+        # the hierarchy modules are removed so that they are imported
+        # afresh - and restored afterwards, so that the rest of the suite
+        # sees the same classes
+        hierarchy = {
+            name: sys.modules.pop(name)
+            for name in list(sys.modules)
+            if name == "hierarchy" or name.startswith("hierarchy.")}
         try:
-            for name in list(sys.modules):
-                if name.startswith("hierarchy"):
-                    del sys.modules[name]
             importlib.import_module("hierarchy.adapter")
         finally:
             sys.meta_path.remove(finder)
             sys.modules.update(cached)
+            sys.modules.update(hierarchy)
         self.assertEqual(blocked, [])
 
     def test_the_blocker_would_catch_an_import(self):
