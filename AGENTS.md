@@ -252,7 +252,7 @@ original edition's second act - the same reduction that drops a top level
 parent in favour of an embedded one as in Don Giovanni - and the one
 original-only track ends at the original edition where the legacy wrote
 the album-wide Drigo top. The Gayne difference adds the scene level on
-purpose. The other seven albums' chains are unchanged.
+purpose. The other seven albums' chains all match the decisions.
 
 ### The second fusion
 The other thing that puts several works in one node is a **recording that
@@ -355,11 +355,13 @@ at all (nutcracker d1t1 and planets t7) and neither of them ties, so the
 tie break does not affect any fixture. The legacy breaks a tie by
 lowest normalised name.
 
-Firebird's track 5 used to be a third one. It is not any more: with
+Firebird's track 5 used to be a third one. It is not any more. With
 `cwp_partial` on the partially performed ballet contributes nothing
-upward, and with it off the reduction drops the top level ballet in
-favour of the embedded suite, so either way the track has one candidate
-name.
+upward. With it off the partial attribute is dropped and the ballet
+becomes an ordinary complete work - but a work performed in full
+contributes its own parents, and the ballet is a top level work with
+none, so it contributes nothing upward either way. The track therefore
+has one candidate name, the suite.
 
 The legacy narrows a fused top's candidates with three passes, in this
 order in `process_album`:
