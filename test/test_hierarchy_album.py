@@ -376,6 +376,55 @@ class AlbumFixtureTestCase(unittest.TestCase):
             [sorted(work.mbid for work in node.works) for node in chain],
             [["first", "second"], ["act"], ["opera"]])
 
+    def test_tristan_the_liebestod_has_one_chain_through_both_acts(self):
+        """The Liebestod is an arrangement, so it has no 'parts' parent: it
+        reaches its two acts through the arrangement relation.
+
+        The two acts are the two parents of the work, so they form one node
+        above it and the track has one chain - the same one the legacy
+        gives.
+        """
+        _rows, _hierarchy, chains, _groups = self._album_of("tristan")
+        rows = self._performances(
+            os.path.join(self.FIXTURE_ROOT, "tristan"), use_partial=False)
+        key = _performance_of(rows, "t2").key
+        chain = chains[key]
+        self.assertEqual(
+            [sorted(work.mbid for work in node.works) for node in chain],
+            [["7b4b0ef2-7928-3c37-8107-1355eb043855"],
+             ["52836ec3-2272-37cd-a4af-20ab3bf56b88",
+              "eb691aba-ba0f-3db6-97bb-df50e64f2b9c"],
+             ["9d1ba066-627f-3fbb-b88d-f55da5cba723"],
+             ["ad177d02-7eb2-4923-beab-bec57819064e"],
+             ["ae217ba8-0b07-4b0b-aed6-c80535dcd94b"]])
+
+    def test_tristan_a_work_may_sit_in_several_nodes(self):
+        """The tree is a tree, not a chain.
+
+        'Akt I, Vorspiel' is a member of two nodes: its own, under 'Akt I',
+        and the fused node that holds it together with the Act III excerpt.
+        The work is reached by two routes, so each route needs a container
+        of its own.
+
+        The invariant is that every *node* has at most one parent, not that
+        every work does.
+        """
+        _rows, hierarchy, _chains, _groups = self._album_of("tristan")
+        nodes = [node for node in hierarchy.nodes.values()
+                 if any(work.mbid.startswith("52836ec3") for work in node.works)]
+        self.assertEqual(
+            len(nodes), 2,
+            "the Vorspiel should be in its own node and in the fused one")
+        for node in nodes:
+            self.assertLessEqual(
+                len(node.parents), 1,
+                "a node must have at most one parent")
+        # the fused node holds both acts and hangs under the Act III scene
+        fused = [node for node in nodes if len(node.works) > 1][0]
+        self.assertEqual(
+            sorted(work.mbid[:8] for work in fused.works),
+            ["52836ec3", "eb691aba"])
+
     def test_the_group_is_one_value_for_every_track_of_an_album(self):
         """The group is the shuffle key: every track of an album must carry
         the identical string, or the album is split into several groups.

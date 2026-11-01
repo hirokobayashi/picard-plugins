@@ -179,6 +179,43 @@ must not be confused:
   level up holds both of them. This is the fusion the model is built
   around: it is what keeps a movement reached by two routes in one place
   in the tree.
+
+  The Liebestod is an *arrangement*, so it has no `parts` parent at all.
+  It reaches its two acts through the arrangement relation: "Akt I,
+  Vorspiel" (`52836ec3`) and "Excerpt from Tristan und Isolde, WWV 90:
+  Akt III" (`eb691aba`). The model's chain for track 2 is
+
+  ```
+  Prelude and Liebestod
+    -> {Akt I, Vorspiel} + {Excerpt from Akt III}     (one node, both)
+      -> Akt III, Szene III
+        -> Akt III
+          -> Tristan und Isolde, WWV 90
+  ```
+
+  which is the legacy's chain exactly.
+
+  **One difference in the tree.** The legacy has only the *fused* node
+  `('eb691aba', '52836ec3')`; it has no node for "Akt I, Vorspiel" alone
+  and none for "Excerpt from Akt III" alone. The new model has all three:
+  the fused node, plus a node for "Akt I, Vorspiel" alone (under "Akt I")
+  and a node for "Excerpt from Akt III" alone (under "Akt III, Szene
+  III"). The two works each sit in two nodes.
+
+  That is deliberate, and it is what "the tree is a tree, not a chain"
+  means. A node is identified by the *set* of works it stands for, so the
+  work "Akt I, Vorspiel" is a member of two nodes - the one alone and the
+  fused one - and each of those nodes has its own parent. The invariant
+  that holds is **every node has at most one parent**, not every work: a
+  work may appear in several nodes, because the same work reached by
+  different routes needs a container of its own in each route.
+
+  The consequence is that "Akt I, Vorspiel" is listed as a parent of the
+  Liebestod through the fused node while also being a movement of "Akt I"
+  in its own right. The legacy avoids that by never creating the
+  standalone node, so its tree has one route to the Liebestod and one
+  route to the Vorspiel. Both trees give the same chain to the track;
+  they differ in what the tree looks like above the track.
 * **A recording that performs two works** (Planets' track 7, which
   performs both suites' "Neptune"). Here the two works are peers.
 
