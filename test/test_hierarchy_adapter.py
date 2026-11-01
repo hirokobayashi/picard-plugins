@@ -806,6 +806,48 @@ class OrderOfTestCase(unittest.TestCase):
                 through=[w("work-a"), w("work-b")]),
             [w("parent-b"), w("parent-a")])
 
+    def test_the_first_contributing_work_wins(self):
+        """Two contributing works naming a parent each.
+
+        Each names its parent first, so the positions collide. The work
+        that comes first has to win, not the one whose id sorts first.
+        """
+        relations = WorkRelations(parents={
+            w("work-a"): [w("zzz-parent")],
+            w("work-b"): [w("aaa-parent")],
+        })
+        self.assertEqual(
+            relations.order_of(
+                [w("aaa-parent"), w("zzz-parent")],
+                through=[w("work-a"), w("work-b")]),
+            [w("zzz-parent"), w("aaa-parent")])
+
+    def test_the_contributing_works_are_in_the_level_below_order(self):
+        """The works leading to a level keep the order of the level below.
+
+        The order of a level comes from the relations, so the works that
+        lead to it have to be read in the order the level below gave them -
+        not in work id order.
+        """
+        adapter = _adapter("swanlake_full")
+        hierarchy, _groups = adapter.build()
+        chains = chains_of(hierarchy, adapter.performances)
+        for recording in adapter.recordings:
+            chain = chains.get(recording.performance.key) or []
+            levels = adapter._levels_with_through(recording, chain)
+            for index in range(1, len(levels)):
+                below = levels[index - 1][1]
+                through = levels[index][1]
+                if len(through) < 2:
+                    continue
+                order = {work: position
+                         for position, work in enumerate(below)}
+                positions = [order.get(work, len(order))
+                             for work in through]
+                self.assertEqual(
+                    positions, sorted(positions),
+                    "the contributing works are not in the level's order")
+
 
 class EmptyNamesTestCase(unittest.TestCase):
     """The tags of a track whose works have no titles."""
@@ -850,6 +892,52 @@ class NoChainTestCase(unittest.TestCase):
         return AlbumAdapter(
             [],
             [{"id": "rec-1", "relations": []}])
+
+    def test_two_partial_works_give_the_recording_id_once(self):
+        """Two works performed in part are both the recording.
+
+        The node holds the works as a set, so it can hold the recording id
+        only once - and the level's ids have to agree with it.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                    "attributes": ["partial"],
+                },
+            ],
+        }
+        adapter = AlbumAdapter([], [recording])
+        self.assertEqual(
+            adapter.recordings[0].members,
+            [w("rec-1")])
+        metadata = adapter.tags()[w("rec-1")].as_metadata()
+        self.assertEqual(metadata['~cwp_workid_0'], "('rec-1',)")
+
+    def test_a_repeated_recording_is_held_once(self):
+        """A release can list the same recording twice."""
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter([], [recording, dict(recording)])
+        self.assertEqual(len(adapter.recordings), 1)
+        self.assertEqual(len(adapter.tags()), 1)
 
     def test_the_recording_is_in_the_result(self):
         """A recording with no chain is still there, with no levels."""
