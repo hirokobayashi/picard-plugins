@@ -932,6 +932,39 @@ class NoChainTestCase(unittest.TestCase):
         metadata = adapter.tags()[w("rec-1")].as_metadata()
         self.assertEqual(metadata['~cwp_workid_0'], "('rec-1',)")
 
+    def test_a_work_related_full_then_partially_gives_one_id(self):
+        """A work performed in full and then in part is the recording.
+
+        The work's own id is replaced by the recording id, and the
+        recording id is not given twice.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                    "attributes": ["partial"],
+                },
+            ],
+        }
+        adapter = AlbumAdapter([], [recording])
+        members = adapter.recordings[0].members
+        self.assertEqual(len(members), len(set(members)), members)
+        self.assertEqual(members, [w("rec-1")])
+
     def test_a_work_related_three_times_does_not_crash(self):
         """A third relation to the same work must not raise.
 
@@ -966,38 +999,40 @@ class NoChainTestCase(unittest.TestCase):
             adapter.recordings[0].members,
             [w("rec-1")])
 
-    def test_a_work_related_full_then_partially_gives_one_id(self):
-        """A work performed in full and then in part is the recording.
+    def test_every_relation_ordering_gives_one_id_per_work(self):
+        """Every ordering of the relations gives the same level.
 
-        The work's own id is replaced by the recording id, and the
-        recording id is not given twice.
+        Two works, each related up to three times and each either wholly
+        or partly performed. The level holds one id per work, and the
+        recording id only once however many works stand in for it.
         """
-        recording = {
-            "id": "rec-1",
-            "relations": [
-                {
-                    "type": "performance",
-                    "direction": "forward",
-                    "work": {"id": "work-a"},
-                    "attributes": ["partial"],
-                },
-                {
-                    "type": "performance",
-                    "direction": "forward",
-                    "work": {"id": "work-b"},
-                },
-                {
-                    "type": "performance",
-                    "direction": "forward",
-                    "work": {"id": "work-b"},
-                    "attributes": ["partial"],
-                },
-            ],
-        }
-        adapter = AlbumAdapter([], [recording])
-        members = adapter.recordings[0].members
-        self.assertEqual(len(members), len(set(members)), members)
-        self.assertEqual(members, [w("rec-1")])
+        for relations in self._relation_orderings():
+            recording = {"id": "rec-1", "relations": relations}
+            adapter = AlbumAdapter([], [recording])
+            members = adapter.recordings[0].members
+            self.assertEqual(
+                len(members), len(set(members)),
+                "%s -> %s" % (relations, members))
+
+    @staticmethod
+    def _relation_orderings():
+        """Every ordering of the relations over two works."""
+        import itertools
+        choices = [
+            ("work-a", False), ("work-a", True),
+            ("work-b", False), ("work-b", True),
+        ]
+        for count in (1, 2, 3):
+            for combo in itertools.product(choices, repeat=count):
+                yield [
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": work},
+                        "attributes": ["partial"] if partial else [],
+                    }
+                    for work, partial in combo
+                ]
 
     def test_a_repeated_recording_is_held_once(self):
         """A release can list the same recording twice."""
