@@ -40,7 +40,7 @@ The levels above the first are the node's works in the same order.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, FrozenSet, Iterable, List, Mapping, Sequence, Tuple
+from typing import Dict, FrozenSet, Iterable, List, Mapping, Sequence, Set, Tuple
 
 from .album import Album, Performance, candidate_tops, chains_of
 from .graph import NodeId, WorkGraph, WorkId
@@ -48,6 +48,10 @@ from .project import Hierarchy, project
 
 #: The separator the legacy uses between the ids of one level.
 ID_SEPARATOR = '; '
+
+#: The sort key of a work that no relation named. It has to be past every
+#: real position, so that such a work sorts after the ones that were named.
+_UNORDERED = float('inf')
 
 
 def format_ids(works: Iterable[WorkId]) -> str:
@@ -137,9 +141,12 @@ class WorkRelations:
             for position, parent in enumerate(parent_list):
                 if parent in wanted and parent not in order:
                     order[parent] = position
+        # A work no relation named goes after every work one did, so the
+        # sentinel has to be past the largest real position - not just
+        # past the number of matches, which can be smaller.
         return sorted(
             wanted,
-            key=lambda work: (order.get(work, len(order)), work.mbid))
+            key=lambda work: (order.get(work, _UNORDERED), work.mbid))
 
 
 def read_work_graph(
@@ -294,19 +301,49 @@ def node_height(hierarchy: Hierarchy, node: NodeId) -> int:
 
     This is the number of levels below the node, which is what the
     legacy's ``level_calc`` computes for the whole tree of a top work.
+
+    The height of a node is one more than the height of its deepest
+    child, so the heights are worked out from the leaves upwards. A node
+    reached by two paths then gets the deeper of the two - a walk that
+    stopped at the first path would miss the deeper one.
+
+    A cycle would make the walk go on for ever, so a node already on the
+    path is treated as a leaf. The hierarchy is a tree - every node has at
+    most one parent - so a cycle cannot occur; the guard is there so that
+    a malformed graph cannot hang the plugin.
+
+    The walk is iterative, so a deep hierarchy cannot exhaust the stack.
     """
-    best = 0
-    stack = [(node, 0)]
-    seen = set()
+    heights: Dict[NodeId, int] = {}
+    active: Set[NodeId] = set()
+    stack: List[Tuple[NodeId, bool]] = [(node, False)]
     while stack:
-        current, depth = stack.pop()
-        if current in seen:
+        current, expanded = stack.pop()
+        if expanded:
+            active.discard(current)
+            deepest = 0
+            for child in _children_of(hierarchy, current):
+                deepest = max(deepest, heights.get(child, 0))
+            heights[current] = deepest + 1
             continue
-        seen.add(current)
-        best = max(best, depth)
-        for child in hierarchy.nodes[current].children:
-            stack.append((child, depth + 1))
-    return best
+        if current in heights:
+            continue
+        if current in active:
+            # a cycle: this node is treated as a leaf
+            heights[current] = 1
+            continue
+        active.add(current)
+        stack.append((current, True))
+        for child in _children_of(hierarchy, current):
+            if child not in heights:
+                stack.append((child, False))
+    return heights.get(node, 1) - 1
+
+
+def _children_of(hierarchy: Hierarchy, node: NodeId) -> FrozenSet[NodeId]:
+    """The children of a node, or none when the node is unknown."""
+    found = hierarchy.nodes.get(node)
+    return found.children if found is not None else frozenset()
 
 
 class AlbumAdapter:
@@ -487,23 +524,12 @@ class AlbumAdapter:
         first level hangs off the recording's own works.
         """
         result: List[Tuple[NodeId, WorkId | None]] = []
-        through: WorkId | None = None
-        for node in chain:
+        for index, node in enumerate(chain):
+            through = None
+            if index > 0:
+                through = self._node_child(chain[index - 1], node)
             result.append((node, through))
-            # the next level hangs off this one, reached through the work
-            # the chain came down by
-            through = self._child_through(node, chain)
         return result
-
-    def _child_through(
-            self,
-            node: NodeId,
-            chain: Sequence[NodeId]) -> WorkId | None:
-        """The work of a node that the next level hangs off."""
-        index = list(chain).index(node)
-        if index + 1 >= len(chain):
-            return None
-        return self._node_child(node, chain[index + 1])
 
     def _node_child(self, node: NodeId, child: NodeId) -> WorkId | None:
         """The work of ``node`` that leads to ``child``.
