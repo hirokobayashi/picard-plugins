@@ -523,6 +523,12 @@ class AlbumAdapter:
 
     def build(self) -> Tuple[Hierarchy, Dict[WorkId, str]]:
         """The hierarchy and the group of every recording."""
+        hierarchy, _chains, groups = self.build_all()
+        return hierarchy, groups
+
+    def build_all(self) -> Tuple[Hierarchy, Dict[WorkId, List[NodeId]],
+                                Dict[WorkId, str]]:
+        """The hierarchy, the chain of every recording, and the groups."""
         hierarchy = project(
             self.graph,
             use_arrangements=self.use_arrangements,
@@ -532,7 +538,7 @@ class AlbumAdapter:
         chains = chains_of(hierarchy, self.performances)
         album = Album(names=self.names.titles)
         groups = album.group_names(candidate_tops(chains, hierarchy))
-        return hierarchy, groups
+        return hierarchy, chains, groups
 
     def tags(self) -> Dict[WorkId, TrackTags]:
         """The hierarchy tags of every recording.
@@ -541,8 +547,7 @@ class AlbumAdapter:
         the tree, is in the result with no levels - so a caller can tell it
         apart from a recording that is not there at all.
         """
-        hierarchy, groups = self.build()
-        chains = chains_of(hierarchy, self.performances)
+        hierarchy, chains, groups = self.build_all()
         candidates = candidate_tops(chains, hierarchy)
         votes = self._votes(candidates)
         result: Dict[WorkId, TrackTags] = {}
