@@ -444,6 +444,11 @@ class AdapterFixtureTestCase(unittest.TestCase):
             "no track has a top holding several works")
 
     def test_every_fixture_release_produces_tags(self):
+        """Every release gives every track a hierarchy.
+
+        The ids themselves are checked against the legacy's own tags by
+        ``LegacyParityTestCase``.
+        """
         for album in (
                 "daphnis", "firebird", "gayne", "nutcracker", "planets",
                 "requiem", "swanlake_full", "swanlake_jarvi", "tristan"):
@@ -625,7 +630,12 @@ class TopNameTestCase(unittest.TestCase):
             ["A work", "Another work"])
 
     def test_the_swan_lake_top_is_named_once(self):
-        """Two editions with one title give that title once."""
+        """Two editions with one title give that title once.
+
+        Both Swan Lake editions are called "Swan Lake, op. 20", so the
+        name appears once. The vote is exercised by the Planets album,
+        where the two candidate names differ.
+        """
         tags = _adapter("swanlake_full").tags()
         for track in tags.values():
             self.assertEqual(
@@ -1442,14 +1452,27 @@ class LegacyParityTestCase(unittest.TestCase):
 class AdapterWithoutPicardTestCase(unittest.TestCase):
     """The adapter needs no Picard."""
 
-    def test_the_module_does_not_import_picard(self):
-        path = os.path.join(
+    def test_no_module_of_the_package_imports_picard(self):
+        """No source of the hierarchy package mentions Picard.
+
+        The whole package is scanned, not just the adapter - a module
+        that Picard reached would drag it in whatever imported it.
+        """
+        package = os.path.join(
             os.path.dirname(__file__), "..", "plugins", "classical_extras",
-            "hierarchy", "adapter.py")
-        with open(path, encoding="utf-8") as handle:
-            source = handle.read()
-        self.assertNotIn("import picard", source)
-        self.assertNotIn("from picard", source)
+            "hierarchy")
+        for name in sorted(os.listdir(package)):
+            if not name.endswith(".py"):
+                continue
+            path = os.path.join(package, name)
+            with open(path, encoding="utf-8") as handle:
+                source = handle.read()
+            for line in source.splitlines():
+                stripped = line.strip()
+                self.assertFalse(
+                    stripped.startswith("import picard")
+                    or stripped.startswith("from picard"),
+                    "%s imports Picard: %s" % (name, stripped))
 
 
 if __name__ == "__main__":
