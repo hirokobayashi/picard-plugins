@@ -276,6 +276,8 @@ class Recording:
 class TrackTags:
     """The hierarchy tags of one track."""
 
+    #: The recording the tags belong to.
+    key: WorkId | None = None
     #: The work ids of each level, level 0 first.
     levels: List[List[WorkId]] = field(default_factory=list)
     #: The top work's ids.
@@ -443,6 +445,8 @@ class AlbumAdapter:
         """
         key = performance.key
         members: List[WorkId] = []
+        # where each work's id sits in the list, and where the recording
+        # id sits
         seen: Dict[WorkId, int] = {}
         for relation in recording.get('relations') or ():
             if relation.get('type') != 'performance':
@@ -455,16 +459,41 @@ class AlbumAdapter:
                 self.use_partial
                 and 'partial' in (relation.get('attributes') or ()))
             if work in seen:
-                if partial:
-                    # the work is partially performed as well, so the
-                    # recording id replaces the work's own id
-                    members[seen[work]] = key
+                if not partial:
+                    continue
+                # the work is performed in part as well, so the recording
+                # id represents it. If the work's own id is in the list,
+                # it is replaced by the recording id - which may already
+                # be there for another work.
+                position = seen[work]
+                if members[position] == work:
+                    if key in members:
+                        # the recording id is already there for another
+                        # work, so the work's own id is dropped and the
+                        # two share the recording id
+                        del members[position]
+                        self._reindex(seen, members)
+                    else:
+                        members[position] = key
+                        seen[work] = position
+                continue
+            member = key if partial else work
+            if member in members:
+                # the recording id is already there for another work
+                seen[work] = members.index(member)
                 continue
             seen[work] = len(members)
-            member = key if partial else work
-            if member not in members:
-                members.append(member)
+            members.append(member)
         return members
+
+    @staticmethod
+    def _reindex(seen: Dict[WorkId, int], members: List[WorkId]) -> None:
+        """Fix the positions after an entry was removed from the list."""
+        for work, position in list(seen.items()):
+            if position >= len(members):
+                del seen[work]
+            elif members[position] != work and work in members:
+                seen[work] = members.index(work)
 
     def build(self) -> Tuple[Hierarchy, Dict[WorkId, str]]:
         """The hierarchy and the group of every recording."""
@@ -557,9 +586,10 @@ class AlbumAdapter:
         if not levels or not levels[-1]:
             # the recording names no work, or names a work with no place
             # in the tree
-            return TrackTags(group=group)
+            return TrackTags(key=recording.performance.key, group=group)
         top = levels[-1]
         return TrackTags(
+            key=recording.performance.key,
             levels=levels,
             top=top,
             top_names=self._top_names(top, votes),
