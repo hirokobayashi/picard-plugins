@@ -216,8 +216,39 @@ must not be confused:
   standalone node, so its tree has one route to the Liebestod and one
   route to the Vorspiel. Both trees give the same chain to the track;
   they differ in what the tree looks like above the track.
-* **A recording that performs two works** (Planets' track 7, which
-  performs both suites' "Neptune"). Here the two works are peers.
+
+### The trees differ in more places than the Liebestod
+The difference above is not unique to it. The legacy and the new model
+agree on every *track's chain* but not on the shape of the tree above it,
+and they differ in both directions.
+
+* **The new model has more standalone nodes.** A work that is reached by
+  two routes gets a node of its own as well as a place in the fused node.
+  Tristan's "Akt I, Vorspiel" is one, and Swan Lake's album has sixteen
+  of them: the two editions, the acts, and the movements that sit under
+  two of them.
+* **The new model fuses less.** Don Giovanni's "Recitative and Aria,
+  K. 540c" is a standalone work *and* a part of the opera's second act.
+  The legacy fuses the two parents into one node; the new model's
+  reduction drops the standalone parent - it is a top level work while
+  the act is embedded - so there is no fused node at all and the
+  standalone work is a root of its own.
+* **The new model fuses the top.** Swan Lake's album has a root holding
+  both editions, `{11f48c5e, 13867eb1}`, as well as a root for each
+  edition alone; the legacy has the two editions as separate roots and
+  fuses the Drigo edition with its second act instead.
+* **The new model keeps the Gayne scene level**, where the legacy
+  flattens the six movements of "Act I, Scene I (Spring)" directly under
+  "Act I".
+
+Every one of these is a fusion boundary: the same two works are either
+held in one node or in two. None of them changes a track's chain, except
+the Gayne one, which adds a level on purpose.
+
+### The second fusion
+The other thing that puts several works in one node is a **recording that
+performs two works** (Planets' track 7, which performs both suites'
+"Neptune"). Here the two works are peers.
 
 The legacy fuses the second case as well, and does it by making the two
 works a node of their own - the legacy's tree has the key
