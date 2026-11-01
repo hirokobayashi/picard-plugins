@@ -353,7 +353,7 @@ def node_height(hierarchy: Hierarchy, node: NodeId) -> int:
     visiting: Set[NodeId] = set()
     done: Set[NodeId] = set()
     stack: List[Tuple[NodeId, Iterator[NodeId]]] = [
-        (node, iter(sorted(_children_of(hierarchy, node))))]
+        (node, iter(_children_of(hierarchy, node)))]
     visiting.add(node)
     while stack:
         current, children = stack[-1]
@@ -374,8 +374,7 @@ def node_height(hierarchy: Hierarchy, node: NodeId) -> int:
             # leaf. The walk carries on without it.
             continue
         visiting.add(child)
-        stack.append(
-            (child, iter(sorted(_children_of(hierarchy, child)))))
+        stack.append((child, iter(_children_of(hierarchy, child))))
     return heights.get(node, 1) - 1
 
 
@@ -611,7 +610,7 @@ class AlbumAdapter:
         under this track's top, which is the same for every track that
         shares the top.
         """
-        levels, through = self._levels(recording, chain)
+        levels, _through = self._levels(recording, chain)
         if not levels or not levels[-1]:
             # the recording names no work, or names a work with no place
             # in the tree

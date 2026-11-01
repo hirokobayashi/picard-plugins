@@ -625,13 +625,12 @@ class TopNameTestCase(unittest.TestCase):
             ["A work", "Another work"])
 
     def test_the_swan_lake_top_is_named_once(self):
+        """Two editions with one title give that title once."""
         tags = _adapter("swanlake_full").tags()
         for track in tags.values():
-            for name in track.top_names:
-                self.assertNotEqual(name, "", track.group)
             self.assertEqual(
-                len(track.top_names),
-                len(set(track.top_names)),
+                track.top_names,
+                ["Swan Lake, op. 20"],
                 track.group)
 
     def test_the_fused_top_names_are_the_vote_winner(self):
@@ -875,6 +874,10 @@ class OrderOfTestCase(unittest.TestCase):
         lead to it have to be read in the order the level below gave them -
         not in work id order. The check is against the level below's own
         ids, which the adapter wrote from the relations.
+
+        The level above the recording is not covered here: its leaders are
+        the recording's own works, which the partly performed case
+        handles - see ``PartialOrderTestCase``.
         """
         adapter = _adapter("swanlake_full")
         hierarchy, _groups = adapter.build()
@@ -1365,10 +1368,13 @@ class LegacyParityTestCase(unittest.TestCase):
                 for tag in self.TAGS:
                     got = self._ids(metadata.get(tag))
                     wanted = self._ids(want.get(tag))
-                    if got != wanted and not self._holds_more(
+                    if got == wanted:
+                        continue
+                    if tag.startswith('~cwp_workid') and self._holds_more(
                             got, wanted):
-                        differing.setdefault(album, []).append(label)
-                        break
+                        continue
+                    differing.setdefault(album, []).append(label)
+                    break
         self.assertEqual(
             differing, self.DIFFERING,
             "the tracks that differ from the legacy are not the "
@@ -1380,12 +1386,14 @@ class LegacyParityTestCase(unittest.TestCase):
 
         The model may keep more works in a level than the legacy did -
         both Swan Lake editions, say - so the level holds the legacy's
-        ids in the same order and adds the extra ones.
+        ids in the same order and adds the extra ones. The extra ids are
+        the model's own decision and are checked by
+        ``test_every_id_is_a_work_the_model_knows``.
         """
         if got is None or wanted is None:
             return False
         if not wanted:
-            return True
+            return False
         if len(got) < len(wanted):
             return False
         # the legacy's ids have to appear in the same order
