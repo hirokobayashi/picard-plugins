@@ -343,7 +343,8 @@ class TrackTags:
         metadata: Dict[str, object] = {}
         for level, works in enumerate(self.levels):
             metadata['~cwp_workid_%d' % level] = self.id_tuple(level)
-        metadata['~cwp_workid_top'] = tuple(work.mbid for work in self.top)
+        metadata['~cwp_workid_top'] = tuple(
+            work.mbid for work in self.top) if self.top else ()
         if len(self.top_names) == 1:
             metadata['~cwp_work_top'] = self.top_names[0]
         else:
@@ -459,7 +460,7 @@ class AlbumAdapter:
             recording, use_partial=self.use_partial)
         return Recording(
             performance=performance,
-            members=self._ordered_members(recording, performance),
+            members=self._ordered_members(recording, performance.key),
             partial=self._partial_works(recording, performance),
             performed=self._performed_works(recording))
 
@@ -519,7 +520,7 @@ class AlbumAdapter:
     def _ordered_members(
             self,
             recording: Mapping,
-            performance: Performance) -> List[WorkId]:
+            key: WorkId) -> List[WorkId]:
         """The recording's first level ids, in the legacy's order.
 
         The performance relations in the order they came back in, with a
@@ -538,7 +539,6 @@ class AlbumAdapter:
         wholly and in part is represented by the recording id either way,
         because the recording is not the work.
         """
-        key = performance.key
         members: List[WorkId] = []
         for work, partial in self._performed(recording):
             member = key if partial else work
