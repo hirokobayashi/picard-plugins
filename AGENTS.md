@@ -92,7 +92,7 @@
   tracknumber lists must stay the same length (caller zips track with
   tracknumber). Tests: `test_process_trackback_depth0_keeps_all_tracks_parallel`,
   `test_process_trackback_children_then_root_stays_parallel`,
-  `test_process_trackback_fur_alina_tracks_kept`.
+  `test_process_trackback_zip_does_not_truncate`.
 
 ## New work-hierarchy model (`plugins/classical_extras/hierarchy/`)
 Picard-independent replacement for the legacy hierarchy model, in preparation
