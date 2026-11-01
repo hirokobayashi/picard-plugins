@@ -30,11 +30,15 @@ sys.path.insert(
 from hierarchy.adapter import (  # noqa: E402
     AlbumAdapter,
     WorkNames,
+    WorkRelations,
     format_ids,
+    node_height,
     read_performance,
     read_work_graph,
 )
-from hierarchy.graph import WorkId  # noqa: E402
+from hierarchy.album import chains_of  # noqa: E402
+from hierarchy.graph import NodeId, WorkId  # noqa: E402
+from hierarchy.project import Hierarchy  # noqa: E402
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
 
@@ -42,6 +46,21 @@ FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
 def w(mbid):
     """A work id."""
     return WorkId(mbid)
+
+
+def _node(mbid):
+    """A node id."""
+    return NodeId(frozenset([w(mbid)]))
+
+
+class _FakeNode:
+    """A node of a hand-built hierarchy."""
+
+    def __init__(self, node_id, children):
+        self.id = node_id
+        self.works = node_id.works
+        self.children = frozenset(children)
+        self.parents = frozenset()
 
 
 def _responses(album):
@@ -351,9 +370,22 @@ class AdapterFixtureTestCase(unittest.TestCase):
         self.assertEqual(metadata["~cwp_workid_top"], track.id_string(-1))
 
     def test_the_group_is_always_one_value(self):
-        for album in ("daphnis", "firebird", "gayne", "swanlake_full"):
+        """The group is one string, and it is one of the album's groups."""
+        for album, groups in (
+                ("daphnis", {"Daphnis et Chloé"}),
+                ("gayne", {"Gayaneh, op. 50"}),
+                ("swanlake_full", {"Swan Lake, op. 20"}),
+                ("tristan", {
+                    "Tristan und Isolde, WWV 90",
+                    "Rienzi, der letzte der Tribunen, WWV 49",
+                    "Lohengrin, WWV 75",
+                    "Der Ring des Nibelungen, WWV 86",
+                    "Wesendonck-Lieder",
+                    "Die Meistersinger von Nürnberg, WWV 96",
+                })):
             for track in _adapter(album).tags().values():
                 self.assertIsInstance(track.group, str, album)
+                self.assertIn(track.group, groups, album)
 
     def test_planets_the_group_is_the_vote_winner(self):
         """Every track of the suite carries the same group."""
@@ -598,6 +630,160 @@ class TopNameTestCase(unittest.TestCase):
                     max(counts[other] for other in counts
                         if other in track.top_names),
                     name)
+
+    def test_every_track_sharing_a_top_names_it_the_same_way(self):
+        """Tracks under the same top work carry the same top name.
+
+        This is what the vote is for: the top work tag has to agree across
+        the album, or a release's tracks would be tagged inconsistently.
+        """
+        for album in ("daphnis", "firebird", "gayne", "nutcracker",
+                      "planets", "requiem", "swanlake_full",
+                      "swanlake_jarvi", "tristan"):
+            tags = _adapter(album).tags()
+            by_top = {}
+            for track in tags.values():
+                by_top.setdefault(track.id_string(-1), set()).add(
+                    tuple(track.top_names))
+            for top, names in by_top.items():
+                self.assertEqual(
+                    len(names), 1,
+                    "%s: the top %s is named %s" % (album, top, names))
+
+
+class NodeHeightTestCase(unittest.TestCase):
+    """The height of a node.
+
+    The hierarchy is a tree, so a node is reached by one path - but the
+    height has to be the longest path, not the first one found.
+    """
+
+    def _hierarchy(self, shape):
+        """A hierarchy of the given shape.
+
+        The shape is a dict of node id to the ids of its children.
+        """
+        nodes = {}
+        for node_id, children in shape.items():
+            nodes[node_id] = _FakeNode(node_id, children)
+        return Hierarchy(
+            nodes=nodes, node_of={}, node_of_performance={})
+
+    def test_a_leaf_is_zero(self):
+        hierarchy = self._hierarchy({_node("a"): []})
+        self.assertEqual(node_height(hierarchy, _node("a")), 0)
+
+    def test_a_chain_is_its_length(self):
+        hierarchy = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [_node("c")],
+            _node("c"): [],
+        })
+        self.assertEqual(node_height(hierarchy, _node("a")), 2)
+
+    def test_a_diamond_takes_the_longest_path(self):
+        """A node reachable by two paths takes the longer one.
+
+        The tree is
+        ::
+
+            a
+           / \\
+          b   d
+          |   |\\
+          c   | e
+          |   |
+          +---+
+
+        so ``d`` is reached both directly and through ``c``, and the
+        longest path from ``a`` is a -> b -> c -> d -> e.
+        """
+        hierarchy = self._hierarchy({
+            _node("a"): [_node("b"), _node("d")],
+            _node("b"): [_node("c")],
+            _node("c"): [_node("d")],
+            _node("d"): [_node("e")],
+            _node("e"): [],
+        })
+        self.assertEqual(node_height(hierarchy, _node("a")), 4)
+
+    def test_the_height_of_a_subtree(self):
+        hierarchy = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [_node("c")],
+            _node("c"): [],
+        })
+        self.assertEqual(node_height(hierarchy, _node("b")), 1)
+
+    def test_a_cycle_does_not_hang(self):
+        """A cycle must not make the walk go on for ever."""
+        hierarchy = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [_node("a")],
+        })
+        self.assertEqual(node_height(hierarchy, _node("a")), 2)
+
+
+class ChainShapeTestCase(unittest.TestCase):
+    """The shape of a track's chain.
+
+    The adapter reads a chain positionally - each level hangs off the work
+    the level below was reached by - so the chain has to hold no node
+    twice, and the levels have to be in order.
+    """
+
+    def test_no_chain_holds_a_node_twice(self):
+        """A node repeated in a chain would make the levels ambiguous."""
+        for album in ("daphnis", "firebird", "gayne", "nutcracker",
+                      "planets", "requiem", "swanlake_full",
+                      "swanlake_jarvi", "tristan"):
+            adapter = _adapter(album)
+            hierarchy, _groups = adapter.build()
+            for chain in chains_of(hierarchy, adapter.performances).values():
+                ids = list(chain)
+                self.assertEqual(
+                    len(ids), len(set(ids)),
+                    "%s: a chain holds a node twice" % album)
+
+    def test_the_top_is_the_last_level(self):
+        for album in ("daphnis", "gayne", "swanlake_full"):
+            for track in _adapter(album).tags().values():
+                self.assertTrue(track.levels, album)
+                self.assertEqual(
+                    track.id_string(-1),
+                    track.id_string(len(track.levels) - 1),
+                    album)
+
+
+class OrderOfTestCase(unittest.TestCase):
+    """The order of a level's works.
+
+    A work no relation named has to sort after the ones that were named,
+    whatever the work ids are.
+    """
+
+    def test_an_unnamed_work_sorts_last(self):
+        relations = WorkRelations(
+            parents={w("child"): [w("unrelated"), w("work-b")]})
+        self.assertEqual(
+            relations.order_of(
+                [w("work-a"), w("work-b")], through=w("child")),
+            [w("work-b"), w("work-a")])
+
+    def test_an_unnamed_work_sorts_last_when_its_id_is_smaller(self):
+        """The named work keeps its place even when its id sorts later.
+
+        The parent list names ``bbb`` at position 1 and an unrelated work
+        at position 0. The unnamed ``aaa`` has to sort after it, not
+        before it - the position in the relation is what counts, not the
+        work id.
+        """
+        relations = WorkRelations(
+            parents={w("child"): [w("unrelated"), w("bbb")]})
+        self.assertEqual(
+            relations.order_of(
+                [w("aaa"), w("bbb")], through=w("child")),
+            [w("bbb"), w("aaa")])
 
 
 class AdapterWithoutPicardTestCase(unittest.TestCase):
