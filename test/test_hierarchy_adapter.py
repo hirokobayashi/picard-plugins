@@ -1407,6 +1407,27 @@ class LegacyParityTestCase(unittest.TestCase):
         ],
     }
 
+    #: The tracks whose level counts differ from the legacy's. The Gayne
+    #: tracks sit one level deeper, because the model keeps the scene
+    #: level; the Swan Lake tracks that end at the original edition sit
+    #: one deeper too; and the two tracks whose top holds more works
+    #: have a deeper tree under it.
+    DEEPER = {
+        "gayne": [
+            "d1t10",
+            "d1t11",
+            "d1t6",
+            "d1t7",
+            "d1t8",
+            "d1t9",
+        ],
+        "nutcracker": ["d1t1"],
+        "requiem": ["t1"],
+        "swanlake_full": [
+            "d1t17", "d1t19", "d1t20", "d1t21", "d1t22", "d2t2",
+        ],
+    }
+
     @staticmethod
     def _ids(value):
         """The ids a tag holds, in order.
@@ -1439,6 +1460,28 @@ class LegacyParityTestCase(unittest.TestCase):
         self.assertEqual(
             sorted(self.legacy),
             sorted(USE_PARTIAL))
+
+    def test_the_listed_tracks_exist(self):
+        """Every track named in the lists is in the fixture.
+
+        A name that is not there would be silently ignored - the test
+        that uses it would pass without checking anything.
+        """
+        for album, labels in self.DIFFERING.items():
+            for label in labels:
+                self.assertIn(
+                    label, self.legacy[album]['tracks'],
+                    "%s %s is not in the fixture" % (album, label))
+        for album, labels in self.HOLDING_MORE.items():
+            for label in labels:
+                self.assertIn(
+                    label, self.legacy[album]['tracks'],
+                    "%s %s is not in the fixture" % (album, label))
+        for album, labels in self.DEEPER.items():
+            for label in labels:
+                self.assertIn(
+                    label, self.legacy[album]['tracks'],
+                    "%s %s is not in the fixture" % (album, label))
 
     def test_the_tags_match_the_legacy(self):
         """Every tag of every track, against the legacy's own values.
@@ -1590,15 +1633,7 @@ class LegacyParityTestCase(unittest.TestCase):
         which sit one level deeper, and for the two tracks whose top
         holds more works, which makes the tree under it deeper.
         """
-        deeper = {
-            "gayne": self.DIFFERING.get("gayne") or (),
-            "nutcracker": ["d1t1"],
-            "requiem": ["t1"],
-            # the Swan Lake tracks that end at the original edition sit
-            # one level deeper than the legacy's
-            "swanlake_full": ["d1t17", "d1t19", "d1t20", "d1t21",
-                              "d1t22", "d2t2"],
-        }
+        deeper = self.DEEPER
         for album, expected in sorted(self.legacy.items()):
             tags = _adapter(album).tags()
             for label, want in sorted(expected['tracks'].items()):
