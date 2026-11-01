@@ -150,6 +150,9 @@ class WorkRelations:
             candidates = list(self.parents.values())
         elif isinstance(through, WorkId):
             candidates = [self.parents.get(through, ())]
+        elif isinstance(through, str):
+            # a bare work id
+            candidates = [self.parents.get(WorkId(through), ())]
         else:
             # the list is taken once: a one-shot iterable would be
             # exhausted by the emptiness check
