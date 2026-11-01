@@ -4603,6 +4603,30 @@ class FirebirdPartialTopWorkIntegrationTestCase(ClassicalExtrasTestCase):
                 tracks[label].metadata['~cwp_work_0'],
                 "%s lost its level-0 work" % label)
 
+    def test_track_5_level_0_holds_the_recording_id_stand_in(self):
+        """Track 5's level 0 holds the movement and a recording id.
+
+        The second relation is marked 'partial', so the legacy treats the
+        recording as a stand-in for the work it only partially performs and
+        writes the recording's own id into the work id slot. The tuple is
+        the node's identity, so it is pinned here: the movement first, the
+        recording id second.
+
+        The other tracks of the suite have no such relation, so their
+        level 0 is the single movement.
+        """
+        tracks = self._run_full_album()
+        self.assertEqual(
+            self.mod.str_to_list(tracks['t5'].metadata['~cwp_workid_0']),
+            ['a06c71e7-e293-4206-a40b-a4cf89b34cb0',
+             '036a332c-4e01-4e74-8528-456060d37182'],
+            "t5 workid_0")
+        for label in ["t1", "t2", "t3", "t4", "t6", "t7"]:
+            self.assertEqual(
+                len(self.mod.str_to_list(
+                    tracks[label].metadata['~cwp_workid_0'])), 1,
+                "%s workid_0" % label)
+
     def test_the_other_two_works_are_unaffected(self):
         """The Nightingale (8-11) and the Rite (12-25) are ordinary
         hierarchies on the same album; they pin the rest of the release."""
@@ -4626,10 +4650,12 @@ class FirebirdPartialTopWorkIntegrationTestCase(ClassicalExtrasTestCase):
             tracks = self._run_full_album(drain=order)
             result = {
                 label: (self.mod.str_to_list(
-                            tracks[label].metadata['~cwp_work_top']),
-                        self.mod.str_to_list(
-                            tracks[label].metadata['~cwp_work_0']),
-                        tracks[label].metadata['~cwp_part_levels'])
+                    tracks[label].metadata['~cwp_work_top']),
+                    self.mod.str_to_list(
+                        tracks[label].metadata['~cwp_work_0']),
+                    self.mod.str_to_list(
+                        tracks[label].metadata['~cwp_workid_0']),
+                    tracks[label].metadata['~cwp_part_levels'])
                 for label, _t, _r, _w in self._TRACKS}
             if baseline is None:
                 baseline = result
