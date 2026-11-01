@@ -346,8 +346,9 @@ class TrackTags:
         metadata: Dict[str, object] = {}
         for level, works in enumerate(self.levels):
             metadata['~cwp_workid_%d' % level] = self.id_tuple(level)
-        metadata['~cwp_workid_top'] = tuple(
-            work.mbid for work in self.top) if self.top else ()
+        if self.top:
+            metadata['~cwp_workid_top'] = tuple(
+                work.mbid for work in self.top)
         if len(self.top_names) == 1:
             metadata['~cwp_work_top'] = self.top_names[0]
         else:
@@ -446,7 +447,10 @@ class AlbumAdapter:
             # on two discs, or a bonus track reusing a recording. The
             # hierarchy is built per recording, so the second one would
             # overwrite the first in the tags. The two entries are the same
-            # recording, so the first is kept.
+            # recording - the same performance of the same works - so the
+            # first is kept. If they were not the same, the second's
+            # relations would be dropped: the tags are per recording, so
+            # there is nowhere for both to go.
             if entry.performance.key in seen:
                 continue
             seen[entry.performance.key] = entry

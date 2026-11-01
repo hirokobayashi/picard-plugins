@@ -1048,6 +1048,25 @@ class PartialOrderTestCase(unittest.TestCase):
         self.assertEqual(track.levels[0], [w("rec-1")])
         self.assertEqual(track.levels[1], [w("work-zzz")])
 
+    def test_a_partial_only_work_is_not_in_the_chain(self):
+        """A work performed only in part is in the recording's chain
+        nowhere.
+
+        The recording is not that work, so it stands in for it nowhere
+        and contributes nothing - so the work's own parent is not in the
+        recording's chain either.
+        """
+        adapter = self._adapter()
+        hierarchy, _groups = adapter.build()
+        chains = chains_of(hierarchy, adapter.performances)
+        for recording in adapter.recordings:
+            chain = chains.get(recording.performance.key) or []
+            for node in chain:
+                for work in node.works:
+                    self.assertNotEqual(
+                        work, w("work-aaa"),
+                        "the partial-only work is in the chain")
+
     def test_two_partial_works_keep_the_relation_order(self):
         """The level above two works holds their parents, in order.
 
@@ -1725,8 +1744,10 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
             try:
                 importlib.import_module("hierarchy.adapter")
             except ImportError:
-                # the blocker fired - the assertion below says so
-                pass
+                if not blocked:
+                    # the import failed for another reason - the package
+                    # is broken, not blocked
+                    raise
         finally:
             sys.meta_path.remove(finder)
             sys.modules.update(cached)
