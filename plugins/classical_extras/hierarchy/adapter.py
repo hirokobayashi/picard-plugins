@@ -396,8 +396,18 @@ class AlbumAdapter:
         self.use_arrangements = use_arrangements
         self.use_medleys = use_medleys
         self.use_collections = use_collections
-        self.recordings = [
-            self._read_recording(recording) for recording in recordings]
+        self.recordings = []
+        seen: Dict[WorkId, Recording] = {}
+        for recording in recordings:
+            entry = self._read_recording(recording)
+            # a release can list the same recording twice - the same track
+            # on two discs, or a bonus track reusing a recording. The
+            # hierarchy is built per recording, so the second one would
+            # overwrite the first in the tags.
+            if entry.performance.key in seen:
+                continue
+            seen[entry.performance.key] = entry
+            self.recordings.append(entry)
 
     @property
     def performances(self) -> List[Performance]:
@@ -423,6 +433,13 @@ class AlbumAdapter:
         relation's place. A work related twice - once partially, once in
         full - is represented by the recording id alone, because the
         recording is not the work.
+
+        An id is only given once. Two relations to two different works
+        that are both performed in part would otherwise both be
+        represented by the recording id, and the level would hold it
+        twice - but the node holds the works as a set, so it can only
+        hold the recording id once. The legacy de-duplicates its id list
+        for the same reason.
         """
         key = performance.key
         members: List[WorkId] = []
@@ -444,7 +461,9 @@ class AlbumAdapter:
                     members[seen[work]] = key
                 continue
             seen[work] = len(members)
-            members.append(key if partial else work)
+            member = key if partial else work
+            if member not in members:
+                members.append(member)
         return members
 
     def build(self) -> Tuple[Hierarchy, Dict[WorkId, str]]:
@@ -562,14 +581,16 @@ class AlbumAdapter:
         for index, node in enumerate(chain):
             through: List[WorkId] = []
             if index > 0:
-                through = self._works_leading_to(chain[index - 1], node)
+                through = self._works_leading_to(
+                    chain[index - 1], node, result[index - 1][1])
             result.append((node, through))
         return result
 
     def _works_leading_to(
             self,
             node: NodeId,
-            child: NodeId) -> List[WorkId]:
+            child: NodeId,
+            below: Sequence[WorkId]) -> List[WorkId]:
         """The works of ``node`` whose parents are in ``child``.
 
         A node holds the works it stands for. The next level up holds
@@ -578,11 +599,19 @@ class AlbumAdapter:
         two works puts them in one node, and then both of them
         contribute - picking only one of them would lose the other's
         contribution to the order.
+
+        The works are in the order the level below gave them, not in work
+        id order: the level's order comes from the relations, and the id
+        order would decide it instead.
         """
-        return [
-            work for work in sorted(node.works, key=lambda item: item.mbid)
+        leading = [
+            work for work in node.works
             if self.relations.parents.get(work, ())
             and set(self.relations.parents[work]) & set(child.works)]
+        order = {work: position for position, work in enumerate(below)}
+        return sorted(
+            leading,
+            key=lambda work: (order.get(work, len(order)), work.mbid))
 
     def _level_ids(
             self,
