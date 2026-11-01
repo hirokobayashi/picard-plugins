@@ -44,8 +44,9 @@
   `ui_options_classical_extras.py`.
 
 ### Recording place/date tags (pure core only)
-- `recording_session_tags(relations)` is a module-level pure function (near
-  line 2990, after `blank_if_none`). It takes a recording's already-parsed
+- `recording_session_tags(relations, name_overrides=None)` is a module-level
+  pure function (near line 3116, after `blank_if_none`). It takes a
+  recording's already-parsed
   `relations` list (as from `/recording?inc=place-rels+artist-rels`) and
   returns a dict: `recordingsessions`, `recordingplace`, `recordingcity`,
   `recordingdate`. It does NO web lookups and writes NO tags — the caller wires
@@ -113,7 +114,8 @@ test that both scans the sources and blocks the import.
   Verified against the Liszt fixture (drops the broad "Annees de pelerinage"
   in favour of the specific "Premiere annee: Suisse").
 - **Legacy node keys are the work's OWN id tuple**, with `['parent']` holding
-  the parent ids. `partof[PARENT_KEY] = [CHILD_KEY]`.
+  the parent ids. `partof` maps a parent's id tuple to the list of its
+  children's id tuples.
 
 ### Node model
 - Each work is a node of its own: `NodeId(frozenset({work}))`.
