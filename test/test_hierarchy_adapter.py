@@ -1456,8 +1456,8 @@ class LegacyParityTestCase(unittest.TestCase):
             groups = set(expected['groups'])
             for label, want in sorted(expected['tracks'].items()):
                 track = tags.get(WorkId(_recording_id(album, label)))
-                if track is None:
-                    continue
+                self.assertIsNotNone(
+                    track, "%s %s has no tags" % (album, label))
                 self.assertIn(
                     track.as_metadata().get('~cwp_work_group'),
                     groups, album)
@@ -1465,6 +1465,53 @@ class LegacyParityTestCase(unittest.TestCase):
                     track.as_metadata().get('~cwp_work_group'),
                     want.get('~cwp_work_group'),
                     "%s %s" % (album, label))
+
+    def test_the_differing_tracks_differ_only_as_documented(self):
+        """The tracks that differ differ in the documented way.
+
+        A track may differ in the level ids, but its group and its top
+        name are the legacy's - so a regression that broke those would
+        show up here. The level counts differ for the Gayne tracks,
+        which sit one level deeper, and for the two tracks whose top
+        holds more works, which makes the tree under it deeper.
+        """
+        deeper = {
+            "gayne": self.DIFFERING.get("gayne") or (),
+            "nutcracker": ["d1t1"],
+            "requiem": ["t1"],
+            # the Swan Lake tracks that end at the original edition sit
+            # one level deeper than the legacy's
+            "swanlake_full": ["d1t17", "d1t19", "d1t20", "d1t21",
+                              "d1t22", "d2t2"],
+        }
+        for album, expected in sorted(self.legacy.items()):
+            tags = _adapter(album).tags()
+            for label, want in sorted(expected['tracks'].items()):
+                track = tags.get(WorkId(_recording_id(album, label)))
+                self.assertIsNotNone(
+                    track, "%s %s has no tags" % (album, label))
+                metadata = track.as_metadata()
+                for tag in (
+                        '~cwp_work_top',
+                        '~cwp_work_group',
+                        '~cwp_part_levels',
+                        '~cwp_work_part_levels'):
+                    if (tag in ('~cwp_part_levels',
+                                '~cwp_work_part_levels')
+                            and label in (deeper.get(album) or ())):
+                        continue
+                    self.assertEqual(
+                        metadata.get(tag), want.get(tag),
+                        "%s %s %s" % (album, label, tag))
+
+    def test_the_differing_tracks_are_present(self):
+        """Every track of the legacy's is there - none was dropped."""
+        for album, expected in sorted(self.legacy.items()):
+            tags = _adapter(album).tags()
+            for label in expected['tracks']:
+                self.assertIn(
+                    WorkId(_recording_id(album, label)), tags,
+                    "%s %s is missing" % (album, label))
 
 
 class AdapterWithoutPicardTestCase(unittest.TestCase):
@@ -1498,29 +1545,61 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
         """
         import importlib
 
-        blocked = {}
+        blocked = []
 
         class Blocker:
-            """A stand-in for Picard that fails if it is imported."""
+            """A finder that refuses to load Picard."""
 
-            def find_module(self, name, path=None):
+            def find_spec(self, name, path=None, target=None):
                 if name == "picard" or name.startswith("picard."):
-                    blocked["name"] = name
+                    blocked.append(name)
                     raise ImportError("Picard must not be imported")
                 return None
 
         finder = Blocker()
         sys.meta_path.insert(0, finder)
+        # Picard is removed from the module cache, so that an import of it
+        # would really reach the blocker rather than find the cached one
+        cached = {
+            name: sys.modules.pop(name)
+            for name in list(sys.modules)
+            if name == "picard" or name.startswith("picard.")}
         try:
             for name in list(sys.modules):
-                if name == "picard" or name.startswith("picard."):
-                    continue
                 if name.startswith("hierarchy"):
                     del sys.modules[name]
             importlib.import_module("hierarchy.adapter")
         finally:
             sys.meta_path.remove(finder)
-        self.assertEqual(blocked, {})
+            sys.modules.update(cached)
+        self.assertEqual(blocked, [])
+
+    def test_the_blocker_would_catch_an_import(self):
+        """The blocker really blocks - otherwise the test above is void.
+
+        A name of its own is used, so the test does not depend on whether
+        Picard happens to be in the module cache.
+        """
+        import importlib
+
+        name = "picard_blocker_probe"
+
+        class Blocker:
+            """A finder that refuses to load the probe."""
+
+            def find_spec(self, fullname, path=None, target=None):
+                if fullname == name:
+                    raise ImportError("the probe must not be imported")
+                return None
+
+        finder = Blocker()
+        sys.meta_path.insert(0, finder)
+        try:
+            with self.assertRaises(ImportError):
+                importlib.import_module(name)
+        finally:
+            sys.meta_path.remove(finder)
+            sys.modules.pop(name, None)
 
     @staticmethod
     def _sources(package):

@@ -135,6 +135,11 @@ class WorkRelations:
         order it gives is the order the relations were read in, not the
         order of any one relation.
 
+        An empty list of works is not the same as no work given: there
+        the caller knows which work the level was reached by and it
+        names none, so the works are left in work id order rather than
+        given an order from an unrelated relation.
+
         A work that no relation names keeps its place at the end, in work
         id order, so the result is always deterministic.
         """
@@ -149,11 +154,8 @@ class WorkRelations:
             # the list is taken once: a one-shot iterable would be
             # exhausted by the emptiness check
             sources = list(through)
-            if sources:
-                candidates = [
-                    self.parents.get(work, ()) for work in sources]
-            else:
-                candidates = list(self.parents.values())
+            candidates = [
+                self.parents.get(work, ()) for work in sources]
         for source, parent_list in enumerate(candidates):
             for position, parent in enumerate(parent_list):
                 if parent in wanted and parent not in order:
