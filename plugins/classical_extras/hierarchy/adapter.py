@@ -40,7 +40,8 @@ The levels above the first are the node's works in the same order.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, FrozenSet, Iterable, List, Mapping, Sequence, Set, Tuple
+from typing import (Dict, FrozenSet, Iterable, Iterator, List, Mapping, Sequence,
+                    Set, Tuple)
 
 from .album import Album, Performance, candidate_tops, chains_of
 from .graph import NodeId, WorkGraph, WorkId
@@ -116,13 +117,18 @@ class WorkRelations:
     def order_of(
             self,
             works: Iterable[WorkId],
-            through: WorkId | None = None) -> List[WorkId]:
+            through: Iterable[WorkId] | WorkId | None = None) -> List[WorkId]:
         """The given works in the order the relation gave them.
 
-        The legacy's node holds the parents of the work it was reached
-        through, in the order that work's own relation gave them. So the
-        order comes from ``through`` - the work the level was reached
+        The legacy's node holds the parents of the works it was reached
+        through, in the order those works' own relations gave them. So the
+        order comes from ``through`` - the works the level was reached
         by - and not from the order the works happen to be in.
+
+        More than one work can lead to the same level: a recording that
+        performs two works puts them in one node, and that node holds
+        both of their parents. Every one of those works contributes, so
+        all of their parent lists are read.
 
         With no work given, the order is looked for in every relation,
         which is what a caller that only knows the works themselves can
@@ -133,10 +139,13 @@ class WorkRelations:
         """
         wanted = list(works)
         order: Dict[WorkId, int] = {}
-        if through is not None:
+        if through is None:
+            candidates = list(self.parents.values())
+        elif isinstance(through, WorkId):
             candidates = [self.parents.get(through, ())]
         else:
-            candidates = list(self.parents.values())
+            candidates = [
+                self.parents.get(work, ()) for work in through]
         for parent_list in candidates:
             for position, parent in enumerate(parent_list):
                 if parent in wanted and parent not in order:
@@ -288,7 +297,7 @@ class TrackTags:
         metadata['~cwp_workid_top'] = format_ids(self.top)
         if len(self.top_names) == 1:
             metadata['~cwp_work_top'] = self.top_names[0]
-        elif self.top_names:
+        else:
             metadata['~cwp_work_top'] = ID_SEPARATOR.join(self.top_names)
         metadata['~cwp_work_group'] = self.group
         metadata['~cwp_part_levels'] = str(self.part_levels)
@@ -315,28 +324,32 @@ def node_height(hierarchy: Hierarchy, node: NodeId) -> int:
     The walk is iterative, so a deep hierarchy cannot exhaust the stack.
     """
     heights: Dict[NodeId, int] = {}
-    active: Set[NodeId] = set()
-    stack: List[Tuple[NodeId, bool]] = [(node, False)]
+    visiting: Set[NodeId] = set()
+    done: Set[NodeId] = set()
+    stack: List[Tuple[NodeId, Iterator[NodeId]]] = [
+        (node, iter(sorted(_children_of(hierarchy, node))))]
+    visiting.add(node)
     while stack:
-        current, expanded = stack.pop()
-        if expanded:
-            active.discard(current)
+        current, children = stack[-1]
+        child = next(children, None)
+        if child is None:
+            stack.pop()
+            visiting.discard(current)
+            done.add(current)
             deepest = 0
-            for child in _children_of(hierarchy, current):
-                deepest = max(deepest, heights.get(child, 0))
+            for grandchild in _children_of(hierarchy, current):
+                deepest = max(deepest, heights.get(grandchild, 0))
             heights[current] = deepest + 1
             continue
-        if current in heights:
+        if child in done:
             continue
-        if current in active:
-            # a cycle: this node is treated as a leaf
-            heights[current] = 1
+        if child in visiting:
+            # a cycle: the child is on the path, so it is treated as a
+            # leaf. The walk carries on without it.
             continue
-        active.add(current)
-        stack.append((current, True))
-        for child in _children_of(hierarchy, current):
-            if child not in heights:
-                stack.append((child, False))
+        visiting.add(child)
+        stack.append(
+            (child, iter(sorted(_children_of(hierarchy, child)))))
     return heights.get(node, 1) - 1
 
 
@@ -516,45 +529,50 @@ class AlbumAdapter:
     def _levels_with_through(
             self,
             recording: Recording,
-            chain: Sequence[NodeId]) -> List[Tuple[NodeId, WorkId | None]]:
-        """Each level of the chain with the work it was reached through.
+            chain: Sequence[NodeId]) -> List[Tuple[NodeId, List[WorkId]]]:
+        """Each level of the chain with the works it was reached through.
 
-        A level's order is the order the relation of the work below it
-        gave, so every level needs to know which work it hangs off. The
+        A level's order is the order the relations of the works below it
+        gave, so every level needs to know which works it hangs off. The
         first level hangs off the recording's own works.
         """
-        result: List[Tuple[NodeId, WorkId | None]] = []
+        result: List[Tuple[NodeId, List[WorkId]]] = []
         for index, node in enumerate(chain):
-            through = None
+            through: List[WorkId] = []
             if index > 0:
-                through = self._node_child(chain[index - 1], node)
+                through = self._works_leading_to(chain[index - 1], node)
             result.append((node, through))
         return result
 
-    def _node_child(self, node: NodeId, child: NodeId) -> WorkId | None:
-        """The work of ``node`` that leads to ``child``.
+    def _works_leading_to(
+            self,
+            node: NodeId,
+            child: NodeId) -> List[WorkId]:
+        """The works of ``node`` whose parents are in ``child``.
 
         A node holds the works it stands for. The next level up holds
-        those works' parents, so the work that links the two is the one
-        of ``node`` that has a parent in ``child``.
+        those works' parents, so every work of the node that has a
+        parent in the child contributes to it. A recording that performs
+        two works puts them in one node, and then both of them
+        contribute - picking only one of them would lose the other's
+        contribution to the order.
         """
-        for work in sorted(node.works, key=lambda item: item.mbid):
-            if self.relations.parents.get(work, ()) and set(
-                    self.relations.parents[work]) & set(child.works):
-                return work
-        return None
+        return [
+            work for work in sorted(node.works, key=lambda item: item.mbid)
+            if self.relations.parents.get(work, ())
+            and set(self.relations.parents[work]) & set(child.works)]
 
     def _level_ids(
             self,
             recording: Recording,
             node: NodeId,
             index: int,
-            through: WorkId | None) -> List[WorkId]:
+            through: Sequence[WorkId]) -> List[WorkId]:
         """The ids one level holds, in the legacy's order.
 
         The first level is the recording's own works, in the order the
         performance relations came back in. The levels above it are the
-        node's works, in the order the relation of the work below gave
+        node's works, in the order the relations of the works below gave
         them.
         """
         if index == 0:

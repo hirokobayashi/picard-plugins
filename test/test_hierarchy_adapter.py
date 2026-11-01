@@ -36,7 +36,7 @@ from hierarchy.adapter import (  # noqa: E402
     read_performance,
     read_work_graph,
 )
-from hierarchy.album import chains_of  # noqa: E402
+from hierarchy.album import candidate_tops, chains_of  # noqa: E402
 from hierarchy.graph import NodeId, WorkId  # noqa: E402
 from hierarchy.project import Hierarchy  # noqa: E402
 
@@ -402,13 +402,9 @@ class AdapterFixtureTestCase(unittest.TestCase):
     def test_the_top_may_hold_several_works(self):
         """The model keeps both Swan Lake editions in the top node."""
         tags = _adapter("swanlake_full").tags()
-        tops = {
-            track.id_string(-1)
-            for track in tags.values()
-        }
         self.assertTrue(
-            any(len(top.split(", ")) > 1 for top in tops),
-            tops)
+            any(len(track.top) > 1 for track in tags.values()),
+            "no track has a top holding several works")
 
     def test_every_fixture_release_produces_tags(self):
         for album in (
@@ -617,19 +613,35 @@ class TopNameTestCase(unittest.TestCase):
         self.assertEqual(fused, {"The Planets, op. 32"})
 
     def test_the_fused_top_names_are_the_vote_winner(self):
-        """A top with several candidates is named by the vote."""
+        """A top with several candidates is named by the vote.
+
+        Planets' track 7 has a top holding two works - the suite and its
+        extension - and their names are "The Planets, op. 32" and "The
+        Planets Suite extension". The name the rest of the album voted
+        for is the one it gets.
+        """
         tags = _adapter("planets").tags()
+        fused = [
+            track for track in tags.values()
+            if len(track.top) > 1
+        ]
+        self.assertEqual(len(fused), 1, "expected one fused top")
+        self.assertEqual(
+            fused[0].top_names,
+            ["The Planets, op. 32"])
+
+    def test_the_vote_counts_the_candidate_names(self):
+        """A name is counted once per track that has it as a candidate."""
+        adapter = _adapter("planets")
+        hierarchy, _groups = adapter.build()
+        candidates = candidate_tops(chains_of(hierarchy, adapter.performances),
+                                    hierarchy)
         counts = {}
-        for track in tags.values():
-            for name in track.top_names:
+        for works in candidates.values():
+            for name in set(adapter.names.names_of(works)):
                 counts[name] = counts.get(name, 0) + 1
-        for track in tags.values():
-            for name in track.top_names:
-                self.assertEqual(
-                    counts[name],
-                    max(counts[other] for other in counts
-                        if other in track.top_names),
-                    name)
+        self.assertEqual(counts["The Planets, op. 32"], 7)
+        self.assertEqual(counts["The Planets Suite extension"], 2)
 
     def test_every_track_sharing_a_top_names_it_the_same_way(self):
         """Tracks under the same top work carry the same top name.
@@ -716,12 +728,22 @@ class NodeHeightTestCase(unittest.TestCase):
         self.assertEqual(node_height(hierarchy, _node("b")), 1)
 
     def test_a_cycle_does_not_hang(self):
-        """A cycle must not make the walk go on for ever."""
+        """A cycle must not make the walk go on for ever.
+
+        The node on the path is treated as a leaf, so ``a -> b -> a``
+        has the height of ``a -> b``.
+        """
         hierarchy = self._hierarchy({
             _node("a"): [_node("b")],
             _node("b"): [_node("a")],
         })
-        self.assertEqual(node_height(hierarchy, _node("a")), 2)
+        self.assertEqual(node_height(hierarchy, _node("a")), 1)
+
+    def test_a_self_loop_does_not_hang(self):
+        hierarchy = self._hierarchy({
+            _node("a"): [_node("a")],
+        })
+        self.assertEqual(node_height(hierarchy, _node("a")), 0)
 
 
 class ChainShapeTestCase(unittest.TestCase):
@@ -746,18 +768,18 @@ class ChainShapeTestCase(unittest.TestCase):
                     "%s: a chain holds a node twice" % album)
 
     def test_the_top_is_the_last_level(self):
+        """The top work's ids are the ids of the last level."""
         for album in ("daphnis", "gayne", "swanlake_full"):
             for track in _adapter(album).tags().values():
                 self.assertTrue(track.levels, album)
                 self.assertEqual(
-                    track.id_string(-1),
+                    format_ids(track.top),
                     track.id_string(len(track.levels) - 1),
                     album)
 
 
 class OrderOfTestCase(unittest.TestCase):
     """The order of a level's works.
-
     A work no relation named has to sort after the ones that were named,
     whatever the work ids are.
     """
@@ -784,6 +806,59 @@ class OrderOfTestCase(unittest.TestCase):
             relations.order_of(
                 [w("aaa"), w("bbb")], through=w("child")),
             [w("bbb"), w("aaa")])
+
+    def test_every_contributing_work_is_read(self):
+        """Two works leading to the same level both contribute.
+
+        A recording that performs two works puts them in one node, and
+        that node holds both of their parents. Each contributing work's
+        own relation gives the order of the parents it names.
+        """
+        relations = WorkRelations(parents={
+            w("work-a"): [w("parent-b"), w("parent-a")],
+            w("work-b"): [w("parent-a")],
+        })
+        self.assertEqual(
+            relations.order_of(
+                [w("parent-a"), w("parent-b")],
+                through=[w("work-a"), w("work-b")]),
+            [w("parent-b"), w("parent-a")])
+
+
+class EmptyNamesTestCase(unittest.TestCase):
+    """The tags of a track whose works have no titles."""
+
+    def test_the_top_work_tag_is_written_empty(self):
+        """Every tag is written, even when the names are unknown."""
+        works = [
+            {
+                "id": "work-1",
+                "title": "A work",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "work-2"},
+                    },
+                ],
+            },
+            {"id": "work-2", "title": "Another work"},
+        ]
+        recordings = [{
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-1"},
+                },
+            ],
+        }]
+        adapter = AlbumAdapter(works, recordings)
+        tags = adapter.tags()
+        metadata = tags[WorkId("rec-1")].as_metadata()
+        self.assertEqual(metadata['~cwp_work_top'], '')
+        self.assertEqual(metadata['~cwp_workid_top'], "('work-2',)")
 
 
 class AdapterWithoutPicardTestCase(unittest.TestCase):
