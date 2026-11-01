@@ -158,6 +158,10 @@ adapter hands Picard the same tuple, so the two agree in the stored
 text, not only in the ids. The parity test compares them as Picard
 stores them, so a change of format would be caught.
 
+The deepest chain in the fixtures is five levels (the Tristan album's
+`t2` and `t11`), so the comparison covers `~cwp_workid_0` to
+`~cwp_workid_4` and the top.
+
 Two things the legacy does that the adapter has to reproduce, and that the
 review found missing at first:
 
