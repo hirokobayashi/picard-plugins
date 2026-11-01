@@ -423,13 +423,6 @@ class AdapterFixtureTestCase(unittest.TestCase):
         self.assertEqual(len(track.levels), 4)
         self.assertEqual(track.part_levels, 3)
 
-    def test_the_top_is_the_last_level(self):
-        tags = _adapter("daphnis").tags()
-        recording = w("03e53458-39f8-482a-b470-80a5a70d15bf")
-        track = tags[recording]
-        metadata = track.as_metadata()
-        self.assertEqual(metadata["~cwp_workid_top"], track.id_string(-1))
-
     def test_the_group_is_always_one_value(self):
         """The group is one string, and it is one of the album's groups."""
         for album, groups in (

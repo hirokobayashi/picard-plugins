@@ -334,7 +334,8 @@ class TrackTags:
             metadata['~cwp_work_top'] = self.top_names[0]
         else:
             metadata['~cwp_work_top'] = ID_SEPARATOR.join(self.top_names)
-        metadata['~cwp_work_group'] = self.group
+        if self.group:
+            metadata['~cwp_work_group'] = self.group
         metadata['~cwp_part_levels'] = str(self.part_levels)
         metadata['~cwp_work_part_levels'] = str(self.work_part_levels)
         return metadata
@@ -459,14 +460,26 @@ class AlbumAdapter:
         where it stood, and this list is what says instead.
         """
         return [
-            work for work in self._performed_works(recording)
-            if work in performance.partial]
+            work for work, partial in self._performed(recording)
+            if partial]
 
     def _performed_works(
             self,
             recording: Mapping) -> List[WorkId]:
         """The works the recording performs, in the relation order."""
-        works: List[WorkId] = []
+        return [work for work, _partial in self._performed(recording)]
+
+    def _performed(
+            self,
+            recording: Mapping) -> List[Tuple[WorkId, bool]]:
+        """The works the recording performs, and whether each is in part.
+
+        The relations are read once here, so the first level's ids, the
+        partly performed works and the model's performance cannot drift
+        apart.
+        """
+        result: List[Tuple[WorkId, bool]] = []
+        seen: Set[WorkId] = set()
         for relation in recording.get('relations') or ():
             if relation.get('type') != 'performance':
                 continue
@@ -474,9 +487,20 @@ class AlbumAdapter:
             if not target or not target.get('id'):
                 continue
             work = WorkId(target['id'])
-            if work not in works:
-                works.append(work)
-        return works
+            is_partial = (
+                self.use_partial
+                and 'partial' in (relation.get('attributes') or ()))
+            if work in seen:
+                if is_partial:
+                    # the work is performed in part as well, so the
+                    # recording id stands in for it
+                    result = [
+                        (held, True) if held == work else (held, part)
+                        for held, part in result]
+                continue
+            seen.add(work)
+            result.append((work, is_partial))
+        return result
 
     def _ordered_members(
             self,
@@ -501,30 +525,9 @@ class AlbumAdapter:
         because the recording is not the work.
         """
         key = performance.key
-        # the works in the order the relations came back in, and whether
-        # each of them is performed in part
-        order: List[WorkId] = []
-        partial: Dict[WorkId, bool] = {}
-        for relation in recording.get('relations') or ():
-            if relation.get('type') != 'performance':
-                continue
-            target = relation.get('work')
-            if not target or not target.get('id'):
-                continue
-            work = WorkId(target['id'])
-            is_partial = (
-                self.use_partial
-                and 'partial' in (relation.get('attributes') or ()))
-            if work not in partial:
-                order.append(work)
-                partial[work] = is_partial
-            elif is_partial:
-                # the work is performed in part as well, so the recording
-                # id stands in for it
-                partial[work] = True
         members: List[WorkId] = []
-        for work in order:
-            member = key if partial[work] else work
+        for work, partial in self._performed(recording):
+            member = key if partial else work
             if member not in members:
                 members.append(member)
         return members
