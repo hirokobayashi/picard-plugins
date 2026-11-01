@@ -100,6 +100,48 @@ Picard-independent replacement for the legacy hierarchy model, in preparation
 for a Picard 3 port. No `import picard` anywhere in the package - enforced by a
 test that both scans the sources and blocks the import.
 
+### The adapter (`hierarchy/adapter.py`)
+The seam between MusicBrainz's JSON and the model. It reads the work and
+recording responses and writes the hierarchy tags. Two things the model
+deliberately does not care about have to be restored here, because the
+legacy's tags carry them:
+
+- **the order of the ids inside a level.** The legacy keyed a node by a
+  *tuple*, and the order in the tuple was the order the relations came back
+  in. The model holds a node's works as a *set*, so the order has to be put
+  back. The rule, measured over every fixture: the first level is the
+  recording's **performance** relations in order, with a partially performed
+  work represented by the **recording id** in the relation's place; a work
+  related twice - once partially, once in full - is represented by the
+  recording id alone. The levels above the first take their order from the
+  relation of the work the level was reached through.
+- **the format of a level's ids.** The legacy writes the repr of a tuple:
+  `('abc...',)` for one id, `('abc...', 'def...')` for two.
+
+The `partial` substitution only applies when the plugin's `cwp_partial`
+option is on. With it off, a partially performed work is an ordinary one.
+
+A work related twice is in the performance's `partial` **and** its
+`complete` set: the recording stands in for the work, and the work itself
+still contributes - it is the parent of the recording id one level up.
+
+**Measured against the legacy** (the ids, the level counts, the top work
+and the group):
+
+- `~cwp_workid_0` and `~cwp_work_group` are identical on **all 218** tracks
+  of the nine releases.
+- `~cwp_part_levels` and `~cwp_work_part_levels` differ on 11 and 2 tracks.
+- 160 of the 218 tracks are identical in every tag.
+- The 58 that differ are the model's own decisions, and they are the same
+  ones the model already documents: 44 where the top holds more works than
+  the legacy's, 6 Gayne scene-level tracks, 6 Swan Lake tracks that route
+  through the original edition, and 2 with a fused parent.
+
+The name tags (`~cwp_work_<n>`) are **not** produced by the adapter. The
+legacy strips the parent's text out of the child's name
+(`strip_parent_from_work`), which is a separate feature with its own
+options and its own tests, and it has nothing to do with the hierarchy.
+
 ### Legacy semantics that had to be reproduced (do not "simplify" these away)
 - **Parent resolution is an ordered fallback**, not just `parts` relations:
   `parts` (backward) -> `arrangement` (backward) -> `medley`. The first type
