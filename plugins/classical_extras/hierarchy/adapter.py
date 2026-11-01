@@ -130,9 +130,10 @@ class WorkRelations:
         both of their parents. Every one of those works contributes, so
         all of their parent lists are read.
 
-        With no work given, the order is looked for in every relation,
-        which is what a caller that only knows the works themselves can
-        do.
+        With no work given, the order is looked for in every relation.
+        That is only a fallback: the result is deterministic, but the
+        order it gives is the order the relations were read in, not the
+        order of any one relation.
 
         A work that no relation names keeps its place at the end, in work
         id order, so the result is always deterministic.
@@ -405,7 +406,8 @@ class AlbumAdapter:
             # a release can list the same recording twice - the same track
             # on two discs, or a bonus track reusing a recording. The
             # hierarchy is built per recording, so the second one would
-            # overwrite the first in the tags.
+            # overwrite the first in the tags. The two entries are the same
+            # recording, so the first is kept.
             if entry.performance.key in seen:
                 continue
             seen[entry.performance.key] = entry
@@ -441,6 +443,10 @@ class AlbumAdapter:
         the level would hold it twice - but the node holds the works as a
         set, so it can only hold the recording id once. The legacy
         de-duplicates its id list for the same reason.
+
+        The order of the relations does not matter: a work related both
+        wholly and in part is represented by the recording id either way,
+        because the recording is not the work.
         """
         key = performance.key
         # the works in the order the relations came back in, and whether
