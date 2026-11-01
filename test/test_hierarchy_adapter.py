@@ -898,6 +898,88 @@ class OrderOfTestCase(unittest.TestCase):
         self.assertTrue(checked, "no level had two contributing works")
 
 
+class PartialOrderTestCase(unittest.TestCase):
+    """The order of the level above a partly performed work.
+
+    A partly performed work is represented by the recording id in the
+    level below, so the level below cannot say where it stood. It takes
+    the recording id's place, which is where the relation put it.
+    """
+
+    def _adapter(self):
+        """A recording that partly performs two works.
+
+        One work is performed in part and in full, so it contributes
+        itself to the level above - the recording id stands in for it one
+        level below. The other is performed in part only, so it
+        contributes nothing.
+        """
+        works = [
+            {
+                "id": "work-zzz",
+                "title": "A work",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "parent-1"},
+                    },
+                ],
+            },
+            {
+                "id": "work-aaa",
+                "title": "Another work",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "parent-2"},
+                    },
+                ],
+            },
+            {"id": "parent-1", "title": "The first parent"},
+            {"id": "parent-2", "title": "The second parent"},
+        ]
+        recordings = [{
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-zzz"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-zzz"},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-aaa"},
+                    "attributes": ["partial"],
+                },
+            ],
+        }]
+        return AlbumAdapter(works, recordings, use_partial=True)
+
+    def test_the_level_follows_the_relation_order(self):
+        """The parents come in the order the relations gave them."""
+        tags = self._adapter().tags()
+        track = tags[w("rec-1")]
+        self.assertEqual(
+            track.levels[2],
+            [w("parent-1")])
+
+    def test_the_recording_id_stands_in_for_the_work(self):
+        """The level below holds the recording id, not the work."""
+        tags = self._adapter().tags()
+        track = tags[w("rec-1")]
+        self.assertEqual(track.levels[0], [w("rec-1")])
+        self.assertEqual(track.levels[1], [w("work-zzz")])
+
+
 class EmptyNamesTestCase(unittest.TestCase):
     """The tags of a track whose works have no titles."""
 

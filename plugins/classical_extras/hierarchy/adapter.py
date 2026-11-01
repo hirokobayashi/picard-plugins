@@ -222,6 +222,9 @@ def read_performance(
     contributes: it is the parent of the recording id one level up. So
     such a work is in both sets.
 
+    A work related twice, both times partially, is only in the partial
+    set: the recording never performs it in full.
+
     ``use_partial`` is the plugin's ``cwp_partial`` option: with it off
     the attribute is ignored and a partially performed work is an ordinary
     one.
@@ -267,10 +270,15 @@ class Recording:
     recording's first level, in the legacy's order: the performance
     relations in the order they came back in, with a partially performed
     work represented by the recording id.
+
+    ``partial`` are the works that are only performed in part. Their
+    place in the first level is taken by the recording id, so they have
+    to be kept to know where they stood.
     """
 
     performance: Performance
     members: List[WorkId] = field(default_factory=list)
+    partial: List[WorkId] = field(default_factory=list)
 
 
 @dataclass
@@ -424,7 +432,8 @@ class AlbumAdapter:
             recording, use_partial=self.use_partial)
         return Recording(
             performance=performance,
-            members=self._ordered_members(recording, performance))
+            members=self._ordered_members(recording, performance),
+            partial=sorted(performance.partial, key=lambda x: x.mbid))
 
     def _ordered_members(
             self,
@@ -597,7 +606,8 @@ class AlbumAdapter:
                 leaders: List[WorkId] = []
             else:
                 leaders = self._works_leading_to(
-                    chain[index - 1], node, levels[index - 1])
+                    chain[index - 1], node, levels[index - 1],
+                    recording.performance.key, recording.partial)
                 ids = self.relations.order_of(node.works, through=leaders)
             levels.append(ids)
             through.append(leaders)
@@ -607,7 +617,9 @@ class AlbumAdapter:
             self,
             node: NodeId,
             child: NodeId,
-            below: Sequence[WorkId]) -> List[WorkId]:
+            below: Sequence[WorkId],
+            recording: WorkId,
+            partial: Sequence[WorkId]) -> List[WorkId]:
         """The works of ``node`` whose parents are in ``child``.
 
         A node holds the works it stands for. The next level up holds
@@ -620,12 +632,23 @@ class AlbumAdapter:
         The works are in the order the level below gave them, not in work
         id order: the level's order comes from the relations, and the id
         order would decide it instead.
+
+        A partly performed work is represented by the recording id in
+        the level below, so the level below cannot say where it stood.
+        It takes the recording id's place, which is where the relation
+        put it.
         """
         leading = [
             work for work in node.works
             if self.relations.parents.get(work, ())
             and set(self.relations.parents[work]) & set(child.works)]
         order = {work: position for position, work in enumerate(below)}
+        if recording in order:
+            # the recording id stands in for the partly performed works,
+            # so they take its place
+            for work in leading:
+                if work not in order and work in partial:
+                    order[work] = order[recording]
         return sorted(
             leading,
             key=lambda work: (order.get(work, len(order)), work.mbid))
