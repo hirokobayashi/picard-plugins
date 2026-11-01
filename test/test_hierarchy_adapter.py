@@ -750,13 +750,22 @@ class ChainShapeTestCase(unittest.TestCase):
                     "%s: a chain holds a node twice" % album)
 
     def test_the_top_is_the_last_level(self):
-        """The top work's ids are the ids of the last level."""
+        """The top work's ids are the ids of the last level.
+
+        The expected top is worked out from the candidate tops, which is
+        derived from the chain independently of the adapter's own tag
+        building.
+        """
         for album in ("daphnis", "gayne", "swanlake_full"):
-            for track in _adapter(album).tags().values():
+            adapter = _adapter(album)
+            hierarchy, _groups = adapter.build()
+            candidates = candidate_tops(
+                chains_of(hierarchy, adapter.performances), hierarchy)
+            for track in adapter.tags().values():
                 self.assertTrue(track.levels, album)
                 self.assertEqual(
-                    format_ids(track.top),
-                    track.id_string(len(track.levels) - 1),
+                    set(track.top),
+                    set(candidates[track.key]),
                     album)
 
 
@@ -922,6 +931,73 @@ class NoChainTestCase(unittest.TestCase):
             [w("rec-1")])
         metadata = adapter.tags()[w("rec-1")].as_metadata()
         self.assertEqual(metadata['~cwp_workid_0'], "('rec-1',)")
+
+    def test_a_work_related_three_times_does_not_crash(self):
+        """A third relation to the same work must not raise.
+
+        The position of the work in the list is remembered, so a relation
+        that finds the work already there must not use a stale one.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                    "attributes": ["partial"],
+                },
+            ],
+        }
+        adapter = AlbumAdapter([], [recording])
+        self.assertEqual(
+            adapter.recordings[0].members,
+            [w("rec-1")])
+
+    def test_a_work_related_full_then_partially_gives_one_id(self):
+        """A work performed in full and then in part is the recording.
+
+        The work's own id is replaced by the recording id, and the
+        recording id is not given twice.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                    "attributes": ["partial"],
+                },
+            ],
+        }
+        adapter = AlbumAdapter([], [recording])
+        members = adapter.recordings[0].members
+        self.assertEqual(len(members), len(set(members)), members)
+        self.assertEqual(members, [w("rec-1")])
 
     def test_a_repeated_recording_is_held_once(self):
         """A release can list the same recording twice."""
