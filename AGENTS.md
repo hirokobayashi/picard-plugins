@@ -252,7 +252,7 @@ original edition's second act - the same reduction that drops a top level
 parent in favour of an embedded one as in Don Giovanni - and the one
 original-only track ends at the original edition where the legacy wrote
 the album-wide Drigo top. The Gayne difference adds the scene level on
-purpose. The other six albums' chains are unchanged.
+purpose. The other seven albums' chains are unchanged.
 
 ### The second fusion
 The other thing that puts several works in one node is a **recording that
