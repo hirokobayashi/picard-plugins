@@ -136,25 +136,15 @@ def _as_picard_stores(value):
     return values
 
 
-def _form_of(value):
-    """The shape of a stored tag - one id or several.
-
-    Used where the ids differ but the form they are stored in does not.
-    """
-    if value is None:
-        return None
-    if isinstance(value, str):
-        return "one"
-    return "many"
-
-
-def _first_id(value):
-    """The first id of a stored tag, as the tag stores it."""
-    if value is None:
-        return None
-    if isinstance(value, str):
-        return value
-    return value[0] if value else None
+def _starts_with(stored, legacy):
+    """The stored tag holds the legacy's ids first, in the same order."""
+    if legacy is None:
+        return True
+    legacy_ids = legacy if isinstance(legacy, list) else [legacy]
+    stored_ids = stored if isinstance(stored, list) else [stored]
+    if len(stored_ids) < len(legacy_ids):
+        return False
+    return stored_ids[:len(legacy_ids)] == legacy_ids
 
 
 def _names(works):
@@ -1458,8 +1448,13 @@ class LegacyParityTestCase(unittest.TestCase):
                     continue
                 metadata = track.as_metadata()
                 for tag in self.TAGS:
-                    got = self._ids(metadata.get(tag))
-                    wanted = self._ids(want.get(tag))
+                    if tag.startswith('~cwp_workid'):
+                        got = self._ids(metadata.get(tag))
+                        wanted = self._ids(want.get(tag))
+                    else:
+                        # the name and the group are text, not ids
+                        got = metadata.get(tag)
+                        wanted = want.get(tag)
                     if got == wanted:
                         continue
                     if (tag.startswith('~cwp_workid')
@@ -1522,11 +1517,10 @@ class LegacyParityTestCase(unittest.TestCase):
                     stored = _as_picard_stores(metadata.get(tag))
                     if label in holding_more:
                         # the model's level holds the legacy's ids and
-                        # more, so only the form of the legacy's own ids
-                        # is compared
-                        self.assertEqual(
-                            _form_of(_first_id(stored)),
-                            _form_of(_first_id(legacy)),
+                        # more, so the legacy's ids have to be the
+                        # model's first ones
+                        self.assertTrue(
+                            _starts_with(stored, legacy),
                             "%s %s %s" % (album, label, tag))
                         continue
                     self.assertEqual(
