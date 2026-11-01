@@ -570,8 +570,23 @@ class TopNameTestCase(unittest.TestCase):
                 track.group)
 
     def test_the_top_name_is_the_vote_winner(self):
-        """The name the most tracks of the album voted for."""
-        tags = _adapter("swanlake_full").tags()
+        """The name the most tracks of the album voted for.
+
+        The Planets album's track 7 has a top with two candidate names -
+        the suite and its extension - and the name the rest of the album
+        voted for is the one it gets.
+        """
+        tags = _adapter("planets").tags()
+        fused = {
+            track.top_names[0]
+            for track in tags.values()
+            if len(track.top) > 1
+        }
+        self.assertEqual(fused, {"The Planets, op. 32"})
+
+    def test_the_fused_top_names_are_the_vote_winner(self):
+        """A top with several candidates is named by the vote."""
+        tags = _adapter("planets").tags()
         counts = {}
         for track in tags.values():
             for name in track.top_names:

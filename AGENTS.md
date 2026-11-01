@@ -132,10 +132,14 @@ and the group):
   **all 218** tracks of the nine releases.
 - `~cwp_part_levels` and `~cwp_work_part_levels` differ on 11 and 2 tracks.
 - 161 of the 218 tracks are identical in every tag.
-- The 57 that differ are the model's own decisions, and they are the same
-  ones the model already documents: 43 where the top holds more works than
-  the legacy's, 11 where the level count differs, and 3 that end at a
-  different work.
+- The 57 that differ are the model's own decisions, and they are the ones
+  the model already documents. Counted by cause, so that a track differing
+  in more than one way is counted once:
+  - **45** where the top holds more works than the legacy's - 29 of Swan
+    Lake's 43 tracks, 13 of the Jarvi release's 19, and one each of
+    Nutcracker, Planets and Requiem;
+  - **12** that end at a different work - the 6 Gayne scene-level tracks
+    and the 6 Swan Lake tracks that route through the original edition.
 
 Two things the legacy does that the adapter has to reproduce, and that the
 review found missing at first:
@@ -156,6 +160,11 @@ The name tags (`~cwp_work_<n>`) are **not** produced by the adapter. The
 legacy strips the parent's text out of the child's name
 (`strip_parent_from_work`), which is a separate feature with its own
 options and its own tests, and it has nothing to do with the hierarchy.
+
+The comparison above is by the ids the tags hold, not by their literal
+text: the legacy writes a level of two ids as `('a', 'b')` in some
+places and as `a; b` in others, and the adapter writes the tuple repr
+everywhere. The ids and their order are the same either way.
 
 ### Legacy semantics that had to be reproduced (do not "simplify" these away)
 - **Parent resolution is an ordered fallback**, not just `parts` relations:
