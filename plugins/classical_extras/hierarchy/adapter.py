@@ -317,19 +317,33 @@ class TrackTags:
         """The work ids of one level, as the legacy writes them."""
         return format_ids(self.levels[level])
 
-    def as_metadata(self) -> Dict[str, str]:
+    def id_tuple(self, level: int) -> Tuple[str, ...]:
+        """The work ids of one level, as the tuple the legacy hands Picard.
+
+        Picard stores a tuple of one id as a bare string and a tuple of
+        more as a list, so this is what the legacy's own tags read as.
+        """
+        return tuple(work.mbid for work in self.levels[level])
+
+    def as_metadata(self) -> Dict[str, object]:
         """The tags, in the legacy's names.
 
         A track with no hierarchy - one whose recording names no work, or
         names a work with no place in the tree - gets no tags at all,
         which is what the legacy writes for it.
+
+        The work id tags hold a tuple of ids, as the legacy's do. Picard
+        stores a tuple as a bare string when it holds one id and as a
+        list when it holds more, so this is what the legacy's own tags
+        read as - a single id is bare, and two are separated by a
+        semicolon.
         """
         if not self.levels:
             return {}
-        metadata: Dict[str, str] = {}
+        metadata: Dict[str, object] = {}
         for level, works in enumerate(self.levels):
-            metadata['~cwp_workid_%d' % level] = self.id_string(level)
-        metadata['~cwp_workid_top'] = format_ids(self.top)
+            metadata['~cwp_workid_%d' % level] = self.id_tuple(level)
+        metadata['~cwp_workid_top'] = tuple(work.mbid for work in self.top)
         if len(self.top_names) == 1:
             metadata['~cwp_work_top'] = self.top_names[0]
         else:

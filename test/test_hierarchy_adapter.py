@@ -117,6 +117,23 @@ def _parents_in_fixture(mbid, album="swanlake_full"):
     return []
 
 
+def _as_picard_stores(value):
+    """The tag as Picard stores it.
+
+    Picard stores a single value as a bare string and more than one as a
+    list, so a tuple of one id reads as a bare id and a tuple of two
+    reads as a list of two.
+    """
+    if value is None:
+        return None
+    values = [str(item) for item in value]
+    if not values:
+        return None
+    if len(values) == 1:
+        return values[0]
+    return values
+
+
 def _names(works):
     """The titles of the given work responses."""
     return WorkNames(titles={w(item["id"]): item.get("title", "")
@@ -408,13 +425,34 @@ class AdapterFixtureTestCase(unittest.TestCase):
                 continue
             self.assertEqual(len(track.levels[0]), 1, key.mbid)
 
-    def test_the_ids_are_written_as_a_tuple_repr(self):
+    def test_the_ids_are_written_as_a_tuple(self):
+        """The id tags hold a tuple, as the legacy's do.
+
+        Picard stores a tuple of one id as a bare string and a tuple of
+        more as a list - so this is what the legacy's own tags read as.
+        """
         tags = _adapter("daphnis").tags()
         recording = w("03e53458-39f8-482a-b470-80a5a70d15bf")
         metadata = tags[recording].as_metadata()
         self.assertEqual(
             metadata["~cwp_workid_0"],
-            "('03e53458-39f8-482a-b470-80a5a70d15bf',)")
+            ("03e53458-39f8-482a-b470-80a5a70d15bf",))
+
+    def test_the_ids_read_as_the_legacy_writes_them(self):
+        """A level's ids read as the legacy's own tag reads.
+
+        A single id is bare, and two are separated by a semicolon - the
+        form Picard stores a tuple in.
+        """
+        for album in sorted(USE_PARTIAL):
+            for track in _adapter(album).tags().values():
+                for level, works in enumerate(track.levels):
+                    tag = track.as_metadata()['~cwp_workid_%d' % level]
+                    self.assertEqual(
+                        _as_picard_stores(tag),
+                        _as_picard_stores(
+                            [work.mbid for work in works]),
+                        "%s level %d" % (album, level))
 
     def test_the_level_count_is_the_distance_to_the_top(self):
         tags = _adapter("daphnis").tags()
@@ -1122,7 +1160,7 @@ class EmptyNamesTestCase(unittest.TestCase):
         tags = adapter.tags()
         metadata = tags[WorkId("rec-1")].as_metadata()
         self.assertEqual(metadata['~cwp_work_top'], '')
-        self.assertEqual(metadata['~cwp_workid_top'], "('work-2',)")
+        self.assertEqual(metadata['~cwp_workid_top'], ("work-2",))
 
 
 class NoChainTestCase(unittest.TestCase):
@@ -1161,7 +1199,7 @@ class NoChainTestCase(unittest.TestCase):
             adapter.recordings[0].members,
             [w("rec-1")])
         metadata = adapter.tags()[w("rec-1")].as_metadata()
-        self.assertEqual(metadata['~cwp_workid_0'], "('rec-1',)")
+        self.assertEqual(metadata['~cwp_workid_0'], ("rec-1",))
 
     def test_a_work_related_full_then_partially_gives_one_id(self):
         """A work performed in full and then in part is the recording.
@@ -1371,16 +1409,17 @@ class LegacyParityTestCase(unittest.TestCase):
 
     @staticmethod
     def _ids(value):
-        """The ids a tag holds, in order."""
+        """The ids a tag holds, in order.
+
+        The tag is read as Picard stores it: a tuple of one id is a bare
+        string, and a tuple of more is a list. The legacy's own tags were
+        captured from Picard's metadata, so they are in that form too.
+        """
         if value is None:
             return None
+        if isinstance(value, (list, tuple)):
+            return tuple(str(item).strip() for item in value)
         text = str(value).strip()
-        if text.startswith('(') and text.endswith(')'):
-            text = text[1:-1].strip()
-            if not text:
-                return ()
-            parts = [part.strip().strip("'\"") for part in text.split(',')]
-            return tuple(part for part in parts if part)
         if ';' in text:
             return tuple(
                 part.strip() for part in text.split(';') if part.strip())
@@ -1603,29 +1642,35 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
     def test_the_blocker_would_catch_an_import(self):
         """The blocker really blocks - otherwise the test above is void.
 
-        A name of its own is used, so the test does not depend on whether
-        Picard happens to be in the module cache.
+        A module that exists is blocked, so the failure comes from the
+        blocker and not from the module not being there. The blocker
+        records that it fired.
         """
         import importlib
 
-        name = "picard_blocker_probe"
+        name = "json"
+        fired = []
 
         class Blocker:
-            """A finder that refuses to load the probe."""
+            """A finder that refuses to load the module."""
 
             def find_spec(self, fullname, path=None, target=None):
                 if fullname == name:
-                    raise ImportError("the probe must not be imported")
+                    fired.append(fullname)
+                    raise ImportError("the module must not be imported")
                 return None
 
         finder = Blocker()
         sys.meta_path.insert(0, finder)
+        cached = sys.modules.pop(name, None)
         try:
             with self.assertRaises(ImportError):
                 importlib.import_module(name)
         finally:
             sys.meta_path.remove(finder)
-            sys.modules.pop(name, None)
+            if cached is not None:
+                sys.modules[name] = cached
+        self.assertEqual(fired, [name])
 
     @staticmethod
     def _sources(package):

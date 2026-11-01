@@ -149,6 +149,15 @@ tracks that may differ are named there, and the tracks that may hold
 *more* ids than the legacy - the extra ones come after the legacy's, and
 are the model's own decision - are named separately.
 
+**The id tags hold a tuple, not a string.** The legacy hands Picard a
+tuple of work ids (`parentId = tuple(trackback['id'])`), and Picard
+stores a tuple of one id as a bare string and a tuple of more as a list.
+So a level of one id reads as a bare id and a level of two reads as a
+list of two - which is exactly what the legacy's own tags read as. The
+adapter hands Picard the same tuple, so the two agree in the stored
+text, not only in the ids. The parity test compares them as Picard
+stores them, so a change of format would be caught.
+
 Two things the legacy does that the adapter has to reproduce, and that the
 review found missing at first:
 
