@@ -882,25 +882,19 @@ class OrderOfTestCase(unittest.TestCase):
         checked = 0
         for recording in adapter.recordings:
             chain = chains.get(recording.performance.key) or []
-            levels = adapter._levels_with_through(recording, chain)
-            tags = adapter.tags()[recording.performance.key]
+            levels, through = adapter._levels(recording, chain)
             for index in range(1, len(levels)):
-                through = levels[index][1]
-                if len(through) < 2:
+                leaders = through[index]
+                if len(leaders) < 2:
                     continue
-                # each contributing work names its own parents, and the
-                # level holds them in the order the contributing works
-                # give - so the first parent of the first contributing
-                # work comes first
-                first = adapter.relations.parents.get(through[0], ())
-                if not first:
-                    continue
+                # the contributing works are the level below's ids, in the
+                # level below's order
+                below = levels[index - 1]
+                expected = [work for work in below if work in leaders]
                 checked += 1
                 self.assertEqual(
-                    tags.levels[index][0],
-                    first[0],
-                    "the level does not start with the first contributing "
-                    "work's first parent")
+                    leaders, expected,
+                    "the contributing works are not in the level's order")
         self.assertTrue(checked, "no level had two contributing works")
 
 
@@ -1124,6 +1118,7 @@ class LegacyParityTestCase(unittest.TestCase):
         '~cwp_workid_0',
         '~cwp_workid_1',
         '~cwp_workid_2',
+        '~cwp_workid_3',
         '~cwp_workid_top',
         '~cwp_work_top',
         '~cwp_work_group',
@@ -1192,10 +1187,13 @@ class LegacyParityTestCase(unittest.TestCase):
     def test_the_tags_match_the_legacy(self):
         """Every tag of every track, against the legacy's own values.
 
-        The tracks that differ are the model's documented decisions: the
-        Gayne scene level, the Swan Lake tracks that route through the
-        original edition, and the two releases whose top holds more works
-        than the legacy's.
+        The ids are compared in order, because the order is the adapter's
+        whole purpose. A level's ids may hold *more* than the legacy's -
+        that is the model's decision to keep both Swan Lake editions -
+        and the extra ids are the legacy's own. So a level matches when
+        the legacy's ids are a prefix-preserving subset of the adapter's:
+        the same ids, in the same order, with the model's extra ones
+        added.
         """
         differing = {}
         for album, expected in sorted(self.legacy.items()):
@@ -1209,12 +1207,8 @@ class LegacyParityTestCase(unittest.TestCase):
                 for tag in self.TAGS:
                     got = self._ids(metadata.get(tag))
                     wanted = self._ids(want.get(tag))
-                    if tag.startswith('~cwp_workid'):
-                        if got is not None and wanted is not None:
-                            if set(wanted) <= set(got):
-                                # the model's top holds more works
-                                continue
-                    if got != wanted:
+                    if got != wanted and not self._holds_more(
+                            got, wanted):
                         differing.setdefault(album, []).append(label)
                         break
         self.assertEqual(
@@ -1222,18 +1216,61 @@ class LegacyParityTestCase(unittest.TestCase):
             "the tracks that differ from the legacy are not the "
             "documented ones")
 
-    def test_the_work_group_is_always_the_same(self):
-        """The group is one name for the whole album."""
+    @staticmethod
+    def _holds_more(got, wanted):
+        """The adapter's level holds the legacy's ids, in the same order.
+
+        The model may keep more works in a level than the legacy did -
+        both Swan Lake editions, say - so the level holds the legacy's
+        ids in the same order and adds the extra ones.
+        """
+        if got is None or wanted is None:
+            return False
+        if not wanted:
+            return True
+        if len(got) < len(wanted):
+            return False
+        # the legacy's ids have to appear in the same order
+        remaining = list(got)
+        for work in wanted:
+            if work not in remaining:
+                return False
+            remaining = remaining[remaining.index(work) + 1:]
+        return True
+
+    def test_every_id_is_a_work_the_model_knows(self):
+        """No id is invented.
+
+        The model may hold more works in a level than the legacy did -
+        both Swan Lake editions, say, and the Gayne scene level - but
+        every id it writes has to be a work of the hierarchy.
+        """
+        for album in sorted(USE_PARTIAL):
+            adapter = _adapter(album)
+            hierarchy, _groups = adapter.build()
+            known = set()
+            for node in hierarchy.nodes.values():
+                known |= set(node.works)
+            for track in adapter.tags().values():
+                for level in track.levels:
+                    for work in level:
+                        self.assertIn(
+                            work, known,
+                            "%s: %s is not a work of the hierarchy"
+                            % (album, work.mbid))
+
+    def test_the_work_group_is_the_legacys(self):
+        """Every track's group is the legacy's group for it."""
         for album, expected in sorted(self.legacy.items()):
             tags = _adapter(album).tags()
-            groups = {
-                track.as_metadata().get('~cwp_work_group')
-                for track in tags.values()
-            }
-            self.assertLessEqual(
-                len(groups),
-                len(set(expected['groups'])),
-                album)
+            for label, want in sorted(expected['tracks'].items()):
+                track = tags.get(WorkId(_recording_id(album, label)))
+                if track is None:
+                    continue
+                self.assertEqual(
+                    track.as_metadata().get('~cwp_work_group'),
+                    want.get('~cwp_work_group'),
+                    "%s %s" % (album, label))
 
 
 class AdapterWithoutPicardTestCase(unittest.TestCase):

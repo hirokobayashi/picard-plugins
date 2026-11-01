@@ -562,9 +562,7 @@ class AlbumAdapter:
         under this track's top, which is the same for every track that
         shares the top.
         """
-        levels = [self._level_ids(recording, node, index, through)
-                  for index, (node, through) in enumerate(
-                      self._levels_with_through(recording, chain))]
+        levels, through = self._levels(recording, chain)
         if not levels or not levels[-1]:
             # the recording names no work, or names a work with no place
             # in the tree
@@ -579,24 +577,31 @@ class AlbumAdapter:
             part_levels=len(chain) - 1,
             work_part_levels=node_height(hierarchy, chain[-1]))
 
-    def _levels_with_through(
+    def _levels(
             self,
             recording: Recording,
-            chain: Sequence[NodeId]) -> List[Tuple[NodeId, List[WorkId]]]:
-        """Each level of the chain with the works it was reached through.
+            chain: Sequence[NodeId]) -> Tuple[List[List[WorkId]],
+                                              List[List[WorkId]]]:
+        """The ids of each level, and the works each level was reached by.
 
-        A level's order is the order the relations of the works below it
-        gave, so every level needs to know which works it hangs off. The
-        first level hangs off the recording's own works.
+        The levels are worked out from the bottom up, because a level's
+        order comes from the relations of the works below it - so the
+        works that lead to a level are read in the order the level below
+        gave them.
         """
-        result: List[Tuple[NodeId, List[WorkId]]] = []
+        levels: List[List[WorkId]] = []
+        through: List[List[WorkId]] = []
         for index, node in enumerate(chain):
-            through: List[WorkId] = []
-            if index > 0:
-                through = self._works_leading_to(
-                    chain[index - 1], node, result[index - 1][1])
-            result.append((node, through))
-        return result
+            if index == 0:
+                ids = list(recording.members)
+                leaders: List[WorkId] = []
+            else:
+                leaders = self._works_leading_to(
+                    chain[index - 1], node, levels[index - 1])
+                ids = self.relations.order_of(node.works, through=leaders)
+            levels.append(ids)
+            through.append(leaders)
+        return levels, through
 
     def _works_leading_to(
             self,
@@ -624,20 +629,3 @@ class AlbumAdapter:
         return sorted(
             leading,
             key=lambda work: (order.get(work, len(order)), work.mbid))
-
-    def _level_ids(
-            self,
-            recording: Recording,
-            node: NodeId,
-            index: int,
-            through: Sequence[WorkId]) -> List[WorkId]:
-        """The ids one level holds, in the legacy's order.
-
-        The first level is the recording's own works, in the order the
-        performance relations came back in. The levels above it are the
-        node's works, in the order the relations of the works below gave
-        them.
-        """
-        if index == 0:
-            return list(recording.members)
-        return self.relations.order_of(node.works, through=through)
