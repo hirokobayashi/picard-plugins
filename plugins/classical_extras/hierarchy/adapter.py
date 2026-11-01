@@ -436,18 +436,17 @@ class AlbumAdapter:
         full - is represented by the recording id alone, because the
         recording is not the work.
 
-        An id is only given once. Two relations to two different works
-        that are both performed in part would otherwise both be
-        represented by the recording id, and the level would hold it
-        twice - but the node holds the works as a set, so it can only
-        hold the recording id once. The legacy de-duplicates its id list
-        for the same reason.
+        An id is only given once. Two works that are both performed in
+        part would otherwise both be represented by the recording id, and
+        the level would hold it twice - but the node holds the works as a
+        set, so it can only hold the recording id once. The legacy
+        de-duplicates its id list for the same reason.
         """
         key = performance.key
-        members: List[WorkId] = []
-        # where each work's id sits in the list, and where the recording
-        # id sits
-        seen: Dict[WorkId, int] = {}
+        # the works in the order the relations came back in, and whether
+        # each of them is performed in part
+        order: List[WorkId] = []
+        partial: Dict[WorkId, bool] = {}
         for relation in recording.get('relations') or ():
             if relation.get('type') != 'performance':
                 continue
@@ -455,45 +454,22 @@ class AlbumAdapter:
             if not target or not target.get('id'):
                 continue
             work = WorkId(target['id'])
-            partial = (
+            is_partial = (
                 self.use_partial
                 and 'partial' in (relation.get('attributes') or ()))
-            if work in seen:
-                if not partial:
-                    continue
+            if work not in partial:
+                order.append(work)
+                partial[work] = is_partial
+            elif is_partial:
                 # the work is performed in part as well, so the recording
-                # id represents it. If the work's own id is in the list,
-                # it is replaced by the recording id - which may already
-                # be there for another work.
-                position = seen[work]
-                if members[position] == work:
-                    if key in members:
-                        # the recording id is already there for another
-                        # work, so the work's own id is dropped and the
-                        # two share the recording id
-                        del members[position]
-                        self._reindex(seen, members)
-                    else:
-                        members[position] = key
-                        seen[work] = position
-                continue
-            member = key if partial else work
-            if member in members:
-                # the recording id is already there for another work
-                seen[work] = members.index(member)
-                continue
-            seen[work] = len(members)
-            members.append(member)
+                # id stands in for it
+                partial[work] = True
+        members: List[WorkId] = []
+        for work in order:
+            member = key if partial[work] else work
+            if member not in members:
+                members.append(member)
         return members
-
-    @staticmethod
-    def _reindex(seen: Dict[WorkId, int], members: List[WorkId]) -> None:
-        """Fix the positions after an entry was removed from the list."""
-        for work, position in list(seen.items()):
-            if position >= len(members):
-                del seen[work]
-            elif members[position] != work and work in members:
-                seen[work] = members.index(work)
 
     def build(self) -> Tuple[Hierarchy, Dict[WorkId, str]]:
         """The hierarchy and the group of every recording."""
