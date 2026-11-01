@@ -128,14 +128,29 @@ still contributes - it is the parent of the recording id one level up.
 **Measured against the legacy** (the ids, the level counts, the top work
 and the group):
 
-- `~cwp_workid_0` and `~cwp_work_group` are identical on **all 218** tracks
-  of the nine releases.
+- `~cwp_workid_0`, `~cwp_work_top` and `~cwp_work_group` are identical on
+  **all 218** tracks of the nine releases.
 - `~cwp_part_levels` and `~cwp_work_part_levels` differ on 11 and 2 tracks.
-- 160 of the 218 tracks are identical in every tag.
-- The 58 that differ are the model's own decisions, and they are the same
-  ones the model already documents: 44 where the top holds more works than
-  the legacy's, 6 Gayne scene-level tracks, 6 Swan Lake tracks that route
-  through the original edition, and 2 with a fused parent.
+- 161 of the 218 tracks are identical in every tag.
+- The 57 that differ are the model's own decisions, and they are the same
+  ones the model already documents: 43 where the top holds more works than
+  the legacy's, 11 where the level count differs, and 3 that end at a
+  different work.
+
+Two things the legacy does that the adapter has to reproduce, and that the
+review found missing at first:
+
+- **the order of a level reached through an `arrangement` relation.** The
+  Tristan album's "Prelude and Liebestod" has no `parts` parent at all -
+  it reaches the opera through an `arrangement` relation, and the legacy
+  wrote that level's ids in the order the arrangement relation gave them.
+  The parents the adapter records are therefore the *resolved* ones - the
+  graph's own ordered fallback of `parts`, `arrangement` and `medley` -
+  not just the `parts` relations.
+- **the name of a top that holds two works with the same title.** The two
+  editions of Swan Lake are both called "Swan Lake, op. 20", and the tag
+  holds the name once. The tag also holds the *vote winner*, so that
+  every track sharing a top names it the same way.
 
 The name tags (`~cwp_work_<n>`) are **not** produced by the adapter. The
 legacy strips the parent's text out of the child's name
