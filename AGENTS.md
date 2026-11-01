@@ -143,6 +143,12 @@ and the group):
     Swan Lake tracks that end at the original edition rather than the
     Drigo one.
 
+The legacy's own tags are recorded in `test/fixtures/legacy_tags.json`,
+and `test/test_hierarchy_adapter.py` checks the adapter against them. The
+tracks that may differ are named there, and the tracks that may hold
+*more* ids than the legacy - the extra ones come after the legacy's, and
+are the model's own decision - are named separately.
+
 Two things the legacy does that the adapter has to reproduce, and that the
 review found missing at first:
 
