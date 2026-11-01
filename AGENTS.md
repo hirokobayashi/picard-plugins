@@ -160,7 +160,10 @@ stores them, so a change of format would be caught.
 
 The deepest chain in the fixtures is five levels (the Tristan album's
 `t2` and `t11`), so the comparison covers `~cwp_workid_0` to
-`~cwp_workid_4` and the top.
+`~cwp_workid_4` and the top. The tags compared are the ones the legacy
+wrote for that track *and* the ones the adapter wrote - so a level the
+adapter has and the legacy did not would be caught too, and the list of
+levels does not have to be kept up to date.
 
 Two things the legacy does that the adapter has to reproduce, and that the
 review found missing at first:

@@ -1357,23 +1357,6 @@ class LegacyParityTestCase(unittest.TestCase):
     listed in AGENTS.md.
     """
 
-    #: The tags compared. The level ids are compared by the ids they
-    #: hold, not by their literal text - Picard stores a tuple of one id
-    #: as a bare string and a tuple of more as a list, so the same level
-    #: reads differently depending on how many ids it holds.
-    TAGS = (
-        '~cwp_workid_0',
-        '~cwp_workid_1',
-        '~cwp_workid_2',
-        '~cwp_workid_3',
-        '~cwp_workid_4',
-        '~cwp_workid_top',
-        '~cwp_work_top',
-        '~cwp_work_group',
-        '~cwp_part_levels',
-        '~cwp_work_part_levels',
-    )
-
     @classmethod
     def setUpClass(cls):
         path = os.path.join(FIXTURES, 'legacy_tags.json')
@@ -1510,6 +1493,10 @@ class LegacyParityTestCase(unittest.TestCase):
         that is the model's decision to keep both Swan Lake editions -
         and the extra ids come after the legacy's. Only the tracks named
         in HOLDING_MORE may hold more.
+
+        The tags compared are the ones the legacy wrote for that track,
+        plus the ones the adapter wrote - so a level the adapter has and
+        the legacy did not would be caught.
         """
         differing = {}
         for album, expected in sorted(self.legacy.items()):
@@ -1521,7 +1508,7 @@ class LegacyParityTestCase(unittest.TestCase):
                     differing.setdefault(album, []).append(label)
                     continue
                 metadata = track.as_metadata()
-                for tag in self.TAGS:
+                for tag in self._tags_of(metadata, want):
                     if tag.startswith('~cwp_workid'):
                         got = self._ids(metadata.get(tag))
                         wanted = self._ids(want.get(tag))
@@ -1541,6 +1528,17 @@ class LegacyParityTestCase(unittest.TestCase):
             differing, self.DIFFERING,
             "the tracks that differ from the legacy are not the "
             "documented ones")
+
+    @staticmethod
+    def _tags_of(metadata, want):
+        """The tags to compare for one track.
+
+        The legacy's own tags for the track, and the adapter's - so a
+        level the adapter has and the legacy did not is compared too.
+        """
+        tags = set(want)
+        tags |= set(metadata)
+        return sorted(tags)
 
     @staticmethod
     def _holds_more(got, wanted):
