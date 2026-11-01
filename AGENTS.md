@@ -172,7 +172,8 @@ works is the next thing the model needs.
 
 ### Two different fusions
 There are two distinct things that put several works in one node, and they
-must not be confused:
+must not be confused. The second - a recording that performs two works -
+is described further down, in *The second fusion*.
 
 * **A work with two parents** (Tristan's "Prelude and Liebestod"). The
   recording performs one work; that work has two parents, so the node one
@@ -219,14 +220,14 @@ must not be confused:
 
 ### The trees differ in more places than the Liebestod
 The difference above is not unique to it. The legacy and the new model
-agree on every *track's chain* but not on the shape of the tree above it,
-and they differ in both directions.
+agree on 206 of the 218 chains over the fixtures, but not on the shape of
+the tree above the track, and they differ in both directions.
 
 * **The new model has more standalone nodes.** A work that is reached by
   two routes gets a node of its own as well as a place in the fused node.
-  Tristan's "Akt I, Vorspiel" is one, and Swan Lake's album has sixteen
-  of them: the two editions, the acts, and the movements that sit under
-  two of them.
+  Tristan's "Akt I, Vorspiel" is one, and Swan Lake's album has fifteen
+  of them: the two editions, the eight acts, and the five movements that
+  sit under two of them.
 * **The new model fuses less.** Don Giovanni's "Recitative and Aria,
   K. 540c" is a standalone work *and* a part of the opera's second act.
   The legacy fuses the two parents into one node; the new model's
@@ -236,14 +237,22 @@ and they differ in both directions.
 * **The new model fuses the top.** Swan Lake's album has a root holding
   both editions, `{11f48c5e, 13867eb1}`, as well as a root for each
   edition alone; the legacy has the two editions as separate roots and
-  fuses the Drigo edition with its second act instead.
+  fuses the Drigo edition with the *original* edition's second act
+  (`f9bdafff`) instead.
 * **The new model keeps the Gayne scene level**, where the legacy
   flattens the six movements of "Act I, Scene I (Spring)" directly under
   "Act I".
 
 Every one of these is a fusion boundary: the same two works are either
-held in one node or in two. None of them changes a track's chain, except
-the Gayne one, which adds a level on purpose.
+held in one node or in two.
+
+Two of them do change a track's chain. In Swan Lake the five "Danses des
+cygnes" movements now route through `{3481d89d, de767453}` and the
+original edition's second act - the same reduction that drops a top level
+parent in favour of an embedded one as in Don Giovanni - and the one
+original-only track ends at the original edition where the legacy wrote
+the album-wide Drigo top. The Gayne difference adds the scene level on
+purpose. The other six albums' chains are unchanged.
 
 ### The second fusion
 The other thing that puts several works in one node is a **recording that
