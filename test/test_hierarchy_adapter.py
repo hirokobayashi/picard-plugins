@@ -980,10 +980,12 @@ class PartialOrderTestCase(unittest.TestCase):
         self.assertEqual(track.levels[1], [w("work-zzz")])
 
     def test_two_partial_works_keep_the_relation_order(self):
-        """Two partly performed works keep the order of the relations.
+        """The level above two works holds their parents, in order.
 
-        Both are represented by the recording id in the first level, so
-        the first level cannot say which came first - the relations do.
+        A level's ids are the parents of the works below it, in the order
+        those works' own relations gave them. So the level above the two
+        works holds each work's parent, and the order is the order the
+        works' relations give.
         """
         works = [
             {
@@ -1041,8 +1043,8 @@ class PartialOrderTestCase(unittest.TestCase):
         adapter = AlbumAdapter(works, recordings, use_partial=True)
         tags = adapter.tags()
         track = tags[w("rec-1")]
-        # the level above the two works holds the parents, and a level's
-        # order comes from the relations of the works below it
+        # the level above the two works holds their parents, one each, in
+        # the order the works' relations give
         self.assertEqual(
             track.levels[2],
             [w("parent-2"), w("parent-1")])
