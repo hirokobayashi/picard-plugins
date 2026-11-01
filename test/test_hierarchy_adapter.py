@@ -597,21 +597,6 @@ class TopNameTestCase(unittest.TestCase):
                 len(set(track.top_names)),
                 track.group)
 
-    def test_the_top_name_is_the_vote_winner(self):
-        """The name the most tracks of the album voted for.
-
-        The Planets album's track 7 has a top with two candidate names -
-        the suite and its extension - and the name the rest of the album
-        voted for is the one it gets.
-        """
-        tags = _adapter("planets").tags()
-        fused = {
-            track.top_names[0]
-            for track in tags.values()
-            if len(track.top) > 1
-        }
-        self.assertEqual(fused, {"The Planets, op. 32"})
-
     def test_the_fused_top_names_are_the_vote_winner(self):
         """A top with several candidates is named by the vote.
 
@@ -634,12 +619,9 @@ class TopNameTestCase(unittest.TestCase):
         """A name is counted once per track that has it as a candidate."""
         adapter = _adapter("planets")
         hierarchy, _groups = adapter.build()
-        candidates = candidate_tops(chains_of(hierarchy, adapter.performances),
-                                    hierarchy)
-        counts = {}
-        for works in candidates.values():
-            for name in set(adapter.names.names_of(works)):
-                counts[name] = counts.get(name, 0) + 1
+        candidates = candidate_tops(
+            chains_of(hierarchy, adapter.performances), hierarchy)
+        counts = adapter._votes(candidates)
         self.assertEqual(counts["The Planets, op. 32"], 7)
         self.assertEqual(counts["The Planets Suite extension"], 2)
 
@@ -859,6 +841,26 @@ class EmptyNamesTestCase(unittest.TestCase):
         metadata = tags[WorkId("rec-1")].as_metadata()
         self.assertEqual(metadata['~cwp_work_top'], '')
         self.assertEqual(metadata['~cwp_workid_top'], "('work-2',)")
+
+
+class NoChainTestCase(unittest.TestCase):
+    """A recording that names no work."""
+
+    def _adapter(self):
+        return AlbumAdapter(
+            [],
+            [{"id": "rec-1", "relations": []}])
+
+    def test_the_recording_is_in_the_result(self):
+        """A recording with no chain is still there, with no levels."""
+        tags = self._adapter().tags()
+        self.assertIn(w("rec-1"), tags)
+        self.assertEqual(tags[w("rec-1")].levels, [])
+
+    def test_it_gets_no_tags(self):
+        """A track with no hierarchy gets no tags at all."""
+        tags = self._adapter().tags()
+        self.assertEqual(tags[w("rec-1")].as_metadata(), {})
 
 
 class AdapterWithoutPicardTestCase(unittest.TestCase):
