@@ -140,7 +140,9 @@ class WorkRelations:
         """
         wanted = list(works)
         order: Dict[WorkId, Tuple[int, int]] = {}
-        if through is None:
+        if through is None or (not isinstance(through, WorkId)
+                               and not list(through)):
+            # no work to read the order from, so every relation is read
             candidates = list(self.parents.values())
         elif isinstance(through, WorkId):
             candidates = [self.parents.get(through, ())]
@@ -593,7 +595,10 @@ class AlbumAdapter:
             # to choose between
             return names[:1]
         winners = [name for name in names if votes.get(name, 0) == best]
-        return winners
+        # a tie keeps every tied name, in a fixed order - not the order of
+        # this track's top list, which differs between the tracks that
+        # share a top
+        return sorted(winners)
 
     def _tags_for(
             self,
