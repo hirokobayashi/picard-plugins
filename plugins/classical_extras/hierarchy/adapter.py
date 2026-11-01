@@ -140,15 +140,20 @@ class WorkRelations:
         """
         wanted = list(works)
         order: Dict[WorkId, Tuple[int, int]] = {}
-        if through is None or (not isinstance(through, WorkId)
-                               and not list(through)):
+        if through is None:
             # no work to read the order from, so every relation is read
             candidates = list(self.parents.values())
         elif isinstance(through, WorkId):
             candidates = [self.parents.get(through, ())]
         else:
-            candidates = [
-                self.parents.get(work, ()) for work in through]
+            # the list is taken once: a one-shot iterable would be
+            # exhausted by the emptiness check
+            sources = list(through)
+            if sources:
+                candidates = [
+                    self.parents.get(work, ()) for work in sources]
+            else:
+                candidates = list(self.parents.values())
         for source, parent_list in enumerate(candidates):
             for position, parent in enumerate(parent_list):
                 if parent in wanted and parent not in order:

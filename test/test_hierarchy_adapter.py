@@ -589,19 +589,18 @@ class ArrangementOrderTestCase(unittest.TestCase):
             [w("work-b")])
 
     def test_tristan_the_liebestod_reaches_its_acts_in_order(self):
-        """The real fixture: the order is the arrangement's, not the id's."""
+        """The real fixture: the order is the arrangement's, not the id's.
+
+        Track 2 of the Tristan album is the one that reaches both acts.
+        """
         tags = _adapter("tristan").tags()
-        # find the track whose chain holds the two acts
-        for track in tags.values():
-            for level in track.levels:
-                ids = [work.mbid for work in level]
-                if any(i.startswith("eb691aba") for i in ids):
-                    self.assertEqual(
-                        [i[:8] for i in ids],
-                        ["eb691aba", "52836ec3"],
-                        "the arrangement relation's order")
-                    return
-        self.fail("no track reaches the two acts")
+        track = tags[WorkId(_recording_id("tristan", "t2"))]
+        found = [
+            [work.mbid[:8] for work in level]
+            for level in track.levels
+            if len(level) > 1
+        ]
+        self.assertIn(["eb691aba", "52836ec3"], found)
 
 
 class TopNameTestCase(unittest.TestCase):
@@ -1303,11 +1302,13 @@ class LegacyParityTestCase(unittest.TestCase):
         with open(path, encoding='utf-8') as handle:
             cls.legacy = json.load(handle)
 
-    #: The tracks whose tags differ from the legacy's, and why. The
-    #: Gayne tracks sit one level deeper, because the model keeps the
-    #: scene level; the Swan Lake tracks end at the original edition
-    #: rather than the Drigo one; and the Nutcracker and Requiem tracks
-    #: have a top that holds more works than the legacy's.
+    #: The tracks whose tags differ from the legacy's in more than extra
+    #: ids, and why. The Gayne tracks sit one level deeper, because the
+    #: model keeps the scene level; the Swan Lake tracks end at the
+    #: original edition rather than the Drigo one, and their top holds
+    #: both editions where the legacy's held one; and the Nutcracker,
+    #: Planets and Requiem tracks have a top that holds more works than
+    #: the legacy's.
     DIFFERING = {
         "gayne": [
             "d1t10",
@@ -1320,16 +1321,30 @@ class LegacyParityTestCase(unittest.TestCase):
         "nutcracker": [
             "d1t1",
         ],
+        "planets": [
+            "t7",
+        ],
         "requiem": [
             "t1",
         ],
         "swanlake_full": [
-            "d1t17",
-            "d1t19",
-            "d1t20",
-            "d1t21",
-            "d1t22",
-            "d2t2",
+            "d1t1", "d1t10", "d1t11", "d1t12", "d1t13", "d1t14",
+            "d1t15", "d1t16", "d1t17", "d1t19", "d1t2", "d1t20",
+            "d1t21", "d1t22", "d1t23", "d1t3", "d1t4", "d1t5",
+            "d1t6", "d1t7", "d1t8", "d1t9", "d2t1", "d2t13",
+            "d2t14", "d2t15", "d2t17", "d2t2", "d2t3", "d2t4",
+            "d2t5", "d2t6", "d2t7", "d2t8", "d2t9",
+        ],
+    }
+
+    #: The tracks whose a level holds the legacy's ids and more, and
+    #: nothing else differs. The model keeps both Swan Lake editions
+    #: where the legacy picked one, and the extra ids come after the
+    #: legacy's.
+    HOLDING_MORE = {
+        "swanlake_jarvi": [
+            "t1", "t10", "t13", "t15", "t16", "t17", "t18", "t2",
+            "t3", "t4", "t6", "t7", "t9",
         ],
     }
 
@@ -1361,14 +1376,13 @@ class LegacyParityTestCase(unittest.TestCase):
         The ids are compared in order, because the order is the adapter's
         whole purpose. A level's ids may hold *more* than the legacy's -
         that is the model's decision to keep both Swan Lake editions -
-        and the extra ids are the legacy's own. So a level matches when
-        the legacy's ids are a prefix-preserving subset of the adapter's:
-        the same ids, in the same order, with the model's extra ones
-        added.
+        and the extra ids come after the legacy's. Only the tracks named
+        in HOLDING_MORE may hold more.
         """
         differing = {}
         for album, expected in sorted(self.legacy.items()):
             tags = _adapter(album).tags()
+            holding_more = self.HOLDING_MORE.get(album) or []
             for label, want in sorted(expected['tracks'].items()):
                 track = tags.get(WorkId(_recording_id(album, label)))
                 if track is None:
@@ -1380,8 +1394,9 @@ class LegacyParityTestCase(unittest.TestCase):
                     wanted = self._ids(want.get(tag))
                     if got == wanted:
                         continue
-                    if tag.startswith('~cwp_workid') and self._holds_more(
-                            got, wanted):
+                    if (tag.startswith('~cwp_workid')
+                            and label in holding_more
+                            and self._holds_more(got, wanted)):
                         continue
                     differing.setdefault(album, []).append(label)
                     break
@@ -1392,13 +1407,13 @@ class LegacyParityTestCase(unittest.TestCase):
 
     @staticmethod
     def _holds_more(got, wanted):
-        """The adapter's level holds the legacy's ids, in the same order.
+        """The adapter's level holds the legacy's ids, plus more.
 
         The model may keep more works in a level than the legacy did -
         both Swan Lake editions, say - so the level holds the legacy's
-        ids in the same order and adds the extra ones. The extra ids are
-        the model's own decision and are checked by
-        ``test_every_id_is_a_work_the_model_knows``.
+        ids **first**, in the same order, and the model's extra ones
+        after them. The extra ids are the model's own decision and are
+        checked by ``test_every_id_is_a_work_the_model_knows``.
         """
         if got is None or wanted is None:
             return False
@@ -1406,13 +1421,8 @@ class LegacyParityTestCase(unittest.TestCase):
             return False
         if len(got) < len(wanted):
             return False
-        # the legacy's ids have to appear in the same order
-        remaining = list(got)
-        for work in wanted:
-            if work not in remaining:
-                return False
-            remaining = remaining[remaining.index(work) + 1:]
-        return True
+        # the legacy's ids have to come first, in the same order
+        return list(got[:len(wanted)]) == list(wanted)
 
     def test_every_id_is_a_work_the_model_knows(self):
         """No id is invented.
@@ -1436,13 +1446,21 @@ class LegacyParityTestCase(unittest.TestCase):
                             % (album, work.mbid))
 
     def test_the_work_group_is_the_legacys(self):
-        """Every track's group is the legacy's group for it."""
+        """Every track's group is the legacy's group for it.
+
+        The assignment of groups to tracks is pinned too - not just that
+        every track has some group.
+        """
         for album, expected in sorted(self.legacy.items()):
             tags = _adapter(album).tags()
+            groups = set(expected['groups'])
             for label, want in sorted(expected['tracks'].items()):
                 track = tags.get(WorkId(_recording_id(album, label)))
                 if track is None:
                     continue
+                self.assertIn(
+                    track.as_metadata().get('~cwp_work_group'),
+                    groups, album)
                 self.assertEqual(
                     track.as_metadata().get('~cwp_work_group'),
                     want.get('~cwp_work_group'),
@@ -1455,16 +1473,14 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
     def test_no_module_of_the_package_imports_picard(self):
         """No source of the hierarchy package mentions Picard.
 
-        The whole package is scanned, not just the adapter - a module
+        The whole package is scanned, subpackages included - a module
         that Picard reached would drag it in whatever imported it.
         """
         package = os.path.join(
             os.path.dirname(__file__), "..", "plugins", "classical_extras",
             "hierarchy")
-        for name in sorted(os.listdir(package)):
-            if not name.endswith(".py"):
-                continue
-            path = os.path.join(package, name)
+        for path in self._sources(package):
+            name = os.path.relpath(path, package)
             with open(path, encoding="utf-8") as handle:
                 source = handle.read()
             for line in source.splitlines():
@@ -1473,6 +1489,46 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
                     stripped.startswith("import picard")
                     or stripped.startswith("from picard"),
                     "%s imports Picard: %s" % (name, stripped))
+
+    def test_the_package_does_not_import_picard(self):
+        """Importing the package must not pull Picard in.
+
+        The import is blocked, so a module that reached for Picard would
+        fail rather than quietly work on a machine that has it.
+        """
+        import importlib
+
+        blocked = {}
+
+        class Blocker:
+            """A stand-in for Picard that fails if it is imported."""
+
+            def find_module(self, name, path=None):
+                if name == "picard" or name.startswith("picard."):
+                    blocked["name"] = name
+                    raise ImportError("Picard must not be imported")
+                return None
+
+        finder = Blocker()
+        sys.meta_path.insert(0, finder)
+        try:
+            for name in list(sys.modules):
+                if name == "picard" or name.startswith("picard."):
+                    continue
+                if name.startswith("hierarchy"):
+                    del sys.modules[name]
+            importlib.import_module("hierarchy.adapter")
+        finally:
+            sys.meta_path.remove(finder)
+        self.assertEqual(blocked, {})
+
+    @staticmethod
+    def _sources(package):
+        """Every python source of the package."""
+        for root, _dirs, names in os.walk(package):
+            for name in sorted(names):
+                if name.endswith(".py"):
+                    yield os.path.join(root, name)
 
 
 if __name__ == "__main__":
