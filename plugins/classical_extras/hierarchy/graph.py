@@ -292,10 +292,10 @@ class WorkGraph:
                     parents.append(relation.target)
 
             if not parents and use_arrangements:
-                parents = [
-                    relation.target
-                    for relation in self.relations_of(
-                        work, ARRANGEMENT_RELATION, BACKWARD)]
+                for relation in self.relations_of(
+                        work, ARRANGEMENT_RELATION, BACKWARD):
+                    if relation.target not in parents:
+                        parents.append(relation.target)
 
             if not parents and use_medleys:
                 for relation in self.relations_of(work, MEDLEY_RELATION):
