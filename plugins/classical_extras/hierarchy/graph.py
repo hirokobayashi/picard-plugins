@@ -262,26 +262,49 @@ class WorkGraph:
         A ``part of collection`` relation names a grouping work rather than a
         genuine parent, so it is ignored when collections are disabled.
         """
-        resolved: Dict[WorkId, FrozenSet[WorkId]] = {}
+        return {
+            work: frozenset(parents)
+            for work, parents in self.resolve_parents_ordered(
+                use_arrangements=use_arrangements,
+                use_medleys=use_medleys,
+                use_collections=use_collections).items()}
+
+    def resolve_parents_ordered(
+            self,
+            use_arrangements: bool = True,
+            use_medleys: bool = True,
+            use_collections: bool = True) -> Dict[WorkId, List[WorkId]]:
+        """The parents of every work, in the order the relations gave them.
+
+        The same resolution as :meth:`resolve_parents`, but the order is
+        kept. The legacy keyed a node by a tuple of ids and the order in
+        the tuple was the order the relations came back in, so a caller
+        that has to write the same tag needs the order.
+        """
+        resolved: Dict[WorkId, List[WorkId]] = {}
         for work in self.works():
-            parents: Set[WorkId] = set()
+            parents: List[WorkId] = []
 
             for relation in self.relations_of(work, PARTS_RELATION, BACKWARD):
                 if relation.is_collection and not use_collections:
                     continue
-                parents.add(relation.target)
+                if relation.target not in parents:
+                    parents.append(relation.target)
 
             if not parents and use_arrangements:
-                parents = self.relation_targets(
-                    work, ARRANGEMENT_RELATION, BACKWARD)
+                parents = [
+                    relation.target
+                    for relation in self.relations_of(
+                        work, ARRANGEMENT_RELATION, BACKWARD)]
 
             if not parents and use_medleys:
                 for relation in self.relations_of(work, MEDLEY_RELATION):
                     if relation.direction == BACKWARD:
                         continue
-                    parents.add(relation.target)
+                    if relation.target not in parents:
+                        parents.append(relation.target)
 
-            resolved[work] = frozenset(parents)
+            resolved[work] = parents
         return resolved
 
     # -- queries ---------------------------------------------------------

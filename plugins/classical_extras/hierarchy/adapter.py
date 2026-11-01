@@ -40,10 +40,10 @@ The levels above the first are the node's works in the same order.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, Iterable, List, Mapping, Sequence, Tuple
+from typing import Dict, FrozenSet, Iterable, List, Mapping, Sequence, Tuple
 
 from .album import Album, Performance, candidate_tops, chains_of
-from .graph import BACKWARD, PARTS_RELATION, NodeId, WorkGraph, WorkId
+from .graph import NodeId, WorkGraph, WorkId
 from .project import Hierarchy, project
 
 #: The separator the legacy uses between the ids of one level.
@@ -75,20 +75,38 @@ class WorkNames:
         return self.titles.get(work, '')
 
     def names_of(self, works: Iterable[WorkId]) -> List[str]:
-        """The titles of the given works, in the order given."""
-        return [self.title_of(work) for work in works]
+        """The titles of the given works, in the order given.
+
+        A title is only given once, even when two works share it. The
+        legacy's top work tag holds the *names*, and two works with the
+        same name are one name to the reader - the Swan Lake editions
+        are both called "Swan Lake, op. 20", and the tag says so once.
+        """
+        names: List[str] = []
+        for work in works:
+            title = self.title_of(work)
+            if title and title not in names:
+                names.append(title)
+        return names
 
 
 @dataclass
 class WorkRelations:
-    """The parent relations of each work, in the order they came back in.
+    """The resolved parents of each work, in the order they came back in.
 
     The legacy's node keys are tuples, and the order inside a tuple is
     the order the relations came back in. The model holds a node's works
     as a set, so the order has to be restored here to write the same tag.
+
+    The parents are the *resolved* ones - the graph's own ordered
+    fallback of ``parts``, ``arrangement`` and ``medley`` - because that
+    is the set the hierarchy is built from. A work reached only by an
+    ``arrangement`` relation, like the Tristan album's "Prelude and
+    Liebestod", has its parents named by that relation, and the order of
+    those names is the order the legacy wrote them in.
     """
 
-    #: The parent ids of each work, in relation order.
+    #: The resolved parent ids of each work, in relation order.
     parents: Dict[WorkId, List[WorkId]] = field(default_factory=dict)
 
     def order_of(
@@ -125,7 +143,10 @@ class WorkRelations:
 
 
 def read_work_graph(
-        works: Iterable[Mapping]) -> Tuple[WorkGraph, WorkRelations]:
+        works: Iterable[Mapping],
+        use_arrangements: bool = True,
+        use_medleys: bool = True,
+        use_collections: bool = True) -> Tuple[WorkGraph, WorkRelations]:
     """Build a work graph from MusicBrainz's work responses.
 
     Each entry is one ``/ws/2/work`` response. The relations it carries
@@ -135,30 +156,34 @@ def read_work_graph(
 
     The order the parents came back in is returned as well, because the
     legacy's node keys are tuples and the order inside a tuple is the
-    order the relations came back in.
+    order the relations came back in. The parents are the *resolved*
+    ones - the graph's own ordered fallback of ``parts``,
+    ``arrangement`` and ``medley`` - because that is the set the
+    hierarchy is built from.
     """
     graph = WorkGraph()
-    relations = WorkRelations()
     for response in works:
         source = WorkId(response['id'])
         graph.add_work(source)
-        parents: List[WorkId] = []
         for relation in response.get('relations') or ():
             target = relation.get('work')
             if not target or not target.get('id'):
                 continue
-            target_id = WorkId(target['id'])
             graph.add_relation(
                 source,
                 relation.get('type'),
                 relation.get('direction'),
-                target_id,
+                WorkId(target['id']),
                 relation.get('attributes') or ())
-            if (relation.get('type') == PARTS_RELATION
-                    and relation.get('direction') == BACKWARD):
-                parents.append(target_id)
-        if parents:
-            relations.parents[source] = parents
+    resolved = graph.resolve_parents_ordered(
+        use_arrangements=use_arrangements,
+        use_medleys=use_medleys,
+        use_collections=use_collections)
+    relations = WorkRelations(
+        parents={
+            work: list(parents)
+            for work, parents in resolved.items()
+            if parents})
     return graph, relations
 
 
@@ -300,7 +325,11 @@ class AlbumAdapter:
             use_arrangements: bool = True,
             use_medleys: bool = True,
             use_collections: bool = True) -> None:
-        self.graph, self.relations = read_work_graph(works)
+        self.graph, self.relations = read_work_graph(
+            works,
+            use_arrangements=use_arrangements,
+            use_medleys=use_medleys,
+            use_collections=use_collections)
         self.names = names or WorkNames()
         self.use_partial = use_partial
         self.use_arrangements = use_arrangements
@@ -374,6 +403,8 @@ class AlbumAdapter:
         """The hierarchy tags of every recording."""
         hierarchy, groups = self.build()
         chains = chains_of(hierarchy, self.performances)
+        candidates = candidate_tops(chains, hierarchy)
+        votes = self._votes(candidates)
         result: Dict[WorkId, TrackTags] = {}
         for recording in self.recordings:
             chain = chains.get(recording.performance.key) or []
@@ -381,15 +412,50 @@ class AlbumAdapter:
                 continue
             result[recording.performance.key] = self._tags_for(
                 recording, chain, hierarchy,
-                groups.get(recording.performance.key, ''))
+                groups.get(recording.performance.key, ''),
+                votes)
         return result
+
+    def _votes(
+            self,
+            candidates: Mapping[WorkId, FrozenSet[WorkId]]) -> Dict[str, int]:
+        """How many tracks of the album have each name as a candidate top.
+
+        The legacy votes over the *names* of a track's candidate top
+        works, and the winner becomes the track's top work tag.
+        """
+        votes: Dict[str, int] = {}
+        for works in candidates.values():
+            for name in set(self.names.names_of(works)):
+                votes[name] = votes.get(name, 0) + 1
+        return votes
+
+    def _top_names(
+            self,
+            top: Sequence[WorkId],
+            votes: Mapping[str, int]) -> List[str]:
+        """The names of a track's top work.
+
+        The legacy picks the candidate name the most tracks of the album
+        voted for, so that every track sharing a top names it the same
+        way. A tie keeps every tied name.
+        """
+        names = self.names.names_of(top)
+        if not names:
+            return []
+        if not votes:
+            return names[:1]
+        best = max(votes.get(name, 0) for name in names)
+        winners = [name for name in names if votes.get(name, 0) == best]
+        return winners
 
     def _tags_for(
             self,
             recording: Recording,
             chain: Sequence[NodeId],
             hierarchy: Hierarchy,
-            group: str) -> TrackTags:
+            group: str,
+            votes: Mapping[str, int]) -> TrackTags:
         """The tags of one recording, from its chain.
 
         ``~cwp_part_levels`` is the number of levels between the track and
@@ -402,11 +468,10 @@ class AlbumAdapter:
                   for index, (node, through) in enumerate(
                       self._levels_with_through(recording, chain))]
         top = levels[-1]
-        top_names = self.names.names_of(top)
         return TrackTags(
             levels=levels,
             top=top,
-            top_names=top_names,
+            top_names=self._top_names(top, votes),
             group=group,
             part_levels=len(chain) - 1,
             work_part_levels=node_height(hierarchy, chain[-1]))

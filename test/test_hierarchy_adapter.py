@@ -459,6 +459,132 @@ class ReadWorkGraphTestCase(unittest.TestCase):
             [w("work-a"), w("work-b")])
 
 
+class ArrangementOrderTestCase(unittest.TestCase):
+    """The order of a level reached through an arrangement relation.
+
+    The Tristan album's "Prelude and Liebestod" has no ``parts`` parent
+    at all - it reaches the opera through an ``arrangement`` relation.
+    The legacy wrote that level's ids in the order the arrangement
+    relation gave them, which is not the work id order.
+    """
+
+    def test_the_arrangement_order_is_kept(self):
+        works = [
+            {
+                "id": "work-1",
+                "title": "The work",
+                "relations": [
+                    {
+                        "type": "arrangement",
+                        "direction": "backward",
+                        "work": {"id": "work-b"},
+                    },
+                    {
+                        "type": "arrangement",
+                        "direction": "backward",
+                        "work": {"id": "work-a"},
+                    },
+                ],
+            },
+        ]
+        graph, relations = read_work_graph(works)
+        self.assertEqual(
+            relations.parents[w("work-1")],
+            [w("work-b"), w("work-a")])
+        self.assertEqual(
+            relations.order_of([w("work-a"), w("work-b")], through=w("work-1")),
+            [w("work-b"), w("work-a")])
+
+    def test_the_parts_relation_wins_over_the_arrangement(self):
+        works = [
+            {
+                "id": "work-1",
+                "relations": [
+                    {
+                        "type": "arrangement",
+                        "direction": "backward",
+                        "work": {"id": "work-a"},
+                    },
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "work-b"},
+                    },
+                ],
+            },
+        ]
+        graph, relations = read_work_graph(works)
+        self.assertEqual(
+            relations.parents[w("work-1")],
+            [w("work-b")])
+
+    def test_tristan_the_liebestod_reaches_its_acts_in_order(self):
+        """The real fixture: the order is the arrangement's, not the id's."""
+        tags = _adapter("tristan").tags()
+        # find the track whose chain holds the two acts
+        for track in tags.values():
+            for level in track.levels:
+                ids = [work.mbid for work in level]
+                if any(i.startswith("eb691aba") for i in ids):
+                    self.assertEqual(
+                        [i[:8] for i in ids],
+                        ["eb691aba", "52836ec3"],
+                        "the arrangement relation's order")
+                    return
+        self.fail("no track reaches the two acts")
+
+
+class TopNameTestCase(unittest.TestCase):
+    """The name of a track's top work.
+
+    Two works can share a title - the two editions of Swan Lake are both
+    called "Swan Lake, op. 20" - and the tag then holds the name once.
+    """
+
+    def test_two_works_with_one_name_give_one_name(self):
+        names = WorkNames(titles={
+            w("work-a"): "Swan Lake, op. 20",
+            w("work-b"): "Swan Lake, op. 20",
+        })
+        self.assertEqual(
+            names.names_of([w("work-a"), w("work-b")]),
+            ["Swan Lake, op. 20"])
+
+    def test_two_different_names_give_two_names(self):
+        names = WorkNames(titles={
+            w("work-a"): "A work",
+            w("work-b"): "Another work",
+        })
+        self.assertEqual(
+            names.names_of([w("work-a"), w("work-b")]),
+            ["A work", "Another work"])
+
+    def test_the_swan_lake_top_is_named_once(self):
+        tags = _adapter("swanlake_full").tags()
+        for track in tags.values():
+            for name in track.top_names:
+                self.assertNotEqual(name, "", track.group)
+            self.assertEqual(
+                len(track.top_names),
+                len(set(track.top_names)),
+                track.group)
+
+    def test_the_top_name_is_the_vote_winner(self):
+        """The name the most tracks of the album voted for."""
+        tags = _adapter("swanlake_full").tags()
+        counts = {}
+        for track in tags.values():
+            for name in track.top_names:
+                counts[name] = counts.get(name, 0) + 1
+        for track in tags.values():
+            for name in track.top_names:
+                self.assertEqual(
+                    counts[name],
+                    max(counts[other] for other in counts
+                        if other in track.top_names),
+                    name)
+
+
 class AdapterWithoutPicardTestCase(unittest.TestCase):
     """The adapter needs no Picard."""
 
