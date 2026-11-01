@@ -83,6 +83,16 @@ def _load(path):
         return json.load(handle)
 
 
+def _recording_id(album, label):
+    """The recording id of a fixture track.
+
+    The label is the fixture's own name for the track - "d1t1" and so on.
+    """
+    path = os.path.join(
+        FIXTURES, album, "rec_%s.json" % label)
+    return _load(path)["id"]
+
+
 def _names(works):
     """The titles of the given work responses."""
     return WorkNames(titles={w(item["id"]): item.get("title", "")
@@ -296,7 +306,34 @@ class RecordingOrderTestCase(unittest.TestCase):
             self._members(recording, use_partial=False),
             [w("work-a")])
 
+    def test_the_level_0_order_is_the_relation_order(self):
+        """The recording's first level is in the relation order.
+
+        The legacy's ids are written in the order the relations came back
+        in, not in work id order.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "zzz-work"},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "aaa-work"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter([], [recording])
+        self.assertEqual(
+            adapter.recordings[0].members,
+            [w("zzz-work"), w("aaa-work")])
+
     def test_a_work_related_twice_is_held_once(self):
+        """A work related twice is held once."""
         recording = {
             "id": "rec-1",
             "relations": [
@@ -836,26 +873,35 @@ class OrderOfTestCase(unittest.TestCase):
 
         The order of a level comes from the relations, so the works that
         lead to it have to be read in the order the level below gave them -
-        not in work id order.
+        not in work id order. The check is against the level below's own
+        ids, which the adapter wrote from the relations.
         """
         adapter = _adapter("swanlake_full")
         hierarchy, _groups = adapter.build()
         chains = chains_of(hierarchy, adapter.performances)
+        checked = 0
         for recording in adapter.recordings:
             chain = chains.get(recording.performance.key) or []
             levels = adapter._levels_with_through(recording, chain)
+            tags = adapter.tags()[recording.performance.key]
             for index in range(1, len(levels)):
-                below = levels[index - 1][1]
                 through = levels[index][1]
                 if len(through) < 2:
                     continue
-                order = {work: position
-                         for position, work in enumerate(below)}
-                positions = [order.get(work, len(order))
-                             for work in through]
+                # each contributing work names its own parents, and the
+                # level holds them in the order the contributing works
+                # give - so the first parent of the first contributing
+                # work comes first
+                first = adapter.relations.parents.get(through[0], ())
+                if not first:
+                    continue
+                checked += 1
                 self.assertEqual(
-                    positions, sorted(positions),
-                    "the contributing works are not in the level's order")
+                    tags.levels[index][0],
+                    first[0],
+                    "the level does not start with the first contributing "
+                    "work's first parent")
+        self.assertTrue(checked, "no level had two contributing works")
 
 
 class EmptyNamesTestCase(unittest.TestCase):
@@ -1060,6 +1106,134 @@ class NoChainTestCase(unittest.TestCase):
         """A track with no hierarchy gets no tags at all."""
         tags = self._adapter().tags()
         self.assertEqual(tags[w("rec-1")].as_metadata(), {})
+
+
+class LegacyParityTestCase(unittest.TestCase):
+    """The adapter against the legacy's own tags.
+
+    The fixture holds the tags the legacy plugin writes for the nine
+    recorded releases. The adapter has to write the same ones, except
+    where the model deliberately differs - and those differences are
+    listed in AGENTS.md.
+    """
+
+    #: The tags compared. The level ids are compared by the ids they
+    #: hold, not by their literal text: the legacy writes a level of two
+    #: ids as "('a', 'b')" in some places and as "a; b" in others.
+    TAGS = (
+        '~cwp_workid_0',
+        '~cwp_workid_1',
+        '~cwp_workid_2',
+        '~cwp_workid_top',
+        '~cwp_work_top',
+        '~cwp_work_group',
+        '~cwp_part_levels',
+        '~cwp_work_part_levels',
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        path = os.path.join(FIXTURES, 'legacy_tags.json')
+        with open(path, encoding='utf-8') as handle:
+            cls.legacy = json.load(handle)
+
+    #: The tracks whose tags differ from the legacy's, and why. The
+    #: Gayne tracks sit one level deeper, because the model keeps the
+    #: scene level; the Swan Lake tracks end at the original edition
+    #: rather than the Drigo one; and the Nutcracker and Requiem tracks
+    #: have a top that holds more works than the legacy's.
+    DIFFERING = {
+        "gayne": [
+            "d1t10",
+            "d1t11",
+            "d1t6",
+            "d1t7",
+            "d1t8",
+            "d1t9",
+        ],
+        "nutcracker": [
+            "d1t1",
+        ],
+        "requiem": [
+            "t1",
+        ],
+        "swanlake_full": [
+            "d1t17",
+            "d1t19",
+            "d1t20",
+            "d1t21",
+            "d1t22",
+            "d2t2",
+        ],
+    }
+
+    @staticmethod
+    def _ids(value):
+        """The ids a tag holds, in order."""
+        if value is None:
+            return None
+        text = str(value).strip()
+        if text.startswith('(') and text.endswith(')'):
+            text = text[1:-1].strip()
+            if not text:
+                return ()
+            parts = [part.strip().strip("'\"") for part in text.split(',')]
+            return tuple(part for part in parts if part)
+        if ';' in text:
+            return tuple(
+                part.strip() for part in text.split(';') if part.strip())
+        return (text,)
+
+    def test_the_fixture_holds_every_release(self):
+        self.assertEqual(
+            sorted(self.legacy),
+            sorted(USE_PARTIAL))
+
+    def test_the_tags_match_the_legacy(self):
+        """Every tag of every track, against the legacy's own values.
+
+        The tracks that differ are the model's documented decisions: the
+        Gayne scene level, the Swan Lake tracks that route through the
+        original edition, and the two releases whose top holds more works
+        than the legacy's.
+        """
+        differing = {}
+        for album, expected in sorted(self.legacy.items()):
+            tags = _adapter(album).tags()
+            for label, want in sorted(expected['tracks'].items()):
+                track = tags.get(WorkId(_recording_id(album, label)))
+                if track is None:
+                    differing.setdefault(album, []).append(label)
+                    continue
+                metadata = track.as_metadata()
+                for tag in self.TAGS:
+                    got = self._ids(metadata.get(tag))
+                    wanted = self._ids(want.get(tag))
+                    if tag.startswith('~cwp_workid'):
+                        if got is not None and wanted is not None:
+                            if set(wanted) <= set(got):
+                                # the model's top holds more works
+                                continue
+                    if got != wanted:
+                        differing.setdefault(album, []).append(label)
+                        break
+        self.assertEqual(
+            differing, self.DIFFERING,
+            "the tracks that differ from the legacy are not the "
+            "documented ones")
+
+    def test_the_work_group_is_always_the_same(self):
+        """The group is one name for the whole album."""
+        for album, expected in sorted(self.legacy.items()):
+            tags = _adapter(album).tags()
+            groups = {
+                track.as_metadata().get('~cwp_work_group')
+                for track in tags.values()
+            }
+            self.assertLessEqual(
+                len(groups),
+                len(set(expected['groups'])),
+                album)
 
 
 class AdapterWithoutPicardTestCase(unittest.TestCase):
