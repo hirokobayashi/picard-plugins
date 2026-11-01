@@ -451,13 +451,30 @@ recording of the album yields the identical string.
 | swanlake_full | identical | 8 / 43 | 37 / 43 |
 | gayne | identical | 45 / 51 | 45 / 51 |
 
-"chains matching the decisions" counts a chain as matching when the new
-model's chain is the legacy's with the top allowed to hold several works
-where the legacy picks one. The twelve chains that differ are the six
-Gayne tracks of the scene level - which is kept, a deliberate decision -
-and the six Swan Lake tracks: five of the container level reduction, and
-one that differs because the legacy wrote its album-wide top rather than
-the track's own. Both are decisions rather than defects.
+Three ways of comparing the chains give three figures, so all three are
+worth stating:
+
+| comparison | result |
+|---|---|
+| the work ids at every level are identical | 161 / 218 |
+| the work *names* at every level are identical | 162 / 218 |
+| the legacy's ids are a subset of the model's, level by level | 206 / 218 |
+
+"chains matching the decisions" is the third of these: a chain matches
+when the new model's chain is the legacy's with the top allowed to hold
+several works where the legacy picks one.
+
+The chains that differ are:
+
+- **the top holds more works** - 29 of Swan Lake's 43 tracks, 13 of the
+  Jarvi release's 19, and one track each of Nutcracker, Planets and
+  Requiem. For Swan Lake the top holds both editions of "Swan Lake,
+  op. 20", where the legacy names one of them.
+- **the Gayne scene level** - six tracks sit one level deeper.
+- **a different work** - five Swan Lake tracks (`d1t17`, `d1t19` to
+  `d1t22`) now sit under the original edition's Act II rather than the
+  Drigo one, and `d2t2` ends at the original edition where the legacy
+  wrote the album-wide Drigo top.
 
 - **Two editions of one work** (Swan Lake's op. 20 and the 1895 R. Drigo
   edition, 35 tracks). The legacy picks one of the two as the
