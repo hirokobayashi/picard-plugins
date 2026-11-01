@@ -270,7 +270,7 @@ them. That is what the model does now. It does not change the *group*,
 though: Planets' track 7 has the same group as the other suite tracks
 (tracks 1-6), "The Planets, op. 32", because the group is the vote winner
 among the track's candidate names. Only track 8, which reaches only the
-extension, sits in the "Planets Suite extension" group.
+extension, sits in the "The Planets Suite extension" group.
 
 The two works of a recording need not be peers. The Firebird album's
 track 5 carries a performance relation to a movement of the 1919 suite
@@ -350,10 +350,16 @@ group.
 The group name is the candidate name when the candidates share one name -
 no choice needed. Only when the candidates have *different* names does the
 group have to pick, and it picks the album-wide vote winner. Measured over
-the tracked fixtures, only three tracks have more than one candidate name
-at all (firebird t5, nutcracker d1t1, planets t7) and none of them ties,
-so the tie break does not affect any fixture. The legacy breaks a tie by
+the tracked fixtures, only two tracks have more than one candidate name
+at all (nutcracker d1t1 and planets t7) and neither of them ties, so the
+tie break does not affect any fixture. The legacy breaks a tie by
 lowest normalised name.
+
+Firebird's track 5 used to be a third one. It is not any more: with
+`cwp_partial` on the partially performed ballet contributes nothing
+upward, and with it off the reduction drops the top level ballet in
+favour of the embedded suite, so either way the track has one candidate
+name.
 
 The legacy narrows a fused top's candidates with three passes, in this
 order in `process_album`:
@@ -393,6 +399,7 @@ among those candidates:
 | firebird | 3 groups, 25 tracks | 3 groups, 25 tracks |
 | tristan | 6 groups, 11 tracks | 6 groups, 11 tracks |
 | gayne | 1 group, 51 tracks | 1 group, 51 tracks |
+| daphnis | 1 group, 19 tracks | 1 group, 19 tracks |
 
 Every group set and every track count is identical to the legacy.
 
@@ -444,8 +451,9 @@ recording of the album yields the identical string.
 model's chain is the legacy's with the top allowed to hold several works
 where the legacy picks one. The twelve chains that differ are the six
 Gayne tracks of the scene level - which is kept, a deliberate decision -
-and the six Swan Lake tracks of the container level reduction. Both are
-decisions rather than defects.
+and the six Swan Lake tracks: five of the container level reduction, and
+one that differs because the legacy wrote its album-wide top rather than
+the track's own. Both are decisions rather than defects.
 
 - **Two editions of one work** (Swan Lake's op. 20 and the 1895 R. Drigo
   edition, 35 tracks). The legacy picks one of the two as the
