@@ -6,6 +6,9 @@ plugins/*.zip
 __pycache__/
 *.py[cod]
 
+# Test run output
+.coverage
+
 # Distribution / packaging / development
 .venv/
 .vscode/
