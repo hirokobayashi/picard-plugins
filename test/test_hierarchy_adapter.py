@@ -883,7 +883,7 @@ class OrderOfTestCase(unittest.TestCase):
         for recording in adapter.recordings:
             chain = chains.get(recording.performance.key) or []
             levels, through = adapter._levels(recording, chain)
-            for index in range(1, len(levels)):
+            for index in range(2, len(levels)):
                 leaders = through[index]
                 if len(leaders) < 2:
                     continue
@@ -978,6 +978,80 @@ class PartialOrderTestCase(unittest.TestCase):
         track = tags[w("rec-1")]
         self.assertEqual(track.levels[0], [w("rec-1")])
         self.assertEqual(track.levels[1], [w("work-zzz")])
+
+    def test_two_partial_works_keep_the_relation_order(self):
+        """Two partly performed works keep the order of the relations.
+
+        Both are represented by the recording id in the first level, so
+        the first level cannot say which came first - the relations do.
+        """
+        works = [
+            {
+                "id": "work-zzz",
+                "title": "A work",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "parent-1"},
+                    },
+                ],
+            },
+            {
+                "id": "work-aaa",
+                "title": "Another work",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "parent-2"},
+                    },
+                ],
+            },
+            {"id": "parent-1", "title": "The first parent"},
+            {"id": "parent-2", "title": "The second parent"},
+        ]
+        recordings = [{
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-zzz"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-zzz"},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-aaa"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-aaa"},
+                },
+            ],
+        }]
+        adapter = AlbumAdapter(works, recordings, use_partial=True)
+        tags = adapter.tags()
+        track = tags[w("rec-1")]
+        # the level above the two works holds the parents, and a level's
+        # order comes from the relations of the works below it
+        self.assertEqual(
+            track.levels[2],
+            [w("parent-2"), w("parent-1")])
+        # and the two works themselves are in the order the relations gave
+        # them - the recording id stands in for them in the first level,
+        # so the relations are what say
+        self.assertEqual(
+            adapter.recordings[0].performed,
+            [w("work-zzz"), w("work-aaa")])
 
 
 class EmptyNamesTestCase(unittest.TestCase):

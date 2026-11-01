@@ -274,11 +274,15 @@ class Recording:
     ``partial`` are the works that are only performed in part. Their
     place in the first level is taken by the recording id, so they have
     to be kept to know where they stood.
+
+    ``performed`` are the works the recording performs, in the order the
+    relations gave them.
     """
 
     performance: Performance
     members: List[WorkId] = field(default_factory=list)
     partial: List[WorkId] = field(default_factory=list)
+    performed: List[WorkId] = field(default_factory=list)
 
 
 @dataclass
@@ -433,7 +437,38 @@ class AlbumAdapter:
         return Recording(
             performance=performance,
             members=self._ordered_members(recording, performance),
-            partial=sorted(performance.partial, key=lambda x: x.mbid))
+            partial=self._partial_works(recording, performance),
+            performed=self._performed_works(recording))
+
+    def _partial_works(
+            self,
+            recording: Mapping,
+            performance: Performance) -> List[WorkId]:
+        """The partly performed works, in the order the relations gave them.
+
+        The order matters: a partly performed work is represented by the
+        recording id in the first level, so the first level cannot say
+        where it stood, and this list is what says instead.
+        """
+        return [
+            work for work in self._performed_works(recording)
+            if work in performance.partial]
+
+    def _performed_works(
+            self,
+            recording: Mapping) -> List[WorkId]:
+        """The works the recording performs, in the relation order."""
+        works: List[WorkId] = []
+        for relation in recording.get('relations') or ():
+            if relation.get('type') != 'performance':
+                continue
+            target = relation.get('work')
+            if not target or not target.get('id'):
+                continue
+            work = WorkId(target['id'])
+            if work not in works:
+                works.append(work)
+        return works
 
     def _ordered_members(
             self,
@@ -642,13 +677,20 @@ class AlbumAdapter:
             work for work in node.works
             if self.relations.parents.get(work, ())
             and set(self.relations.parents[work]) & set(child.works)]
-        order = {work: position for position, work in enumerate(below)}
+        # the key is the place in the level below, and then the place among
+        # the partly performed works - a work the level below does not
+        # name goes last
+        order: Dict[WorkId, Tuple[int, int]] = {
+            work: (position, 0)
+            for position, work in enumerate(below)}
         if recording in order:
-            # the recording id stands in for the partly performed works,
-            # so they take its place
+            partial_order = {
+                work: position for position, work in enumerate(partial)}
             for work in leading:
-                if work not in order and work in partial:
-                    order[work] = order[recording]
+                if work not in order and work in partial_order:
+                    order[work] = (order[recording][0], partial_order[work])
         return sorted(
             leading,
-            key=lambda work: (order.get(work, len(order)), work.mbid))
+            key=lambda work: (
+                order.get(work, (len(below), 0)),
+                work.mbid))
