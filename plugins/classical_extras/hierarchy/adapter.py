@@ -51,8 +51,8 @@ from .project import Hierarchy, project
 ID_SEPARATOR = '; '
 
 #: The sort key of a work that no relation named. It has to be past every
-#: real position, so that such a work sorts after the ones that were named.
-_UNORDERED = float('inf')
+#: real key, so that such a work sorts after the ones that were named.
+_UNORDERED = (1 << 30, 1 << 30)
 
 
 def format_ids(works: Iterable[WorkId]) -> str:
@@ -138,7 +138,7 @@ class WorkRelations:
         id order, so the result is always deterministic.
         """
         wanted = list(works)
-        order: Dict[WorkId, int] = {}
+        order: Dict[WorkId, Tuple[int, int]] = {}
         if through is None:
             candidates = list(self.parents.values())
         elif isinstance(through, WorkId):
@@ -146,13 +146,17 @@ class WorkRelations:
         else:
             candidates = [
                 self.parents.get(work, ()) for work in through]
-        for parent_list in candidates:
+        for source, parent_list in enumerate(candidates):
             for position, parent in enumerate(parent_list):
                 if parent in wanted and parent not in order:
-                    order[parent] = position
+                    # The key is the contributing work's own index and the
+                    # position within it. Two contributing works can each
+                    # name a parent at position 0, and then the work that
+                    # comes first has to win - not the one whose id sorts
+                    # first.
+                    order[parent] = (source, position)
         # A work no relation named goes after every work one did, so the
-        # sentinel has to be past the largest real position - not just
-        # past the number of matches, which can be smaller.
+        # sentinel has to be past every real key.
         return sorted(
             wanted,
             key=lambda work: (order.get(work, _UNORDERED), work.mbid))
@@ -290,7 +294,14 @@ class TrackTags:
         return format_ids(self.levels[level])
 
     def as_metadata(self) -> Dict[str, str]:
-        """The tags, in the legacy's names."""
+        """The tags, in the legacy's names.
+
+        A track with no hierarchy - one whose recording names no work, or
+        names a work with no place in the tree - gets no tags at all,
+        which is what the legacy writes for it.
+        """
+        if not self.levels:
+            return {}
         metadata: Dict[str, str] = {}
         for level, works in enumerate(self.levels):
             metadata['~cwp_workid_%d' % level] = self.id_string(level)
@@ -450,7 +461,12 @@ class AlbumAdapter:
         return hierarchy, groups
 
     def tags(self) -> Dict[WorkId, TrackTags]:
-        """The hierarchy tags of every recording."""
+        """The hierarchy tags of every recording.
+
+        A recording that names no work, or names a work with no place in
+        the tree, is in the result with no levels - so a caller can tell it
+        apart from a recording that is not there at all.
+        """
         hierarchy, groups = self.build()
         chains = chains_of(hierarchy, self.performances)
         candidates = candidate_tops(chains, hierarchy)
@@ -458,8 +474,6 @@ class AlbumAdapter:
         result: Dict[WorkId, TrackTags] = {}
         for recording in self.recordings:
             chain = chains.get(recording.performance.key) or []
-            if not chain:
-                continue
             result[recording.performance.key] = self._tags_for(
                 recording, chain, hierarchy,
                 groups.get(recording.performance.key, ''),
@@ -496,6 +510,10 @@ class AlbumAdapter:
         if not votes:
             return names[:1]
         best = max(votes.get(name, 0) for name in names)
+        if best == 0:
+            # none of this top's names was voted for, so there is nothing
+            # to choose between
+            return names[:1]
         winners = [name for name in names if votes.get(name, 0) == best]
         return winners
 
@@ -517,6 +535,10 @@ class AlbumAdapter:
         levels = [self._level_ids(recording, node, index, through)
                   for index, (node, through) in enumerate(
                       self._levels_with_through(recording, chain))]
+        if not levels or not levels[-1]:
+            # the recording names no work, or names a work with no place
+            # in the tree
+            return TrackTags(group=group)
         top = levels[-1]
         return TrackTags(
             levels=levels,
