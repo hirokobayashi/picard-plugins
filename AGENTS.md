@@ -138,8 +138,10 @@ and the group):
   - **45** where the top holds more works than the legacy's - 29 of Swan
     Lake's 43 tracks, 13 of the Jarvi release's 19, and one each of
     Nutcracker, Planets and Requiem;
-  - **12** that end at a different work - the 6 Gayne scene-level tracks
-    and the 6 Swan Lake tracks that route through the original edition.
+  - **12** that differ elsewhere in the chain - the 6 Gayne scene-level
+    tracks, which end at the same work but one level deeper, and the 6
+    Swan Lake tracks that end at the original edition rather than the
+    Drigo one.
 
 Two things the legacy does that the adapter has to reproduce, and that the
 review found missing at first:
