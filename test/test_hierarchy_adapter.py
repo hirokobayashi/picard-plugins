@@ -1580,6 +1580,14 @@ class PartialOrderFixtureTestCase(unittest.TestCase):
                 self.assertEqual(
                     metadata.get(tag), value,
                     "order %s %s" % (order, tag))
+            # and the whole set of the level tags, so that a level that
+            # was not there before would show
+            self.assertEqual(
+                {tag for tag in metadata
+                 if tag.startswith('~cwp_workid')},
+                {"~cwp_workid_0", "~cwp_workid_1", "~cwp_workid_2",
+                 "~cwp_workid_3", "~cwp_workid_top"},
+                "order %s" % order)
 
     @staticmethod
     def _adapter(order):
