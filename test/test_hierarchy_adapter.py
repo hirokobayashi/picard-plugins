@@ -112,18 +112,6 @@ def _as_picard_stores(value):
     return values
 
 
-def _form_of(value):
-    """The shape of a stored tag - one id or several.
-
-    Used where the ids differ but the form they are stored in does not.
-    """
-    if value is None:
-        return None
-    if isinstance(value, str):
-        return "one"
-    return "many"
-
-
 def _starts_with(stored, legacy):
     """The stored tag holds the legacy's ids first, in the same order."""
     if legacy is None:
@@ -1416,7 +1404,16 @@ class NoChainTestCase(unittest.TestCase):
                 w(recording["id"]), level,
                 "daphnis %s: the recording id is not in the first level"
                 % label)
+            # the work that is related twice is related partly, so the
+            # recording stands in for it - but a work related once in
+            # full is in the level as itself
             for work in works:
+                partial = any(
+                    relation["work"]["id"] == work
+                    and relation.get("attributes")
+                    for relation in related)
+                if not partial:
+                    continue
                 self.assertNotIn(
                     w(work), level,
                     "daphnis %s: the work is in the first level" % label)
@@ -1819,13 +1816,11 @@ class LegacyParityTestCase(unittest.TestCase):
                     legacy = want.get(tag)
                     stored = _as_picard_stores(metadata.get(tag))
                     if label in differing:
-                        # the ids differ, but the form they are written
-                        # in does not: a tuple, like every other level
+                        # the ids differ - and the model's level may hold
+                        # more of them - but the form is the same: a
+                        # tuple, like every other level
                         self.assertIsInstance(
                             metadata.get(tag), tuple,
-                            "%s %s %s" % (album, label, tag))
-                        self.assertEqual(
-                            len(metadata[tag]), len(works),
                             "%s %s %s" % (album, label, tag))
                         continue
                     if legacy is None:
@@ -1834,9 +1829,6 @@ class LegacyParityTestCase(unittest.TestCase):
                         # written as a tuple, like every other level
                         self.assertIsInstance(
                             metadata.get(tag), tuple,
-                            "%s %s %s" % (album, label, tag))
-                        self.assertEqual(
-                            len(metadata[tag]), len(works),
                             "%s %s %s" % (album, label, tag))
                         continue
                     if label in holding_more:

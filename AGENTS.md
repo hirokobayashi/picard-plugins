@@ -161,6 +161,11 @@ adapter hands Picard the same tuple, so the two agree in the stored
 text, not only in the ids. The parity test compares them as Picard
 stores them, so a change of format would be caught.
 
+Picard joins several values with `'; '` when it writes them out, so a
+level of two ids reads as `a; b` in the file. That is why the legacy's
+own tags sometimes read that way - it is Picard's list, not a string
+the legacy wrote.
+
 There is no tuple-repr string anywhere: the adapter writes the tuple and
 lets Picard store it, so the two cannot drift apart.
 
