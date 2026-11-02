@@ -1081,14 +1081,17 @@ class NodeHeightTestCase(unittest.TestCase):
     def test_a_cycle_does_not_hang(self):
         """A cycle must not make the walk go on for ever.
 
-        The node on the path is treated as a leaf, so ``a -> b -> a``
-        has the height of ``a -> b``.
+        The node on the path is left out of the walk, so it finishes.
+        The height it gives is not to be relied on, so it is not given -
+        the caller is told that the walk was not reliable.
         """
         hierarchy = self._hierarchy({
             _node("a"): [_node("b")],
             _node("b"): [_node("a")],
         })
-        self.assertEqual(node_height(hierarchy, _node("a")), 1)
+        self.assertTrue(has_cycle(hierarchy, _node("a")))
+        self.assertRaises(
+            ValueError, node_height, hierarchy, _node("a"))
 
     def test_a_cycle_is_reported(self):
         """A cycle is reported, so the caller can leave the track alone.
@@ -1152,10 +1155,13 @@ class NodeHeightTestCase(unittest.TestCase):
         self.assertFalse(has_cycle(hierarchy, _node("c")))
 
     def test_a_self_loop_does_not_hang(self):
+        """A self loop must not make the walk go on for ever."""
         hierarchy = self._hierarchy({
             _node("a"): [_node("a")],
         })
-        self.assertEqual(node_height(hierarchy, _node("a")), 0)
+        self.assertTrue(has_cycle(hierarchy, _node("a")))
+        self.assertRaises(
+            ValueError, node_height, hierarchy, _node("a"))
 
 
 class ChainShapeTestCase(unittest.TestCase):

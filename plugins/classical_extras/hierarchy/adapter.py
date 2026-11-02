@@ -437,10 +437,17 @@ def node_height(hierarchy: Hierarchy, node: NodeId) -> int:
     A node that the hierarchy does not hold raises - a caller that
     passes a stale or mistyped node would otherwise get a height of
     zero, which is the height of a leaf.
+
+    A hierarchy with a cycle, or with a child it does not hold, raises
+    too: the height it would give is not to be relied on, and a
+    plausible-looking wrong height is worse than none.
     """
     heights = heights_of(hierarchy, node)
     if node not in heights:
         raise KeyError("the hierarchy has no node %s" % (node,))
+    if not heights_are_reliable(hierarchy, node):
+        raise ValueError(
+            "the height of %s is not to be relied on" % (node,))
     return heights[node]
 
 
