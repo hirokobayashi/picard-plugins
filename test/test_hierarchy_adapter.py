@@ -623,7 +623,9 @@ class ReadWorkGraphTestCase(unittest.TestCase):
         the check is made in a few processes with different hash seeds.
 
         The two works name different parents, so the order of the works
-        is the order of the parents.
+        is the order of the parents. The parents are named so that their
+        id order is the *opposite* of the order the works give - so
+        that the order cannot come from the ids either.
         """
         import subprocess
         import sys
@@ -636,14 +638,14 @@ class ReadWorkGraphTestCase(unittest.TestCase):
             "graph, relations = read_work_graph([\n"
             "    {'id': 'work-a', 'relations': [\n"
             "        {'type': 'parts', 'direction': 'backward',\n"
-            "         'work': {'id': 'parent-a'}}]},\n"
+            "         'work': {'id': 'parent-zzz'}}]},\n"
             "    {'id': 'work-b', 'relations': [\n"
             "        {'type': 'parts', 'direction': 'backward',\n"
-            "         'work': {'id': 'parent-b'}}]},\n"
-            "    {'id': 'parent-a', 'title': 'The parent of A'},\n"
-            "    {'id': 'parent-b', 'title': 'The parent of B'},\n"
+            "         'work': {'id': 'parent-aaa'}}]},\n"
+            "    {'id': 'parent-aaa', 'title': 'The parent of B'},\n"
+            "    {'id': 'parent-zzz', 'title': 'The parent of A'},\n"
             "])\n"
-            "wanted = [WorkId('parent-a'), WorkId('parent-b')]\n"
+            "wanted = [WorkId('parent-aaa'), WorkId('parent-zzz')]\n"
             "print(','.join(\n"
             "    work.mbid for work in relations.order_of(\n"
             "        wanted, through={WorkId('work-a'), WorkId('work-b')})))\n"
@@ -660,7 +662,7 @@ class ReadWorkGraphTestCase(unittest.TestCase):
                 finished.returncode, 0, finished.stderr)
             results.add(finished.stdout.strip())
         self.assertEqual(
-            results, {"parent-a,parent-b"},
+            results, {"parent-zzz,parent-aaa"},
             "the order differs between the processes")
 
 
