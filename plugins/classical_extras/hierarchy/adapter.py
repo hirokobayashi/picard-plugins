@@ -559,8 +559,9 @@ class AlbumAdapter:
             # recorded, so that a caller can see it happened.
             if entry.performance.key in seen:
                 self.dropped.append(entry.performance.key)
-                if self._performed(recording) != self._performed(
-                        seen[entry.performance.key].raw):
+                if self._performance_of(
+                        recording) != self._performance_of(
+                            seen[entry.performance.key].raw):
                     self.conflicting.append(entry.performance.key)
                 continue
             seen[entry.performance.key] = entry
@@ -581,6 +582,28 @@ class AlbumAdapter:
             partial=self._partial_works(recording),
             performed=self._performed_works(recording),
             raw=recording)
+
+    def _performance_of(
+            self,
+            recording: Mapping) -> Tuple[Tuple[WorkId, ...], ...]:
+        """The recording's performance, in full.
+
+        The works in the order the relations gave them, and whether each
+        is in part. A work related more than once is held once - the
+        first relation decides - but the relations after it still count
+        for the model's performance, so the whole performance is
+        compared rather than just the first relations.
+        """
+        performance = read_performance(
+            recording, use_partial=self.use_partial)
+        return (
+            # the order the relations gave, which decides the order of
+            # the first level
+            tuple(self._performed_works(recording)),
+            tuple(sorted(performance.works)),
+            tuple(sorted(performance.partial)),
+            tuple(sorted(performance.complete)),
+        )
 
     def _partial_works(
             self,

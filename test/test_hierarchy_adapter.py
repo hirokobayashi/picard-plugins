@@ -2371,6 +2371,35 @@ class NoChainTestCase(unittest.TestCase):
         tags = adapter.tags()
         self.assertIn(WorkId("rec-1"), tags)
 
+    def test_a_repeated_recording_with_another_relation_is_a_conflict(self):
+        """A repeated recording whose second relation differs is a
+        conflict.
+
+        The two entries perform the same work, but the second relation
+        to it differs - one in full, one partly. The work is in the
+        complete set in one and not in the other, so the two give
+        different hierarchies and different tags.
+        """
+        def relation(attributes):
+            return {
+                "type": "performance",
+                "direction": "forward",
+                "work": {"id": "work-a"},
+                "attributes": attributes,
+            }
+
+        first = {
+            "id": "rec-1",
+            "relations": [relation(["partial"]), relation([])],
+        }
+        second = {
+            "id": "rec-1",
+            "relations": [relation(["partial"]), relation(["partial"])],
+        }
+        adapter = AlbumAdapter([], [first, second])
+        self.assertEqual(adapter.dropped, [w("rec-1")])
+        self.assertEqual(adapter.conflicting, [w("rec-1")])
+
     def test_a_repeated_recording_is_not_a_conflict(self):
         """The same recording listed twice is not a conflict.
 
