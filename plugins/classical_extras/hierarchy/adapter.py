@@ -372,6 +372,23 @@ def node_height(hierarchy: Hierarchy, node: NodeId) -> int:
     a malformed graph cannot hang the plugin.
 
     The walk is iterative, so a deep hierarchy cannot exhaust the stack.
+
+    Use ``heights_of`` when the heights of several nodes of the same
+    hierarchy are wanted: it works them out once.
+    """
+    return heights_of(hierarchy, node).get(node, 0)
+
+
+def heights_of(
+        hierarchy: Hierarchy,
+        node: NodeId) -> Dict[NodeId, int]:
+    """The height of a node and of every node below it.
+
+    The height of a node is the number of levels below it - so a leaf
+    has the height zero.
+
+    The heights of a tree are worked out once, so that the tracks that
+    share a top do not each walk it again.
     """
     heights: Dict[NodeId, int] = {}
     visiting: Set[NodeId] = set()
@@ -399,7 +416,8 @@ def node_height(hierarchy: Hierarchy, node: NodeId) -> int:
             continue
         visiting.add(child)
         stack.append((child, iter(_children_of(hierarchy, child))))
-    return heights.get(node, 1) - 1
+    # the walk counts a node itself, so the heights are one too many
+    return {node_id: height - 1 for node_id, height in heights.items()}
 
 
 def _children_of(hierarchy: Hierarchy, node: NodeId) -> FrozenSet[NodeId]:
@@ -466,13 +484,12 @@ class AlbumAdapter:
         return Recording(
             performance=performance,
             members=self._ordered_members(recording, performance.key),
-            partial=self._partial_works(recording, performance),
+            partial=self._partial_works(recording),
             performed=self._performed_works(recording))
 
     def _partial_works(
             self,
-            recording: Mapping,
-            performance: Performance) -> List[WorkId]:
+            recording: Mapping) -> List[WorkId]:
         """The partly performed works, in the order the relations gave them.
 
         The order matters: a partly performed work is represented by the
@@ -586,13 +603,16 @@ class AlbumAdapter:
         hierarchy, chains, groups = self.build_all()
         candidates = candidate_tops(chains, hierarchy)
         votes = self._votes(candidates)
+        # the height of a top is the same for every track that shares it,
+        # so it is worked out once per top
+        heights: Dict[NodeId, Dict[NodeId, int]] = {}
         result: Dict[WorkId, TrackTags] = {}
         for recording in self.recordings:
             chain = chains.get(recording.performance.key) or []
             result[recording.performance.key] = self._tags_for(
                 recording, chain, hierarchy,
                 groups.get(recording.performance.key, ''),
-                votes)
+                votes, heights)
         return result
 
     def _votes(
@@ -643,14 +663,16 @@ class AlbumAdapter:
             chain: Sequence[NodeId],
             hierarchy: Hierarchy,
             group: str,
-            votes: Mapping[str, int]) -> TrackTags:
+            votes: Mapping[str, int],
+            heights: Dict[NodeId, Dict[NodeId, int]]) -> TrackTags:
         """The tags of one recording, from its chain.
 
         ``~cwp_part_levels`` is the number of levels between the track and
         the top - how deep the track's own work sits in the hierarchy.
         ``~cwp_work_part_levels`` is the depth of the whole hierarchy
         under this track's top, which is the same for every track that
-        shares the top.
+        shares the top - so it is worked out once per top and kept in
+        ``heights``.
         """
         levels, _through = self._levels(recording, chain)
         if not levels or not levels[-1]:
@@ -658,6 +680,8 @@ class AlbumAdapter:
             # in the tree
             return TrackTags(key=recording.performance.key, group=group)
         top = levels[-1]
+        if chain[-1] not in heights:
+            heights[chain[-1]] = heights_of(hierarchy, chain[-1])
         return TrackTags(
             key=recording.performance.key,
             levels=levels,
@@ -665,7 +689,7 @@ class AlbumAdapter:
             top_names=self._top_names(top, votes),
             group=group,
             part_levels=len(chain) - 1,
-            work_part_levels=node_height(hierarchy, chain[-1]))
+            work_part_levels=heights[chain[-1]][chain[-1]])
 
     def _levels(
             self,
