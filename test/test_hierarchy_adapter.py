@@ -1913,12 +1913,13 @@ class NoChainTestCase(unittest.TestCase):
         """The model's performance and the first level's ids agree.
 
         They are read separately, so a test checks that they do not
-        drift apart: the partly performed works are the same, the works
-        are the same, and the works performed in full are the same.
+        drift apart: the partly performed works are the same, and the
+        works are the same.
 
-        The last one matters: the model's complete set says which works
-        contribute themselves to the level above, so a work in it when
-        it should not be - or missing from it - would change the tags.
+        The complete set is checked through what it means for the first
+        level: a work that is performed in full is in the level as
+        itself, and a work that is only partly performed is not - the
+        recording id stands in for it.
         """
         for relations in self._relation_orderings():
             recording = {"id": "rec-1", "relations": relations}
@@ -1956,6 +1957,14 @@ class NoChainTestCase(unittest.TestCase):
                 self.assertIn(
                     work, entry.members,
                     "%s: the work is not in the first level" % (relations,))
+            # and a work that is performed in full is one the model
+            # knows about - the complete set says which works contribute
+            # themselves to the level above
+            for work in performance.complete:
+                self.assertIn(
+                    work, performance.works,
+                    "%s: the work is not a work of the performance"
+                    % (relations,))
 
     @staticmethod
     def _expected_members(relations):
@@ -2401,6 +2410,14 @@ class LegacyParityTestCase(unittest.TestCase):
                 self.assertIsNotNone(
                     track, "%s %s has no tags" % (album, label))
                 metadata = track.as_metadata()
+                # the tags are numbered by the levels that have ids, so
+                # the numbers of the tags and of the levels are the same
+                # only when no level is empty. Every level of every
+                # fixture has ids, so they are the same - and the test
+                # says so, rather than assuming it.
+                self.assertTrue(
+                    all(track.levels),
+                    "%s %s: a level has no ids" % (album, label))
                 for level, works in enumerate(track.levels):
                     tag = '~cwp_workid_%d' % level
                     legacy = want.get(tag)
