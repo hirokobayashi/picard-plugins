@@ -1137,6 +1137,20 @@ class NodeHeightTestCase(unittest.TestCase):
         })
         self.assertFalse(heights_are_reliable(broken, _node("a")))
 
+    def test_the_heights_of_a_node_that_is_not_there_are_not_reliable(self):
+        """The heights of a node the hierarchy does not hold are not
+        reliable.
+
+        The node has no height at all - ``node_height`` raises for it -
+        so the walk must not say that the heights can be relied on.
+        """
+        hierarchy = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [],
+        })
+        self.assertFalse(heights_are_reliable(hierarchy, _node("c")))
+        self.assertFalse(has_cycle(hierarchy, _node("c")))
+
     def test_a_self_loop_does_not_hang(self):
         hierarchy = self._hierarchy({
             _node("a"): [_node("a")],
@@ -2664,6 +2678,31 @@ class NoChainTestCase(unittest.TestCase):
             self.assertRaises(
                 ValueError, AlbumAdapter, [], [],
                 multiplicity={w("rec-1"): count})
+
+    def test_a_multiplicity_for_a_recording_that_is_not_there_is_reported(self):
+        """A count for a recording that is not in the release is reported.
+
+        A count for a recording that is not there has no effect - and a
+        misspelled id would have the same effect as a count that was not
+        given at all. The caller is told.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter(
+            [], [recording], multiplicity={w("rec-2"): 2})
+        self.assertEqual(adapter.unused_multiplicity, [w("rec-2")])
+        # a count for a recording that is there is used
+        adapter = AlbumAdapter(
+            [], [recording], multiplicity={w("rec-1"): 2})
+        self.assertEqual(adapter.unused_multiplicity, [])
 
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.

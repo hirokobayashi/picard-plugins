@@ -504,7 +504,9 @@ def _heights_of(
     visiting: Set[NodeId] = set()
     done: Set[NodeId] = set()
     cycle = False
-    missing = False
+    # a node the hierarchy does not hold has no height, so the walk
+    # gives nothing that can be relied on
+    missing = node not in hierarchy.nodes
     stack: List[Tuple[NodeId, Iterator[NodeId]]] = [
         (node, iter(_children_of(hierarchy, node)))]
     visiting.add(node)
@@ -631,6 +633,11 @@ class AlbumAdapter:
         #: same recording when the option is off - and the tags would
         #: be the same then too.
         self.conflicting: List[WorkId] = []
+        #: The multiplicities that named no recording of the release. A
+        #: count for a recording that is not there has no effect - and a
+        #: misspelled id would have the same effect as a count that was
+        #: not given, so the caller is told.
+        self.unused_multiplicity: List[WorkId] = []
         #: The candidate tops of the hierarchy, worked out when it is
         #: built and kept so that the tags do not walk the chains again.
         self._candidates: Dict[WorkId, List[WorkId]] = {}
@@ -665,6 +672,11 @@ class AlbumAdapter:
                 continue
             seen[entry.performance.key] = entry
             self.recordings.append(entry)
+        # a count for a recording that is not in the release has no
+        # effect - and a misspelled id would have the same effect as a
+        # count that was not given at all
+        self.unused_multiplicity = [
+            key for key in self.multiplicity if key not in seen]
 
     @property
     def performances(self) -> List[Performance]:
