@@ -761,20 +761,28 @@ class AlbumAdapter:
                     # below and their order cannot come from it.
                     #
                     # They take the recording id's place in the level
-                    # below, which is where the relations put them, and
-                    # the works the level below does name keep their own
-                    # place. So the two are put back together in the
-                    # order the relations gave.
+                    # below, which is where the relations put them. The
+                    # works that came from the works before the
+                    # recording id keep their place, so the two are put
+                    # back together in the order the relations gave.
                     partial = [
                         work for work in recording.partial
                         if work in ids]
                     if partial:
                         place = levels[0].index(recording.performance.key)
+                        before = {
+                            work for position, work in enumerate(levels[0])
+                            if position < place}
+                        # the level's works that came from the works
+                        # before the recording id - the partial works go
+                        # after those
+                        leading_before = sum(
+                            1 for work in leaders if work in before)
                         others = [
                             work for work in ids if work not in partial]
                         ids = (
-                            others[:place] + partial
-                            + others[place:])
+                            others[:leading_before] + partial
+                            + others[leading_before:])
             levels.append(ids)
             through.append(leaders)
         return levels, through
