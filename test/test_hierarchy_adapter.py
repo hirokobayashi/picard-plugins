@@ -219,6 +219,7 @@ class ReadPerformanceTestCase(unittest.TestCase):
 
         The recording stands in for the work, and the work still
         contributes - it is the parent of the recording id one level up.
+        The partial relation comes first here.
         """
         recording = {
             "id": "rec-1",
@@ -243,11 +244,16 @@ class ReadPerformanceTestCase(unittest.TestCase):
         self.assertEqual(performance.complete, frozenset([w("work-1")]))
 
     def test_a_work_related_twice_in_the_other_order(self):
-        """The order of the relations does not change the sets.
+        """A work related in full first is performed in full.
 
-        The work is related in full first and partly second here. It is
-        still in both sets - any partly performed relation puts the work
-        in the partial set, whatever order the relations came in.
+        The first relation decides: the legacy reads the attributes of
+        the first relation it finds for the work, so a work related in
+        full first and partly second is a work performed in full - the
+        recording id does not stand in for it, and it is only in the
+        complete set.
+
+        The legacy writes ~cwp_workid_0 = ('work-1', 'work-a') for such
+        a recording - the work itself, not the recording id.
         """
         recording = {
             "id": "rec-1",
@@ -268,7 +274,7 @@ class ReadPerformanceTestCase(unittest.TestCase):
         }
         performance = read_performance(recording)
         self.assertEqual(performance.works, frozenset([w("work-1")]))
-        self.assertEqual(performance.partial, frozenset([w("work-1")]))
+        self.assertEqual(performance.partial, frozenset())
         self.assertEqual(performance.complete, frozenset([w("work-1")]))
 
     def test_other_relations_are_ignored(self):
@@ -1592,6 +1598,65 @@ class PartialOrderFixtureTestCase(unittest.TestCase):
         self.assertEqual(track.levels[1], [w("work-c")])
 
 
+class PartialFullFirstFixtureTestCase(unittest.TestCase):
+    """A work related in full first and partly second.
+
+    The expectations are the legacy's own: the fixture was run through
+    the legacy and the tags it wrote are recorded here.
+    """
+
+    #: The legacy's tags for the fixture. It wrote
+    #: workid_0 = ('work-b', 'work-a') - the work itself, because the
+    #: first relation for it is a full one - and workid_top =
+    #: ('work-b', 'work-a').
+    LEGACY = {
+        "~cwp_workid_0": ("work-b", "work-a"),
+        "~cwp_workid_top": ("work-b", "work-a"),
+    }
+
+    @staticmethod
+    def _adapter():
+        directory = os.path.join(FIXTURES, "partial_full_first")
+        works = [
+            _load(os.path.join(directory, name))
+            for name in sorted(os.listdir(directory))
+            if name.startswith("work_")]
+        recording = _load(os.path.join(directory, "rec_1.json"))
+        return AlbumAdapter(works, [recording], use_partial=True)
+
+    def test_the_work_keeps_its_own_id(self):
+        """The first relation decides, so the work keeps its own id.
+
+        The work is related in full first and partly second. The legacy
+        reads the attributes of the first relation it finds for the
+        work, so it is a work performed in full - the recording id does
+        not stand in for it.
+
+        The legacy writes workid_0 = ('work-b', 'work-a') and
+        workid_top = ('work-b', 'work-a').
+        """
+        tags = self._adapter().tags()
+        track = tags[WorkId("rec-1")]
+        metadata = track.as_metadata()
+        for tag, ids in self.LEGACY.items():
+            self.assertEqual(
+                tuple(metadata.get(tag) or ()), ids,
+                "%s" % (tag,))
+
+    def test_the_partly_performed_work_is_not_among_the_partial_ones(self):
+        """The work is not among the partly performed works.
+
+        The recording id stands in for a partly performed work, and this
+        one is not partly performed - so it is not in that list, and the
+        level above it does not hold it.
+        """
+        adapter = self._adapter()
+        self.assertEqual(adapter.recordings[0].partial, [])
+        tags = adapter.tags()
+        track = tags[WorkId("rec-1")]
+        self.assertEqual(track.levels[0], [w("work-b"), w("work-a")])
+
+
 class EmptyNamesTestCase(unittest.TestCase):
     """The tags of a track whose works have no titles."""
 
@@ -1672,10 +1737,16 @@ class NoChainTestCase(unittest.TestCase):
         self.assertEqual(metadata['~cwp_workid_0'], ("rec-1",))
 
     def test_a_work_related_full_then_partially_gives_one_id(self):
-        """A work performed in full and then in part is the recording.
+        """A work performed in full and then in part keeps its own id.
 
-        The work's own id is replaced by the recording id, and the
-        recording id is not given twice.
+        The first relation decides: the legacy reads the attributes of
+        the first relation it finds for the work, so a work related in
+        full first is a work performed in full and the recording id
+        does not stand in for it.
+
+        The legacy writes ~cwp_workid_0 = ('rec-1', 'work-b') for such a
+        recording - the recording id for the partly performed work-a,
+        and work-b itself.
         """
         recording = {
             "id": "rec-1",
@@ -1702,7 +1773,7 @@ class NoChainTestCase(unittest.TestCase):
         adapter = AlbumAdapter([], [recording])
         members = adapter.recordings[0].members
         self.assertEqual(len(members), len(set(members)), members)
-        self.assertEqual(members, [w("rec-1")])
+        self.assertEqual(members, [w("rec-1"), w("work-b")])
 
     def test_a_work_related_three_times_does_not_crash(self):
         """A third relation to the same work must not raise.
@@ -1841,9 +1912,11 @@ class NoChainTestCase(unittest.TestCase):
     def _expected_members(relations):
         """The first level's ids for the given relations.
 
-        Worked out from the relations themselves: a work related wholly
-        is the work, and a work related partly - whether or not it is
-        also related wholly - is the recording id.
+        Worked out from the relations themselves: the *first* relation
+        for a work decides, because the legacy reads the attributes of
+        the first relation it finds for the work. A work whose first
+        relation is partly performed is the recording id, and a work
+        whose first relation is whole is the work itself.
         """
         partial = set()
         order = []
@@ -1851,8 +1924,8 @@ class NoChainTestCase(unittest.TestCase):
             work = relation['work']['id']
             if work not in order:
                 order.append(work)
-            if 'partial' in (relation.get('attributes') or ()):
-                partial.add(work)
+                if 'partial' in (relation.get('attributes') or ()):
+                    partial.add(work)
         members = []
         for work in order:
             member = (
