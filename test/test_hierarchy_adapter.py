@@ -3017,6 +3017,8 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
                     # the import failed for another reason - the package
                     # is broken, not blocked
                     raise
+                # the blocker fired, so the import failed because of
+                # Picard - which is what the test is about
         finally:
             sys.meta_path.remove(finder)
             sys.modules.update(cached)
