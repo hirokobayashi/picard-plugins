@@ -664,8 +664,12 @@ class TopNameTestCase(unittest.TestCase):
         self.assertEqual(
             top_names, ["The first work", "The second work"])
 
-    def test_a_tied_top_is_written_as_one_string(self):
-        """The names of a top are written joined by a semicolon."""
+    def test_a_tied_top_is_written_as_a_list(self):
+        """The names of a tied top are written as a list.
+
+        The legacy hands Picard the list of the tied names, so Picard
+        stores a list of them.
+        """
         adapter = _adapter("planets")
         adapter.names = WorkNames(titles={
             w("work-a"): "The first work",
@@ -680,7 +684,7 @@ class TopNameTestCase(unittest.TestCase):
                 [w("work-a"), w("work-b")], votes))
         self.assertEqual(
             track.as_metadata()['~cwp_work_top'],
-            "The first work; The second work")
+            ("The first work", "The second work"))
 
     def test_the_swan_lake_top_is_named_once(self):
         """Two editions with one title give that title once.
@@ -1884,6 +1888,30 @@ class LegacyParityTestCase(unittest.TestCase):
                         continue
                     self.assertEqual(
                         metadata.get(tag), want.get(tag),
+                        "%s %s %s" % (album, label, tag))
+
+    def test_the_differing_tracks_have_the_ids_the_model_gives(self):
+        """The tracks that differ have the model's own ids.
+
+        The legacy's ids are the model's with the model's own changes -
+        so the model's ids are recorded in the fixture and checked here.
+        Without this, a wrong id on one of these tracks would go
+        unnoticed.
+        """
+        for album, labels in self.DIFFERING.items():
+            tags = _adapter(album).tags()
+            for label in labels:
+                want = self.legacy[album]['tracks'][label].get('model')
+                self.assertIsNotNone(
+                    want, "%s %s has no recorded ids" % (album, label))
+                track = tags.get(WorkId(_recording_id(album, label)))
+                self.assertIsNotNone(
+                    track, "%s %s has no tags" % (album, label))
+                metadata = track.as_metadata()
+                for tag, ids in sorted(want.items()):
+                    self.assertEqual(
+                        list(metadata.get(tag) or ()),
+                        ids,
                         "%s %s %s" % (album, label, tag))
 
     def test_the_differing_tracks_are_present(self):
