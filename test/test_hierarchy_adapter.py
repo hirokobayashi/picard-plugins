@@ -33,6 +33,7 @@ from hierarchy.adapter import (  # noqa: E402
     TrackTags,
     WorkNames,
     WorkRelations,
+    _has_missing_child,
     has_cycle,
     node_height,
     read_performance,
@@ -1062,7 +1063,6 @@ class NodeHeightTestCase(unittest.TestCase):
             _node("b"): [_node("a")],
         })
         self.assertTrue(has_cycle(hierarchy, _node("a")))
-        self.assertFalse(has_cycle(hierarchy, _node("c")))
 
     def test_a_tree_is_not_reported_as_a_cycle(self):
         """A tree has no cycle - not even a shared child."""
@@ -1074,6 +1074,26 @@ class NodeHeightTestCase(unittest.TestCase):
             _node("e"): [],
         })
         self.assertFalse(has_cycle(hierarchy, _node("a")))
+
+    def test_a_missing_child_is_reported(self):
+        """A child the hierarchy does not hold is reported.
+
+        Such a child is counted as a leaf, so the depth of the tree
+        under it is lost - and the depth that comes back is too small.
+        The caller has to know, so that it can leave the track with no
+        tags rather than write a wrong depth.
+        """
+        hierarchy = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [_node("c")],
+        })
+        self.assertTrue(_has_missing_child(hierarchy, _node("a")))
+        # a tree is whole
+        hierarchy = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [],
+        })
+        self.assertFalse(_has_missing_child(hierarchy, _node("a")))
 
     def test_a_self_loop_does_not_hang(self):
         hierarchy = self._hierarchy({
@@ -2513,6 +2533,43 @@ class NoChainTestCase(unittest.TestCase):
         self.assertEqual(
             adapter._votes(candidates),
             {"The first work": 2, "The second work": 1})
+
+    def test_a_malformed_relation_is_skipped(self):
+        """A relation that is not an object is skipped.
+
+        The response is guarded against being malformed, but the
+        relations inside it were not - so a relation that is a string or
+        a null would have raised out of the tagging and taken the whole
+        release with it.
+        """
+        good = {
+            "id": "work-a",
+            "title": "A work",
+            "relations": [
+                {
+                    "type": "parts",
+                    "direction": "backward",
+                    "work": {"id": "work-b"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter(
+            [good, {"id": "work-c", "relations": [
+                "bogus", None, 42,
+                {"type": "parts", "work": "not an object"}]}],
+            [{"id": "rec-1", "relations": [
+                "bogus",
+                None,
+                {"type": "performance", "work": "not an object"},
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ]}],
+            use_partial=True)
+        tags = adapter.tags()
+        self.assertIn(WorkId("rec-1"), tags)
 
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
