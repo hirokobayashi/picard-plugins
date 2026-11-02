@@ -62,8 +62,12 @@ def format_ids(works: Iterable[WorkId]) -> str:
     repr, so a level of one id reads ``('abc...',)`` and a level of two
     reads ``('abc...', 'def...')``. The order inside the tuple is the
     order the relations came back in.
+
+    A level with no ids has no repr to write, so it is empty.
     """
     ids = list(works)
+    if not ids:
+        return ''
     if len(ids) == 1:
         return "('%s',)" % ids[0].mbid
     return '(%s)' % ', '.join("'%s'" % work.mbid for work in ids)
@@ -309,7 +313,8 @@ class TrackTags:
     top: List[WorkId] = field(default_factory=list)
     #: The top work's name or names.
     top_names: List[str] = field(default_factory=list)
-    #: The group name - the shuffle key, always one value.
+    #: The group name - the shuffle key, always one value. A track with
+    #: no hierarchy has a group too, but no tags are written for it.
     group: str = ''
     #: The number of levels below this track's own level.
     part_levels: int = 0

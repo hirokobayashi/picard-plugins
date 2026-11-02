@@ -1306,6 +1306,10 @@ class NoChainTestCase(unittest.TestCase):
         works stand in for it. A work related partly and wholly is
         represented by the recording id too - the recording is not the
         work.
+
+        The rule itself is checked against the legacy's own tags by
+        ``LegacyParityTestCase``; this checks that every ordering of the
+        relations gives the same answer.
         """
         for relations in self._relation_orderings():
             recording = {"id": "rec-1", "relations": relations}
@@ -1315,6 +1319,41 @@ class NoChainTestCase(unittest.TestCase):
             self.assertEqual(
                 members, expected,
                 "%s -> %s" % (relations, members))
+
+    def test_a_work_related_twice_is_the_recording_id(self):
+        """The legacy's own tags for a work related partly and wholly.
+
+        The Daphnis album has tracks whose recording is related to the
+        same work twice - once partly and once wholly. The legacy writes
+        the recording id for it, because the recording is not the work.
+        """
+        path = os.path.join(FIXTURES, "legacy_tags.json")
+        with open(path, encoding="utf-8") as handle:
+            legacy = json.load(handle)
+        tags = _adapter("daphnis").tags()
+        for label, want in sorted(legacy["daphnis"]["tracks"].items()):
+            recording = _load(os.path.join(
+                FIXTURES, "daphnis", "rec_%s.json" % label))
+            related = [
+                relation for relation in (recording.get("relations") or ())
+                if relation.get("type") == "performance"
+                and (relation.get("work") or {}).get("id")]
+            works = {(relation["work"]["id"]) for relation in related}
+            if len(works) == len(related):
+                # every work is related once - nothing to check
+                continue
+            track = tags.get(WorkId(recording["id"]))
+            self.assertIsNotNone(
+                track, "daphnis %s has no tags" % label)
+            level = track.levels[0]
+            self.assertIn(
+                w(recording["id"]), level,
+                "daphnis %s: the recording id is not in the first level"
+                % label)
+            for work in works:
+                self.assertNotIn(
+                    w(work), level,
+                    "daphnis %s: the work is in the first level" % label)
 
     @staticmethod
     def _expected_members(relations):
@@ -1626,11 +1665,11 @@ class LegacyParityTestCase(unittest.TestCase):
                     legacy = want.get(tag)
                     stored = _as_picard_stores(metadata.get(tag))
                     if legacy is None:
-                        # the legacy wrote no such level, so only the
-                        # form is checked
+                        # the legacy wrote no such level, so the model's
+                        # level is checked against the ids it holds
                         self.assertEqual(
-                            _form_of(stored),
-                            _form_of(
+                            stored,
+                            _as_picard_stores(
                                 [work.mbid for work in works]),
                             "%s %s %s" % (album, label, tag))
                         continue
@@ -1809,11 +1848,6 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
             name: sys.modules.pop(name)
             for name in list(sys.modules)
             if name == "hierarchy" or name.startswith("hierarchy.")}
-        # the import sets the modules as attributes of the package, so
-        # those are saved too - otherwise the package would keep the
-        # freshly imported ones
-        package = hierarchy.get("hierarchy")
-        attributes = dict(vars(package)) if package is not None else {}
         try:
             try:
                 importlib.import_module("hierarchy.adapter")
@@ -1826,12 +1860,6 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
             sys.meta_path.remove(finder)
             sys.modules.update(cached)
             sys.modules.update(hierarchy)
-            if package is not None:
-                for name in list(vars(package)):
-                    if name not in attributes:
-                        delattr(package, name)
-                for name, value in attributes.items():
-                    setattr(package, name, value)
         self.assertEqual(blocked, [])
 
     def test_the_blocker_would_catch_an_import(self):
