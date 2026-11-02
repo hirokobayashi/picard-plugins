@@ -337,13 +337,14 @@ class TrackTags:
     #: The number of levels in the whole hierarchy of this track's top.
     work_part_levels: int = 0
 
-    def id_tuple(self, level: int) -> Tuple[str, ...]:
-        """The work ids of one level, as the tuple the legacy hands Picard.
+    @staticmethod
+    def id_tuple(works: Sequence[WorkId]) -> Tuple[str, ...]:
+        """The work ids of a level, as the tuple the legacy hands Picard.
 
         Picard stores a tuple of one id as a bare string and a tuple of
         more as a list, so this is what the legacy's own tags read as.
         """
-        return tuple(work.mbid for work in self.levels[level])
+        return tuple(work.mbid for work in works)
 
     def as_metadata(self) -> Dict[str, object]:
         """The tags, in the legacy's names.
@@ -361,12 +362,15 @@ class TrackTags:
         if not self.levels:
             return {}
         metadata: Dict[str, object] = {}
-        for level, works in enumerate(self.levels):
+        # a level with no ids has no tag - the legacy writes a tag only
+        # when it has a value. The levels are numbered by the ones that
+        # do have ids, so the numbering has no gaps.
+        number = 0
+        for works in self.levels:
             if not works:
-                # a level with no ids has no tag - the legacy writes a tag
-                # only when it has a value
                 continue
-            metadata['~cwp_workid_%d' % level] = self.id_tuple(level)
+            metadata['~cwp_workid_%d' % number] = self.id_tuple(works)
+            number += 1
         if self.top:
             metadata['~cwp_workid_top'] = tuple(
                 work.mbid for work in self.top)
@@ -487,11 +491,16 @@ class AlbumAdapter:
         #: The recordings that were listed twice and dropped, so that a
         #: caller can see that it happened.
         self.dropped: List[WorkId] = []
-        #: The recordings that were listed twice with *different* relations.
-        #: The first entry's tags win - the tags are per recording, so
-        #: there is nowhere for both to go - but the caller can see that
-        #: the two disagreed, which is a different thing from a repeated
-        #: recording.
+        #: The recordings that were listed twice with *different*
+        #: performances. The first entry's tags win - the tags are per
+        #: recording, so there is nowhere for both to go - but the caller
+        #: can see that the two disagreed, which is a different thing
+        #: from a repeated recording.
+        #:
+        #: Only the performance relations are compared: they are the
+        #: ones the tags are worked out from. Two entries that differ
+        #: only in other relations are the same recording as far as the
+        #: tags are concerned.
         self.conflicting: List[WorkId] = []
         seen: Dict[WorkId, Recording] = {}
         for recording in recordings:
@@ -757,7 +766,7 @@ class AlbumAdapter:
             top=top,
             top_names=self._top_names(top, votes),
             group=group,
-            part_levels=len(chain) - 1,
+            part_levels=sum(1 for works in levels if works) - 1,
             work_part_levels=heights[chain[-1]][chain[-1]])
 
     def _levels(
