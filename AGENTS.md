@@ -146,6 +146,12 @@ and the group):
     Swan Lake tracks that end at the original edition rather than the
     Drigo one.
 
+  The test's own lists are `DIFFERING` (44 tracks whose ids differ) and
+  `HOLDING_MORE` (13 tracks whose level holds the legacy's ids and more).
+  The 44 and the 13 add up to the 57, but they are not the same split as
+  the 45 and the 12 above: a track can differ in the ids *and* hold more
+  of them, so the two lists and the two causes do not line up.
+
 The legacy's own tags are recorded in `test/fixtures/legacy_tags.json`,
 and `test/test_hierarchy_adapter.py` checks the adapter against them. The
 tracks that may differ are named there, and the tracks that may hold
