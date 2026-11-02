@@ -1700,6 +1700,31 @@ class NoChainTestCase(unittest.TestCase):
             [w("work-a")])
         # and the dropped one is recorded, so a caller can see it
         self.assertEqual(adapter.dropped, [w("rec-1")])
+        # and the two disagreed, which is worth telling apart from a
+        # recording that was simply listed twice
+        self.assertEqual(adapter.conflicting, [w("rec-1")])
+
+    def test_a_repeated_recording_is_not_a_conflict(self):
+        """The same recording listed twice is not a conflict.
+
+        A release can list the same recording on two tracks - the same
+        performance of the same works. The second entry is dropped, but
+        the two did not disagree, so there is nothing to tell the caller
+        about.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter([], [recording, dict(recording)])
+        self.assertEqual(adapter.dropped, [w("rec-1")])
+        self.assertEqual(adapter.conflicting, [])
 
     def test_a_shared_recording_gives_both_tracks_the_same_tags(self):
         """A release can list the same recording on two tracks.
