@@ -136,6 +136,18 @@ def _as_picard_stores(value):
     return values
 
 
+def _form_of(value):
+    """The shape of a stored tag - one id or several.
+
+    Used where the ids differ but the form they are stored in does not.
+    """
+    if value is None:
+        return None
+    if isinstance(value, str):
+        return "one"
+    return "many"
+
+
 def _starts_with(stored, legacy):
     """The stored tag holds the legacy's ids first, in the same order."""
     if legacy is None:
@@ -1318,7 +1330,7 @@ class NoChainTestCase(unittest.TestCase):
             work = relation['work']['id']
             if work not in order:
                 order.append(work)
-            if relation.get('attributes'):
+            if 'partial' in (relation.get('attributes') or ()):
                 partial.add(work)
         members = []
         for work in order:
@@ -1454,7 +1466,7 @@ class LegacyParityTestCase(unittest.TestCase):
         "nutcracker": ["d1t1"],
         "requiem": ["t1"],
         "swanlake_full": [
-            "d1t17", "d1t19", "d1t20", "d1t21", "d1t22", "d2t2",
+            "d1t17", "d1t19", "d1t20", "d1t21", "d1t22",
         ],
     }
 
@@ -1606,15 +1618,22 @@ class LegacyParityTestCase(unittest.TestCase):
                 if label in differing:
                     continue
                 track = tags.get(WorkId(_recording_id(album, label)))
-                if track is None:
-                    continue
+                self.assertIsNotNone(
+                    track, "%s %s has no tags" % (album, label))
                 metadata = track.as_metadata()
                 for level, works in enumerate(track.levels):
                     tag = '~cwp_workid_%d' % level
                     legacy = want.get(tag)
-                    if legacy is None:
-                        continue
                     stored = _as_picard_stores(metadata.get(tag))
+                    if legacy is None:
+                        # the legacy wrote no such level, so only the
+                        # form is checked
+                        self.assertEqual(
+                            _form_of(stored),
+                            _form_of(
+                                [work.mbid for work in works]),
+                            "%s %s %s" % (album, label, tag))
+                        continue
                     if label in holding_more:
                         # the model's level holds the legacy's ids and
                         # more, so the legacy's ids have to be the
@@ -1668,6 +1687,30 @@ class LegacyParityTestCase(unittest.TestCase):
                     track.as_metadata().get('~cwp_work_group'),
                     want.get('~cwp_work_group'),
                     "%s %s" % (album, label))
+
+    def test_the_deeper_tracks_really_are_deeper(self):
+        """Every track in DEEPER really has a different level count.
+
+        The list exempts a track from the level count check, so an entry
+        that no longer needs the exemption - or never did - would let a
+        regression through.
+        """
+        for album, labels in self.DEEPER.items():
+            tags = _adapter(album).tags()
+            for label in labels:
+                want = self.legacy[album]['tracks'][label]
+                track = tags.get(WorkId(_recording_id(album, label)))
+                self.assertIsNotNone(
+                    track, "%s %s has no tags" % (album, label))
+                metadata = track.as_metadata()
+                differs = any(
+                    metadata.get(tag) != want.get(tag)
+                    for tag in (
+                        '~cwp_part_levels', '~cwp_work_part_levels'))
+                self.assertTrue(
+                    differs,
+                    "%s %s is not deeper - it does not need the "
+                    "exemption" % (album, label))
 
     def test_the_differing_tracks_differ_only_as_documented(self):
         """The tracks that differ differ in the documented way.
