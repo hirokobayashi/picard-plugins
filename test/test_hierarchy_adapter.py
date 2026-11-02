@@ -1155,8 +1155,12 @@ class PartialOrderTestCase(unittest.TestCase):
 class EmptyNamesTestCase(unittest.TestCase):
     """The tags of a track whose works have no titles."""
 
-    def test_the_top_work_tag_is_written_empty(self):
-        """Every tag is written, even when the names are unknown."""
+    def test_the_top_work_tag_is_left_out_when_the_name_is_unknown(self):
+        """The name tag is left out when there is no name.
+
+        The legacy writes a tag only when it has a value, so an unknown
+        name is no tag at all.
+        """
         works = [
             {
                 "id": "work-1",
@@ -1472,6 +1476,8 @@ class NoChainTestCase(unittest.TestCase):
         self.assertEqual(
             adapter.recordings[0].members,
             [w("work-a")])
+        # and the dropped one is recorded, so a caller can see it
+        self.assertEqual(adapter.dropped, [w("rec-1")])
 
     def test_the_recording_is_in_the_result(self):
         """A recording with no chain is still there, with no levels."""
@@ -1704,16 +1710,14 @@ class LegacyParityTestCase(unittest.TestCase):
         them: a single id is bare, and two are a list of two. The format
         is checked here, not only the ids.
 
-        The tracks the model differs on are left out - their ids differ,
-        and the format is checked on the rest.
+        The tracks the model differs on are checked for the form only -
+        their ids are the model's own.
         """
         for album, expected in sorted(self.legacy.items()):
             tags = _adapter(album).tags()
             differing = self.DIFFERING.get(album) or ()
             holding_more = self.HOLDING_MORE.get(album) or ()
             for label, want in sorted(expected['tracks'].items()):
-                if label in differing:
-                    continue
                 track = tags.get(WorkId(_recording_id(album, label)))
                 self.assertIsNotNone(
                     track, "%s %s has no tags" % (album, label))
@@ -1722,6 +1726,16 @@ class LegacyParityTestCase(unittest.TestCase):
                     tag = '~cwp_workid_%d' % level
                     legacy = want.get(tag)
                     stored = _as_picard_stores(metadata.get(tag))
+                    if label in differing:
+                        # the ids differ, but the form they are written
+                        # in does not: a tuple, like every other level
+                        self.assertIsInstance(
+                            metadata.get(tag), tuple,
+                            "%s %s %s" % (album, label, tag))
+                        self.assertEqual(
+                            len(metadata[tag]), len(works),
+                            "%s %s %s" % (album, label, tag))
+                        continue
                     if legacy is None:
                         # the legacy wrote no such level, so the model's
                         # level is one of its own - and it has to be
