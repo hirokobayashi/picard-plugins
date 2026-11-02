@@ -2880,6 +2880,33 @@ class NoChainTestCase(unittest.TestCase):
         # a response with no id raises as well
         self.assertRaises(ValueError, read_performance, {})
 
+    def test_a_multiplicity_for_a_recording_that_names_no_work_is_reported(self):
+        """A count for a recording that names no work is reported.
+
+        Such a recording has no chain and no candidates, so the count
+        has no effect - the same as a count for a recording that is not
+        in the release at all.
+        """
+        adapter = AlbumAdapter(
+            [], [{"id": "rec-1", "relations": []}],
+            multiplicity={w("rec-1"): 2})
+        self.assertEqual(adapter.unused_multiplicity, [w("rec-1")])
+
+    def test_a_track_with_no_top_gets_no_tags(self):
+        """A track with levels but no top gets no tags at all.
+
+        Half a track's tags would name a level the top does not reach.
+        """
+        tags = TrackTags(
+            key=WorkId("rec-1"),
+            levels=[[w("work-a")]],
+            top=[],
+            top_names=["A work"],
+            group="A group",
+            part_levels=0,
+            work_part_levels=0)
+        self.assertEqual(tags.as_metadata(), {})
+
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
 
