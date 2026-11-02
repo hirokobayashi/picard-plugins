@@ -501,9 +501,10 @@ class AlbumAdapter:
             recording: Mapping) -> List[Tuple[WorkId, bool]]:
         """The works the recording performs, and whether each is in part.
 
-        The relations are read once here, so the first level's ids, the
-        partly performed works and the model's performance cannot drift
-        apart.
+        The first level's ids and the partly performed works come from
+        this one pass, so they cannot drift apart. The model's own
+        performance is read separately by ``read_performance``; the two
+        agree, and a test checks that they do.
         """
         result: List[Tuple[WorkId, bool]] = []
         seen: Set[WorkId] = set()
