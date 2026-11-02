@@ -2717,6 +2717,29 @@ class NoChainTestCase(unittest.TestCase):
             [], [recording], multiplicity={w("rec-1"): 2})
         self.assertEqual(adapter.unused_multiplicity, [])
 
+    def test_the_top_names_are_the_same_for_every_track_that_shares_a_top(self):
+        """The tracks that share a top name it the same way.
+
+        The vote is what makes them agree. With no vote at all - no
+        candidate top has a title - the names are put in a fixed order
+        first, because the order they came in is the order of the
+        track's own level, and the tracks that share a top do not agree
+        on that.
+        """
+        names = WorkNames(titles={
+            w("work-a"): "The first work",
+            w("work-b"): "The second work",
+        })
+        adapter = AlbumAdapter([], [], names=names, use_partial=True)
+        votes = {}
+        # the two orders of the same two works name the top the same way
+        self.assertEqual(
+            adapter._top_names([w("work-b"), w("work-a")], votes),
+            ["The first work"])
+        self.assertEqual(
+            adapter._top_names([w("work-a"), w("work-b")], votes),
+            ["The first work"])
+
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
 
