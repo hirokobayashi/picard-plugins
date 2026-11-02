@@ -661,11 +661,12 @@ class AlbumAdapter:
         #: be the same then too.
         self.conflicting: List[WorkId] = []
         #: The multiplicities that had no effect. A count for a
-        #: recording that is not in the release, or that names no work,
-        #: has no effect - and a misspelled id would have the same
-        #: effect as a count that was not given, so the caller is told.
-        #: It is filled in once the recordings have been read, below.
-        self.unused_multiplicity: List[WorkId]
+        #: recording that does not vote - one that is not in the
+        #: release, or that names no work, or whose works are not in
+        #: the graph - has no effect, and a misspelled id would have the
+        #: same effect as a count that was not given, so the caller is
+        #: told. It is filled in when the hierarchy is built.
+        self.unused_multiplicity: List[WorkId] = []
         #: The candidate tops of the hierarchy, worked out when it is
         #: built and kept so that the tags do not walk the chains again.
         self._candidates: Dict[WorkId, List[WorkId]] = {}
@@ -712,12 +713,6 @@ class AlbumAdapter:
             self.recordings.append(entry)
             self.tracks_per_recording[entry.performance.key] = (
                 self.tracks_per_recording.get(entry.performance.key, 0) + 1)
-        # a count for a recording that is not in the release, or that
-        # names no work, has no effect - and a misspelled id would have
-        # the same effect as a count that was not given at all
-        self.unused_multiplicity = [
-            key for key in self.multiplicity
-            if key not in seen or not seen[key].performance.works]
 
     @property
     def performances(self) -> List[Performance]:
@@ -886,6 +881,14 @@ class AlbumAdapter:
         # the candidates are kept, so that the tags do not have to walk
         # the chains a second time
         self._candidates = candidates
+        # a count for a recording that does not vote has no effect - and
+        # a misspelled id would have the same effect as a count that was
+        # not given at all. A recording votes when it has candidates:
+        # one that names no work, or whose works are not in the graph,
+        # has none.
+        self.unused_multiplicity = [
+            key for key in self.multiplicity
+            if not candidates.get(key)]
         self._built = (hierarchy, chains, groups)
         return self._built
 
