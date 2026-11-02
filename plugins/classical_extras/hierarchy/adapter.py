@@ -546,7 +546,13 @@ class AlbumAdapter:
         self.use_collections = use_collections
         #: How many tracks each recording is on. The legacy votes once
         #: per *track*, so a recording on two tracks votes twice.
-        self.multiplicity: Dict[WorkId, int] = dict(multiplicity or {})
+        #:
+        #: The keys are the recording ids. A plain string is taken as an
+        #: id, so that a caller that has the ids as strings is not
+        #: silently ignored.
+        self.multiplicity: Dict[WorkId, int] = {
+            (key if isinstance(key, WorkId) else WorkId(key)): count
+            for key, count in (multiplicity or {}).items()}
         self.recordings = []
         #: The recordings that were listed twice and dropped, so that a
         #: caller can see that it happened.
@@ -878,8 +884,9 @@ class AlbumAdapter:
         top_index, top = filled[-1]
         tip = chain[top_index]
         if tip not in heights:
-            heights[tip] = heights_of(hierarchy, tip)
-            cycles[tip] = has_cycle(hierarchy, tip)
+            # the walk gives the heights and whether it found a cycle,
+            # so it is only walked once
+            heights[tip], cycles[tip] = _heights_of(hierarchy, tip)
         # A chain whose tip the hierarchy does not hold has no depth to
         # report - and zero is the depth of a one-level hierarchy, so a
         # plausible-looking wrong value would be written. The track is
