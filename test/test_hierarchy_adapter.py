@@ -1355,6 +1355,34 @@ class NoChainTestCase(unittest.TestCase):
                     w(work), level,
                     "daphnis %s: the work is in the first level" % label)
 
+    def test_the_performance_and_the_members_agree(self):
+        """The model's performance and the first level's ids agree.
+
+        They are read separately, so a test checks that they do not
+        drift apart: the partly performed works are the same, and the
+        works are the same.
+        """
+        for relations in self._relation_orderings():
+            recording = {"id": "rec-1", "relations": relations}
+            adapter = AlbumAdapter([], [recording])
+            entry = adapter.recordings[0]
+            performance = entry.performance
+            self.assertEqual(
+                set(entry.partial), set(performance.partial),
+                "%s" % (relations,))
+            self.assertEqual(
+                set(entry.performed), set(performance.works),
+                "%s" % (relations,))
+            # the recording id stands in for every partly performed work
+            for work in performance.partial:
+                self.assertNotIn(
+                    work, entry.members,
+                    "%s: the work is in the first level" % (relations,))
+            for work in performance.works - performance.partial:
+                self.assertIn(
+                    work, entry.members,
+                    "%s: the work is not in the first level" % (relations,))
+
     @staticmethod
     def _expected_members(relations):
         """The first level's ids for the given relations.
