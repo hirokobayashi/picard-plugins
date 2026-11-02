@@ -35,6 +35,7 @@ from hierarchy.adapter import (  # noqa: E402
     WorkRelations,
     has_cycle,
     heights_are_reliable,
+    heights_of,
     node_height,
     read_performance,
     read_work_graph,
@@ -1160,6 +1161,32 @@ class NodeHeightTestCase(unittest.TestCase):
         self.assertFalse(heights_are_reliable(hierarchy, _node("c")))
         self.assertFalse(has_cycle(hierarchy, _node("c")))
 
+    def test_the_heights_of_an_unreliable_tree_are_not_given(self):
+        """The heights of a tree that cannot be relied on are not given.
+
+        A cycle or a child that is not there makes the depth wrong, and
+        a plausible-looking wrong height is worse than none.
+        """
+        cyclic = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [_node("a")],
+        })
+        self.assertRaises(
+            ValueError, heights_of, cyclic, _node("a"))
+        broken = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [_node("c")],
+        })
+        self.assertRaises(
+            ValueError, heights_of, broken, _node("a"))
+        # a whole tree gives its heights
+        whole = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [],
+        })
+        self.assertEqual(
+            heights_of(whole, _node("a")), {_node("a"): 1, _node("b"): 0})
+
     def test_a_self_loop_does_not_hang(self):
         """A self loop must not make the walk go on for ever."""
         hierarchy = self._hierarchy({
@@ -1241,6 +1268,18 @@ class OrderOfTestCase(unittest.TestCase):
         self.assertEqual(
             sorted([w("bbb"), w("aaa"), w("ccc")]),
             [w("aaa"), w("bbb"), w("ccc")])
+
+    def test_works_given_as_plain_strings_are_work_ids(self):
+        """Works given as plain strings are work ids.
+
+        The one that gives the order takes a bare string, so the works
+        do too.
+        """
+        relations = WorkRelations(
+            parents={w("child"): [w("unrelated"), w("work-b")]})
+        self.assertEqual(
+            relations.order_of(["work-a", "work-b"], through=w("child")),
+            [w("work-b"), w("work-a")])
 
     def test_a_bare_work_id_is_taken_as_a_work(self):
         """A plain string is a work id, not a list of them.
