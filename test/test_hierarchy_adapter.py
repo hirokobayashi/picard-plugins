@@ -1781,6 +1781,77 @@ class PartialFullFirstFixtureTestCase(unittest.TestCase):
         self.assertEqual(track.levels[0], [w("work-b"), w("work-a")])
 
 
+class PartialOnlyShapeTestCase(unittest.TestCase):
+    """A partly performed work that is the recording's only work.
+
+    The legacy stops at the partly performed work: its node holds the
+    work and no parent, so the work's own parents are never reached.
+    The model goes on - the work is performed in full as well, so it
+    contributes itself and the chain continues above it.
+
+    That is a difference the model makes on purpose, and this test
+    says so.
+    """
+    @staticmethod
+    def _adapter():
+        works = [
+            {
+                "id": "work-a",
+                "title": "A work",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "parent-a"},
+                    },
+                ],
+            },
+            {
+                "id": "parent-a",
+                "title": "The parent",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "top"},
+                    },
+                ],
+            },
+            {"id": "top", "title": "The top"},
+        ]
+        recordings = [{
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ],
+        }]
+        return AlbumAdapter(works, recordings, use_partial=True)
+
+    def test_the_model_goes_on_where_the_legacy_stops(self):
+        """The model goes on above the partly performed work.
+
+        The legacy writes ~cwp_workid_0 = ('rec-1',) and
+        ~cwp_workid_1 = ('work-a',) and stops there - the work's node
+        has no parent. The model continues to the work's own parent,
+        because the work is performed in full as well.
+        """
+        tags = self._adapter().tags()
+        track = tags[WorkId("rec-1")]
+        self.assertEqual(track.levels[0], [w("rec-1")])
+        self.assertEqual(track.levels[1], [w("work-a")])
+        self.assertEqual(track.levels[2], [w("parent-a")])
+
+
 class EmptyNamesTestCase(unittest.TestCase):
     """The tags of a track whose works have no titles."""
 
