@@ -183,6 +183,13 @@ regression. The 44 tracks whose ids differ have the model's own ids
 recorded in the fixture and checked - so a wrong id on one of them
 would be caught too.
 
+The partly performed works keep their place in the order through the
+`Recording.partial` list - the order the relations gave them, not the
+work id order. (An earlier version tried to place them in the level
+above as well; that branch could never fire, because the level below
+always names the recording id in the partly performed work's place and
+so names every work the level above could reach.)
+
 Two things the legacy does that the adapter has to reproduce, and that the
 review found missing at first:
 

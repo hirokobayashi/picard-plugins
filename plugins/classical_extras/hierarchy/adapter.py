@@ -339,12 +339,12 @@ class TrackTags:
         """
         if not self.levels:
             return {}
-        if any(not level for level in self.levels):
-            # a level with no ids has no tag - the legacy writes one only
-            # when it has a value
-            return {}
         metadata: Dict[str, object] = {}
         for level, works in enumerate(self.levels):
+            if not works:
+                # a level with no ids has no tag - the legacy writes a tag
+                # only when it has a value
+                continue
             metadata['~cwp_workid_%d' % level] = self.id_tuple(level)
         if self.top:
             metadata['~cwp_workid_top'] = tuple(
@@ -725,8 +725,7 @@ class AlbumAdapter:
                 leaders: List[WorkId] = []
             else:
                 leaders = self._works_leading_to(
-                    chain[index - 1], node, levels[index - 1],
-                    recording.performance.key, recording.partial)
+                    chain[index - 1], node, levels[index - 1])
                 ids = self.relations.order_of(node.works, through=leaders)
             levels.append(ids)
             through.append(leaders)
@@ -736,9 +735,7 @@ class AlbumAdapter:
             self,
             node: NodeId,
             child: NodeId,
-            below: Sequence[WorkId],
-            recording: WorkId,
-            partial: Sequence[WorkId]) -> List[WorkId]:
+            below: Sequence[WorkId]) -> List[WorkId]:
         """The works of ``node`` whose parents are in ``child``.
 
         A node holds the works it stands for. The next level up holds
@@ -755,24 +752,18 @@ class AlbumAdapter:
         A partly performed work is represented by the recording id in
         the level below, so the level below cannot say where it stood.
         It takes the recording id's place, which is where the relation
-        put it.
+        put it - the level below names the recording id, so the work is
+        found there.
         """
         leading = [
             work for work in node.works
             if self.relations.parents.get(work, ())
             and set(self.relations.parents[work]) & set(child.works)]
-        # the key is the place in the level below, and then the place among
-        # the partly performed works - a work the level below does not
-        # name goes last
+        # the key is the place in the level below - a work the level below
+        # does not name goes last
         order: Dict[WorkId, Tuple[int, int]] = {
             work: (position, 0)
             for position, work in enumerate(below)}
-        if recording in order:
-            partial_order = {
-                work: position for position, work in enumerate(partial)}
-            for work in leading:
-                if work not in order and work in partial_order:
-                    order[work] = (order[recording][0], partial_order[work])
         return sorted(
             leading,
             key=lambda work: (

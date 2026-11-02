@@ -1815,7 +1815,9 @@ class LegacyParityTestCase(unittest.TestCase):
         is checked here, not only the ids.
 
         The tracks the model differs on are checked for the form only -
-        their ids are the model's own.
+        their ids are the model's own, and they are checked against the
+        recorded ones by ``test_the_differing_tracks_have_the_ids_the
+        _model_gives``.
         """
         for album, expected in sorted(self.legacy.items()):
             tags = _adapter(album).tags()
