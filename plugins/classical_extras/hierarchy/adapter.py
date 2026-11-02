@@ -751,8 +751,7 @@ class AlbumAdapter:
                 leaders: List[WorkId] = []
             else:
                 leaders = self._works_leading_to(
-                    chain[index - 1], node, levels[index - 1],
-                    recording.performance.key, recording.partial)
+                    chain[index - 1], node, levels[index - 1])
                 ids = self.relations.order_of(node.works, through=leaders)
                 if index == 1:
                     # The level above the first can hold the partly
@@ -800,10 +799,26 @@ class AlbumAdapter:
         seen: Set[WorkId] = set()
         # the works that lead to the level, and the partly performed
         # works - which are not among them, because the recording id
-        # stands in for them in the level below
+        # stands in for them in the level below. A partly performed work
+        # takes the recording id's place there, so that is where it
+        # goes here too.
+        place = {
+            work: position
+            for position, work in enumerate(below)}
+        key = recording.performance.key
+        # the partly performed works that are not among the leaders take
+        # the recording id's place - and keep their own order among
+        # themselves, which is the order the relations gave them
+        partial_order = {
+            work: position
+            for position, work in enumerate(recording.partial)}
         contributors = list(leaders) + [
             work for work in recording.partial
             if work in ordered and work not in leaders]
+        contributors.sort(key=lambda work: (
+            place.get(work, place.get(key, len(below))),
+            partial_order.get(work, 0),
+            work.mbid))
         for work in contributors:
             if work in partial:
                 contribution: List[WorkId] = [work]
@@ -827,9 +842,7 @@ class AlbumAdapter:
             self,
             below_node: NodeId,
             above_node: NodeId,
-            below: Sequence[WorkId],
-            recording: WorkId,
-            partial: Sequence[WorkId]) -> List[WorkId]:
+            below: Sequence[WorkId]) -> List[WorkId]:
         """The works of ``below_node`` whose parents are in ``above_node``.
 
         A node holds the works it stands for. The next level up holds
@@ -843,28 +856,19 @@ class AlbumAdapter:
         id order: the level's order comes from the relations, and the id
         order would decide it instead.
 
-        A partly performed work is represented by the recording id in
-        the level below, so the level below cannot say where it stood.
-        It takes the recording id's place, which is where the relation
-        put it - the level below names the recording id, so the work is
-        found there.
+        A partly performed work is not among them - the recording id
+        stands in for it in the level below - so its place in the level
+        above is worked out by ``_level_above_first``.
         """
         leading = [
             work for work in below_node.works
             if self.relations.parents.get(work, ())
             and set(self.relations.parents[work]) & set(above_node.works)]
-        # the key is the place in the level below, and then the place among
-        # the partly performed works - a work the level below does not
-        # name goes last
+        # the key is the place in the level below - a work the level
+        # below does not name goes last
         order: Dict[WorkId, Tuple[int, int]] = {
             work: (position, 0)
             for position, work in enumerate(below)}
-        if recording in order:
-            partial_order = {
-                work: position for position, work in enumerate(partial)}
-            for work in leading:
-                if work not in order and work in partial_order:
-                    order[work] = (order[recording][0], partial_order[work])
         return sorted(
             leading,
             key=lambda work: (
