@@ -121,6 +121,25 @@ legacy's tags carry them:
   reads as a list of two. The adapter hands Picard the same tuple, so the
   stored text is the legacy's.
 
+**One bad track must not take the release with it.** The adapter skips
+what it cannot use, rather than raising out of the tagging:
+
+- a response that is not an object, or that has no id, is skipped - on
+  both the recording side and the work side;
+- a relation that is not an object, or whose work is not an object, is
+  skipped;
+- attributes that are not a list are no attributes - a string would be
+  searched as a list of characters, and `'partial' in 'partially'` is
+  true;
+- a chain whose tip the hierarchy does not hold leaves that one track
+  with no tags;
+- a hierarchy with a cycle, or with a child it does not hold, leaves the
+  track with no tags too - the depth would be wrong, and a wrong depth
+  is worse than none.
+
+A count of tracks below one is refused, and a count for a recording
+that is not in the release is reported in `unused_multiplicity`.
+
 The `partial` substitution only applies when the plugin's `cwp_partial`
 option is on. With it off, a partially performed work is an ordinary one.
 
