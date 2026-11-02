@@ -577,6 +577,11 @@ class AlbumAdapter:
         A recording that names no work, or names a work with no place in
         the tree, is in the result with no levels - so a caller can tell it
         apart from a recording that is not there at all.
+
+        The result is keyed by the recording id, so a caller looks the
+        tags up by the recording of the track it is tagging. A release
+        that lists the same recording on two tracks gets the same tags
+        for both - the tags are the recording's, not the track's.
         """
         hierarchy, chains, groups = self.build_all()
         candidates = candidate_tops(chains, hierarchy)
@@ -613,6 +618,10 @@ class AlbumAdapter:
         The legacy picks the candidate name the most tracks of the album
         voted for, so that every track sharing a top names it the same
         way. A tie keeps every tied name.
+
+        With no votes at all the legacy falls back to the first name.
+        With votes that name none of the candidates, every name is tied
+        at zero - so they are all kept, as the legacy keeps them.
         """
         names = self.names.names_of(top)
         if not names:
@@ -620,11 +629,9 @@ class AlbumAdapter:
         if not votes:
             return names[:1]
         best = max(votes.get(name, 0) for name in names)
-        if best == 0:
-            # none of this top's names was voted for, so there is nothing
-            # to choose between
-            return names[:1]
         winners = [name for name in names if votes.get(name, 0) == best]
+        if len(winners) == 1:
+            return winners
         # a tie keeps every tied name, in a fixed order - not the order of
         # this track's top list, which differs between the tracks that
         # share a top

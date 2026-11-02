@@ -686,6 +686,35 @@ class TopNameTestCase(unittest.TestCase):
             track.as_metadata()['~cwp_work_top'],
             ("The first work", "The second work"))
 
+    def test_a_top_with_no_votes_keeps_every_name(self):
+        """Votes that name none of the candidates keep every name.
+
+        Every name is tied at zero votes, so they are all kept - which is
+        what the legacy does.
+        """
+        adapter = _adapter("planets")
+        adapter.names = WorkNames(titles={
+            w("work-a"): "The first work",
+            w("work-b"): "The second work",
+        })
+        votes = {"Another work": 3}
+        top_names = adapter._top_names([w("work-a"), w("work-b")], votes)
+        self.assertEqual(
+            top_names, ["The first work", "The second work"])
+
+    def test_a_top_with_no_votes_at_all_keeps_the_first(self):
+        """With no votes at all the first name is kept.
+
+        This is the legacy's fallback when there is no vote information.
+        """
+        adapter = _adapter("planets")
+        adapter.names = WorkNames(titles={
+            w("work-a"): "The first work",
+            w("work-b"): "The second work",
+        })
+        top_names = adapter._top_names([w("work-a"), w("work-b")], {})
+        self.assertEqual(top_names, ["The first work"])
+
     def test_the_swan_lake_top_is_named_once(self):
         """Two editions with one title give that title once.
 
@@ -1483,6 +1512,29 @@ class NoChainTestCase(unittest.TestCase):
         # and the dropped one is recorded, so a caller can see it
         self.assertEqual(adapter.dropped, [w("rec-1")])
 
+    def test_a_shared_recording_gives_both_tracks_the_same_tags(self):
+        """A release can list the same recording on two tracks.
+
+        The tags are the recording's, so both tracks get them - the
+        caller looks them up by the recording id.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter([], [recording, dict(recording)])
+        tags = adapter.tags()
+        self.assertEqual(len(tags), 1)
+        self.assertIn(w("rec-1"), tags)
+        self.assertEqual(
+            tags[w("rec-1")].levels[0], [w("work-a")])
+
     def test_the_recording_is_in_the_result(self):
         """A recording with no chain is still there, with no levels."""
         tags = self._adapter().tags()
@@ -1682,8 +1734,10 @@ class LegacyParityTestCase(unittest.TestCase):
 
         The legacy's own tags for the track, and the adapter's - so a
         level the adapter has and the legacy did not is compared too.
+        Only the tags are compared: the fixture holds the model's own
+        ids under another key, and that is not a tag.
         """
-        tags = set(want)
+        tags = {tag for tag in want if tag.startswith('~cwp_')}
         tags |= set(metadata)
         return sorted(tags)
 
