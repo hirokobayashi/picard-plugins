@@ -2066,6 +2066,79 @@ class NoChainTestCase(unittest.TestCase):
         # recording that was simply listed twice
         self.assertEqual(adapter.conflicting, [w("rec-1")])
 
+    def test_a_partly_performed_work_is_never_among_the_leaders(self):
+        """A partly performed work is not among the works that lead to
+        the level above the first.
+
+        A work performed both in part and in full contributes itself, so
+        it sits one level above the recording id - and the recording's
+        own node holds the recording id, not the work. So the works that
+        lead to the level above the first are the ones performed in
+        full, and a partly performed work is not among them - so it
+        never has to contribute its parents there.
+        """
+        works = [
+            {
+                "id": "work-b",
+                "title": "B work",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "parent-p"},
+                    },
+                ],
+            },
+            {
+                "id": "parent-p",
+                "title": "The parent P",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "top"},
+                    },
+                ],
+            },
+            {"id": "top", "title": "The top"},
+        ]
+        recordings = [{
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                },
+            ],
+        }]
+        adapter = AlbumAdapter(works, recordings, use_partial=True)
+        leaders = []
+        original = adapter._works_leading_to
+
+        def spy(below_node, above_node, below):
+            found = original(below_node, above_node, below)
+            leaders.append(found)
+            return found
+
+        adapter._works_leading_to = spy
+        adapter.tags()
+        partial = set(adapter.recordings[0].partial)
+        # the first level's leaders are the ones that lead to the level
+        # above the first - the others are higher up, where a partly
+        # performed work can be among them
+        for found in leaders[:1]:
+            for work in found:
+                self.assertNotIn(
+                    work, partial,
+                    "a partly performed work is among the leaders")
+
     def test_a_work_without_an_id_is_skipped(self):
         """A work response with no id is skipped, and the rest is used.
 

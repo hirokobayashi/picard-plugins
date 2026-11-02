@@ -836,6 +836,15 @@ class AlbumAdapter:
         partly performed work takes the recording id's place, and the
         works before it keep theirs.
 
+        A partly performed work is not among the works that lead to the
+        level above the first: the recording's own node holds the
+        recording id in its place, so the works that lead to the level
+        above are the ones performed in full. A work performed both in
+        part and in full contributes *itself*, so it is one level above
+        the recording id - and there it can be among the works that lead
+        to the level above that one, where its parents are contributed
+        in the ordinary way.
+
         The works that lead to the level are in the order the level
         below gave them, which is the order the relations gave.
         """
