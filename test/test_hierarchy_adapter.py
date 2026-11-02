@@ -41,6 +41,8 @@ from hierarchy.graph import NodeId, WorkId  # noqa: E402
 from hierarchy.project import Hierarchy  # noqa: E402
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
+PLUGIN_DIR = os.path.join(
+    os.path.dirname(__file__), "..", "plugins", "classical_extras")
 
 
 def w(mbid):
@@ -583,39 +585,49 @@ class ReadWorkGraphTestCase(unittest.TestCase):
 
         A set has no order of its own, so the works are put in work id
         order first - otherwise the result would differ from one run to
-        the next.
+        the next. A set's order is fixed for the life of a process, so
+        the check is made in a few processes with different hash seeds.
+
+        The two works name different parents, so the order of the works
+        is the order of the parents.
         """
-        graph, relations = read_work_graph([
-            {
-                "id": "work-a",
-                "relations": [
-                    {
-                        "type": "parts",
-                        "direction": "backward",
-                        "work": {"id": "parent"},
-                    },
-                ],
-            },
-            {
-                "id": "work-b",
-                "relations": [
-                    {
-                        "type": "parts",
-                        "direction": "backward",
-                        "work": {"id": "parent"},
-                    },
-                ],
-            },
-            {"id": "parent", "title": "The parent"},
-        ])
-        wanted = [w("parent")]
-        first = relations.order_of(wanted, through={w("work-a"), w("work-b")})
-        for _ in range(5):
+        import subprocess
+        import sys
+        script = (
+            "import os, sys\n"
+            "sys.path.insert(0, %r)\n"
+            "sys.path.insert(0, %r)\n"
+            "from hierarchy.adapter import read_work_graph\n"
+            "from hierarchy.graph import WorkId\n"
+            "graph, relations = read_work_graph([\n"
+            "    {'id': 'work-a', 'relations': [\n"
+            "        {'type': 'parts', 'direction': 'backward',\n"
+            "         'work': {'id': 'parent-a'}}]},\n"
+            "    {'id': 'work-b', 'relations': [\n"
+            "        {'type': 'parts', 'direction': 'backward',\n"
+            "         'work': {'id': 'parent-b'}}]},\n"
+            "    {'id': 'parent-a', 'title': 'The parent of A'},\n"
+            "    {'id': 'parent-b', 'title': 'The parent of B'},\n"
+            "])\n"
+            "wanted = [WorkId('parent-a'), WorkId('parent-b')]\n"
+            "print(','.join(\n"
+            "    work.mbid for work in relations.order_of(\n"
+            "        wanted, through={WorkId('work-a'), WorkId('work-b')})))\n"
+        ) % (PLUGIN_DIR, os.path.dirname(os.path.abspath(__file__)))
+        results = set()
+        for seed in ("0", "1", "2", "12345"):
+            environment = dict(os.environ)
+            environment['PYTHONHASHSEED'] = seed
+            finished = subprocess.run(
+                [sys.executable, "-c", script],
+                capture_output=True, text=True, env=environment,
+                cwd=os.path.dirname(os.path.abspath(__file__)))
             self.assertEqual(
-                relations.order_of(
-                    wanted, through={w("work-a"), w("work-b")}),
-                first)
-        self.assertEqual(first, [w("parent")])
+                finished.returncode, 0, finished.stderr)
+            results.add(finished.stdout.strip())
+        self.assertEqual(
+            results, {"parent-a,parent-b"},
+            "the order differs between the processes")
 
 
 class ArrangementOrderTestCase(unittest.TestCase):
