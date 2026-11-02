@@ -754,7 +754,9 @@ class TopNameTestCase(unittest.TestCase):
         """The names of a tied top are written as a list.
 
         The legacy hands Picard the list of the tied names, so Picard
-        stores a list of them.
+        stores a list of them. The adapter hands Picard a tuple, which
+        Picard stores the same way - a tuple of two names is stored as a
+        list of two, and a tuple of one as a bare name.
         """
         adapter = _adapter("planets")
         adapter.names = WorkNames(titles={
@@ -771,6 +773,11 @@ class TopNameTestCase(unittest.TestCase):
         self.assertEqual(
             track.as_metadata()['~cwp_work_top'],
             ("The first work", "The second work"))
+        # Picard stores a tuple and a list the same way, so the two are
+        # the same as far as the tag file is concerned
+        self.assertEqual(
+            _as_picard_stores(track.as_metadata()['~cwp_work_top']),
+            _as_picard_stores(["The first work", "The second work"]))
 
     def test_a_top_with_no_votes_keeps_every_name(self):
         """Votes that name none of the candidates keep every name.

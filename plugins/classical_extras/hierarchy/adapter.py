@@ -384,9 +384,11 @@ def node_height(hierarchy: Hierarchy, node: NodeId) -> int:
     stopped at the first path would miss the deeper one.
 
     A cycle would make the walk go on for ever, so a node already on the
-    path is treated as a leaf. The hierarchy is a tree - every node has at
+    path is left out: it is treated as absent, so the node above it
+    counts it as nothing. The hierarchy is a tree - every node has at
     most one parent - so a cycle cannot occur; the guard is there so that
-    a malformed graph cannot hang the plugin.
+    a malformed graph cannot hang the plugin, and the height it gives in
+    that case is not to be relied on.
 
     The walk is iterative, so a deep hierarchy cannot exhaust the stack.
 
@@ -428,8 +430,8 @@ def heights_of(
         if child in done:
             continue
         if child in visiting:
-            # a cycle: the child is on the path, so it is treated as a
-            # leaf. The walk carries on without it.
+            # a cycle: the child is on the path, so it is left out. The
+            # walk carries on without it.
             continue
         visiting.add(child)
         stack.append((child, iter(_children_of(hierarchy, child))))
@@ -766,14 +768,13 @@ class AlbumAdapter:
                     # taking each one's contribution: its parents, or
                     # the work itself when it is partly performed.
                     ids = self._level_above_first(
-                        node, leaders, levels[0], recording, ids)
+                        leaders, levels[0], recording, ids)
             levels.append(ids)
             through.append(leaders)
         return levels, through
 
     def _level_above_first(
             self,
-            node: NodeId,
             leaders: Sequence[WorkId],
             below: Sequence[WorkId],
             recording: Recording,

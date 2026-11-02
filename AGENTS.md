@@ -172,6 +172,12 @@ level of two ids reads as `a; b` in the file. That is why the legacy's
 own tags sometimes read that way - it is Picard's list, not a string
 the legacy wrote.
 
+Picard's `_set` takes any iterable, so a tuple and a list are stored
+the same way: a tuple of two ids is stored as a list of two, and a
+tuple of one as a bare id. So the adapter writing a tuple where the
+legacy wrote a list (`~cwp_work_top` for a tied top, for instance)
+stores exactly the same.
+
 There is no tuple-repr string anywhere: the adapter writes the tuple and
 lets Picard store it, so the two cannot drift apart.
 
