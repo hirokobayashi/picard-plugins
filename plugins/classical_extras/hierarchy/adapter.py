@@ -450,10 +450,34 @@ def heights_of(
     hierarchy does not hold contributes nothing, so the node above it
     counts one level rather than the depth of the subtree that is not
     there. The hierarchy is built by the model, so it is well formed.
+
+    A cycle in the hierarchy is left out of the walk, so the heights
+    that come back are not to be relied on. ``has_cycle`` says when
+    that happened.
     """
+    heights, _cycle = _heights_of(hierarchy, node)
+    return heights
+
+
+def has_cycle(hierarchy: Hierarchy, node: NodeId) -> bool:
+    """Whether the hierarchy has a cycle on the way down from the node.
+
+    The hierarchy is a tree, so a cycle cannot occur - but a malformed
+    graph could have one, and the heights of a walk that found one are
+    not to be relied on.
+    """
+    _heights, cycle = _heights_of(hierarchy, node)
+    return cycle
+
+
+def _heights_of(
+        hierarchy: Hierarchy,
+        node: NodeId) -> Tuple[Dict[NodeId, int], bool]:
+    """The heights of a walk, and whether it found a cycle."""
     heights: Dict[NodeId, int] = {}
     visiting: Set[NodeId] = set()
     done: Set[NodeId] = set()
+    cycle = False
     stack: List[Tuple[NodeId, Iterator[NodeId]]] = [
         (node, iter(_children_of(hierarchy, node)))]
     visiting.add(node)
@@ -476,12 +500,15 @@ def heights_of(
             continue
         if child in visiting:
             # a cycle: the child is on the path, so it is left out. The
-            # walk carries on without it.
+            # walk carries on without it - but the heights it gives are
+            # not to be relied on, so the caller is told.
+            cycle = True
             continue
         visiting.add(child)
         stack.append((child, iter(_children_of(hierarchy, child))))
     # the walk counts a node itself, so the heights are one too many
-    return {node_id: height - 1 for node_id, height in heights.items()}
+    return {
+        node_id: height - 1 for node_id, height in heights.items()}, cycle
 
 
 def _children_of(hierarchy: Hierarchy, node: NodeId) -> FrozenSet[NodeId]:
@@ -763,13 +790,14 @@ class AlbumAdapter:
         # the height of a top is the same for every track that shares it,
         # so it is worked out once per top
         heights: Dict[NodeId, Dict[NodeId, int]] = {}
+        cycles: Dict[NodeId, bool] = {}
         result: Dict[WorkId, TrackTags] = {}
         for recording in self.recordings:
             chain = chains.get(recording.performance.key) or []
             result[recording.performance.key] = self._tags_for(
                 recording, chain, hierarchy,
                 groups.get(recording.performance.key, ''),
-                votes, heights)
+                votes, heights, cycles)
         return result
 
     def _votes(
@@ -825,7 +853,8 @@ class AlbumAdapter:
             hierarchy: Hierarchy,
             group: str,
             votes: Mapping[str, int],
-            heights: Dict[NodeId, Dict[NodeId, int]]) -> TrackTags:
+            heights: Dict[NodeId, Dict[NodeId, int]],
+            cycles: Dict[NodeId, bool]) -> TrackTags:
         """The tags of one recording, from its chain.
 
         ``~cwp_part_levels`` is the number of levels between the track and
@@ -850,6 +879,7 @@ class AlbumAdapter:
         tip = chain[top_index]
         if tip not in heights:
             heights[tip] = heights_of(hierarchy, tip)
+            cycles[tip] = has_cycle(hierarchy, tip)
         # A chain whose tip the hierarchy does not hold has no depth to
         # report - and zero is the depth of a one-level hierarchy, so a
         # plausible-looking wrong value would be written. The track is
@@ -857,6 +887,10 @@ class AlbumAdapter:
         # rest of the release with it.
         work_part_levels = heights[tip].get(tip)
         if work_part_levels is None:
+            return TrackTags(key=recording.performance.key, group=group)
+        # A cycle in the hierarchy makes the depth unreliable, so the
+        # track is left with no tags rather than a wrong depth.
+        if cycles[tip]:
             return TrackTags(key=recording.performance.key, group=group)
         return TrackTags(
             key=recording.performance.key,
