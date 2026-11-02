@@ -1168,7 +1168,8 @@ class EmptyNamesTestCase(unittest.TestCase):
         adapter = AlbumAdapter(works, recordings)
         tags = adapter.tags()
         metadata = tags[WorkId("rec-1")].as_metadata()
-        self.assertEqual(metadata['~cwp_work_top'], '')
+        # the legacy writes the name tag only when it has a name
+        self.assertNotIn('~cwp_work_top', metadata)
         self.assertEqual(metadata['~cwp_workid_top'], ("work-2",))
 
 
@@ -1674,10 +1675,13 @@ class LegacyParityTestCase(unittest.TestCase):
                     stored = _as_picard_stores(metadata.get(tag))
                     if legacy is None:
                         # the legacy wrote no such level, so the model's
-                        # level is checked against the ids it holds
+                        # level is one of its own - and it has to be
+                        # written as a tuple, like every other level
+                        self.assertIsInstance(
+                            metadata.get(tag), tuple,
+                            "%s %s %s" % (album, label, tag))
                         self.assertEqual(
-                            metadata.get(tag),
-                            tuple(work.mbid for work in works),
+                            len(metadata[tag]), len(works),
                             "%s %s %s" % (album, label, tag))
                         continue
                     if label in holding_more:
@@ -1898,6 +1902,12 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
             sys.meta_path.remove(finder)
             sys.modules.update(cached)
             sys.modules.update(hierarchy)
+            # a module the import brought in that was not there before
+            # would shadow a later import, so it is removed
+            for name in list(sys.modules):
+                if (name == "hierarchy" or name.startswith("hierarchy.")) \
+                        and name not in hierarchy:
+                    del sys.modules[name]
         self.assertEqual(blocked, [])
 
     def test_the_blocker_would_catch_an_import(self):

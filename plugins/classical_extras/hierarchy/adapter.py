@@ -332,10 +332,11 @@ class TrackTags:
         if self.top:
             metadata['~cwp_workid_top'] = tuple(
                 work.mbid for work in self.top)
-        if len(self.top_names) == 1:
-            metadata['~cwp_work_top'] = self.top_names[0]
-        else:
-            metadata['~cwp_work_top'] = ID_SEPARATOR.join(self.top_names)
+        if self.top_names:
+            if len(self.top_names) == 1:
+                metadata['~cwp_work_top'] = self.top_names[0]
+            else:
+                metadata['~cwp_work_top'] = ID_SEPARATOR.join(self.top_names)
         if self.group:
             metadata['~cwp_work_group'] = self.group
         metadata['~cwp_part_levels'] = str(self.part_levels)
