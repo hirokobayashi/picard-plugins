@@ -666,6 +666,11 @@ class AlbumAdapter:
         self._built: Optional[Tuple[
             Hierarchy, Dict[WorkId, List[NodeId]], Dict[WorkId, str]]] = None
         seen: Dict[WorkId, Recording] = {}
+        #: How many tracks each recording is on. The legacy votes once
+        #: per *track*, so a recording that is on two tracks votes twice
+        #: - and a release that lists the same recording twice is a
+        #: recording on two tracks.
+        self.tracks_per_recording: Dict[WorkId, int] = {}
         for recording in recordings:
             if (not isinstance(recording, Mapping)
                     or not recording.get('id')):
@@ -686,6 +691,11 @@ class AlbumAdapter:
             # recorded, so that a caller can see it happened.
             if entry.performance.key in seen:
                 self.dropped.append(entry.performance.key)
+                # the same recording on another track - so it is on one
+                # more track
+                self.tracks_per_recording[entry.performance.key] = (
+                    self.tracks_per_recording.get(
+                        entry.performance.key, 0) + 1)
                 if self._performance_of(
                         recording) != self._performance_of(
                             seen[entry.performance.key].raw):
@@ -693,6 +703,8 @@ class AlbumAdapter:
                 continue
             seen[entry.performance.key] = entry
             self.recordings.append(entry)
+            self.tracks_per_recording[entry.performance.key] = (
+                self.tracks_per_recording.get(entry.performance.key, 0) + 1)
         # a count for a recording that is not in the release has no
         # effect - and a misspelled id would have the same effect as a
         # count that was not given at all
@@ -909,11 +921,14 @@ class AlbumAdapter:
         works, and the winner becomes the track's top work tag.
 
         The vote is per *track*, so a recording that is on two tracks
-        votes twice - which the multiplicity says.
+        votes twice. A release that lists the same recording twice is a
+        recording on two tracks, and the count of the tracks says so -
+        and a multiplicity given for the recording says so instead.
         """
         votes: Dict[str, int] = {}
         for key, works in candidates.items():
-            count = self.multiplicity.get(key, 1)
+            count = self.multiplicity.get(
+                key, self.tracks_per_recording.get(key, 1))
             for name in set(self.names.names_of(works)):
                 votes[name] = votes.get(name, 0) + count
         return votes
