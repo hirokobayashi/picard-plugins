@@ -825,21 +825,25 @@ class AlbumAdapter:
         """
         levels, _through = self._levels(recording, chain)
         # the top is the last level that has ids - a level with no ids
-        # has no tag, so it is not a level of the track's own
-        filled = [works for works in levels if works]
+        # has no tag, so it is not a level of the track's own. The node
+        # of that level is the one the depth comes from, so that the
+        # two cannot come from different nodes.
+        filled = [(index, works)
+                  for index, works in enumerate(levels) if works]
         if not filled:
             # the recording names no work, or names a work with no place
             # in the tree
             return TrackTags(key=recording.performance.key, group=group)
-        top = filled[-1]
-        if chain[-1] not in heights:
-            heights[chain[-1]] = heights_of(hierarchy, chain[-1])
+        top_index, top = filled[-1]
+        tip = chain[top_index]
+        if tip not in heights:
+            heights[tip] = heights_of(hierarchy, tip)
         # A chain whose tip the hierarchy does not hold has no depth to
         # report - and zero is the depth of a one-level hierarchy, so a
         # plausible-looking wrong value would be written. The track is
         # left with no tags instead: one bad chain must not take the
         # rest of the release with it.
-        work_part_levels = heights[chain[-1]].get(chain[-1])
+        work_part_levels = heights[tip].get(tip)
         if work_part_levels is None:
             return TrackTags(key=recording.performance.key, group=group)
         return TrackTags(
