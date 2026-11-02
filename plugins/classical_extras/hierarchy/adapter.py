@@ -840,7 +840,10 @@ class AlbumAdapter:
             work.mbid))
         for work in contributors:
             if work in partial:
-                contribution: List[WorkId] = [work]
+                # the work contributes itself, but only if the level
+                # holds it
+                contribution: List[WorkId] = (
+                    [work] if work in ordered else [])
             else:
                 contribution = [
                     parent for parent in self.relations.parents.get(work, ())

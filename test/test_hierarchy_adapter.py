@@ -2353,7 +2353,8 @@ class LegacyParityTestCase(unittest.TestCase):
         The tracks the model differs on are checked for the form only -
         their ids are the model's own, and they are checked against the
         recorded ones by ``test_the_differing_tracks_have_the_ids_the
-        _model_gives``.
+        _model_gives``. So this test says nothing about the ids of
+        those tracks; it says that they are written in the same shape.
         """
         for album, expected in sorted(self.legacy.items()):
             tags = _adapter(album).tags()
@@ -2401,7 +2402,8 @@ class LegacyParityTestCase(unittest.TestCase):
 
         The model may hold more works in a level than the legacy did -
         both Swan Lake editions, say, and the Gayne scene level - but
-        every id it writes has to be a work of the hierarchy.
+        every id it writes has to be a work of the hierarchy, and of
+        the node that level holds.
         """
         for album in sorted(USE_PARTIAL):
             adapter = _adapter(album)
@@ -2416,6 +2418,15 @@ class LegacyParityTestCase(unittest.TestCase):
                             work, known,
                             "%s: %s is not a work of the hierarchy"
                             % (album, work.mbid))
+                        # and the work has to be in *some* node - a work
+                        # of another level would be a level that does
+                        # not hold it
+                        in_a_node = any(
+                            work in node.works
+                            for node in hierarchy.nodes.values())
+                        self.assertTrue(
+                            in_a_node,
+                            "%s: %s is in no node" % (album, work.mbid))
 
     def test_the_work_group_is_the_legacys(self):
         """Every track's group is the legacy's group for it.
