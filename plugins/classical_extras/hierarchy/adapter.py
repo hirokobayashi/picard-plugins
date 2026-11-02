@@ -469,6 +469,12 @@ class AlbumAdapter:
         #: The recordings that were listed twice and dropped, so that a
         #: caller can see that it happened.
         self.dropped: List[WorkId] = []
+        #: The recordings that were listed twice with *different* relations.
+        #: The first entry's tags win - the tags are per recording, so
+        #: there is nowhere for both to go - but the caller can see that
+        #: the two disagreed, which is a different thing from a repeated
+        #: recording.
+        self.conflicting: List[WorkId] = []
         seen: Dict[WorkId, Recording] = {}
         for recording in recordings:
             entry = self._read_recording(recording)
@@ -483,6 +489,8 @@ class AlbumAdapter:
             # recorded, so that a caller can see it happened.
             if entry.performance.key in seen:
                 self.dropped.append(entry.performance.key)
+                if entry.members != seen[entry.performance.key].members:
+                    self.conflicting.append(entry.performance.key)
                 continue
             seen[entry.performance.key] = entry
             self.recordings.append(entry)
@@ -759,17 +767,17 @@ class AlbumAdapter:
 
     def _works_leading_to(
             self,
-            node: NodeId,
-            child: NodeId,
+            below_node: NodeId,
+            above_node: NodeId,
             below: Sequence[WorkId],
             recording: WorkId,
             partial: Sequence[WorkId]) -> List[WorkId]:
-        """The works of ``node`` whose parents are in ``child``.
+        """The works of ``below_node`` whose parents are in ``above_node``.
 
         A node holds the works it stands for. The next level up holds
         those works' parents, so every work of the node that has a
-        parent in the child contributes to it. A recording that performs
-        two works puts them in one node, and then both of them
+        parent in the node above contributes to it. A recording that
+        performs two works puts them in one node, and then both of them
         contribute - picking only one of them would lose the other's
         contribution to the order.
 
@@ -784,9 +792,9 @@ class AlbumAdapter:
         found there.
         """
         leading = [
-            work for work in node.works
+            work for work in below_node.works
             if self.relations.parents.get(work, ())
-            and set(self.relations.parents[work]) & set(child.works)]
+            and set(self.relations.parents[work]) & set(above_node.works)]
         # the key is the place in the level below, and then the place among
         # the partly performed works - a work the level below does not
         # name goes last
