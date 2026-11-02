@@ -2550,9 +2550,12 @@ class LegacyParityTestCase(unittest.TestCase):
                         got = self._ids(metadata.get(tag))
                         wanted = self._ids(want.get(tag))
                     else:
-                        # the name and the group are text, not ids
-                        got = metadata.get(tag)
-                        wanted = want.get(tag)
+                        # The name and the group are text, not ids - but
+                        # they are read as Picard stores them, so that a
+                        # tuple of names and a list of names are the
+                        # same. A tied top is written as a tuple.
+                        got = _as_picard_stores(metadata.get(tag))
+                        wanted = _as_picard_stores(want.get(tag))
                     if got == wanted:
                         continue
                     if (tag.startswith('~cwp_workid')

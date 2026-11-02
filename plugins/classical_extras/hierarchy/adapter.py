@@ -799,11 +799,14 @@ class AlbumAdapter:
         top = filled[-1]
         if chain[-1] not in heights:
             heights[chain[-1]] = heights_of(hierarchy, chain[-1])
-        # a chain whose tip the hierarchy does not hold has no depth to
+        # A chain whose tip the hierarchy does not hold has no depth to
         # report - and zero is the depth of a one-level hierarchy, so a
-        # plausible-looking wrong value would be written. It raises
-        # instead: a stale chain is a bug, not a track to tag.
-        work_part_levels = heights[chain[-1]][chain[-1]]
+        # plausible-looking wrong value would be written. The track is
+        # left with no tags instead: one bad chain must not take the
+        # rest of the release with it.
+        work_part_levels = heights[chain[-1]].get(chain[-1])
+        if work_part_levels is None:
+            return TrackTags(key=recording.performance.key, group=group)
         return TrackTags(
             key=recording.performance.key,
             levels=levels,
