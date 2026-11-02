@@ -35,6 +35,7 @@ from hierarchy.adapter import (  # noqa: E402
     WorkRelations,
     _has_missing_child,
     has_cycle,
+    heights_are_reliable,
     node_height,
     read_performance,
     read_work_graph,
@@ -321,6 +322,45 @@ class ReadPerformanceTestCase(unittest.TestCase):
         self.assertEqual(performance.works, frozenset([w("work-1")]))
         self.assertEqual(performance.partial, frozenset([w("work-1")]))
         self.assertEqual(performance.complete, frozenset())
+
+    def test_a_work_related_three_times_partly_partly_and_then_in_full(self):
+        """A work related partly, partly and then in full is in both sets.
+
+        The first relation decides whether the recording stands in for
+        the work - and it is a partial one, so it does. A relation in
+        full afterwards still puts the work in the complete set, so the
+        work contributes itself one level up.
+
+        The legacy was run on this case and it writes the work one level
+        up, so this is what the legacy does.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-1"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-1"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-1"},
+                    "attributes": [],
+                },
+            ],
+        }
+        performance = read_performance(recording)
+        self.assertEqual(performance.works, frozenset([w("work-1")]))
+        self.assertEqual(performance.partial, frozenset([w("work-1")]))
+        self.assertEqual(performance.complete, frozenset([w("work-1")]))
 
     def test_other_relations_are_ignored(self):
         recording = {
@@ -1094,6 +1134,41 @@ class NodeHeightTestCase(unittest.TestCase):
             _node("b"): [],
         })
         self.assertFalse(_has_missing_child(hierarchy, _node("a")))
+
+    def test_the_heights_are_reliable_only_for_a_whole_tree(self):
+        """The heights can be relied on only when the tree is whole.
+
+        A cycle stops the walk and a child that is not there is counted
+        as a leaf - so the depth is wrong either way, and the caller has
+        to know.
+        """
+        whole = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [],
+        })
+        self.assertTrue(heights_are_reliable(whole, _node("a")))
+        cyclic = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [_node("a")],
+        })
+        self.assertFalse(heights_are_reliable(cyclic, _node("a")))
+        broken = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [_node("c")],
+        })
+        self.assertFalse(heights_are_reliable(broken, _node("a")))
+
+    def test_the_work_ids_are_ordered_by_their_id(self):
+        """The work ids are ordered by their id.
+
+        The sorts of the work ids say which key they use, so that they
+        do not depend on the work id class being ordered. The class
+        itself is ordered by its id - it has one field - so the two
+        agree.
+        """
+        self.assertEqual(
+            sorted([w("bbb"), w("aaa"), w("ccc")]),
+            [w("aaa"), w("bbb"), w("ccc")])
 
     def test_a_self_loop_does_not_hang(self):
         hierarchy = self._hierarchy({

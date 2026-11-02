@@ -476,6 +476,17 @@ def has_cycle(hierarchy: Hierarchy, node: NodeId) -> bool:
     return cycle
 
 
+def heights_are_reliable(hierarchy: Hierarchy, node: NodeId) -> bool:
+    """Whether the heights of the node below are to be relied on.
+
+    They are not when the hierarchy has a cycle, or a child it does not
+    hold - a cycle stops the walk and a child that is not there is
+    counted as a leaf, so the depth is too small either way.
+    """
+    _heights, cycle = _heights_of(hierarchy, node)
+    return not cycle and not _has_missing_child(hierarchy, node)
+
+
 def _heights_of(
         hierarchy: Hierarchy,
         node: NodeId) -> Tuple[Dict[NodeId, int], bool]:
@@ -934,13 +945,10 @@ class AlbumAdapter:
         top_index, top = filled[-1]
         tip = chain[top_index]
         if tip not in heights:
-            # the walk gives the heights and whether it found a cycle,
-            # so it is only walked once
+            # the walk gives the heights and whether they can be relied
+            # on, so it is only walked once
             heights[tip], cycles[tip] = _heights_of(hierarchy, tip)
-            # a child the hierarchy does not hold is counted as a leaf,
-            # so the depth would be too small - the track is left with
-            # no tags rather than a wrong depth
-            cycles[tip] = cycles[tip] or _has_missing_child(
+            cycles[tip] = cycles[tip] or not heights_are_reliable(
                 hierarchy, tip)
         # A chain whose tip the hierarchy does not hold has no depth to
         # report - and zero is the depth of a one-level hierarchy, so a
