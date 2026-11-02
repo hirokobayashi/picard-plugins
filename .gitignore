@@ -8,6 +8,7 @@ __pycache__/
 
 # Test run output
 .coverage
+nohup.out
 
 # Distribution / packaging / development
 .venv/

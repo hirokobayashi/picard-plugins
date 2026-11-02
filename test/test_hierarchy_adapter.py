@@ -2571,6 +2571,33 @@ class NoChainTestCase(unittest.TestCase):
         tags = adapter.tags()
         self.assertIn(WorkId("rec-1"), tags)
 
+    def test_attributes_that_are_not_a_list_are_no_attributes(self):
+        """Attributes that are not a list are no attributes.
+
+        A string would be searched as a list of characters, and
+        ``'partial' in 'partially'`` is true - so a relation whose
+        attributes are a string would be taken as a partly performed
+        one.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                    "attributes": "partially",
+                },
+            ],
+        }
+        performance = read_performance(recording, use_partial=True)
+        self.assertEqual(performance.partial, frozenset())
+        self.assertEqual(performance.complete, frozenset({w("work-a")}))
+        # a list of names is read as it is
+        recording["relations"][0]["attributes"] = ["partial"]
+        performance = read_performance(recording, use_partial=True)
+        self.assertEqual(performance.partial, frozenset({w("work-a")}))
+
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
 
@@ -3447,7 +3474,8 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
                     # is broken, not blocked
                     raise
                 # the blocker fired, so the import failed because of
-                # Picard - which is what the test is about
+                # Picard - which is what the test is about. The check
+                # below says so.
         finally:
             sys.meta_path.remove(finder)
             sys.modules.update(cached)

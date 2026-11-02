@@ -213,7 +213,7 @@ def read_work_graph(
                 relation.get('type'),
                 relation.get('direction'),
                 WorkId(target['id']),
-                relation.get('attributes') or ())
+                _attributes_of(relation))
     resolved = graph.resolve_parents_ordered(
         use_arrangements=use_arrangements,
         use_medleys=use_medleys,
@@ -293,11 +293,11 @@ def read_performance(
             if (work in partial and use_partial
                     and work not in complete
                     and 'partial' not in (
-                        relation.get('attributes') or ())):
+                        _attributes_of(relation))):
                 complete.append(work)
             continue
         works.append(work)
-        if use_partial and 'partial' in (relation.get('attributes') or ()):
+        if use_partial and 'partial' in _attributes_of(relation):
             partial.append(work)
         else:
             complete.append(work)
@@ -522,6 +522,20 @@ def _heights_of(
         node_id: height - 1 for node_id, height in heights.items()}, cycle
 
 
+def _attributes_of(relation: Mapping) -> Sequence[str]:
+    """The attributes of a relation.
+
+    The attributes are a list of names. A relation whose attributes are
+    something else - a string, say - has none: a string would be
+    searched as a list of characters, and ``'partial' in 'partially'``
+    is true.
+    """
+    attributes = relation.get('attributes')
+    if isinstance(attributes, (list, tuple)):
+        return [str(item) for item in attributes]
+    return ()
+
+
 def _children_of(hierarchy: Hierarchy, node: NodeId) -> FrozenSet[NodeId]:
     """The children of a node, or none when the node is unknown."""
     found = hierarchy.nodes.get(node)
@@ -741,7 +755,7 @@ class AlbumAdapter:
                 continue
             is_partial = (
                 self.use_partial
-                and 'partial' in (relation.get('attributes') or ()))
+                and 'partial' in _attributes_of(relation))
             seen.add(work)
             result.append((work, is_partial))
         return result
