@@ -257,17 +257,19 @@ def read_performance(
     the attribute is ignored and a partially performed work is an ordinary
     one.
 
-    A response with no id names no recording, and this raises - the
-    caller has to filter those out. ``AlbumAdapter`` does, so a release
-    with a track that has no recording attached is tagged as usual.
+    A response that is not an object, or that has no id, names no
+    recording, and this raises - the caller has to filter those out.
+    ``AlbumAdapter`` does, so a release with a track that has no
+    recording attached is tagged as usual.
 
     The relation's direction is not looked at, because the legacy does
     not look at it either: it matches the recording's relations by the
     work they name. A performance relation is forward in MusicBrainz's
     data, so there is nothing to tell apart in practice.
     """
-    if not recording.get('id'):
-        # a response with no id names no recording
+    if not isinstance(recording, Mapping) or not recording.get('id'):
+        # a response that is not an object, or has no id, names no
+        # recording
         raise ValueError("the recording has no id")
     key = WorkId(recording['id'])
     works: List[WorkId] = []
