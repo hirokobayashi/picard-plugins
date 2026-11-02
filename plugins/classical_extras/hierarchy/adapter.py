@@ -929,9 +929,11 @@ class AlbumAdapter:
         level - a work performed only in part contributes nothing, but a
         work performed both in part and in full contributes itself, and
         so it sits in the level above and leads to the one above that.
-        There, its place in the level is worked out by
-        ``_level_above_first``, which gives a partly performed work its
-        own contribution rather than its parents'.
+
+        This is about the level *directly* above the first, and this
+        method is only used for that level. A level higher up holds the
+        parents of the works below it, so a partly performed work there
+        contributes its parents as any other work does.
 
         The works that lead to the level are in the order the level
         below gave them, which is the order the relations gave.

@@ -158,6 +158,16 @@ tracks that may differ are named there, and the tracks that may hold
 *more* ids than the legacy - the extra ones come after the legacy's, and
 are the model's own decision - are named separately.
 
+**What the parity does not establish.** The tests that check the
+adapter's *internals* against themselves - the oracle that works out the
+expected first level from the relations, and the check that the
+model's performance and the adapter's own reading agree - cannot catch
+a *misreading of the rule*, because both sides work it out the same
+way. They catch the two readings drifting apart, and they catch a
+crash. The rule itself is anchored to the legacy's recorded output by
+two small fixtures: `partial_order` and `partial_full_first`. A change
+to the rule would have to be checked against those.
+
 **The id tags hold a tuple, not a string.** The legacy hands Picard a
 tuple of work ids (`parentId = tuple(trackback['id'])`), and Picard
 stores a tuple of one id as a bare string and a tuple of more as a list.
@@ -165,7 +175,10 @@ So a level of one id reads as a bare id and a level of two reads as a
 list of two - which is exactly what the legacy's own tags read as. The
 adapter hands Picard the same tuple, so the two agree in the stored
 text, not only in the ids. The parity test compares them as Picard
-stores them, so a change of format would be caught.
+stores them - which normalises a tuple and a list to the same thing, so
+it catches a change of the *ids* but not of the container. The
+container is checked separately: the adapter hands Picard a tuple, and
+a test says so.
 
 Picard joins several values with `'; '` when it writes them out, so a
 level of two ids reads as `a; b` in the file. That is why the legacy's
@@ -262,6 +275,9 @@ cannot be tagged, and it must not stop the rest of the release from
 being tagged - so the adapter skips it, on both the recording side and
 the work side. (A `KeyError` out of the constructor would take the
 whole release's tags with it.)
+
+`read_performance` itself raises for a response with no id - its caller
+has to filter those out. `AlbumAdapter` does.
 
 The same holds for the rest of the adapter: a chain whose tip the
 hierarchy does not hold leaves that one track with no tags, rather
