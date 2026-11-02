@@ -142,9 +142,12 @@ class WorkRelations:
             # a bare work id
             candidates = [self.parents.get(WorkId(through), ())]
         else:
-            # the list is taken once: a one-shot iterable would be
-            # exhausted by the emptiness check
+            # the list is taken once, so that it can be read to build the
+            # candidates. A set would give a run-to-run order, so it is
+            # put in work id order first.
             sources = list(through)
+            if not isinstance(through, (list, tuple)):
+                sources.sort(key=lambda work: work.mbid)
             candidates = [
                 self.parents.get(work, ()) for work in sources]
         for source, parent_list in enumerate(candidates):
@@ -282,9 +285,10 @@ class Recording:
     relations in the order they came back in, with a partially performed
     work represented by the recording id.
 
-    ``partial`` are the works that are only performed in part. Their
-    place in the first level is taken by the recording id, so they have
-    to be kept to know where they stood.
+    ``partial`` are the works the recording performs in part - including
+    a work it performs in part *and* in full. Their place in the first
+    level is taken by the recording id, so they have to be kept to know
+    where they stood.
 
     ``performed`` are the works the recording performs, in the order the
     relations gave them.

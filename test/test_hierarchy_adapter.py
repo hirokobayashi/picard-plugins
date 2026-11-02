@@ -578,6 +578,45 @@ class ReadWorkGraphTestCase(unittest.TestCase):
             relations.order_of([w("work-b"), w("work-a")]),
             [w("work-a"), w("work-b")])
 
+    def test_a_set_of_contributing_works_gives_the_same_order(self):
+        """A set of contributing works gives the same order every time.
+
+        A set has no order of its own, so the works are put in work id
+        order first - otherwise the result would differ from one run to
+        the next.
+        """
+        graph, relations = read_work_graph([
+            {
+                "id": "work-a",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "parent"},
+                    },
+                ],
+            },
+            {
+                "id": "work-b",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "parent"},
+                    },
+                ],
+            },
+            {"id": "parent", "title": "The parent"},
+        ])
+        wanted = [w("parent")]
+        first = relations.order_of(wanted, through={w("work-a"), w("work-b")})
+        for _ in range(5):
+            self.assertEqual(
+                relations.order_of(
+                    wanted, through={w("work-a"), w("work-b")}),
+                first)
+        self.assertEqual(first, [w("parent")])
+
 
 class ArrangementOrderTestCase(unittest.TestCase):
     """The order of a level reached through an arrangement relation.
