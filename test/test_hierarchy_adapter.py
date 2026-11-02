@@ -2830,6 +2830,17 @@ class NoChainTestCase(unittest.TestCase):
         self.assertEqual(
             tags[WorkId("rec-3")].top_names, ["The first work"])
 
+    def test_a_recording_that_is_not_an_object_raises(self):
+        """A recording that is not an object raises.
+
+        The reader is called directly here, so it says what it cannot
+        use - rather than raising out of the tagging further down.
+        """
+        for recording in ("a string", [], 42, None):
+            self.assertRaises(ValueError, read_performance, recording)
+        # a response with no id raises as well
+        self.assertRaises(ValueError, read_performance, {})
+
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
 
