@@ -1221,6 +1221,37 @@ class ProjectionTestCase(unittest.TestCase):
 class ParentResolutionTestCase(unittest.TestCase):
     """How a work's parent is found among MusicBrainz's relation types."""
 
+    def test_the_ordered_parents_are_the_same_set(self):
+        """The ordered parents are the same parents, as a set.
+
+        The ordered resolution is what the adapter reads, because the
+        order of the parents is what the legacy's tag holds. The set
+        based one is what the rest of the graph uses - so the two have to
+        agree on which parents a work has.
+        """
+        graph = WorkGraph()
+        graph.add_relation(w("movement"), "parts", "backward", w("opera"))
+        graph.add_relation(w("movement"), "parts", "backward", w("act"))
+        graph.add_relation(w("arrangement"), "arrangement", "backward",
+                           w("opera"))
+        graph.add_relation(w("medley"), "medley", "forward", w("opera"))
+        graph.add_relation(w("collection"), "parts", "backward", w("box"))
+        for use_arrangements in (True, False):
+            for use_medleys in (True, False):
+                for use_collections in (True, False):
+                    sets = graph.resolve_parents(
+                        use_arrangements=use_arrangements,
+                        use_medleys=use_medleys,
+                        use_collections=use_collections)
+                    ordered = graph.resolve_parents_ordered(
+                        use_arrangements=use_arrangements,
+                        use_medleys=use_medleys,
+                        use_collections=use_collections)
+                    self.assertEqual(
+                        {work: frozenset(parents)
+                         for work, parents in ordered.items()},
+                        sets)
+
     def test_parts_relation_is_the_parent(self):
         graph = WorkGraph()
         graph.add_relation(w("movement"), "parts", "backward", w("opera"))

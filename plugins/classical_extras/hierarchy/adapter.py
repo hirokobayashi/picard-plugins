@@ -224,6 +224,10 @@ def read_performance(
     contributes: it is the parent of the recording id one level up. So
     such a work is in both sets.
 
+    The order of the relations does not matter: any partly performed
+    relation puts the work in the partial set, and any relation in full
+    puts it in the complete set.
+
     A work related twice, both times partially, is only in the partial
     set: the recording never performs it in full.
 
