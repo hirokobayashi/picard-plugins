@@ -231,18 +231,22 @@ Daphnis tracks), but stops at the work when it is the recording's only
 work: the legacy's node for the work holds no parent. That shape is
 pinned by `PartialOnlyShapeTestCase`.
 
-**The first relation for a work decides.** The legacy reads the
-attributes of the first relation it finds for the work (`parse_data`
-with `'work.id:' + workId`), so:
+**The first relation for a work decides whether the recording stands in
+for it.** The legacy reads the attributes of the first relation it finds
+for the work (`parse_data` with `'work.id:' + workId`), so:
 
 - a work related **partly first** is partly performed - the recording id
   stands in for it in the first level - and it is in both the partial
   and the complete set, because the legacy adds a second entry for it
   and the work itself still contributes;
 - a work related **in full first** is performed in full - the recording
-  id does *not* stand in for it, and it is only in the complete set;
-- a work related **partly twice** is only in the partial set: the
-  recording never performs it in full.
+  id does *not* stand in for it, and it is only in the complete set.
+
+A work related partly first and in full afterwards is in both sets, and
+so is a work related partly, partly and then in full - the legacy was
+run on that case and it writes the work one level up. A work related
+**partly twice** is only in the partial set: the recording never
+performs it in full.
 
 The `test/fixtures/partial_full_first/` fixture was run through the
 legacy: with work-b related in full first and partly second, and

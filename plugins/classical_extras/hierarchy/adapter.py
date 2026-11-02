@@ -234,11 +234,12 @@ def read_performance(
     contributes: it is the parent of the recording id one level up. So
     such a work is in both sets.
 
-    The *first* relation for a work decides: the legacy reads the
-    attributes of the first relation it finds for the work. So a work
-    related partly first and in full second is in the partial set and
-    the complete set, and a work related in full first and partly
-    second is only in the complete set.
+    The *first* relation for a work decides whether the recording stands
+    in for it: the legacy reads the attributes of the first relation it
+    finds for the work. So a work related partly first and in full
+    second is in the partial set and the complete set, and a work
+    related in full first and partly second is only in the complete
+    set.
 
     A work related twice, both times partially, is only in the partial
     set: the recording never performs it in full.
