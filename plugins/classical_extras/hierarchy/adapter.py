@@ -761,31 +761,67 @@ class AlbumAdapter:
                     # below and their order cannot come from it.
                     #
                     # They take the recording id's place in the level
-                    # below, which is where the relations put them. The
-                    # works that came from the works before the
-                    # recording id keep their place, so the two are put
-                    # back together in the order the relations gave.
-                    partial = [
-                        work for work in recording.partial
-                        if work in ids]
-                    if partial:
-                        place = levels[0].index(recording.performance.key)
-                        before = {
-                            work for position, work in enumerate(levels[0])
-                            if position < place}
-                        # the level's works that came from the works
-                        # before the recording id - the partial works go
-                        # after those
-                        leading_before = sum(
-                            1 for work in leaders if work in before)
-                        others = [
-                            work for work in ids if work not in partial]
-                        ids = (
-                            others[:leading_before] + partial
-                            + others[leading_before:])
+                    # below, which is where the relations put them. So
+                    # the level is built by walking the works that lead
+                    # to it in the order the level below gave them, and
+                    # taking each one's contribution: its parents, or
+                    # the work itself when it is partly performed.
+                    ids = self._level_above_first(
+                        node, leaders, levels[0], recording, ids)
             levels.append(ids)
             through.append(leaders)
         return levels, through
+
+    def _level_above_first(
+            self,
+            node: NodeId,
+            leaders: Sequence[WorkId],
+            below: Sequence[WorkId],
+            recording: Recording,
+            ordered: Sequence[WorkId]) -> List[WorkId]:
+        """The level above the first one, in the order the relations gave.
+
+        The level holds the works that lead to it - the parents of the
+        works below - and a partly performed work itself, because the
+        recording id stands in for it in the level below and so cannot
+        say where it stood.
+
+        The order is the order the works below gave, with each work
+        contributing in turn: a partly performed work contributes
+        itself, and any other work contributes its parents. So the
+        partly performed work takes the recording id's place, and the
+        works before it keep theirs.
+
+        The works that lead to the level are in the order the level
+        below gave them, which is the order the relations gave.
+        """
+        partial = set(recording.partial)
+        result: List[WorkId] = []
+        seen: Set[WorkId] = set()
+        # the works that lead to the level, and the partly performed
+        # works - which are not among them, because the recording id
+        # stands in for them in the level below
+        contributors = list(leaders) + [
+            work for work in recording.partial
+            if work in ordered and work not in leaders]
+        for work in contributors:
+            if work in partial:
+                contribution: List[WorkId] = [work]
+            else:
+                contribution = [
+                    parent for parent in self.relations.parents.get(work, ())
+                    if parent in ordered]
+            for item in contribution:
+                if item not in seen:
+                    seen.add(item)
+                    result.append(item)
+        # a work of the level that no leading work contributed keeps the
+        # place the relations gave it
+        for work in ordered:
+            if work not in seen:
+                seen.add(work)
+                result.append(work)
+        return result
 
     def _works_leading_to(
             self,

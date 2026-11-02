@@ -1506,6 +1506,84 @@ class PartialOrderFixtureTestCase(unittest.TestCase):
         # and the level above holds work-c, in the recording id's place
         self.assertEqual(track.levels[1], [w("work-c")])
 
+    def test_a_partly_performed_work_between_works_with_a_shared_parent(self):
+        """A partly performed work keeps its place among the others.
+
+        The recording performs work-a and work-b in full - and they
+        share a parent - then work-c in part and in full, then work-d in
+        full. The first level holds work-a, work-b, the recording id -
+        which stands in for work-c - and work-d.
+
+        The level above holds work-c, in the recording id's place. The
+        two works that share a parent contribute one id between them, so
+        the place cannot be counted in the works that lead to the level.
+
+        The legacy writes ~cwp_workid_0 = ('work-a', 'work-b', 'rec-1',
+        'work-d') and ~cwp_workid_1 = ('work-c',).
+        """
+        def parent_works(name, parent):
+            return {
+                "id": name,
+                "title": name,
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": parent},
+                    },
+                ],
+            }
+
+        works = [
+            parent_works("work-a", "parent-p"),
+            parent_works("work-b", "parent-p"),
+            parent_works("work-c", "parent-r"),
+            parent_works("work-d", "parent-q"),
+            {"id": "parent-p", "title": "The parent P"},
+            {"id": "parent-r", "title": "The parent R"},
+            {"id": "parent-q", "title": "The parent Q"},
+        ]
+        recordings = [{
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-c"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-c"},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-d"},
+                },
+            ],
+        }]
+        adapter = AlbumAdapter(works, recordings, use_partial=True)
+        tags = adapter.tags()
+        track = tags[w("rec-1")]
+        # the recording id stands in for work-c, in work-c's place
+        self.assertEqual(
+            track.levels[0],
+            [w("work-a"), w("work-b"), w("rec-1"), w("work-d")])
+        # and the level above holds work-c, in the recording id's place
+        self.assertEqual(track.levels[1], [w("work-c")])
+
 
 class EmptyNamesTestCase(unittest.TestCase):
     """The tags of a track whose works have no titles."""
