@@ -967,11 +967,12 @@ class OrderOfTestCase(unittest.TestCase):
     def test_the_contributing_works_are_in_the_level_below_order(self):
         """The works leading to a level keep the order of the level below.
 
-        The rule is that the contributing works are the level below's
-        works whose parents are in this level, and that they are in the
-        level below's order. The set is worked out from the relations,
-        so a work that was dropped would be caught; the order is
-        checked against the level below.
+        The order is the point: the contributing works are the level
+        below's works whose parents are in this level, and they are in
+        the level below's order. The set is worked out from the same
+        relations the adapter reads, so this pins the order rather than
+        the rule - the rule itself is checked against the legacy's own
+        tags by ``LegacyParityTestCase``.
         """
         adapter = _adapter("swanlake_full")
         hierarchy, _groups = adapter.build()
@@ -1365,6 +1366,7 @@ class NoChainTestCase(unittest.TestCase):
         with open(path, encoding="utf-8") as handle:
             legacy = json.load(handle)
         tags = _adapter("daphnis").tags()
+        checked = 0
         for label, want in sorted(legacy["daphnis"]["tracks"].items()):
             recording = _load(os.path.join(
                 FIXTURES, "daphnis", "rec_%s.json" % label))
@@ -1376,6 +1378,7 @@ class NoChainTestCase(unittest.TestCase):
             if len(works) == len(related):
                 # every work is related once - nothing to check
                 continue
+            checked += 1
             track = tags.get(WorkId(recording["id"]))
             self.assertIsNotNone(
                 track, "daphnis %s has no tags" % label)
@@ -1388,6 +1391,8 @@ class NoChainTestCase(unittest.TestCase):
                 self.assertNotIn(
                     w(work), level,
                     "daphnis %s: the work is in the first level" % label)
+        self.assertTrue(
+            checked, "no track had a work related twice")
 
     def test_the_performance_and_the_members_agree(self):
         """The model's performance and the first level's ids agree.
