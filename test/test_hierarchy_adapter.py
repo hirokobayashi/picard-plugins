@@ -2305,6 +2305,9 @@ class NoChainTestCase(unittest.TestCase):
         adapter._works_leading_to = spy
         adapter.tags()
         partial = set(adapter.recordings[0].partial)
+        # the leaders were looked for - otherwise the check below would
+        # be about nothing
+        self.assertTrue(leaders, "the leaders were never looked for")
         # the first level's leaders are the ones that lead to the level
         # above the first - the others are higher up, where a partly
         # performed work can be among them

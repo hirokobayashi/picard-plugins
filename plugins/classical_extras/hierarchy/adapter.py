@@ -28,9 +28,10 @@ The rule, measured against the legacy over every fixture:
   order the relations came back in;
 * a work that is only *partially* performed is represented by the
   **recording id** instead of the work id, in the relation's place;
-* a work that is related twice - once partially, once in full - is
-  represented by the recording id alone, because the recording is not the
-  work;
+* a work that is related twice is decided by its **first** relation: if
+  that one is partial, the work is represented by the recording id
+  alone, because the recording is not the work; if that one is in full,
+  the work keeps its own id. See ``read_performance``;
 * the 'partial' substitution only applies when the plugin's
   ``cwp_partial`` option is on.
 
