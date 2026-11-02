@@ -782,6 +782,10 @@ class AlbumAdapter:
         top = filled[-1]
         if chain[-1] not in heights:
             heights[chain[-1]] = heights_of(hierarchy, chain[-1])
+        # a chain whose tip the hierarchy does not hold has no depth to
+        # report - it cannot happen with a chain of the hierarchy, but a
+        # stale chain would take the whole release's tags with it
+        work_part_levels = heights[chain[-1]].get(chain[-1], 0)
         return TrackTags(
             key=recording.performance.key,
             levels=levels,
@@ -789,7 +793,7 @@ class AlbumAdapter:
             top_names=self._top_names(top, votes),
             group=group,
             part_levels=sum(1 for works in levels if works) - 1,
-            work_part_levels=heights[chain[-1]][chain[-1]])
+            work_part_levels=work_part_levels)
 
     def _levels(
             self,
@@ -883,8 +887,15 @@ class AlbumAdapter:
         contributors = list(leaders) + [
             work for work in recording.partial
             if work in ordered and work not in leaders]
+        # A partly performed work takes the recording id's place in the
+        # level below. A work that leads to the level keeps its own
+        # place there - and a work the level below does not name goes
+        # last, as it has no place of its own.
         contributors.sort(key=lambda work: (
-            place.get(work, place.get(key, len(below))),
+            place.get(
+                work,
+                place.get(key, len(below))
+                if work in partial else len(below)),
             partial_order.get(work, 0),
             work.mbid))
         for work in contributors:
