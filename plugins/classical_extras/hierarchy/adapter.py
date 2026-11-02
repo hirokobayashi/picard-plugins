@@ -456,9 +456,9 @@ def heights_of(
     share a top do not each walk it again.
 
     The heights are of a well-formed hierarchy: a child that the
-    hierarchy does not hold contributes nothing, so the node above it
-    counts one level rather than the depth of the subtree that is not
-    there. The hierarchy is built by the model, so it is well formed.
+    hierarchy does not hold is treated as absent, so the node above it
+    counts one level less than it really has. The hierarchy is built by
+    the model, so it is well formed.
 
     A cycle in the hierarchy is left out of the walk, so the heights
     that come back are not to be relied on. ``has_cycle`` says when
@@ -484,7 +484,7 @@ def heights_are_reliable(hierarchy: Hierarchy, node: NodeId) -> bool:
 
     They are not when the hierarchy has a cycle, or a child it does not
     hold - a cycle stops the walk and a child that is not there is
-    counted as a leaf, so the depth is too small either way.
+    treated as absent, so the depth is too small either way.
     """
     _heights, cycle, missing = _heights_of(hierarchy, node)
     return not cycle and not missing
@@ -496,7 +496,7 @@ def _heights_of(
     """The heights of a walk, whether it found a cycle, and whether it
     found a child the hierarchy does not hold.
 
-    A child the hierarchy does not hold is counted as a leaf, so the
+    A child the hierarchy does not hold is treated as absent, so the
     depth it gives is too small. The hierarchy is built by the model,
     so it is well formed - but the caller has to know when it is not.
     """
@@ -535,7 +535,7 @@ def _heights_of(
             continue
         visiting.add(child)
         if child not in hierarchy.nodes:
-            # a child the hierarchy does not hold is counted as a leaf,
+            # a child the hierarchy does not hold is treated as absent,
             # so the depth under it is lost
             missing = True
         stack.append((child, iter(_children_of(hierarchy, child))))

@@ -1184,7 +1184,8 @@ class ChainShapeTestCase(unittest.TestCase):
 
         The expected top is worked out from the candidate tops, which is
         derived from the chain independently of the adapter's own tag
-        building.
+        building. And the top is the last level - so the two have to
+        agree.
         """
         for album in ("daphnis", "gayne", "swanlake_full"):
             adapter = _adapter(album)
@@ -1196,6 +1197,10 @@ class ChainShapeTestCase(unittest.TestCase):
                 self.assertEqual(
                     set(track.top),
                     set(candidates[track.key]),
+                    album)
+                self.assertEqual(
+                    list(track.top),
+                    list(track.levels[-1]),
                     album)
 
 
