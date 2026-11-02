@@ -1202,6 +1202,12 @@ class PartialOrderTestCase(unittest.TestCase):
         those works' own relations gave them. So the level above the two
         works holds each work's parent, and the order is the order the
         works' relations give.
+
+        The two works are both performed in part, so the recording id
+        stands in for both of them in the first level - and the level
+        above holds the works themselves, in the order the relations gave
+        them. The legacy writes the same: workid_0 = ('rec-1',) and
+        workid_1 = ('work-zzz', 'work-aaa').
         """
         works = [
             {
@@ -1259,11 +1265,19 @@ class PartialOrderTestCase(unittest.TestCase):
         adapter = AlbumAdapter(works, recordings, use_partial=True)
         tags = adapter.tags()
         track = tags[w("rec-1")]
-        # the level above the two works holds their parents, one each, in
-        # the order the works' relations give
+        # the first level holds the recording id alone - it stands in for
+        # both of the works
+        self.assertEqual(track.levels[0], [w("rec-1")])
+        # and the level above holds the two works, in the order the
+        # relations gave them - not the work id order
+        self.assertEqual(
+            track.levels[1],
+            [w("work-zzz"), w("work-aaa")])
+        # and the level above that holds their parents, one each, in the
+        # same order
         self.assertEqual(
             track.levels[2],
-            [w("parent-2"), w("parent-1")])
+            [w("parent-1"), w("parent-2")])
         # and the two works themselves are in the order the relations gave
         # them - the recording id stands in for them in the first level,
         # so the relations are what say
