@@ -431,6 +431,7 @@ class AlbumAdapter:
         self.use_medleys = use_medleys
         self.use_collections = use_collections
         self.recordings = []
+        self.dropped: List[WorkId] = []
         seen: Dict[WorkId, Recording] = {}
         for recording in recordings:
             entry = self._read_recording(recording)
@@ -441,8 +442,10 @@ class AlbumAdapter:
             # recording - the same performance of the same works - so the
             # first is kept. If they were not the same, the second's
             # relations would be dropped: the tags are per recording, so
-            # there is nowhere for both to go.
+            # there is nowhere for both to go. The dropped one is
+            # recorded, so that a caller can see it happened.
             if entry.performance.key in seen:
+                self.dropped.append(entry.performance.key)
                 continue
             seen[entry.performance.key] = entry
             self.recordings.append(entry)
