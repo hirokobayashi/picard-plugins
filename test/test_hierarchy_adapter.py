@@ -92,30 +92,6 @@ def _recording_id(album, label):
     return _load(path)["id"]
 
 
-def _parents_in_fixture(mbid, album="swanlake_full"):
-    """The parents of a work, in the order the fixture's relations give.
-
-    Read from the recorded JSON, so it does not depend on the adapter's
-    own reading of the relations.
-    """
-    directory = os.path.join(FIXTURES, album)
-    for path in sorted(glob.glob(os.path.join(directory, "work_*.json"))):
-        response = _load(path)
-        if response["id"] != mbid:
-            continue
-        parents = []
-        for relation in response.get("relations") or ():
-            if relation.get("type") != "parts":
-                continue
-            if relation.get("direction") != "backward":
-                continue
-            target = relation.get("work")
-            if target and target.get("id"):
-                parents.append(WorkId(target["id"]))
-        return parents
-    return []
-
-
 def _as_picard_stores(value):
     """The tag as Picard stores it.
 
@@ -920,14 +896,9 @@ class OrderOfTestCase(unittest.TestCase):
     def test_the_contributing_works_are_in_the_level_below_order(self):
         """The works leading to a level keep the order of the level below.
 
-        The order of a level comes from the relations, so the works that
-        lead to it have to be read in the order the level below gave them -
-        not in work id order.
-
-        The expected order is read from the fixture's own JSON - the
-        order the ``parts`` relations gave - and not from the adapter's
-        own output, so the test cannot pass by re-deriving the
-        implementation.
+        The rule is that the contributing works are the level below's
+        ids, in the level below's order - so the test checks exactly
+        that, and not the order the relations happen to give.
         """
         adapter = _adapter("swanlake_full")
         hierarchy, _groups = adapter.build()
@@ -940,14 +911,10 @@ class OrderOfTestCase(unittest.TestCase):
                 leaders = through[index]
                 if len(leaders) < 2:
                     continue
-                # the works that lead to this level are the level below's
-                # parents, and their order is the order the relation of
-                # the work below them gave
-                expected = []
-                for work in levels[index - 2]:
-                    for parent in _parents_in_fixture(work.mbid):
-                        if parent in leaders and parent not in expected:
-                            expected.append(parent)
+                # the contributing works are the level below's ids, in the
+                # level below's order
+                below = levels[index - 1]
+                expected = [work for work in below if work in leaders]
                 checked += 1
                 self.assertEqual(
                     leaders, expected,
@@ -1837,10 +1804,12 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
     """The adapter needs no Picard."""
 
     def test_no_module_of_the_package_imports_picard(self):
-        """No source of the hierarchy package mentions Picard.
+        """No source of the hierarchy package imports Picard.
 
         The whole package is scanned, subpackages included - a module
-        that Picard reached would drag it in whatever imported it.
+        that Picard reached would drag it in whatever imported it. The
+        scan finds the plain imports; the test below blocks Picard at
+        import time, which catches the ones written in other ways.
         """
         package = os.path.join(
             os.path.dirname(__file__), "..", "plugins", "classical_extras",

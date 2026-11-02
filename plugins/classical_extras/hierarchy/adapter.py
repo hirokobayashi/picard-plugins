@@ -117,9 +117,10 @@ class WorkRelations:
         all of their parent lists are read.
 
         With no work given, the order is looked for in every relation.
-        That is only a fallback: the result is deterministic, but the
-        order it gives is the order the relations were read in, not the
-        order of any one relation.
+        That is only a fallback: the result is deterministic - the
+        relations are read in work id order - but the order it gives is
+        the order the relations were read in, not the order of any one
+        relation.
 
         An empty list of works is not the same as no work given: there
         the caller knows which work the level was reached by and it
@@ -132,8 +133,12 @@ class WorkRelations:
         wanted = list(works)
         order: Dict[WorkId, Tuple[int, int]] = {}
         if through is None:
-            # no work to read the order from, so every relation is read
-            candidates = list(self.parents.values())
+            # no work to read the order from, so every relation is read.
+            # The relations are read in work id order, so the result does
+            # not depend on the order the works happened to be found in.
+            candidates = [
+                self.parents[work]
+                for work in sorted(self.parents, key=lambda x: x.mbid)]
         elif isinstance(through, WorkId):
             candidates = [self.parents.get(through, ())]
         elif isinstance(through, str):
@@ -170,8 +175,10 @@ def read_work_graph(
 
     Each entry is one ``/ws/2/work`` response. The relations it carries
     become the graph's edges: a ``parts`` relation pointing backwards is
-    a parent edge, and everything else is retained but takes no part in
-    the hierarchy.
+    a parent edge, and an ``arrangement`` or a ``medley`` relation is a
+    parent edge too when there is no ``parts`` relation - the graph's
+    own ordered fallback. Every other relation is retained but takes no
+    part in the hierarchy.
 
     The order the parents came back in is returned as well, because the
     legacy's node keys are tuples and the order inside a tuple is the
