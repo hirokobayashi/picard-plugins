@@ -293,12 +293,16 @@ class Recording:
 
     ``performed`` are the works the recording performs, in the order the
     relations gave them.
+
+    ``raw`` is the recording's own data, kept so that two entries for
+    the same recording can be compared.
     """
 
     performance: Performance
     members: List[WorkId] = field(default_factory=list)
     partial: List[WorkId] = field(default_factory=list)
     performed: List[WorkId] = field(default_factory=list)
+    raw: Mapping = field(default_factory=dict)
 
 
 @dataclass
@@ -489,7 +493,8 @@ class AlbumAdapter:
             # recorded, so that a caller can see it happened.
             if entry.performance.key in seen:
                 self.dropped.append(entry.performance.key)
-                if entry.members != seen[entry.performance.key].members:
+                if self._performed(recording) != self._performed(
+                        seen[entry.performance.key].raw):
                     self.conflicting.append(entry.performance.key)
                 continue
             seen[entry.performance.key] = entry
@@ -508,7 +513,8 @@ class AlbumAdapter:
             performance=performance,
             members=self._ordered_members(recording, performance.key),
             partial=self._partial_works(recording),
-            performed=self._performed_works(recording))
+            performed=self._performed_works(recording),
+            raw=recording)
 
     def _partial_works(
             self,
