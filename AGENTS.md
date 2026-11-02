@@ -198,7 +198,6 @@ would be caught too.
 The partly performed works keep their place in the order through the
 `Recording.partial` list - the order the relations gave them, not the
 work id order.
-
 That order matters in the level *above* the first one. The recording id
 stands in for a partly performed work in the first level, so the first
 level cannot say where the work stood - and the level above holds the
@@ -234,7 +233,9 @@ with `'work.id:' + workId`), so:
   and the complete set, because the legacy adds a second entry for it
   and the work itself still contributes;
 - a work related **in full first** is performed in full - the recording
-  id does *not* stand in for it, and it is only in the complete set.
+  id does *not* stand in for it, and it is only in the complete set;
+- a work related **partly twice** is only in the partial set: the
+  recording never performs it in full.
 
 The `test/fixtures/partial_full_first/` fixture was run through the
 legacy: with work-b related in full first and partly second, and
@@ -243,6 +244,13 @@ work-a named in between, the legacy writes
 recording id. The `test/fixtures/partial_order/` fixture has the
 partial relation first, and the legacy writes
 `~cwp_workid_0 = ('rec-1', 'work-a')` there.
+
+**A response with no id is skipped, not raised.** A track with no
+recording attached, or a failed lookup, gives a response with no id. It
+cannot be tagged, and it must not stop the rest of the release from
+being tagged - so the adapter skips it, on both the recording side and
+the work side. (A `KeyError` out of the constructor would take the
+whole release's tags with it.)
 
 The `test/fixtures/partial_order/` fixture was run through the legacy,
 and the tags it wrote are the expectations of the tests that use it: with
