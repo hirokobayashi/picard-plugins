@@ -442,10 +442,10 @@ def node_height(hierarchy: Hierarchy, node: NodeId) -> int:
     too: the height it would give is not to be relied on, and a
     plausible-looking wrong height is worse than none.
     """
-    heights = heights_of(hierarchy, node)
+    heights, cycle, missing = _heights_of(hierarchy, node)
     if node not in heights:
         raise KeyError("the hierarchy has no node %s" % (node,))
-    if not heights_are_reliable(hierarchy, node):
+    if cycle or missing:
         raise ValueError(
             "the height of %s is not to be relied on" % (node,))
     return heights[node]
@@ -931,6 +931,13 @@ class AlbumAdapter:
         With no votes at all the legacy falls back to the first name.
         With votes that name none of the candidates, every name is tied
         at zero - so they are all kept, as the legacy keeps them.
+
+        The legacy has both fallbacks, and so does this - a caller that
+        uses it outside the tagging, as the legacy's own
+        ``_select_top_work_names`` can be called outside
+        ``process_album``. Through the tags neither can happen: a
+        track's own candidates are voted for, so their names have a
+        vote.
         """
         names = self.names.names_of(top)
         if not names:
