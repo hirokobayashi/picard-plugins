@@ -443,9 +443,9 @@ def heights_of(
     share a top do not each walk it again.
 
     The heights are of a well-formed hierarchy: a child that the
-    hierarchy does not hold contributes nothing, so a hierarchy with
-    such an edge gives heights that are too small. The hierarchy is
-    built by the model, so it is well formed.
+    hierarchy does not hold is treated as a leaf, so the node above it
+    counts one more level than it really has. The hierarchy is built by
+    the model, so it is well formed.
     """
     heights: Dict[NodeId, int] = {}
     visiting: Set[NodeId] = set()
@@ -527,6 +527,9 @@ class AlbumAdapter:
         #: only in other relations are the same recording as far as the
         #: tags are concerned.
         self.conflicting: List[WorkId] = []
+        #: The candidate tops of the hierarchy, worked out when it is
+        #: built and kept so that the tags do not walk the chains again.
+        self._candidates: Dict[WorkId, List[WorkId]] = {}
         seen: Dict[WorkId, Recording] = {}
         for recording in recordings:
             if not recording or not recording.get('id'):
@@ -684,7 +687,11 @@ class AlbumAdapter:
             performances=self.performances)
         chains = chains_of(hierarchy, self.performances)
         album = Album(names=self.names.titles)
-        groups = album.group_names(candidate_tops(chains, hierarchy))
+        candidates = candidate_tops(chains, hierarchy)
+        groups = album.group_names(candidates)
+        # the candidates are kept, so that the tags do not have to walk
+        # the chains a second time
+        self._candidates = candidates
         return hierarchy, chains, groups
 
     def tags(self) -> Dict[WorkId, TrackTags]:
@@ -704,8 +711,7 @@ class AlbumAdapter:
         ``dropped``.
         """
         hierarchy, chains, groups = self.build_all()
-        candidates = candidate_tops(chains, hierarchy)
-        votes = self._votes(candidates)
+        votes = self._votes(self._candidates)
         # the height of a top is the same for every track that shares it,
         # so it is worked out once per top
         heights: Dict[NodeId, Dict[NodeId, int]] = {}
