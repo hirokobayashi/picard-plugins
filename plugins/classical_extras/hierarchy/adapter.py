@@ -563,28 +563,6 @@ def _children_of(hierarchy: Hierarchy, node: NodeId) -> FrozenSet[NodeId]:
     return found.children if found is not None else frozenset()
 
 
-def _has_missing_child(hierarchy: Hierarchy, node: NodeId) -> bool:
-    """Whether the hierarchy has a child the hierarchy does not hold.
-
-    Such a child is counted as a leaf, so the depth of the tree under it
-    is lost and the depth that comes back is too small. The hierarchy
-    is built by the model, so it is well formed - but a malformed one
-    would give a plausible-looking wrong depth.
-    """
-    seen: Set[NodeId] = set()
-    pending = [node]
-    while pending:
-        current = pending.pop()
-        for child in _children_of(hierarchy, current):
-            if child not in hierarchy.nodes:
-                return True
-            if child in seen:
-                continue
-            seen.add(child)
-            pending.append(child)
-    return False
-
-
 class AlbumAdapter:
     """Turns a release's responses into the hierarchy tags of its tracks.
 
@@ -617,15 +595,17 @@ class AlbumAdapter:
         #:
         #: The keys are the recording ids. A plain string is taken as an
         #: id, so that a caller that has the ids as strings is not
-        #: silently ignored. A count below one is refused: a recording
-        #: is on at least one track, and a count of zero would take
-        #: votes away and could change the winner.
+        #: silently ignored. A count that is not a whole number of
+        #: tracks, or is below one, is refused: a recording is on at
+        #: least one track, and a count of zero would take votes away
+        #: and could change the winner.
         self.multiplicity: Dict[WorkId, int] = {}
         for key, count in (multiplicity or {}).items():
-            if count < 1:
+            if (not isinstance(count, int) or isinstance(count, bool)
+                    or count < 1):
                 raise ValueError(
-                    "a recording is on at least one track, not %r" % (
-                        count,))
+                    "a recording is on a whole number of tracks, at "
+                    "least one, not %r" % (count,))
             self.multiplicity[
                 key if isinstance(key, WorkId) else WorkId(key)] = count
         self.recordings = []

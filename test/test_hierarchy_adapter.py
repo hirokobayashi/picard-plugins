@@ -33,7 +33,6 @@ from hierarchy.adapter import (  # noqa: E402
     TrackTags,
     WorkNames,
     WorkRelations,
-    _has_missing_child,
     has_cycle,
     heights_are_reliable,
     node_height,
@@ -1114,26 +1113,6 @@ class NodeHeightTestCase(unittest.TestCase):
             _node("e"): [],
         })
         self.assertFalse(has_cycle(hierarchy, _node("a")))
-
-    def test_a_missing_child_is_reported(self):
-        """A child the hierarchy does not hold is reported.
-
-        Such a child is counted as a leaf, so the depth of the tree
-        under it is lost - and the depth that comes back is too small.
-        The caller has to know, so that it can leave the track with no
-        tags rather than write a wrong depth.
-        """
-        hierarchy = self._hierarchy({
-            _node("a"): [_node("b")],
-            _node("b"): [_node("c")],
-        })
-        self.assertTrue(_has_missing_child(hierarchy, _node("a")))
-        # a tree is whole
-        hierarchy = self._hierarchy({
-            _node("a"): [_node("b")],
-            _node("b"): [],
-        })
-        self.assertFalse(_has_missing_child(hierarchy, _node("a")))
 
     def test_the_heights_are_reliable_only_for_a_whole_tree(self):
         """The heights can be relied on only when the tree is whole.
@@ -2674,18 +2653,17 @@ class NoChainTestCase(unittest.TestCase):
         self.assertEqual(performance.partial, frozenset({w("work-a")}))
 
     def test_a_multiplicity_below_one_is_refused(self):
-        """A count below one is refused.
+        """A count that is not a whole number of tracks is refused.
 
         A recording is on at least one track. A count of zero would take
         votes away and could change the winner of the album's vote - so
-        it is refused rather than used.
+        it is refused rather than used. So is a count that is not a
+        whole number: a recording is not on one and a half tracks.
         """
-        self.assertRaises(
-            ValueError, AlbumAdapter, [], [],
-            multiplicity={w("rec-1"): 0})
-        self.assertRaises(
-            ValueError, AlbumAdapter, [], [],
-            multiplicity={w("rec-1"): -1})
+        for count in (0, -1, 1.5, "2", True):
+            self.assertRaises(
+                ValueError, AlbumAdapter, [], [],
+                multiplicity={w("rec-1"): count})
 
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
@@ -3530,13 +3508,16 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
 
         blocked = []
 
+        class PicardBlocked(ImportError):
+            """The blocker refused to load Picard."""
+
         class Blocker:
             """A finder that refuses to load Picard."""
 
             def find_spec(self, name, path=None, target=None):
                 if name == "picard" or name.startswith("picard."):
                     blocked.append(name)
-                    raise ImportError("Picard must not be imported")
+                    raise PicardBlocked("Picard must not be imported")
                 return None
 
         finder = Blocker()
@@ -3557,14 +3538,16 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
         try:
             try:
                 importlib.import_module("hierarchy.adapter")
-            except ImportError:
-                if not blocked:
-                    # the import failed for another reason - the package
-                    # is broken, not blocked
-                    raise
+            except PicardBlocked:
                 # the blocker fired, so the import failed because of
                 # Picard - which is what the test is about. The check
                 # below says so.
+                pass
+            except ImportError:
+                # the import failed for another reason - the package is
+                # broken, not blocked. The error is raised, so that it
+                # is not reported as an import of Picard.
+                raise
         finally:
             sys.meta_path.remove(finder)
             sys.modules.update(cached)
