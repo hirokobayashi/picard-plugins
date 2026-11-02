@@ -2762,10 +2762,12 @@ class NoChainTestCase(unittest.TestCase):
         }
         adapter = AlbumAdapter(
             [], [recording], multiplicity={w("rec-2"): 2})
+        adapter.build_all()
         self.assertEqual(adapter.unused_multiplicity, [w("rec-2")])
         # a count for a recording that is there is used
         adapter = AlbumAdapter(
             [], [recording], multiplicity={w("rec-1"): 2})
+        adapter.build_all()
         self.assertEqual(adapter.unused_multiplicity, [])
 
     def test_the_top_names_are_the_same_for_every_track_that_shares_a_top(self):
@@ -2890,7 +2892,30 @@ class NoChainTestCase(unittest.TestCase):
         adapter = AlbumAdapter(
             [], [{"id": "rec-1", "relations": []}],
             multiplicity={w("rec-1"): 2})
+        adapter.build_all()
         self.assertEqual(adapter.unused_multiplicity, [w("rec-1")])
+
+    def test_a_multiplicity_for_a_recording_that_names_a_work_is_used(self):
+        """A count for a recording that names a work is used.
+
+        The recording's own relation puts the work in the graph, so the
+        work responses of the release are not needed for it - and the
+        count has its effect.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter(
+            [], [recording], multiplicity={w("rec-1"): 2})
+        adapter.build_all()
+        self.assertEqual(adapter.unused_multiplicity, [])
 
     def test_a_track_with_no_top_gets_no_tags(self):
         """A track with levels but no top gets no tags at all.
