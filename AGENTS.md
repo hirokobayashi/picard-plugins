@@ -185,9 +185,19 @@ would be caught too.
 
 The partly performed works keep their place in the order through the
 `Recording.partial` list - the order the relations gave them, not the
-work id order. The `test/fixtures/partial_order/` fixture was run through
-the legacy, and the tags it wrote are the expectations of the tests that
-use it: with the recording naming work-b first it wrote
+work id order.
+
+That order matters in the level *above* the first one. The recording id
+stands in for a partly performed work in the first level, so the first
+level cannot say where the work stood - and the level above holds the
+partly performed works themselves, in the order the relations gave them.
+The legacy does the same: a fixture with two partly performed works,
+work-zzz first, gives `~cwp_workid_0 = ('rec-1',)` and
+`~cwp_workid_1 = ('work-zzz', 'work-aaa')` - not the work id order.
+
+The `test/fixtures/partial_order/` fixture was run through the legacy,
+and the tags it wrote are the expectations of the tests that use it: with
+the recording naming work-b first it wrote
 `~cwp_workid_0 = ('rec-1', 'work-a')` and `~cwp_workid_1 = ('work-b',)`,
 and with work-a first it wrote `('work-a', 'rec-1')` and `('work-b',)`.
 
