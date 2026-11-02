@@ -339,6 +339,10 @@ class TrackTags:
         """
         if not self.levels:
             return {}
+        if any(not level for level in self.levels):
+            # a level with no ids has no tag - the legacy writes one only
+            # when it has a value
+            return {}
         metadata: Dict[str, object] = {}
         for level, works in enumerate(self.levels):
             metadata['~cwp_workid_%d' % level] = self.id_tuple(level)
