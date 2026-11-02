@@ -441,6 +441,11 @@ def heights_of(
 
     The heights of a tree are worked out once, so that the tracks that
     share a top do not each walk it again.
+
+    The heights are of a well-formed hierarchy: a child that the
+    hierarchy does not hold contributes nothing, so a hierarchy with
+    such an edge gives heights that are too small. The hierarchy is
+    built by the model, so it is well formed.
     """
     heights: Dict[NodeId, int] = {}
     visiting: Set[NodeId] = set()
@@ -784,9 +789,10 @@ class AlbumAdapter:
         if chain[-1] not in heights:
             heights[chain[-1]] = heights_of(hierarchy, chain[-1])
         # a chain whose tip the hierarchy does not hold has no depth to
-        # report - it cannot happen with a chain of the hierarchy, but a
-        # stale chain would take the whole release's tags with it
-        work_part_levels = heights[chain[-1]].get(chain[-1], 0)
+        # report - and zero is the depth of a one-level hierarchy, so a
+        # plausible-looking wrong value would be written. It raises
+        # instead: a stale chain is a bug, not a track to tag.
+        work_part_levels = heights[chain[-1]][chain[-1]]
         return TrackTags(
             key=recording.performance.key,
             levels=levels,

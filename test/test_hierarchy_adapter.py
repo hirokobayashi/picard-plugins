@@ -2667,6 +2667,15 @@ class LegacyParityTestCase(unittest.TestCase):
         The list exempts a track from the level count check, so an entry
         that no longer needs the exemption - or never did - would let a
         regression through.
+
+        And the difference has to be in the right direction: the
+        model's chain of its own levels is *deeper* than the legacy's,
+        never shallower. A count that was wrong in the other direction
+        would satisfy a test that only looked for a difference.
+
+        The depth of the whole hierarchy is a different thing - the
+        model's top can be shallower than the legacy's - so it only has
+        to differ.
         """
         for album, labels in self.DEEPER.items():
             tags = _adapter(album).tags()
@@ -2676,14 +2685,22 @@ class LegacyParityTestCase(unittest.TestCase):
                 self.assertIsNotNone(
                     track, "%s %s has no tags" % (album, label))
                 metadata = track.as_metadata()
+                counts = (
+                    ('~cwp_part_levels', '~cwp_work_part_levels'))
                 differs = any(
                     metadata.get(tag) != want.get(tag)
-                    for tag in (
-                        '~cwp_part_levels', '~cwp_work_part_levels'))
+                    for tag in counts)
                 self.assertTrue(
                     differs,
                     "%s %s is not deeper - it does not need the "
                     "exemption" % (album, label))
+                # the track's own chain is never shallower
+                got = metadata.get('~cwp_part_levels')
+                expected = want.get('~cwp_part_levels')
+                if got is not None and expected is not None:
+                    self.assertGreaterEqual(
+                        int(got), int(expected),
+                        "%s %s: the model is shallower" % (album, label))
 
     def test_the_holding_more_tracks_really_hold_more(self):
         """Every track in HOLDING_MORE really holds more ids.
