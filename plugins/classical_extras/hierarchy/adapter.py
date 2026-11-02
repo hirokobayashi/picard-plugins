@@ -457,6 +457,8 @@ class AlbumAdapter:
         self.use_medleys = use_medleys
         self.use_collections = use_collections
         self.recordings = []
+        #: The recordings that were listed twice and dropped, so that a
+        #: caller can see that it happened.
         self.dropped: List[WorkId] = []
         seen: Dict[WorkId, Recording] = {}
         for recording in recordings:
@@ -603,6 +605,10 @@ class AlbumAdapter:
         tags up by the recording of the track it is tagging. A release
         that lists the same recording on two tracks gets the same tags
         for both - the tags are the recording's, not the track's.
+
+        A recording that was listed twice with different relations keeps
+        the first one's tags; the ones that were dropped are in
+        ``dropped``.
         """
         hierarchy, chains, groups = self.build_all()
         candidates = candidate_tops(chains, hierarchy)
