@@ -128,8 +128,9 @@ class WorkRelations:
         A work that no relation names keeps its place at the end, in work
         id order, so the result is always deterministic.
         """
-        # a bare string is a work id, like the one that gives the
-        # order
+        # a bare string is a work id, like the one that gives the order
+        if isinstance(works, (str, WorkId)):
+            works = [works]
         wanted = [work if isinstance(work, WorkId) else WorkId(work)
                   for work in works]
         # the membership is asked for once per relation, so a set is
@@ -215,7 +216,11 @@ def read_work_graph(
                 # a relation that is not an object names nothing
                 continue
             target = relation.get('work')
-            if not isinstance(target, Mapping) or not target.get('id'):
+            if (not isinstance(target, Mapping)
+                    or not isinstance(target.get('id'), str)
+                    or not target.get('id')):
+                # a target that is not an object, or whose id is not a
+                # string, names no work
                 continue
             graph.add_relation(
                 source,
@@ -291,7 +296,11 @@ def read_performance(
         if relation.get('type') != 'performance':
             continue
         target = relation.get('work')
-        if not isinstance(target, Mapping) or not target.get('id'):
+        if (not isinstance(target, Mapping)
+                or not isinstance(target.get('id'), str)
+                or not target.get('id')):
+            # a target that is not an object, or whose id is not a
+            # string, names no work
             continue
         work = WorkId(target['id'])
         if work in works:
@@ -808,7 +817,11 @@ class AlbumAdapter:
             if relation.get('type') != 'performance':
                 continue
             target = relation.get('work')
-            if not isinstance(target, Mapping) or not target.get('id'):
+            if (not isinstance(target, Mapping)
+                    or not isinstance(target.get('id'), str)
+                    or not target.get('id')):
+                # a target that is not an object, or whose id is not a
+                # string, names no work
                 continue
             work = WorkId(target['id'])
             if work in seen:

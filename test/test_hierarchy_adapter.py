@@ -1280,6 +1280,10 @@ class OrderOfTestCase(unittest.TestCase):
         self.assertEqual(
             relations.order_of(["work-a", "work-b"], through=w("child")),
             [w("work-b"), w("work-a")])
+        # a bare string is one work, not a list of characters
+        self.assertEqual(
+            relations.order_of("work-b", through=w("child")),
+            [w("work-b")])
 
     def test_a_bare_work_id_is_taken_as_a_work(self):
         """A plain string is a work id, not a list of them.
@@ -2933,6 +2937,36 @@ class NoChainTestCase(unittest.TestCase):
             part_levels=0,
             work_part_levels=0)
         self.assertEqual(tags.as_metadata(), {})
+
+    def test_a_relation_whose_work_id_is_not_a_string_is_skipped(self):
+        """A relation whose work id is not a string is skipped.
+
+        The ids are strings. One that is not - a list, say - cannot be
+        put in a set, so it would have raised out of the tagging and
+        taken the whole release with it.
+        """
+        adapter = AlbumAdapter(
+            [{"id": "work-a", "title": "A work"}],
+            [{"id": "rec-1", "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": ["a list"]},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": 42},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ]}],
+            use_partial=True)
+        tags = adapter.tags()
+        self.assertIn(WorkId("rec-1"), tags)
 
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
