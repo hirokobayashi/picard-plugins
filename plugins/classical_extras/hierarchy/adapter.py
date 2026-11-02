@@ -755,18 +755,26 @@ class AlbumAdapter:
                     recording.performance.key, recording.partial)
                 ids = self.relations.order_of(node.works, through=leaders)
                 if index == 1:
-                    # The level above the first holds the partly
+                    # The level above the first can hold the partly
                     # performed works - the recording id stands in for
                     # them below, so they are not named by the level
-                    # below and their order cannot come from it. Their
-                    # place is the order the relations gave them, which
-                    # is the order the legacy writes.
+                    # below and their order cannot come from it.
+                    #
+                    # They take the recording id's place in the level
+                    # below, which is where the relations put them, and
+                    # the works the level below does name keep their own
+                    # place. So the two are put back together in the
+                    # order the relations gave.
                     partial = [
                         work for work in recording.partial
                         if work in ids]
                     if partial:
-                        ids = partial + [
+                        place = levels[0].index(recording.performance.key)
+                        others = [
                             work for work in ids if work not in partial]
+                        ids = (
+                            others[:place] + partial
+                            + others[place:])
             levels.append(ids)
             through.append(leaders)
         return levels, through

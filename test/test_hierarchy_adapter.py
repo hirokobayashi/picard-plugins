@@ -1360,6 +1360,70 @@ class PartialOrderFixtureTestCase(unittest.TestCase):
                 tuple(metadata.get(tag) or ()), ids,
                 "%s" % (tag,))
 
+    def test_a_partly_performed_work_after_a_fully_performed_one(self):
+        """A partly performed work keeps its place after a full one.
+
+        The recording performs work-a in full and work-b in part, and
+        names work-a first. The recording id stands in for work-b, so
+        the first level holds work-a and the recording id.
+
+        A work performed only in part contributes nothing to the level
+        above - the recording is not that work - so the level above
+        holds the parent of the work that is performed in full. The
+        legacy puts the partly performed work there instead; that is a
+        difference the model makes on purpose, and it is what the
+        legacy's own tags show too.
+        """
+        works = [
+            {
+                "id": "work-a",
+                "title": "The first work",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "parent"},
+                    },
+                ],
+            },
+            {
+                "id": "work-b",
+                "title": "The second work",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "parent"},
+                    },
+                ],
+            },
+            {"id": "parent", "title": "The parent"},
+        ]
+        recordings = [{
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                    "attributes": ["partial"],
+                },
+            ],
+        }]
+        adapter = AlbumAdapter(works, recordings, use_partial=True)
+        tags = adapter.tags()
+        track = tags[w("rec-1")]
+        # the recording id stands in for work-b, in work-b's place
+        self.assertEqual(track.levels[0], [w("work-a"), w("rec-1")])
+        # and the level above holds the parent of the work performed in
+        # full
+        self.assertEqual(track.levels[1], [w("parent")])
+
 
 class EmptyNamesTestCase(unittest.TestCase):
     """The tags of a track whose works have no titles."""
