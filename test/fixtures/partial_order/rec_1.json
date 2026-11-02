@@ -36,7 +36,7 @@
    "attributes": [],
    "attribute-ids": {},
    "attribute-values": {},
-   "ordering-key": 1,
+   "ordering-key": 2,
    "work": {
     "id": "work-b",
     "title": "B work",
@@ -60,7 +60,7 @@
    "attributes": [],
    "attribute-ids": {},
    "attribute-values": {},
-   "ordering-key": 2,
+   "ordering-key": 3,
    "work": {
     "id": "work-a",
     "title": "A work",

@@ -467,10 +467,9 @@ def heights_of(
     The heights of a tree are worked out once, so that the tracks that
     share a top do not each walk it again.
 
-    The heights are of a well-formed hierarchy: a child that the
-    hierarchy does not hold is treated as absent, so the node above it
-    counts one level less than it really has. The hierarchy is built by
-    the model, so it is well formed.
+    The heights are of a well-formed hierarchy, so a child that the
+    hierarchy does not hold does not arise. The hierarchy is built by
+    the model.
 
     A hierarchy with a cycle, or with a child it does not hold, raises:
     the heights it would give are not to be relied on, and a
@@ -661,8 +660,8 @@ class AlbumAdapter:
         #: count for a recording that is not there has no effect - and a
         #: misspelled id would have the same effect as a count that was
         #: not given, so the caller is told. It is filled in once the
-        #: recordings have been read.
-        self.unused_multiplicity: List[WorkId] = []
+        #: recordings have been read, below.
+        self.unused_multiplicity: List[WorkId]
         #: The candidate tops of the hierarchy, worked out when it is
         #: built and kept so that the tags do not walk the chains again.
         self._candidates: Dict[WorkId, List[WorkId]] = {}
