@@ -2317,6 +2317,43 @@ class NoChainTestCase(unittest.TestCase):
                     work, partial,
                     "a partly performed work is among the leaders")
 
+    def test_a_recording_on_two_tracks_votes_twice(self):
+        """A recording on two tracks votes twice for its name.
+
+        The legacy votes per *track*, so a recording that is on two
+        tracks votes twice for the names of its candidate tops. The
+        multiplicity says how many tracks each recording is on.
+        """
+        works = [
+            {"id": "work-a", "title": "The first work"},
+            {"id": "work-b", "title": "The second work"},
+        ]
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ],
+        }
+        names = WorkNames(titles={
+            w("work-a"): "The first work",
+            w("work-b"): "The second work",
+        })
+        candidates = {w("rec-1"): frozenset({w("work-a")})}
+        adapter = AlbumAdapter(
+            works, [recording], names=names, use_partial=True)
+        self.assertEqual(
+            adapter._votes(candidates), {"The first work": 1})
+        # the same recording on two tracks votes twice
+        adapter = AlbumAdapter(
+            works, [recording], names=names, use_partial=True,
+            multiplicity={w("rec-1"): 2})
+        self.assertEqual(
+            adapter._votes(candidates), {"The first work": 2})
+
     def test_a_work_without_an_id_is_skipped(self):
         """A work response with no id is skipped, and the rest is used.
 

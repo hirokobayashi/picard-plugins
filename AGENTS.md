@@ -288,6 +288,13 @@ review found missing at first:
   holds the name once. The tag also holds the *vote winner*, so that
   every track sharing a top names it the same way.
 
+  The vote is per *track*, not per recording: the legacy collects the
+  tracks under each top and votes once for every track, so a recording
+  that is on two tracks votes twice. The adapter's `multiplicity`
+  argument says how many tracks each recording is on. No fixture has a
+  recording on two tracks, so the parity is the same either way - but a
+  release that has one could give a different winner.
+
 The name tags (`~cwp_work_<n>`) are **not** produced by the adapter. The
 legacy strips the parent's text out of the child's name
 (`strip_parent_from_work`), which is a separate feature with its own

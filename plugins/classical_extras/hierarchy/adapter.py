@@ -503,7 +503,8 @@ class AlbumAdapter:
             use_partial: bool = True,
             use_arrangements: bool = True,
             use_medleys: bool = True,
-            use_collections: bool = True) -> None:
+            use_collections: bool = True,
+            multiplicity: Mapping[WorkId, int] | None = None) -> None:
         self.graph, self.relations = read_work_graph(
             works,
             use_arrangements=use_arrangements,
@@ -514,6 +515,9 @@ class AlbumAdapter:
         self.use_arrangements = use_arrangements
         self.use_medleys = use_medleys
         self.use_collections = use_collections
+        #: How many tracks each recording is on. The legacy votes once
+        #: per *track*, so a recording on two tracks votes twice.
+        self.multiplicity: Dict[WorkId, int] = dict(multiplicity or {})
         self.recordings = []
         #: The recordings that were listed twice and dropped, so that a
         #: caller can see that it happened.
@@ -772,11 +776,15 @@ class AlbumAdapter:
 
         The legacy votes over the *names* of a track's candidate top
         works, and the winner becomes the track's top work tag.
+
+        The vote is per *track*, so a recording that is on two tracks
+        votes twice - which the multiplicity says.
         """
         votes: Dict[str, int] = {}
-        for works in candidates.values():
+        for key, works in candidates.items():
+            count = self.multiplicity.get(key, 1)
             for name in set(self.names.names_of(works)):
-                votes[name] = votes.get(name, 0) + 1
+                votes[name] = votes.get(name, 0) + count
         return votes
 
     def _top_names(
