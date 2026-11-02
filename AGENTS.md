@@ -195,6 +195,17 @@ The legacy does the same: a fixture with two partly performed works,
 work-zzz first, gives `~cwp_workid_0 = ('rec-1',)` and
 `~cwp_workid_1 = ('work-zzz', 'work-aaa')` - not the work id order.
 
+The partly performed works take the *recording id's* place in the level
+below, not the front of the level above. A recording that performs
+work-a in full and work-b in part, naming work-a first, has a first
+level of `('work-a', 'rec-1')` - so work-b goes second.
+
+Note the model's rule about what a partly performed work contributes:
+a work performed *only* in part contributes nothing to the level above
+(the recording is not that work), while the legacy puts the work itself
+there. That is a difference the model makes on purpose, and it is
+tested; the fixtures show the same tags either way.
+
 The `test/fixtures/partial_order/` fixture was run through the legacy,
 and the tags it wrote are the expectations of the tests that use it: with
 the recording naming work-b first it wrote
