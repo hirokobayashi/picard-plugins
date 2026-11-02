@@ -570,6 +570,10 @@ class AlbumAdapter:
 
     The adapter is given the work responses and the recording responses
     of one release, and produces the tags of every track.
+
+    The configuration is fixed once the hierarchy is built: the groups
+    are named from the titles the build saw, so a caller that changes
+    the names afterwards should build a new adapter.
     """
 
     def __init__(
