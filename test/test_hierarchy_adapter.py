@@ -976,15 +976,57 @@ class NodeHeightTestCase(unittest.TestCase):
 
         so ``d`` is reached both directly and through ``c``, and the
         longest path from ``a`` is a -> b -> c -> d -> e.
+
+        The children are held in a set, so the order they are visited in
+        is not fixed - and a height that stopped at the first path
+        found would give the right answer only when it happened to
+        visit the longer path first. So the tree is walked in a few
+        processes with different hash seeds.
         """
-        hierarchy = self._hierarchy({
-            _node("a"): [_node("b"), _node("d")],
-            _node("b"): [_node("c")],
-            _node("c"): [_node("d")],
-            _node("d"): [_node("e")],
-            _node("e"): [],
-        })
-        self.assertEqual(node_height(hierarchy, _node("a")), 4)
+        import subprocess
+        script = (
+            "import os, sys\n"
+            "sys.path.insert(0, %r)\n"
+            "sys.path.insert(0, %r)\n"
+            "from hierarchy.adapter import node_height\n"
+            "from hierarchy.graph import NodeId, WorkId\n"
+            "class Fake:\n"
+            "    def __init__(self, node_id, children):\n"
+            "        self.id = node_id\n"
+            "        self.works = node_id.works\n"
+            "        self.children = frozenset(children)\n"
+            "        self.parents = frozenset()\n"
+            "def node(name):\n"
+            "    return NodeId(frozenset([WorkId(name)]))\n"
+            "nodes = {}\n"
+            "for name, children in (\n"
+            "        ('a', ['b', 'd']),\n"
+            "        ('b', ['c']),\n"
+            "        ('c', ['d']),\n"
+            "        ('d', ['e']),\n"
+            "        ('e', []),\n"
+            "):\n"
+            "    nodes[node(name)] = Fake(\n"
+            "        node(name), [node(child) for child in children])\n"
+            "from hierarchy.adapter import Hierarchy\n"
+            "hierarchy = Hierarchy(\n"
+            "    nodes=nodes, node_of={}, node_of_performance={})\n"
+            "print(node_height(hierarchy, node('a')))\n"
+        ) % (PLUGIN_DIR, os.path.dirname(os.path.abspath(__file__)))
+        results = set()
+        for seed in ("0", "1", "2", "12345"):
+            environment = dict(os.environ)
+            environment['PYTHONHASHSEED'] = seed
+            finished = subprocess.run(
+                [sys.executable, "-c", script],
+                capture_output=True, text=True, env=environment,
+                cwd=os.path.dirname(os.path.abspath(__file__)))
+            self.assertEqual(
+                finished.returncode, 0, finished.stderr)
+            results.add(finished.stdout.strip())
+        self.assertEqual(
+            results, {"4"},
+            "the height differs between the processes")
 
     def test_the_height_of_a_subtree(self):
         hierarchy = self._hierarchy({
