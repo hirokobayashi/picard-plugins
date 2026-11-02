@@ -1218,6 +1218,81 @@ class PartialOrderTestCase(unittest.TestCase):
             [w("work-zzz"), w("work-aaa")])
 
 
+class PartialOrderFixtureTestCase(unittest.TestCase):
+    """A partly performed work's place among the others.
+
+    The expectations are the legacy's own: the fixture was run through
+    the legacy and the tags it wrote are recorded here.
+    """
+
+    #: The legacy's tags for the fixture, with the recording naming
+    #: work-b first. It wrote workid_0 = ('rec-1', 'work-a') and
+    #: workid_1 = ('work-b',).
+    #:
+    #: The legacy's work lookups did not reach the top of this fixture,
+    #: so its workid_top is one level short of the model's - the levels
+    #: below are the ones compared here.
+    LEGACY_FIRST_B = {
+        "~cwp_workid_0": ("rec-1", "work-a"),
+        "~cwp_workid_1": ("work-b",),
+    }
+    #: The legacy's tags with the recording naming work-a first. It wrote
+    #: workid_0 = ('work-a', 'rec-1') and workid_1 = ('work-b',).
+    LEGACY_FIRST_A = {
+        "~cwp_workid_0": ("work-a", "rec-1"),
+        "~cwp_workid_1": ("work-b",),
+    }
+
+    @staticmethod
+    def _adapter(order):
+        directory = os.path.join(FIXTURES, "partial_order")
+        works = [
+            _load(os.path.join(directory, name))
+            for name in sorted(os.listdir(directory))
+            if name.startswith("work_")]
+        recording = _load(os.path.join(directory, "rec_1.json"))
+        relations = recording["relations"]
+        if order == "a":
+            # work-a's relation first
+            relations = [relations[2], relations[0], relations[1]]
+        return AlbumAdapter(
+            works, [{"id": "rec-1", "relations": relations}],
+            use_partial=True)
+
+    def test_the_partly_performed_work_keeps_its_place(self):
+        """The recording id stands where the partly performed work stood.
+
+        The recording performs work-b partly and in full, and work-a in
+        full. The recording id stands in for work-b in the first level,
+        in the place the relations gave it - so the level holds the
+        recording id and work-a, and the level above holds work-b.
+
+        The legacy writes exactly this.
+        """
+        tags = self._adapter("b").tags()
+        track = tags[WorkId("rec-1")]
+        metadata = track.as_metadata()
+        for tag, ids in self.LEGACY_FIRST_B.items():
+            self.assertEqual(
+                tuple(metadata.get(tag) or ()), ids,
+                "%s" % (tag,))
+
+    def test_the_order_of_the_relations_is_kept(self):
+        """The level holds the ids in the order the relations gave them.
+
+        With work-a named first, the recording id comes second - the
+        partly performed work still stands where the relations put it.
+        The legacy writes exactly this.
+        """
+        tags = self._adapter("a").tags()
+        track = tags[WorkId("rec-1")]
+        metadata = track.as_metadata()
+        for tag, ids in self.LEGACY_FIRST_A.items():
+            self.assertEqual(
+                tuple(metadata.get(tag) or ()), ids,
+                "%s" % (tag,))
+
+
 class EmptyNamesTestCase(unittest.TestCase):
     """The tags of a track whose works have no titles."""
 

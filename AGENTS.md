@@ -185,10 +185,11 @@ would be caught too.
 
 The partly performed works keep their place in the order through the
 `Recording.partial` list - the order the relations gave them, not the
-work id order. (An earlier version tried to place them in the level
-above as well; that branch could never fire, because the level below
-always names the recording id in the partly performed work's place and
-so names every work the level above could reach.)
+work id order. The `test/fixtures/partial_order/` fixture was run through
+the legacy, and the tags it wrote are the expectations of the tests that
+use it: with the recording naming work-b first it wrote
+`~cwp_workid_0 = ('rec-1', 'work-a')` and `~cwp_workid_1 = ('work-b',)`,
+and with work-a first it wrote `('work-a', 'rec-1')` and `('work-b',)`.
 
 Two things the legacy does that the adapter has to reproduce, and that the
 review found missing at first:
