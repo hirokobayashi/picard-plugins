@@ -378,7 +378,9 @@ class TrackTags:
 
         A track with no hierarchy - one whose recording names no work, or
         names a work with no place in the tree - gets no tags at all,
-        which is what the legacy writes for it.
+        which is what the legacy writes for it. So does a track whose
+        levels have no top: half a track's tags would name a level the
+        top does not reach.
 
         The work id tags hold a tuple of ids, as the legacy's do. Picard
         stores a tuple as a bare string when it holds one id and as a
@@ -386,8 +388,10 @@ class TrackTags:
         read as - a single id is bare, and two are separated by a
         semicolon.
         """
-        if not self.levels or not any(self.levels):
-            # a track with no hierarchy gets no tags at all
+        if (not self.levels or not any(self.levels)
+                or not self.top):
+            # a track with no hierarchy - or with no top - gets no tags
+            # at all
             return {}
         metadata: Dict[str, object] = {}
         # a level with no ids has no tag - the legacy writes a tag only
@@ -656,11 +660,11 @@ class AlbumAdapter:
         #: same recording when the option is off - and the tags would
         #: be the same then too.
         self.conflicting: List[WorkId] = []
-        #: The multiplicities that named no recording of the release. A
-        #: count for a recording that is not there has no effect - and a
-        #: misspelled id would have the same effect as a count that was
-        #: not given, so the caller is told. It is filled in once the
-        #: recordings have been read, below.
+        #: The multiplicities that had no effect. A count for a
+        #: recording that is not in the release, or that names no work,
+        #: has no effect - and a misspelled id would have the same
+        #: effect as a count that was not given, so the caller is told.
+        #: It is filled in once the recordings have been read, below.
         self.unused_multiplicity: List[WorkId]
         #: The candidate tops of the hierarchy, worked out when it is
         #: built and kept so that the tags do not walk the chains again.
@@ -708,11 +712,12 @@ class AlbumAdapter:
             self.recordings.append(entry)
             self.tracks_per_recording[entry.performance.key] = (
                 self.tracks_per_recording.get(entry.performance.key, 0) + 1)
-        # a count for a recording that is not in the release has no
-        # effect - and a misspelled id would have the same effect as a
-        # count that was not given at all
+        # a count for a recording that is not in the release, or that
+        # names no work, has no effect - and a misspelled id would have
+        # the same effect as a count that was not given at all
         self.unused_multiplicity = [
-            key for key in self.multiplicity if key not in seen]
+            key for key in self.multiplicity
+            if key not in seen or not seen[key].performance.works]
 
     @property
     def performances(self) -> List[Performance]:
@@ -946,9 +951,11 @@ class AlbumAdapter:
         voted for, so that every track sharing a top names it the same
         way. A tie keeps every tied name.
 
-        With no votes at all the legacy falls back to the first name.
-        With votes that name none of the candidates, every name is tied
-        at zero - so they are all kept, as the legacy keeps them.
+        With no votes at all the legacy falls back to the first name -
+        here the first in a fixed order, so that the tracks that share
+        the top agree on it. With votes that name none of the
+        candidates, every name is tied at zero - so they are all kept,
+        as the legacy keeps them.
 
         The legacy has both fallbacks, and so does this - a caller that
         uses it outside the tagging, as the legacy's own
