@@ -29,6 +29,7 @@ sys.path.insert(
 
 from hierarchy.adapter import (  # noqa: E402
     AlbumAdapter,
+    TrackTags,
     WorkNames,
     WorkRelations,
     node_height,
@@ -645,6 +646,42 @@ class TopNameTestCase(unittest.TestCase):
             names.names_of([w("work-a"), w("work-b")]),
             ["A work", "Another work"])
 
+    def test_a_tied_top_names_every_tied_name(self):
+        """A tie keeps every tied name, in a fixed order.
+
+        No fixture has a tie - the two Swan Lake editions share one
+        title, so the names are one. So the tie is built here.
+        """
+        adapter = _adapter("planets")
+        names = WorkNames(titles={
+            w("work-a"): "The first work",
+            w("work-b"): "The second work",
+        })
+        adapter.names = names
+        # a top of two works, with one vote each
+        votes = {"The first work": 1, "The second work": 1}
+        top_names = adapter._top_names([w("work-a"), w("work-b")], votes)
+        self.assertEqual(
+            top_names, ["The first work", "The second work"])
+
+    def test_a_tied_top_is_written_as_one_string(self):
+        """The names of a top are written joined by a semicolon."""
+        adapter = _adapter("planets")
+        adapter.names = WorkNames(titles={
+            w("work-a"): "The first work",
+            w("work-b"): "The second work",
+        })
+        votes = {"The first work": 1, "The second work": 1}
+        track = TrackTags(
+            key=w("rec-1"),
+            levels=[[w("work-a"), w("work-b")]],
+            top=[w("work-a"), w("work-b")],
+            top_names=adapter._top_names(
+                [w("work-a"), w("work-b")], votes))
+        self.assertEqual(
+            track.as_metadata()['~cwp_work_top'],
+            "The first work; The second work")
+
     def test_the_swan_lake_top_is_named_once(self):
         """Two editions with one title give that title once.
 
@@ -699,7 +736,8 @@ class TopNameTestCase(unittest.TestCase):
             tags = _adapter(album).tags()
             by_top = {}
             for track in tags.values():
-                by_top.setdefault(track.id_tuple(-1), set()).add(
+                by_top.setdefault(
+                    tuple(work.mbid for work in track.top), set()).add(
                     tuple(track.top_names))
             for top, names in by_top.items():
                 self.assertEqual(
@@ -897,8 +935,10 @@ class OrderOfTestCase(unittest.TestCase):
         """The works leading to a level keep the order of the level below.
 
         The rule is that the contributing works are the level below's
-        ids, in the level below's order - so the test checks exactly
-        that, and not the order the relations happen to give.
+        works whose parents are in this level, and that they are in the
+        level below's order. The set is worked out from the relations,
+        so a work that was dropped would be caught; the order is
+        checked against the level below.
         """
         adapter = _adapter("swanlake_full")
         hierarchy, _groups = adapter.build()
@@ -911,13 +951,22 @@ class OrderOfTestCase(unittest.TestCase):
                 leaders = through[index]
                 if len(leaders) < 2:
                     continue
-                # the contributing works are the level below's ids, in the
-                # level below's order
+                # the contributing works are the level below's works whose
+                # parents are in this level
                 below = levels[index - 1]
-                expected = [work for work in below if work in leaders]
+                above = chain[index]
+                expected = [
+                    work for work in below
+                    if adapter.relations.parents.get(work)
+                    and set(adapter.relations.parents[work]) & set(above.works)]
                 checked += 1
                 self.assertEqual(
-                    leaders, expected,
+                    set(leaders), set(expected),
+                    "the contributing works are not the right ones")
+                # and they are in the level below's order
+                self.assertEqual(
+                    leaders,
+                    [work for work in below if work in expected],
                     "the contributing works are not in the level's order")
         self.assertTrue(checked, "no level had two contributing works")
 
@@ -1390,6 +1439,39 @@ class NoChainTestCase(unittest.TestCase):
         adapter = AlbumAdapter([], [recording, dict(recording)])
         self.assertEqual(len(adapter.recordings), 1)
         self.assertEqual(len(adapter.tags()), 1)
+
+    def test_the_first_of_two_recordings_is_kept(self):
+        """The first of two entries for a recording is the one kept.
+
+        The two are normally the same recording, but when they are not
+        the first is kept - the tags are per recording, so there is
+        nowhere for both to go.
+        """
+        first = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ],
+        }
+        second = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-b"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter([], [first, second])
+        self.assertEqual(len(adapter.recordings), 1)
+        self.assertEqual(
+            adapter.recordings[0].members,
+            [w("work-a")])
 
     def test_the_recording_is_in_the_result(self):
         """A recording with no chain is still there, with no levels."""
