@@ -129,6 +129,9 @@ class WorkRelations:
         id order, so the result is always deterministic.
         """
         wanted = list(works)
+        # the membership is asked for once per relation, so a set is
+        # kept for it - the list is for the order of the result
+        wanted_set = set(wanted)
         order: Dict[WorkId, Tuple[int, int]] = {}
         if through is None:
             # no work to read the order from, so every relation is read.
@@ -155,7 +158,7 @@ class WorkRelations:
                 self.parents.get(work, ()) for work in sources]
         for source, parent_list in enumerate(candidates):
             for position, parent in enumerate(parent_list):
-                if parent in wanted and parent not in order:
+                if parent in wanted_set and parent not in order:
                     # The key is the contributing work's own index and the
                     # position within it. Two contributing works can each
                     # name a parent at position 0, and then the work that
@@ -461,7 +464,7 @@ def heights_of(
     that come back are not to be relied on. ``has_cycle`` says when
     that happened.
     """
-    heights, _cycle = _heights_of(hierarchy, node)
+    heights, _cycle, _missing = _heights_of(hierarchy, node)
     return heights
 
 
@@ -472,7 +475,7 @@ def has_cycle(hierarchy: Hierarchy, node: NodeId) -> bool:
     graph could have one, and the heights of a walk that found one are
     not to be relied on.
     """
-    _heights, cycle = _heights_of(hierarchy, node)
+    _heights, cycle, _missing = _heights_of(hierarchy, node)
     return cycle
 
 
@@ -483,23 +486,25 @@ def heights_are_reliable(hierarchy: Hierarchy, node: NodeId) -> bool:
     hold - a cycle stops the walk and a child that is not there is
     counted as a leaf, so the depth is too small either way.
     """
-    _heights, cycle = _heights_of(hierarchy, node)
-    return not cycle and not _has_missing_child(hierarchy, node)
+    _heights, cycle, missing = _heights_of(hierarchy, node)
+    return not cycle and not missing
 
 
 def _heights_of(
         hierarchy: Hierarchy,
-        node: NodeId) -> Tuple[Dict[NodeId, int], bool]:
-    """The heights of a walk, and whether it found a cycle.
+        node: NodeId) -> Tuple[Dict[NodeId, int], bool, bool]:
+    """The heights of a walk, whether it found a cycle, and whether it
+    found a child the hierarchy does not hold.
 
     A child the hierarchy does not hold is counted as a leaf, so the
-    depth it gives is too small. The walk does not report that - the
-    hierarchy is built by the model, so it is well formed.
+    depth it gives is too small. The hierarchy is built by the model,
+    so it is well formed - but the caller has to know when it is not.
     """
     heights: Dict[NodeId, int] = {}
     visiting: Set[NodeId] = set()
     done: Set[NodeId] = set()
     cycle = False
+    missing = False
     stack: List[Tuple[NodeId, Iterator[NodeId]]] = [
         (node, iter(_children_of(hierarchy, node)))]
     visiting.add(node)
@@ -527,10 +532,15 @@ def _heights_of(
             cycle = True
             continue
         visiting.add(child)
+        if child not in hierarchy.nodes:
+            # a child the hierarchy does not hold is counted as a leaf,
+            # so the depth under it is lost
+            missing = True
         stack.append((child, iter(_children_of(hierarchy, child))))
     # the walk counts a node itself, so the heights are one too many
     return {
-        node_id: height - 1 for node_id, height in heights.items()}, cycle
+        node_id: height - 1
+        for node_id, height in heights.items()}, cycle, missing
 
 
 def _attributes_of(relation: Mapping) -> Sequence[str]:
@@ -607,10 +617,17 @@ class AlbumAdapter:
         #:
         #: The keys are the recording ids. A plain string is taken as an
         #: id, so that a caller that has the ids as strings is not
-        #: silently ignored.
-        self.multiplicity: Dict[WorkId, int] = {
-            (key if isinstance(key, WorkId) else WorkId(key)): count
-            for key, count in (multiplicity or {}).items()}
+        #: silently ignored. A count below one is refused: a recording
+        #: is on at least one track, and a count of zero would take
+        #: votes away and could change the winner.
+        self.multiplicity: Dict[WorkId, int] = {}
+        for key, count in (multiplicity or {}).items():
+            if count < 1:
+                raise ValueError(
+                    "a recording is on at least one track, not %r" % (
+                        count,))
+            self.multiplicity[
+                key if isinstance(key, WorkId) else WorkId(key)] = count
         self.recordings = []
         #: The recordings that were listed twice and dropped, so that a
         #: caller can see that it happened.
@@ -945,11 +962,11 @@ class AlbumAdapter:
         top_index, top = filled[-1]
         tip = chain[top_index]
         if tip not in heights:
-            # the walk gives the heights and whether they can be relied
-            # on, so it is only walked once
-            heights[tip], cycles[tip] = _heights_of(hierarchy, tip)
-            cycles[tip] = cycles[tip] or not heights_are_reliable(
-                hierarchy, tip)
+            # the walk gives the heights, whether it found a cycle and
+            # whether it found a child the hierarchy does not hold - so
+            # the subtree is only walked once
+            heights[tip], cycle, missing = _heights_of(hierarchy, tip)
+            cycles[tip] = cycle or missing
         # A chain whose tip the hierarchy does not hold has no depth to
         # report - and zero is the depth of a one-level hierarchy, so a
         # plausible-looking wrong value would be written. The track is
