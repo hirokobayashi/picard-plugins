@@ -1726,6 +1726,34 @@ class NoChainTestCase(unittest.TestCase):
         self.assertEqual(adapter.dropped, [w("rec-1")])
         self.assertEqual(adapter.conflicting, [])
 
+    def test_a_repeated_recording_in_another_order_is_a_conflict(self):
+        """The same recording listed twice in another order is a conflict.
+
+        The two entries perform the same works, but in a different order
+        - and the order decides the tag of the level above the first, so
+        the two would write different tags. The first entry's wins, and
+        the caller is told that the two disagreed.
+        """
+        def relation(work):
+            return {
+                "type": "performance",
+                "direction": "forward",
+                "work": {"id": work},
+                "attributes": ["partial"],
+            }
+
+        first = {
+            "id": "rec-1",
+            "relations": [relation("work-a"), relation("work-b")],
+        }
+        second = {
+            "id": "rec-1",
+            "relations": [relation("work-b"), relation("work-a")],
+        }
+        adapter = AlbumAdapter([], [first, second])
+        self.assertEqual(adapter.dropped, [w("rec-1")])
+        self.assertEqual(adapter.conflicting, [w("rec-1")])
+
     def test_a_shared_recording_gives_both_tracks_the_same_tags(self):
         """A release can list the same recording on two tracks.
 
