@@ -128,7 +128,10 @@ class WorkRelations:
         A work that no relation names keeps its place at the end, in work
         id order, so the result is always deterministic.
         """
-        wanted = list(works)
+        # a bare string is a work id, like the one that gives the
+        # order
+        wanted = [work if isinstance(work, WorkId) else WorkId(work)
+                  for work in works]
         # the membership is asked for once per relation, so a set is
         # kept for it - the list is for the order of the result
         wanted_set = set(wanted)
@@ -469,16 +472,15 @@ def heights_of(
     counts one level less than it really has. The hierarchy is built by
     the model, so it is well formed.
 
-    A cycle in the hierarchy is left out of the walk, so the heights
-    that come back are not to be relied on. ``has_cycle`` says when
-    that happened.
-
-    A node the hierarchy does not hold has no height at all, so the
-    result is empty for it - and ``node_height`` raises for it. Use
-    ``heights_are_reliable`` to ask whether the heights can be relied
-    on at all.
+    A hierarchy with a cycle, or with a child it does not hold, raises:
+    the heights it would give are not to be relied on, and a
+    plausible-looking wrong height is worse than none. ``has_cycle``
+    and ``heights_are_reliable`` say so without raising.
     """
-    heights, _cycle, _missing = _heights_of(hierarchy, node)
+    heights, cycle, missing = _heights_of(hierarchy, node)
+    if cycle or missing:
+        raise ValueError(
+            "the heights of %s are not to be relied on" % (node,))
     return heights
 
 
