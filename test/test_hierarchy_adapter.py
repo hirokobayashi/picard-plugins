@@ -1289,16 +1289,44 @@ class NoChainTestCase(unittest.TestCase):
         """Every ordering of the relations gives the same level.
 
         Two works, each related up to three times and each either wholly
-        or partly performed. The level holds one id per work, and the
-        recording id only once however many works stand in for it.
+        or partly performed. A work performed in part is represented by
+        the recording id, and the recording id is held once however many
+        works stand in for it. A work related partly and wholly is
+        represented by the recording id too - the recording is not the
+        work.
         """
         for relations in self._relation_orderings():
             recording = {"id": "rec-1", "relations": relations}
             adapter = AlbumAdapter([], [recording])
             members = adapter.recordings[0].members
+            expected = self._expected_members(relations)
             self.assertEqual(
-                len(members), len(set(members)),
+                members, expected,
                 "%s -> %s" % (relations, members))
+
+    @staticmethod
+    def _expected_members(relations):
+        """The first level's ids for the given relations.
+
+        Worked out from the relations themselves: a work related wholly
+        is the work, and a work related partly - whether or not it is
+        also related wholly - is the recording id.
+        """
+        partial = set()
+        order = []
+        for relation in relations:
+            work = relation['work']['id']
+            if work not in order:
+                order.append(work)
+            if relation.get('attributes'):
+                partial.add(work)
+        members = []
+        for work in order:
+            member = (
+                "rec-1" if work in partial else work)
+            if member not in members:
+                members.append(member)
+        return [w(member) for member in members]
 
     @staticmethod
     def _relation_orderings():
