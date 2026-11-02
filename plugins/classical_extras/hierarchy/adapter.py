@@ -463,6 +463,11 @@ def heights_of(
     A cycle in the hierarchy is left out of the walk, so the heights
     that come back are not to be relied on. ``has_cycle`` says when
     that happened.
+
+    A node the hierarchy does not hold has no height at all, so the
+    result is empty for it - and ``node_height`` raises for it. Use
+    ``heights_are_reliable`` to ask whether the heights can be relied
+    on at all.
     """
     heights, _cycle, _missing = _heights_of(hierarchy, node)
     return heights
@@ -474,6 +479,10 @@ def has_cycle(hierarchy: Hierarchy, node: NodeId) -> bool:
     The hierarchy is a tree, so a cycle cannot occur - but a malformed
     graph could have one, and the heights of a walk that found one are
     not to be relied on.
+
+    A node the hierarchy does not hold has no cycle - it has nothing
+    at all. ``heights_are_reliable`` says that the heights of such a
+    node cannot be relied on.
     """
     _heights, cycle, _missing = _heights_of(hierarchy, node)
     return cycle
@@ -640,7 +649,8 @@ class AlbumAdapter:
         #: The multiplicities that named no recording of the release. A
         #: count for a recording that is not there has no effect - and a
         #: misspelled id would have the same effect as a count that was
-        #: not given, so the caller is told.
+        #: not given, so the caller is told. It is filled in once the
+        #: recordings have been read.
         self.unused_multiplicity: List[WorkId] = []
         #: The candidate tops of the hierarchy, worked out when it is
         #: built and kept so that the tags do not walk the chains again.
@@ -919,7 +929,12 @@ class AlbumAdapter:
         if not names:
             return []
         if not votes:
-            return names[:1]
+            # The vote names none of the candidates. The names are put
+            # in a fixed order first - the order they came in is the
+            # order of the track's own level, and the tracks that share
+            # a top do not agree on it. So every track that shares the
+            # top names it the same way.
+            return sorted(names)[:1]
         best = max(votes.get(name, 0) for name in names)
         winners = [name for name in names if votes.get(name, 0) == best]
         if len(winners) == 1:

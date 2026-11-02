@@ -313,6 +313,15 @@ the recording naming work-b first it wrote
 `~cwp_workid_0 = ('rec-1', 'work-a')` and `~cwp_workid_1 = ('work-b',)`,
 and with work-a first it wrote `('work-a', 'rec-1')` and `('work-b',)`.
 
+The fixture has two branches - `work-a` goes up to `parent-a` and
+`work-b` to `parent-b` - and the legacy's chain has only `work-b`'s.
+`parent-a` is in no level of the legacy's tags, and it was run through
+the legacy to confirm it: the legacy writes `~cwp_workid_0 =
+('work-a', 'rec-1')` and `~cwp_workid_1 = ('work-b',)` and stops there.
+So the model reproduces that, and the adapter's own chain is the same
+one level further on - the model's own decision, which the fixture
+pins.
+
 Two things the legacy does that the adapter has to reproduce, and that the
 review found missing at first:
 
