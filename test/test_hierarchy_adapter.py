@@ -113,14 +113,29 @@ def _as_picard_stores(value):
 
 
 def _starts_with(stored, legacy):
-    """The stored tag holds the legacy's ids first, in the same order."""
+    """The stored tag holds the legacy's ids first, in the same order.
+
+    The legacy's tag may be a bare id, a list, or the semicolon joined
+    string Picard writes a list out as - so the ids are read out of
+    whichever it is.
+    """
     if legacy is None:
         return True
-    legacy_ids = legacy if isinstance(legacy, list) else [legacy]
-    stored_ids = stored if isinstance(stored, list) else [stored]
+    legacy_ids = _split_ids(legacy)
+    stored_ids = _split_ids(stored)
     if len(stored_ids) < len(legacy_ids):
         return False
     return stored_ids[:len(legacy_ids)] == legacy_ids
+
+
+def _split_ids(value):
+    """The ids of a stored tag, however it is stored."""
+    if value is None:
+        return ()
+    if isinstance(value, str):
+        return tuple(
+            part.strip() for part in value.split(';') if part.strip())
+    return tuple(str(item) for item in value)
 
 
 def _names(works):
@@ -2089,7 +2104,7 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
                 if (name == "hierarchy" or name.startswith("hierarchy.")) \
                         and name not in hierarchy:
                     del sys.modules[name]
-        self.assertEqual(blocked, [])
+        self.assertEqual(blocked, [], "the package imported Picard")
 
     def test_the_blocker_would_catch_an_import(self):
         """The blocker really blocks - otherwise the test above is void.
