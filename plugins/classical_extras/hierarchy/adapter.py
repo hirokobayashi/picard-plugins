@@ -257,13 +257,19 @@ def read_performance(
             continue
         work = WorkId(target['id'])
         if work in works:
-            # the work is related again, but the first relation decides:
+            # The work is related again, but the first relation decides:
             # the legacy reads the attributes of the first relation it
-            # finds for the work. A work related partly first is in
-            # both sets - the legacy adds a second entry for it, so the
-            # work itself still contributes.
+            # finds for the work.
+            #
+            # A work related partly first and in full second is in both
+            # sets - the legacy adds a second entry for it, so the work
+            # itself still contributes. A work related partly twice is
+            # only in the partial set: the recording never performs it
+            # in full.
             if (work in partial and use_partial
-                    and work not in complete):
+                    and work not in complete
+                    and 'partial' not in (
+                        relation.get('attributes') or ())):
                 complete.append(work)
             continue
         works.append(work)

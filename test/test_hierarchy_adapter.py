@@ -277,6 +277,34 @@ class ReadPerformanceTestCase(unittest.TestCase):
         self.assertEqual(performance.partial, frozenset())
         self.assertEqual(performance.complete, frozenset([w("work-1")]))
 
+    def test_a_work_related_twice_both_partly_is_only_partial(self):
+        """A work related twice, both partly, is only partly performed.
+
+        The recording never performs it in full, so it is only in the
+        partial set - it does not contribute itself to the level above.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-1"},
+                    "attributes": ["partial"],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-1"},
+                    "attributes": ["partial"],
+                },
+            ],
+        }
+        performance = read_performance(recording)
+        self.assertEqual(performance.works, frozenset([w("work-1")]))
+        self.assertEqual(performance.partial, frozenset([w("work-1")]))
+        self.assertEqual(performance.complete, frozenset())
+
     def test_other_relations_are_ignored(self):
         recording = {
             "id": "rec-1",
@@ -1884,8 +1912,12 @@ class NoChainTestCase(unittest.TestCase):
         """The model's performance and the first level's ids agree.
 
         They are read separately, so a test checks that they do not
-        drift apart: the partly performed works are the same, and the
-        works are the same.
+        drift apart: the partly performed works are the same, the works
+        are the same, and the works performed in full are the same.
+
+        The last one matters: the model's complete set says which works
+        contribute themselves to the level above, so a work in it when
+        it should not be - or missing from it - would change the tags.
         """
         for relations in self._relation_orderings():
             recording = {"id": "rec-1", "relations": relations}
@@ -1898,8 +1930,12 @@ class NoChainTestCase(unittest.TestCase):
             self.assertEqual(
                 set(entry.performed), set(performance.works),
                 "%s" % (relations,))
-            # the recording id stands in for every partly performed work
+            # a work that is partly performed is the recording id in the
+            # first level - unless it is performed in full as well, and
+            # then it contributes itself
             for work in performance.partial:
+                if work in performance.complete:
+                    continue
                 self.assertNotIn(
                     work, entry.members,
                     "%s: the work is in the first level" % (relations,))
