@@ -237,6 +237,35 @@ class ReadPerformanceTestCase(unittest.TestCase):
         self.assertEqual(performance.partial, frozenset([w("work-1")]))
         self.assertEqual(performance.complete, frozenset([w("work-1")]))
 
+    def test_a_work_related_twice_in_the_other_order(self):
+        """The order of the relations does not change the sets.
+
+        The work is related in full first and partly second here. It is
+        still in both sets - any partly performed relation puts the work
+        in the partial set, whatever order the relations came in.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-1"},
+                    "attributes": [],
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-1"},
+                    "attributes": ["partial"],
+                },
+            ],
+        }
+        performance = read_performance(recording)
+        self.assertEqual(performance.works, frozenset([w("work-1")]))
+        self.assertEqual(performance.partial, frozenset([w("work-1")]))
+        self.assertEqual(performance.complete, frozenset([w("work-1")]))
+
     def test_other_relations_are_ignored(self):
         recording = {
             "id": "rec-1",
