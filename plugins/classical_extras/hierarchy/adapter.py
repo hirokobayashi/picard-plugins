@@ -526,6 +526,11 @@ class AlbumAdapter:
         #: ones the tags are worked out from. Two entries that differ
         #: only in other relations are the same recording as far as the
         #: tags are concerned.
+        #:
+        #: The comparison is made with the option as it is set, so two
+        #: entries that differ only in the partial attribute are the
+        #: same recording when the option is off - and the tags would
+        #: be the same then too.
         self.conflicting: List[WorkId] = []
         #: The candidate tops of the hierarchy, worked out when it is
         #: built and kept so that the tags do not walk the chains again.
