@@ -142,6 +142,14 @@ what it cannot use, rather than raising out of the tagging:
 A count of tracks below one is refused, and a count for a recording
 that is not in the release is reported in `unused_multiplicity`.
 
+**The vote for a top's name is per track.** The legacy's vote is built
+from the tracks, so a recording that is on two tracks votes twice. The
+adapter counts the tracks each recording is on - a release that lists
+the same recording twice is that recording on two tracks - and a
+multiplicity given for the recording says so instead. The vote picks
+among a track's *own* candidate names: a track whose only candidate is
+one work keeps that name however the album votes.
+
 The `partial` substitution only applies when the plugin's `cwp_partial`
 option is on. With it off, a partially performed work is an ordinary one.
 
