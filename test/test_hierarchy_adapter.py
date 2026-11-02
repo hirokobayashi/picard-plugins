@@ -927,6 +927,15 @@ class NodeHeightTestCase(unittest.TestCase):
         hierarchy = self._hierarchy({_node("a"): []})
         self.assertEqual(node_height(hierarchy, _node("a")), 0)
 
+    def test_a_node_the_hierarchy_does_not_hold_raises(self):
+        """A node the hierarchy does not hold has no height.
+
+        Zero is the height of a leaf, so a caller that passed a stale or
+        mistyped node would get a plausible-looking answer.
+        """
+        hierarchy = self._hierarchy({_node("a"): []})
+        self.assertRaises(KeyError, node_height, hierarchy, _node("b"))
+
     def test_a_chain_is_its_length(self):
         hierarchy = self._hierarchy({
             _node("a"): [_node("b")],
