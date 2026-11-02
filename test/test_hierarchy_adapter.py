@@ -9,8 +9,9 @@ the model deliberately does not care about:
 
 * the *order* of the ids inside a level, which the legacy took from the
   order the relations came back in;
-* the *format* of a level's ids, which the legacy wrote as the repr of
-  a tuple.
+* the *format* of a level's ids, which the legacy handed to Picard as a
+  tuple - Picard stores a tuple of one id as a bare string and a tuple
+  of more as a list, and the adapter hands Picard the same tuple.
 
 These tests pin both, and check the adapter against the recorded
 fixtures. They need no Picard.
@@ -2251,8 +2252,24 @@ class NoChainTestCase(unittest.TestCase):
         lead to the level above the first are the ones performed in
         full, and a partly performed work is not among them - so it
         never has to contribute its parents there.
+
+        The recording performs a work in full as well, and that work's
+        parent is the partly performed work - so the first level has a
+        work that does lead to the level above, and the check below is
+        about a list with something in it.
         """
         works = [
+            {
+                "id": "work-a",
+                "title": "A work",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "work-b"},
+                    },
+                ],
+            },
             {
                 "id": "work-b",
                 "title": "B work",
@@ -2283,6 +2300,11 @@ class NoChainTestCase(unittest.TestCase):
                 {
                     "type": "performance",
                     "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
                     "work": {"id": "work-b"},
                     "attributes": ["partial"],
                 },
@@ -2308,14 +2330,17 @@ class NoChainTestCase(unittest.TestCase):
         # the leaders were looked for - otherwise the check below would
         # be about nothing
         self.assertTrue(leaders, "the leaders were never looked for")
+        # and the first level has a work that leads to the level above,
+        # so the check is about something
+        self.assertTrue(
+            leaders[0], "the first level has no leader")
         # the first level's leaders are the ones that lead to the level
         # above the first - the others are higher up, where a partly
         # performed work can be among them
-        for found in leaders[:1]:
-            for work in found:
-                self.assertNotIn(
-                    work, partial,
-                    "a partly performed work is among the leaders")
+        for work in leaders[0]:
+            self.assertNotIn(
+                work, partial,
+                "a partly performed work is among the leaders")
 
     def test_a_recording_on_two_tracks_votes_twice(self):
         """A recording on two tracks votes twice for its name.
