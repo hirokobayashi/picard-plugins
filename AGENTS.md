@@ -224,6 +224,13 @@ a work performed *only* in part contributes nothing to the level above
 there. That is a difference the model makes on purpose, and it is
 tested; the fixtures show the same tags either way.
 
+A work performed partly *and* in full contributes itself, and the model
+goes on above it - the work's own parents are reached. The legacy
+reaches them too when the recording has another work as well (the
+Daphnis tracks), but stops at the work when it is the recording's only
+work: the legacy's node for the work holds no parent. That shape is
+pinned by `PartialOnlyShapeTestCase`.
+
 **The first relation for a work decides.** The legacy reads the
 attributes of the first relation it finds for the work (`parse_data`
 with `'work.id:' + workId`), so:
