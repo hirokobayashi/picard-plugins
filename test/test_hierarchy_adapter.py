@@ -1766,6 +1766,11 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
             name: sys.modules.pop(name)
             for name in list(sys.modules)
             if name == "hierarchy" or name.startswith("hierarchy.")}
+        # the import sets the modules as attributes of the package, so
+        # those are saved too - otherwise the package would keep the
+        # freshly imported ones
+        package = hierarchy.get("hierarchy")
+        attributes = dict(vars(package)) if package is not None else {}
         try:
             try:
                 importlib.import_module("hierarchy.adapter")
@@ -1778,6 +1783,12 @@ class AdapterWithoutPicardTestCase(unittest.TestCase):
             sys.meta_path.remove(finder)
             sys.modules.update(cached)
             sys.modules.update(hierarchy)
+            if package is not None:
+                for name in list(vars(package)):
+                    if name not in attributes:
+                        delattr(package, name)
+                for name, value in attributes.items():
+                    setattr(package, name, value)
         self.assertEqual(blocked, [])
 
     def test_the_blocker_would_catch_an_import(self):
