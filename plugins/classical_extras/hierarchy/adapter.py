@@ -245,6 +245,9 @@ def read_performance(
     work they name. A performance relation is forward in MusicBrainz's
     data, so there is nothing to tell apart in practice.
     """
+    if not recording.get('id'):
+        # a response with no id names no recording
+        raise ValueError("the recording has no id")
     key = WorkId(recording['id'])
     works: List[WorkId] = []
     partial: List[WorkId] = []
@@ -597,26 +600,24 @@ class AlbumAdapter:
 
         The performance relations in the order they came back in, with a
         partially performed work represented by the recording id in the
-        relation's place. A work related twice - once partially, once in
-        full - is represented by the recording id alone, because the
+        relation's place. A work related partly first - and then in full
+        - is represented by the recording id alone, because the
         recording is not the work.
 
-        Which id stands for a work does not depend on the order of the
-        relations, but where the recording id stands does: it takes the
-        place of the first relation to the partly performed work, so the
-        level reads the same as the relations did.
+        Which id stands for a work is decided by the *first* relation
+        for it: the legacy reads the attributes of the first relation it
+        finds for the work, so a work related wholly first is the work
+        itself and the recording id does not stand in for it. Where the
+        recording id stands does depend on the order of the relations:
+        it takes the place of the first relation to the partly
+        performed work, so the level reads the same as the relations
+        did.
 
         An id is only given once. Two works that are both performed in
         part would otherwise both be represented by the recording id, and
         the level would hold it twice - but the node holds the works as a
         set, so it can only hold the recording id once. The legacy
         de-duplicates its id list for the same reason.
-
-        The order of the relations does not matter for which id stands
-        for a work: a work related both wholly and in part is
-        represented by the recording id either way, because the
-        recording is not the work. It does matter for where the
-        recording id stands.
         """
         members: List[WorkId] = []
         for work, partial in self._performed(recording):

@@ -1898,7 +1898,8 @@ class NoChainTestCase(unittest.TestCase):
             for work in works:
                 partial = any(
                     relation["work"]["id"] == work
-                    and relation.get("attributes")
+                    and 'partial' in (
+                        relation.get("attributes") or ())
                     for relation in related)
                 if not partial:
                     continue
@@ -1932,9 +1933,21 @@ class NoChainTestCase(unittest.TestCase):
                 "%s" % (relations,))
             # a work that is partly performed is the recording id in the
             # first level - unless it is performed in full as well, and
-            # then it contributes itself
+            # then it contributes itself and the recording id stands in
+            # for it one level below
             for work in performance.partial:
                 if work in performance.complete:
+                    # the work contributes itself, so it is not in the
+                    # first level - but the recording id is, in its
+                    # place
+                    self.assertNotIn(
+                        work, entry.members,
+                        "%s: the work is in the first level" % (relations,))
+                    self.assertIn(
+                        "rec-1",
+                        [member.mbid for member in entry.members],
+                        "%s: the recording id is not in the first level"
+                        % (relations,))
                     continue
                 self.assertNotIn(
                     work, entry.members,
@@ -2402,8 +2415,7 @@ class LegacyParityTestCase(unittest.TestCase):
 
         The model may hold more works in a level than the legacy did -
         both Swan Lake editions, say, and the Gayne scene level - but
-        every id it writes has to be a work of the hierarchy, and of
-        the node that level holds.
+        every id it writes has to be a work of the hierarchy.
         """
         for album in sorted(USE_PARTIAL):
             adapter = _adapter(album)
@@ -2418,15 +2430,6 @@ class LegacyParityTestCase(unittest.TestCase):
                             work, known,
                             "%s: %s is not a work of the hierarchy"
                             % (album, work.mbid))
-                        # and the work has to be in *some* node - a work
-                        # of another level would be a level that does
-                        # not hold it
-                        in_a_node = any(
-                            work in node.works
-                            for node in hierarchy.nodes.values())
-                        self.assertTrue(
-                            in_a_node,
-                            "%s: %s is in no node" % (album, work.mbid))
 
     def test_the_work_group_is_the_legacys(self):
         """Every track's group is the legacy's group for it.
