@@ -1,0 +1,13 @@
+{
+ "id": "work-b",
+ "title": "B work",
+ "relations": [
+  {
+   "type": "parts",
+   "direction": "backward",
+   "work": {
+    "id": "parent-b"
+   }
+  }
+ ]
+}
