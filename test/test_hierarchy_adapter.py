@@ -2066,6 +2066,40 @@ class NoChainTestCase(unittest.TestCase):
         # recording that was simply listed twice
         self.assertEqual(adapter.conflicting, [w("rec-1")])
 
+    def test_a_work_without_an_id_is_skipped(self):
+        """A work response with no id is skipped, and the rest is used.
+
+        A failed lookup gives a response with no id. It cannot be placed
+        in the graph - but it must not stop the rest of the release from
+        being tagged.
+        """
+        good = {
+            "id": "work-a",
+            "title": "A work",
+            "relations": [
+                {
+                    "type": "parts",
+                    "direction": "backward",
+                    "work": {"id": "work-b"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter(
+            [{}, good, None],
+            [{
+                "id": "rec-1",
+                "relations": [
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": "work-a"},
+                    },
+                ],
+            }],
+            use_partial=True)
+        tags = adapter.tags()
+        self.assertIn(WorkId("rec-1"), tags)
+
     def test_a_recording_without_an_id_is_skipped(self):
         """A response with no id is skipped, and the rest is tagged.
 

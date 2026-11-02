@@ -191,6 +191,11 @@ def read_work_graph(
     """
     graph = WorkGraph()
     for response in works:
+        if not response or not response.get('id'):
+            # a response with no id names no work - a failed lookup, or
+            # an empty body. It cannot be placed in the graph, but it
+            # must not stop the rest of the release from being tagged.
+            continue
         source = WorkId(response['id'])
         graph.add_work(source)
         for relation in response.get('relations') or ():
@@ -753,11 +758,14 @@ class AlbumAdapter:
         ``heights``.
         """
         levels, _through = self._levels(recording, chain)
-        if not levels or not levels[-1]:
+        # the top is the last level that has ids - a level with no ids
+        # has no tag, so it is not a level of the track's own
+        filled = [works for works in levels if works]
+        if not filled:
             # the recording names no work, or names a work with no place
             # in the tree
             return TrackTags(key=recording.performance.key, group=group)
-        top = levels[-1]
+        top = filled[-1]
         if chain[-1] not in heights:
             heights[chain[-1]] = heights_of(hierarchy, chain[-1])
         return TrackTags(
