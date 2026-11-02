@@ -47,9 +47,6 @@ from .album import Album, Performance, candidate_tops, chains_of
 from .graph import NodeId, WorkGraph, WorkId
 from .project import Hierarchy, project
 
-#: The separator the legacy uses between the ids of one level.
-ID_SEPARATOR = '; '
-
 #: The sort key of a work that no relation named. It has to be past every
 #: real key, so that such a work sorts after the ones that were named.
 _UNORDERED = (1 << 30, 1 << 30)
@@ -233,6 +230,11 @@ def read_performance(
     ``use_partial`` is the plugin's ``cwp_partial`` option: with it off
     the attribute is ignored and a partially performed work is an ordinary
     one.
+
+    The relation's direction is not looked at, because the legacy does
+    not look at it either: it matches the recording's relations by the
+    work they name. A performance relation is forward in MusicBrainz's
+    data, so there is nothing to tell apart in practice.
     """
     key = WorkId(recording['id'])
     works: List[WorkId] = []
@@ -343,7 +345,9 @@ class TrackTags:
             if len(self.top_names) == 1:
                 metadata['~cwp_work_top'] = self.top_names[0]
             else:
-                metadata['~cwp_work_top'] = ID_SEPARATOR.join(self.top_names)
+                # a tie keeps every tied name, and the legacy hands
+                # Picard the list of them - so Picard stores a list
+                metadata['~cwp_work_top'] = tuple(self.top_names)
         if self.group:
             metadata['~cwp_work_group'] = self.group
         metadata['~cwp_part_levels'] = str(self.part_levels)
