@@ -33,6 +33,7 @@ from hierarchy.adapter import (  # noqa: E402
     TrackTags,
     WorkNames,
     WorkRelations,
+    has_cycle,
     node_height,
     read_performance,
     read_work_graph,
@@ -1048,6 +1049,31 @@ class NodeHeightTestCase(unittest.TestCase):
             _node("b"): [_node("a")],
         })
         self.assertEqual(node_height(hierarchy, _node("a")), 1)
+
+    def test_a_cycle_is_reported(self):
+        """A cycle is reported, so the caller can leave the track alone.
+
+        The height of a walk that found a cycle is not to be relied on,
+        so a caller that knows about the cycle can leave the track with
+        no tags rather than write a wrong depth.
+        """
+        hierarchy = self._hierarchy({
+            _node("a"): [_node("b")],
+            _node("b"): [_node("a")],
+        })
+        self.assertTrue(has_cycle(hierarchy, _node("a")))
+        self.assertFalse(has_cycle(hierarchy, _node("c")))
+
+    def test_a_tree_is_not_reported_as_a_cycle(self):
+        """A tree has no cycle - not even a shared child."""
+        hierarchy = self._hierarchy({
+            _node("a"): [_node("b"), _node("d")],
+            _node("b"): [_node("c")],
+            _node("c"): [_node("d")],
+            _node("d"): [_node("e")],
+            _node("e"): [],
+        })
+        self.assertFalse(has_cycle(hierarchy, _node("a")))
 
     def test_a_self_loop_does_not_hang(self):
         hierarchy = self._hierarchy({
