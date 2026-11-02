@@ -111,10 +111,10 @@ legacy's tags carry them:
   in. The model holds a node's works as a *set*, so the order has to be put
   back. The rule, measured over every fixture: the first level is the
   recording's **performance** relations in order, with a partially performed
-  work represented by the **recording id** in the relation's place; a work
-  related twice - once partially, once in full - is represented by the
-  recording id alone. The levels above the first take their order from the
-  relation of the work the level was reached through.
+  work represented by the **recording id** in the relation's place. A work
+  related twice is decided by its **first** relation - see the section on
+  the first relation below. The levels above the first take their order from
+  the relation of the work the level was reached through.
 - **the format of a level's ids.** The legacy hands Picard a **tuple** of work
   ids, and Picard stores a tuple of one id as a bare string and a tuple of
   more as a list. So a level of one id reads as `abc...` and a level of two
@@ -251,6 +251,10 @@ cannot be tagged, and it must not stop the rest of the release from
 being tagged - so the adapter skips it, on both the recording side and
 the work side. (A `KeyError` out of the constructor would take the
 whole release's tags with it.)
+
+The same holds for the rest of the adapter: a chain whose tip the
+hierarchy does not hold leaves that one track with no tags, rather
+than raising. One bad track must not take the release with it.
 
 The `test/fixtures/partial_order/` fixture was run through the legacy,
 and the tags it wrote are the expectations of the tests that use it: with
