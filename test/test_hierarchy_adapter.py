@@ -1330,8 +1330,8 @@ class NoChainTestCase(unittest.TestCase):
     def test_a_work_related_three_times_does_not_crash(self):
         """A third relation to the same work must not raise.
 
-        The position of the work in the list is remembered, so a relation
-        that finds the work already there must not use a stale one.
+        The work is held once, whatever the number of relations that
+        name it.
         """
         recording = {
             "id": "rec-1",
@@ -1996,6 +1996,14 @@ class LegacyParityTestCase(unittest.TestCase):
                 self.assertIsNotNone(
                     track, "%s %s has no tags" % (album, label))
                 metadata = track.as_metadata()
+                # the model wrote exactly these levels - an extra one
+                # would be a regression, and a missing one too
+                self.assertEqual(
+                    {tag for tag in metadata
+                     if tag.startswith('~cwp_workid')},
+                    set(want),
+                    "%s %s: the levels are not the recorded ones"
+                    % (album, label))
                 for tag, ids in sorted(want.items()):
                     self.assertEqual(
                         list(metadata.get(tag) or ()),
