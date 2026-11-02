@@ -1361,6 +1361,35 @@ class PartialOrderFixtureTestCase(unittest.TestCase):
         "~cwp_workid_1": ("work-b",),
     }
 
+    #: The model's own tags for the fixture. The legacy's work lookups
+    #: did not reach the top of this fixture, so its workid_top is one
+    #: level short of the model's - and the levels above the first are
+    #: the model's own decision. They are recorded here so that a
+    #: change in them would be caught.
+    MODEL = {
+        "~cwp_part_levels": "3",
+        "~cwp_work_part_levels": "3",
+        "~cwp_workid_2": ("parent-b",),
+        "~cwp_workid_3": ("top",),
+        "~cwp_workid_top": ("top",),
+    }
+
+    def test_the_model_writes_the_levels_above_the_first(self):
+        """The levels above the first are the model's own, and recorded.
+
+        The legacy's work lookups did not reach the top of this fixture,
+        so these are the model's own tags - but they are pinned here, so
+        that a change in them would be caught.
+        """
+        for order in ("a", "b"):
+            tags = self._adapter(order).tags()
+            track = tags[WorkId("rec-1")]
+            metadata = track.as_metadata()
+            for tag, value in self.MODEL.items():
+                self.assertEqual(
+                    metadata.get(tag), value,
+                    "order %s %s" % (order, tag))
+
     @staticmethod
     def _adapter(order):
         directory = os.path.join(FIXTURES, "partial_order")
