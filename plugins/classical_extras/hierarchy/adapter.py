@@ -202,8 +202,11 @@ def read_work_graph(
         source = WorkId(response['id'])
         graph.add_work(source)
         for relation in response.get('relations') or ():
+            if not isinstance(relation, Mapping):
+                # a relation that is not an object names nothing
+                continue
             target = relation.get('work')
-            if not target or not target.get('id'):
+            if not isinstance(target, Mapping) or not target.get('id'):
                 continue
             graph.add_relation(
                 source,
@@ -268,10 +271,13 @@ def read_performance(
     partial: List[WorkId] = []
     complete: List[WorkId] = []
     for relation in recording.get('relations') or ():
+        if not isinstance(relation, Mapping):
+            # a relation that is not an object names nothing
+            continue
         if relation.get('type') != 'performance':
             continue
         target = relation.get('work')
-        if not target or not target.get('id'):
+        if not isinstance(target, Mapping) or not target.get('id'):
             continue
         work = WorkId(target['id'])
         if work in works:
@@ -473,7 +479,12 @@ def has_cycle(hierarchy: Hierarchy, node: NodeId) -> bool:
 def _heights_of(
         hierarchy: Hierarchy,
         node: NodeId) -> Tuple[Dict[NodeId, int], bool]:
-    """The heights of a walk, and whether it found a cycle."""
+    """The heights of a walk, and whether it found a cycle.
+
+    A child the hierarchy does not hold is counted as a leaf, so the
+    depth it gives is too small. The walk does not report that - the
+    hierarchy is built by the model, so it is well formed.
+    """
     heights: Dict[NodeId, int] = {}
     visiting: Set[NodeId] = set()
     done: Set[NodeId] = set()
@@ -515,6 +526,28 @@ def _children_of(hierarchy: Hierarchy, node: NodeId) -> FrozenSet[NodeId]:
     """The children of a node, or none when the node is unknown."""
     found = hierarchy.nodes.get(node)
     return found.children if found is not None else frozenset()
+
+
+def _has_missing_child(hierarchy: Hierarchy, node: NodeId) -> bool:
+    """Whether the hierarchy has a child the hierarchy does not hold.
+
+    Such a child is counted as a leaf, so the depth of the tree under it
+    is lost and the depth that comes back is too small. The hierarchy
+    is built by the model, so it is well formed - but a malformed one
+    would give a plausible-looking wrong depth.
+    """
+    seen: Set[NodeId] = set()
+    pending = [node]
+    while pending:
+        current = pending.pop()
+        for child in _children_of(hierarchy, current):
+            if child not in hierarchy.nodes:
+                return True
+            if child in seen:
+                continue
+            seen.add(child)
+            pending.append(child)
+    return False
 
 
 class AlbumAdapter:
@@ -685,10 +718,13 @@ class AlbumAdapter:
         result: List[Tuple[WorkId, bool]] = []
         seen: Set[WorkId] = set()
         for relation in recording.get('relations') or ():
+            if not isinstance(relation, Mapping):
+                # a relation that is not an object names nothing
+                continue
             if relation.get('type') != 'performance':
                 continue
             target = relation.get('work')
-            if not target or not target.get('id'):
+            if not isinstance(target, Mapping) or not target.get('id'):
                 continue
             work = WorkId(target['id'])
             if work in seen:
@@ -887,6 +923,11 @@ class AlbumAdapter:
             # the walk gives the heights and whether it found a cycle,
             # so it is only walked once
             heights[tip], cycles[tip] = _heights_of(hierarchy, tip)
+            # a child the hierarchy does not hold is counted as a leaf,
+            # so the depth would be too small - the track is left with
+            # no tags rather than a wrong depth
+            cycles[tip] = cycles[tip] or _has_missing_child(
+                hierarchy, tip)
         # A chain whose tip the hierarchy does not hold has no depth to
         # report - and zero is the depth of a one-level hierarchy, so a
         # plausible-looking wrong value would be written. The track is
