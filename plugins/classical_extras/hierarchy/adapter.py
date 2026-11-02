@@ -40,8 +40,8 @@ The levels above the first are the node's works in the same order.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import (Dict, FrozenSet, Iterable, Iterator, List, Mapping, Sequence,
-                    Set, Tuple)
+from typing import (Dict, FrozenSet, Iterable, Iterator, List, Mapping, Optional,
+                    Sequence, Set, Tuple)
 
 from .album import Album, Performance, candidate_tops, chains_of
 from .graph import NodeId, WorkGraph, WorkId
@@ -444,9 +444,9 @@ def heights_of(
     share a top do not each walk it again.
 
     The heights are of a well-formed hierarchy: a child that the
-    hierarchy does not hold is treated as a leaf, so the node above it
-    counts one more level than it really has. The hierarchy is built by
-    the model, so it is well formed.
+    hierarchy does not hold contributes nothing, so the node above it
+    counts one level rather than the depth of the subtree that is not
+    there. The hierarchy is built by the model, so it is well formed.
     """
     heights: Dict[NodeId, int] = {}
     visiting: Set[NodeId] = set()
@@ -536,6 +536,9 @@ class AlbumAdapter:
         #: The candidate tops of the hierarchy, worked out when it is
         #: built and kept so that the tags do not walk the chains again.
         self._candidates: Dict[WorkId, List[WorkId]] = {}
+        #: The built hierarchy, kept so that it is not built twice.
+        self._built: Optional[Tuple[
+            Hierarchy, Dict[WorkId, List[NodeId]], Dict[WorkId, str]]] = None
         seen: Dict[WorkId, Recording] = {}
         for recording in recordings:
             if not recording or not recording.get('id'):
@@ -684,7 +687,14 @@ class AlbumAdapter:
 
     def build_all(self) -> Tuple[Hierarchy, Dict[WorkId, List[NodeId]],
                                 Dict[WorkId, str]]:
-        """The hierarchy, the chain of every recording, and the groups."""
+        """The hierarchy, the chain of every recording, and the groups.
+
+        The hierarchy is built once and kept, so that a caller that
+        asks for the build and then for the tags does not walk the
+        whole graph twice.
+        """
+        if self._built is not None:
+            return self._built
         hierarchy = project(
             self.graph,
             use_arrangements=self.use_arrangements,
@@ -698,7 +708,8 @@ class AlbumAdapter:
         # the candidates are kept, so that the tags do not have to walk
         # the chains a second time
         self._candidates = candidates
-        return hierarchy, chains, groups
+        self._built = (hierarchy, chains, groups)
+        return self._built
 
     def tags(self) -> Dict[WorkId, TrackTags]:
         """The hierarchy tags of every recording.
