@@ -2673,6 +2673,20 @@ class NoChainTestCase(unittest.TestCase):
         performance = read_performance(recording, use_partial=True)
         self.assertEqual(performance.partial, frozenset({w("work-a")}))
 
+    def test_a_multiplicity_below_one_is_refused(self):
+        """A count below one is refused.
+
+        A recording is on at least one track. A count of zero would take
+        votes away and could change the winner of the album's vote - so
+        it is refused rather than used.
+        """
+        self.assertRaises(
+            ValueError, AlbumAdapter, [], [],
+            multiplicity={w("rec-1"): 0})
+        self.assertRaises(
+            ValueError, AlbumAdapter, [], [],
+            multiplicity={w("rec-1"): -1})
+
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
 
