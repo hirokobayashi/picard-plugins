@@ -2752,6 +2752,84 @@ class NoChainTestCase(unittest.TestCase):
             adapter._top_names([w("work-a"), w("work-b")], votes),
             ["The first work"])
 
+    def test_a_recording_listed_twice_votes_twice(self):
+        """A recording listed twice is a recording on two tracks.
+
+        The legacy votes once per *track*, and a release that lists the
+        same recording twice is that recording on two tracks. So it
+        votes twice - the adapter has the count in hand and does not
+        throw it away.
+
+        The recording that has both names as its candidates is the one
+        that shows it: with the two names tied it keeps both, and with
+        the extra vote the first name wins outright.
+        """
+        works = [
+            {"id": "work-a", "title": "The first work"},
+            {"id": "work-b", "title": "The second work"},
+        ]
+        recordings = [
+            {
+                "id": "rec-1",
+                "relations": [
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": "work-a"},
+                    },
+                ],
+            },
+            {
+                "id": "rec-2",
+                "relations": [
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": "work-b"},
+                    },
+                ],
+            },
+            {
+                "id": "rec-3",
+                "relations": [
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": "work-a"},
+                    },
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": "work-b"},
+                    },
+                ],
+            },
+        ]
+        names = WorkNames(titles={
+            w("work-a"): "The first work",
+            w("work-b"): "The second work",
+        })
+        # each name has two votes - rec-1 and rec-3 for the first one,
+        # rec-2 and rec-3 for the second one - so the two are tied
+        adapter = AlbumAdapter(
+            works, recordings, names=names, use_partial=True)
+        tags = adapter.tags()
+        self.assertEqual(
+            tags[WorkId("rec-3")].top_names,
+            ["The first work", "The second work"])
+        # rec-1 is listed twice, so it votes twice - and the first name
+        # wins outright
+        adapter = AlbumAdapter(
+            works, recordings + [dict(recordings[0])], names=names,
+            use_partial=True)
+        self.assertEqual(adapter.dropped, [w("rec-1")])
+        self.assertEqual(
+            adapter.tracks_per_recording,
+            {w("rec-1"): 2, w("rec-2"): 1, w("rec-3"): 1})
+        tags = adapter.tags()
+        self.assertEqual(
+            tags[WorkId("rec-3")].top_names, ["The first work"])
+
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
 
