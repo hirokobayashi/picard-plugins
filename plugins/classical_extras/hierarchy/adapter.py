@@ -247,6 +247,10 @@ def read_performance(
     the attribute is ignored and a partially performed work is an ordinary
     one.
 
+    A response with no id names no recording, and this raises - the
+    caller has to filter those out. ``AlbumAdapter`` does, so a release
+    with a track that has no recording attached is tagged as usual.
+
     The relation's direction is not looked at, because the legacy does
     not look at it either: it matches the recording's relations by the
     work they name. A performance relation is forward in MusicBrainz's
@@ -415,8 +419,15 @@ def node_height(hierarchy: Hierarchy, node: NodeId) -> int:
 
     Use ``heights_of`` when the heights of several nodes of the same
     hierarchy are wanted: it works them out once.
+
+    A node that the hierarchy does not hold raises - a caller that
+    passes a stale or mistyped node would otherwise get a height of
+    zero, which is the height of a leaf.
     """
-    return heights_of(hierarchy, node).get(node, 0)
+    heights = heights_of(hierarchy, node)
+    if node not in heights:
+        raise KeyError("the hierarchy has no node %s" % (node,))
+    return heights[node]
 
 
 def heights_of(
@@ -446,7 +457,10 @@ def heights_of(
             deepest = 0
             for grandchild in _children_of(hierarchy, current):
                 deepest = max(deepest, heights.get(grandchild, 0))
-            heights[current] = deepest + 1
+            # a node the hierarchy does not hold has no height - it is
+            # not recorded, so a caller can tell it from a leaf
+            if current in hierarchy.nodes:
+                heights[current] = deepest + 1
             continue
         if child in done:
             continue
