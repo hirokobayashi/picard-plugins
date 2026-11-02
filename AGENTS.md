@@ -152,6 +152,11 @@ and the group):
   the 45 and the 12 above: a track can differ in the ids *and* hold more
   of them, so the two lists and the two causes do not line up.
 
+  The exemption is per **tag**, not per track: `DIFFERING_TAGS` records
+  which tags of each of those 44 tracks differ. Without it a track that
+  was exempt because of one tag could differ in another and the check
+  would still pass.
+
 The legacy's own tags are recorded in `test/fixtures/legacy_tags.json`,
 and `test/test_hierarchy_adapter.py` checks the adapter against them. The
 tracks that may differ are named there, and the tracks that may hold
