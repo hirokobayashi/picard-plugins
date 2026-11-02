@@ -1228,6 +1228,9 @@ class ParentResolutionTestCase(unittest.TestCase):
         order of the parents is what the legacy's tag holds. The set
         based one is what the rest of the graph uses - so the two have to
         agree on which parents a work has.
+
+        The graph has a collection relation and a backward medley, so
+        that the filters are exercised and not just switched on.
         """
         graph = WorkGraph()
         graph.add_relation(w("movement"), "parts", "backward", w("opera"))
@@ -1235,7 +1238,11 @@ class ParentResolutionTestCase(unittest.TestCase):
         graph.add_relation(w("arrangement"), "arrangement", "backward",
                            w("opera"))
         graph.add_relation(w("medley"), "medley", "forward", w("opera"))
+        graph.add_relation(w("medley"), "medley", "backward", w("backwards"))
         graph.add_relation(w("collection"), "parts", "backward", w("box"))
+        graph.add_relation(
+            w("collection"), "parts", "backward", w("box"),
+            attributes=("part of collection",))
         for use_arrangements in (True, False):
             for use_medleys in (True, False):
                 for use_collections in (True, False):
@@ -1251,6 +1258,32 @@ class ParentResolutionTestCase(unittest.TestCase):
                         {work: frozenset(parents)
                          for work, parents in ordered.items()},
                         sets)
+
+    def test_the_collection_filter_is_exercised(self):
+        """A collection parent is dropped when collections are off.
+
+        Without this, the equivalence test above would pass even if the
+        filter were gone - there would be no collection edge to filter.
+        """
+        graph = WorkGraph()
+        graph.add_relation(
+            w("collection"), "parts", "backward", w("box"),
+            attributes=("part of collection",))
+        self.assertEqual(
+            graph.resolve_parents()[w("collection")], frozenset({w("box")}))
+        self.assertEqual(
+            graph.resolve_parents(use_collections=False)[w("collection")],
+            frozenset())
+
+    def test_a_backward_medley_is_not_a_parent(self):
+        """A backward medley relation is not a parent.
+
+        The medley fallback only takes a forward relation.
+        """
+        graph = WorkGraph()
+        graph.add_relation(w("medley"), "medley", "backward", w("opera"))
+        self.assertEqual(
+            graph.resolve_parents()[w("medley")], frozenset())
 
     def test_parts_relation_is_the_parent(self):
         graph = WorkGraph()
