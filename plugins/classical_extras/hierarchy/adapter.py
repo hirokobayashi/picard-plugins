@@ -600,9 +600,9 @@ class AlbumAdapter:
             # the order the relations gave, which decides the order of
             # the first level
             tuple(self._performed_works(recording)),
-            tuple(sorted(performance.works)),
-            tuple(sorted(performance.partial)),
-            tuple(sorted(performance.complete)),
+            tuple(sorted(performance.works, key=lambda work: work.mbid)),
+            tuple(sorted(performance.partial, key=lambda work: work.mbid)),
+            tuple(sorted(performance.complete, key=lambda work: work.mbid)),
         )
 
     def _partial_works(

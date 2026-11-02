@@ -439,14 +439,16 @@ class WorkGraph:
         colour: Dict[WorkId, int] = {work: _WHITE for work in self.works()}
         dropped: Set[Tuple[WorkId, WorkId]] = set()
 
-        for root in sorted(self.works()):
+        for root in sorted(self.works(), key=lambda work: work.mbid):
             if colour[root] != _WHITE:
                 continue
             # Explicit stack of (work, iterator over its parents). Each frame
             # resumes where the previous one stopped, which is what gives the
             # traversal its depth-first character.
             stack: List[Tuple[WorkId, Iterator[WorkId]]] = [
-                (root, iter(sorted(resolved.get(root, frozenset()))))
+                (root, iter(sorted(
+                    resolved.get(root, frozenset()),
+                    key=lambda work: work.mbid)))
             ]
             colour[root] = _GREY
             while stack:
@@ -464,13 +466,16 @@ class WorkGraph:
                 if colour[parent] == _WHITE:
                     colour[parent] = _GREY
                     stack.append(
-                        (parent, iter(sorted(resolved.get(parent, frozenset())))))
+                        (parent, iter(sorted(
+                            resolved.get(parent, frozenset()),
+                            key=lambda work: work.mbid))))
 
         self.dropped_edges = [
             DroppedEdge(
                 child=child,
                 parent=parent,
                 reason='parent is a descendant of the child')
-            for child, parent in sorted(dropped)
+            for child, parent in sorted(
+                dropped, key=lambda pair: (pair[0].mbid, pair[1].mbid))
         ]
         return {work: frozenset(parents) for work, parents in accepted.items()}
