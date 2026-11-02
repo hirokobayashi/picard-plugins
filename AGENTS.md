@@ -115,8 +115,11 @@ legacy's tags carry them:
   related twice - once partially, once in full - is represented by the
   recording id alone. The levels above the first take their order from the
   relation of the work the level was reached through.
-- **the format of a level's ids.** The legacy writes the repr of a tuple:
-  `('abc...',)` for one id, `('abc...', 'def...')` for two.
+- **the format of a level's ids.** The legacy hands Picard a **tuple** of work
+  ids, and Picard stores a tuple of one id as a bare string and a tuple of
+  more as a list. So a level of one id reads as `abc...` and a level of two
+  reads as a list of two. The adapter hands Picard the same tuple, so the
+  stored text is the legacy's.
 
 The `partial` substitution only applies when the plugin's `cwp_partial`
 option is on. With it off, a partially performed work is an ordinary one.
@@ -194,9 +197,8 @@ legacy strips the parent's text out of the child's name
 options and its own tests, and it has nothing to do with the hierarchy.
 
 The comparison above is by the ids the tags hold, not by their literal
-text: the legacy writes a level of two ids as `('a', 'b')` in some
-places and as `a; b` in others, and the adapter writes the tuple repr
-everywhere. The ids and their order are the same either way.
+text, and the parity test also compares the text as Picard stores it.
+The ids and their order are the same either way.
 
 ### Legacy semantics that had to be reproduced (do not "simplify" these away)
 - **Parent resolution is an ordered fallback**, not just `parts` relations:
