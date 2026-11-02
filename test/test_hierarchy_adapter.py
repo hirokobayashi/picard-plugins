@@ -2348,36 +2348,84 @@ class NoChainTestCase(unittest.TestCase):
         The legacy votes per *track*, so a recording that is on two
         tracks votes twice for the names of its candidate tops. The
         multiplicity says how many tracks each recording is on.
+
+        The winner is checked through the tags, so that the vote the
+        tags use is the one that is checked.
         """
         works = [
             {"id": "work-a", "title": "The first work"},
             {"id": "work-b", "title": "The second work"},
         ]
-        recording = {
-            "id": "rec-1",
-            "relations": [
-                {
-                    "type": "performance",
-                    "direction": "forward",
-                    "work": {"id": "work-a"},
-                },
-            ],
-        }
+        # three recordings: one for each work, and one for both - so
+        # that both names are candidates for the third one
+        recordings = [
+            {
+                "id": "rec-1",
+                "relations": [
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": "work-a"},
+                    },
+                ],
+            },
+            {
+                "id": "rec-2",
+                "relations": [
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": "work-b"},
+                    },
+                ],
+            },
+            {
+                "id": "rec-3",
+                "relations": [
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": "work-a"},
+                    },
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": "work-b"},
+                    },
+                ],
+            },
+        ]
         names = WorkNames(titles={
             w("work-a"): "The first work",
             w("work-b"): "The second work",
         })
-        candidates = {w("rec-1"): frozenset({w("work-a")})}
+        # Each name has two votes - rec-1 and rec-3 for the first one,
+        # rec-2 and rec-3 for the second one. So the two are tied, and
+        # the recording that has both names as candidates keeps both.
         adapter = AlbumAdapter(
-            works, [recording], names=names, use_partial=True)
+            works, recordings, names=names, use_partial=True)
+        tags = adapter.tags()
         self.assertEqual(
-            adapter._votes(candidates), {"The first work": 1})
-        # the same recording on two tracks votes twice
+            tags[WorkId("rec-1")].top_names, ["The first work"])
+        self.assertEqual(
+            tags[WorkId("rec-2")].top_names, ["The second work"])
+        self.assertEqual(
+            tags[WorkId("rec-3")].top_names,
+            ["The first work", "The second work"])
+        # rec-1 is on two tracks, so it votes twice - and the first name
+        # wins outright, so the recording with both names now names one
         adapter = AlbumAdapter(
-            works, [recording], names=names, use_partial=True,
+            works, recordings, names=names, use_partial=True,
             multiplicity={w("rec-1"): 2})
+        tags = adapter.tags()
         self.assertEqual(
-            adapter._votes(candidates), {"The first work": 2})
+            tags[WorkId("rec-1")].top_names, ["The first work"])
+        # rec-2's only candidate is the second work, so it keeps it -
+        # the vote picks among a track's own candidates
+        self.assertEqual(
+            tags[WorkId("rec-2")].top_names, ["The second work"])
+        self.assertEqual(
+            tags[WorkId("rec-3")].top_names, ["The first work"])
 
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
