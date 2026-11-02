@@ -734,11 +734,14 @@ class TopNameTestCase(unittest.TestCase):
 
         No fixture has a tie - the two Swan Lake editions share one
         title, so the names are one. So the tie is built here.
+
+        The names are not in the order they would be sorted in, so that
+        an implementation that kept the top's own order would not pass.
         """
         adapter = _adapter("planets")
         names = WorkNames(titles={
-            w("work-a"): "The first work",
-            w("work-b"): "The second work",
+            w("work-a"): "The second work",
+            w("work-b"): "The first work",
         })
         adapter.names = names
         # a top of two works, with one vote each

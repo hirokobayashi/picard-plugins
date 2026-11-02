@@ -256,7 +256,8 @@ def read_performance(
         work = WorkId(target['id'])
         if work in works:
             # the work is related again: a second relation to the same
-            # work makes it performed in full as well
+            # work that is not partial makes it performed in full as
+            # well
             if use_partial and 'partial' in (
                     relation.get('attributes') or ()):
                 if work not in partial:
@@ -566,15 +567,22 @@ class AlbumAdapter:
         full - is represented by the recording id alone, because the
         recording is not the work.
 
+        Which id stands for a work does not depend on the order of the
+        relations, but where the recording id stands does: it takes the
+        place of the first relation to the partly performed work, so the
+        level reads the same as the relations did.
+
         An id is only given once. Two works that are both performed in
         part would otherwise both be represented by the recording id, and
         the level would hold it twice - but the node holds the works as a
         set, so it can only hold the recording id once. The legacy
         de-duplicates its id list for the same reason.
 
-        The order of the relations does not matter: a work related both
-        wholly and in part is represented by the recording id either way,
-        because the recording is not the work.
+        The order of the relations does not matter for which id stands
+        for a work: a work related both wholly and in part is
+        represented by the recording id either way, because the
+        recording is not the work. It does matter for where the
+        recording id stands.
         """
         members: List[WorkId] = []
         for work, partial in self._performed(recording):
