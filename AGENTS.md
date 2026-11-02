@@ -135,7 +135,9 @@ what it cannot use, rather than raising out of the tagging:
   with no tags;
 - a hierarchy with a cycle, or with a child it does not hold, leaves the
   track with no tags too - the depth would be wrong, and a wrong depth
-  is worse than none.
+  is worse than none. The whole track is left, group and all, rather
+  than half a track: the group is named from the same hierarchy, so it
+  would be wrong too.
 
 A count of tracks below one is refused, and a count for a recording
 that is not in the release is reported in `unused_multiplicity`.
