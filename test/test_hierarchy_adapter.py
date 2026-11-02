@@ -1137,6 +1137,19 @@ class OrderOfTestCase(unittest.TestCase):
                 [w("work-a"), w("work-b")], through=w("child")),
             [w("work-b"), w("work-a")])
 
+    def test_a_bare_work_id_is_taken_as_a_work(self):
+        """A plain string is a work id, not a list of them.
+
+        A work id is not a string - it is a dataclass - so a bare string
+        is a work id and not a list of one.
+        """
+        relations = WorkRelations(
+            parents={w("child"): [w("unrelated"), w("work-b")]})
+        self.assertEqual(
+            relations.order_of(
+                [w("work-a"), w("work-b")], through="child"),
+            [w("work-b"), w("work-a")])
+
     def test_an_unnamed_work_sorts_last_when_its_id_is_smaller(self):
         """The named work keeps its place even when its id sorts later.
 
@@ -2452,6 +2465,54 @@ class NoChainTestCase(unittest.TestCase):
             tags[WorkId("rec-2")].top_names, ["The second work"])
         self.assertEqual(
             tags[WorkId("rec-3")].top_names, ["The first work"])
+
+    def test_a_multiplicity_given_as_a_string_is_used(self):
+        """A multiplicity given as a plain string is used.
+
+        A work id is not a string - it is a dataclass - so a caller that
+        has the ids as strings would otherwise be silently ignored.
+        """
+        works = [
+            {"id": "work-a", "title": "The first work"},
+            {"id": "work-b", "title": "The second work"},
+        ]
+        recordings = [
+            {
+                "id": "rec-1",
+                "relations": [
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": "work-a"},
+                    },
+                ],
+            },
+            {
+                "id": "rec-2",
+                "relations": [
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": "work-b"},
+                    },
+                ],
+            },
+        ]
+        names = WorkNames(titles={
+            w("work-a"): "The first work",
+            w("work-b"): "The second work",
+        })
+        adapter = AlbumAdapter(
+            works, recordings, names=names, use_partial=True,
+            multiplicity={"rec-1": 2})
+        self.assertEqual(adapter.multiplicity, {w("rec-1"): 2})
+        candidates = {
+            w("rec-1"): frozenset({w("work-a")}),
+            w("rec-2"): frozenset({w("work-b")}),
+        }
+        self.assertEqual(
+            adapter._votes(candidates),
+            {"The first work": 2, "The second work": 1})
 
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
