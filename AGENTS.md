@@ -200,6 +200,13 @@ below, not the front of the level above. A recording that performs
 work-a in full and work-b in part, naming work-a first, has a first
 level of `('work-a', 'rec-1')` - so work-b goes second.
 
+The level above the first is built by walking the works that lead to
+it, in the order the level below gave them, and taking each one's
+contribution: a partly performed work contributes itself, and any other
+work contributes its parents. The place cannot be counted in the works
+that lead to the level - two of them can share a parent and so
+contribute one id between them.
+
 Note the model's rule about what a partly performed work contributes:
 a work performed *only* in part contributes nothing to the level above
 (the recording is not that work), while the legacy puts the work itself
