@@ -1231,6 +1231,11 @@ class ParentResolutionTestCase(unittest.TestCase):
 
         The graph has a collection relation and a backward medley, so
         that the filters are exercised and not just switched on.
+
+        The collection relation is on a work of its own, so that the
+        filter has something to filter - a work with an ordinary
+        relation as well would keep that relation whatever the option
+        says.
         """
         graph = WorkGraph()
         graph.add_relation(w("movement"), "parts", "backward", w("opera"))
@@ -1239,7 +1244,6 @@ class ParentResolutionTestCase(unittest.TestCase):
                            w("opera"))
         graph.add_relation(w("medley"), "medley", "forward", w("opera"))
         graph.add_relation(w("medley"), "medley", "backward", w("backwards"))
-        graph.add_relation(w("collection"), "parts", "backward", w("box"))
         graph.add_relation(
             w("collection"), "parts", "backward", w("box"),
             attributes=("part of collection",))

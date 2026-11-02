@@ -2057,6 +2057,29 @@ class NoChainTestCase(unittest.TestCase):
         # recording that was simply listed twice
         self.assertEqual(adapter.conflicting, [w("rec-1")])
 
+    def test_a_recording_without_an_id_is_skipped(self):
+        """A response with no id is skipped, and the rest is tagged.
+
+        A track with no recording attached, or a failed lookup, gives a
+        response with no id. It cannot be tagged - but it must not stop
+        the rest of the release from being tagged.
+        """
+        good = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter([], [{}, good, None])
+        self.assertEqual(len(adapter.recordings), 1)
+        self.assertEqual(adapter.recordings[0].members, [w("work-a")])
+        tags = adapter.tags()
+        self.assertIn(WorkId("rec-1"), tags)
+
     def test_a_repeated_recording_is_not_a_conflict(self):
         """The same recording listed twice is not a conflict.
 

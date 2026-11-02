@@ -145,7 +145,9 @@ class WorkRelations:
             # the list is taken once, so that it can be read to build the
             # candidates. A set would give a run-to-run order, so it is
             # put in work id order first.
-            sources = list(through)
+            sources = [
+                work if isinstance(work, WorkId) else WorkId(work)
+                for work in through]
             if not isinstance(through, (list, tuple)):
                 sources.sort(key=lambda work: work.mbid)
             candidates = [
@@ -493,6 +495,12 @@ class AlbumAdapter:
         self.conflicting: List[WorkId] = []
         seen: Dict[WorkId, Recording] = {}
         for recording in recordings:
+            if not recording or not recording.get('id'):
+                # a response with no id names no recording - a track
+                # with no recording attached, or a failed lookup. It
+                # cannot be tagged, but it must not stop the rest of
+                # the release from being tagged.
+                continue
             entry = self._read_recording(recording)
             # a release can list the same recording twice - the same track
             # on two discs, or a bonus track reusing a recording. The
