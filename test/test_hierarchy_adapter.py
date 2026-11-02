@@ -31,7 +31,6 @@ from hierarchy.adapter import (  # noqa: E402
     AlbumAdapter,
     WorkNames,
     WorkRelations,
-    format_ids,
     node_height,
     read_performance,
     read_work_graph,
@@ -207,25 +206,6 @@ def _recording(work_id, recording_id, partial=False, attributes=None):
         "title": "",
         "relations": [relation],
     }
-
-
-class FormatIdsTestCase(unittest.TestCase):
-    """The format of a level's ids."""
-
-    def test_one_id_is_written_as_a_one_element_tuple(self):
-        self.assertEqual(
-            format_ids([w("abc")]),
-            "('abc',)")
-
-    def test_two_ids_keep_their_order(self):
-        self.assertEqual(
-            format_ids([w("abc"), w("def")]),
-            "('abc', 'def')")
-
-    def test_the_order_is_the_one_given(self):
-        self.assertEqual(
-            format_ids([w("def"), w("abc")]),
-            "('def', 'abc')")
 
 
 class ReadPerformanceTestCase(unittest.TestCase):
@@ -743,7 +723,7 @@ class TopNameTestCase(unittest.TestCase):
             tags = _adapter(album).tags()
             by_top = {}
             for track in tags.values():
-                by_top.setdefault(track.id_string(-1), set()).add(
+                by_top.setdefault(track.id_tuple(-1), set()).add(
                     tuple(track.top_names))
             for top, names in by_top.items():
                 self.assertEqual(
@@ -1696,9 +1676,8 @@ class LegacyParityTestCase(unittest.TestCase):
                         # the legacy wrote no such level, so the model's
                         # level is checked against the ids it holds
                         self.assertEqual(
-                            stored,
-                            _as_picard_stores(
-                                [work.mbid for work in works]),
+                            metadata.get(tag),
+                            tuple(work.mbid for work in works),
                             "%s %s %s" % (album, label, tag))
                         continue
                     if label in holding_more:
@@ -1777,6 +1756,37 @@ class LegacyParityTestCase(unittest.TestCase):
                 self.assertTrue(
                     differs,
                     "%s %s is not deeper - it does not need the "
+                    "exemption" % (album, label))
+
+    def test_the_holding_more_tracks_really_hold_more(self):
+        """Every track in HOLDING_MORE really holds more ids.
+
+        The list exempts a track from the exact comparison, so an entry
+        that no longer needs the exemption - or never did - would let a
+        regression through.
+        """
+        for album, labels in self.HOLDING_MORE.items():
+            tags = _adapter(album).tags()
+            for label in labels:
+                want = self.legacy[album]['tracks'][label]
+                track = tags.get(WorkId(_recording_id(album, label)))
+                self.assertIsNotNone(
+                    track, "%s %s has no tags" % (album, label))
+                metadata = track.as_metadata()
+                holds_more = False
+                for tag in metadata:
+                    if not tag.startswith('~cwp_workid'):
+                        continue
+                    legacy = self._ids(want.get(tag))
+                    got = self._ids(metadata.get(tag))
+                    if legacy is None or got is None:
+                        continue
+                    if len(got) > len(legacy) and self._holds_more(
+                            got, legacy):
+                        holds_more = True
+                self.assertTrue(
+                    holds_more,
+                    "%s %s does not hold more - it does not need the "
                     "exemption" % (album, label))
 
     def test_the_differing_tracks_differ_only_as_documented(self):

@@ -55,24 +55,6 @@ ID_SEPARATOR = '; '
 _UNORDERED = (1 << 30, 1 << 30)
 
 
-def format_ids(works: Iterable[WorkId]) -> str:
-    """The ids of one level, as the legacy writes them.
-
-    The legacy keys a level by a tuple of work ids and writes the tuple's
-    repr, so a level of one id reads ``('abc...',)`` and a level of two
-    reads ``('abc...', 'def...')``. The order inside the tuple is the
-    order the relations came back in.
-
-    A level with no ids has no repr to write, so it is empty.
-    """
-    ids = list(works)
-    if not ids:
-        return ''
-    if len(ids) == 1:
-        return "('%s',)" % ids[0].mbid
-    return '(%s)' % ', '.join("'%s'" % work.mbid for work in ids)
-
-
 @dataclass
 class WorkNames:
     """The title of each work, and the aliases it is known by."""
@@ -320,10 +302,6 @@ class TrackTags:
     part_levels: int = 0
     #: The number of levels in the whole hierarchy of this track's top.
     work_part_levels: int = 0
-
-    def id_string(self, level: int) -> str:
-        """The work ids of one level, as the legacy writes them."""
-        return format_ids(self.levels[level])
 
     def id_tuple(self, level: int) -> Tuple[str, ...]:
         """The work ids of one level, as the tuple the legacy hands Picard.

@@ -158,6 +158,9 @@ adapter hands Picard the same tuple, so the two agree in the stored
 text, not only in the ids. The parity test compares them as Picard
 stores them, so a change of format would be caught.
 
+There is no tuple-repr string anywhere: the adapter writes the tuple and
+lets Picard store it, so the two cannot drift apart.
+
 The deepest chain in the fixtures is five levels (the Tristan album's
 `t2` and `t11`), so the comparison covers `~cwp_workid_0` to
 `~cwp_workid_4` and the top. The tags compared are the ones the legacy
