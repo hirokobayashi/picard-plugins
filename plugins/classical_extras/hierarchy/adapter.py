@@ -368,7 +368,8 @@ class TrackTags:
         read as - a single id is bare, and two are separated by a
         semicolon.
         """
-        if not self.levels:
+        if not self.levels or not any(self.levels):
+            # a track with no hierarchy gets no tags at all
             return {}
         metadata: Dict[str, object] = {}
         # a level with no ids has no tag - the legacy writes a tag only

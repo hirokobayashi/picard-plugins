@@ -95,6 +95,20 @@ def _recording_id(album, label):
     return _load(path)["id"]
 
 
+def _first_relation_is_partial(relations, work):
+    """Whether the *first* relation to the work is a partial one.
+
+    The legacy reads the attributes of the first relation it finds for
+    a work, so a work related in full first is a work performed in full
+    - whatever a later relation says.
+    """
+    for relation in relations:
+        if relation["work"]["id"] != work:
+            continue
+        return 'partial' in (relation.get("attributes") or ())
+    return False
+
+
 def _as_picard_stores(value):
     """The tag as Picard stores it.
 
@@ -1906,6 +1920,9 @@ class NoChainTestCase(unittest.TestCase):
         The Daphnis album has tracks whose recording is related to the
         same work twice - once partly and once wholly. The legacy writes
         the recording id for it, because the recording is not the work.
+
+        The legacy's tags are compared with the model's, so this says
+        what the legacy wrote and not what the relations suggest.
         """
         path = os.path.join(FIXTURES, "legacy_tags.json")
         with open(path, encoding="utf-8") as handle:
@@ -1932,15 +1949,20 @@ class NoChainTestCase(unittest.TestCase):
                 w(recording["id"]), level,
                 "daphnis %s: the recording id is not in the first level"
                 % label)
-            # the work that is related twice is related partly, so the
-            # recording stands in for it - but a work related once in
+            # the legacy's own first level, read as Picard stores it
+            legacy_level = _as_picard_stores(
+                want.get("~cwp_workid_0"))
+            self.assertEqual(
+                _as_picard_stores(
+                    [work.mbid for work in level]),
+                legacy_level,
+                "daphnis %s: the first level" % label)
+            # the work that is related twice is related partly first, so
+            # the recording stands in for it - but a work related once in
             # full is in the level as itself
             for work in works:
-                partial = any(
-                    relation["work"]["id"] == work
-                    and 'partial' in (
-                        relation.get("attributes") or ())
-                    for relation in related)
+                partial = _first_relation_is_partial(
+                    related, work)
                 if not partial:
                     continue
                 self.assertNotIn(
