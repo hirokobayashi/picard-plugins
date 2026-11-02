@@ -876,6 +876,10 @@ class TopNameTestCase(unittest.TestCase):
 
         Every name is tied at zero votes, so they are all kept - which is
         what the legacy does.
+
+        The legacy has this fallback for a caller outside
+        ``process_album``. Through the tags it cannot happen - a track's
+        own candidates are voted for - so it is checked here.
         """
         adapter = _adapter("planets")
         adapter.names = WorkNames(titles={
@@ -890,7 +894,9 @@ class TopNameTestCase(unittest.TestCase):
     def test_a_top_with_no_votes_at_all_keeps_the_first(self):
         """With no votes at all the first name is kept.
 
-        This is the legacy's fallback when there is no vote information.
+        This is the legacy's fallback when there is no vote information -
+        for a caller outside ``process_album``. Through the tags it
+        cannot happen, so it is checked here.
         """
         adapter = _adapter("planets")
         adapter.names = WorkNames(titles={
