@@ -682,8 +682,9 @@ class AlbumAdapter:
         #: release, or that names no work, or whose works are not in
         #: the graph - has no effect, and a misspelled id would have the
         #: same effect as a count that was not given, so the caller is
-        #: told. It is filled in when the hierarchy is built.
-        self.unused_multiplicity: List[WorkId] = []
+        #: told. It is worked out when the hierarchy is built, so it is
+        #: read through the property of the same name.
+        self._unused_multiplicity: List[WorkId] = []
         #: The candidate tops of the hierarchy, worked out when it is
         #: built and kept so that the tags do not walk the chains again.
         self._candidates: Dict[WorkId, List[WorkId]] = {}
@@ -733,6 +734,17 @@ class AlbumAdapter:
             self.recordings.append(entry)
             self.tracks_per_recording[entry.performance.key] = (
                 self.tracks_per_recording.get(entry.performance.key, 0) + 1)
+
+    @property
+    def unused_multiplicity(self) -> List[WorkId]:
+        """The multiplicities that had no effect.
+
+        Which ones those are is only known once the hierarchy is built
+        - a recording votes when it has candidates - so the hierarchy
+        is built if it has not been already.
+        """
+        self.build_all()
+        return self._unused_multiplicity
 
     @property
     def performances(self) -> List[Performance]:
@@ -910,7 +922,7 @@ class AlbumAdapter:
         # not given at all. A recording votes when it has candidates:
         # one that names no work, or whose works are not in the graph,
         # has none.
-        self.unused_multiplicity = [
+        self._unused_multiplicity = [
             key for key in self.multiplicity
             if not candidates.get(key)]
         self._built = (hierarchy, chains, groups)

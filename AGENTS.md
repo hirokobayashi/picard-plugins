@@ -332,6 +332,15 @@ So the model reproduces that, and the adapter's own chain is the same
 one level further on - the model's own decision, which the fixture
 pins.
 
+A work that is performed partly **and** in full contributes *itself* at
+the level above the first, and not its parents - it stands in for the
+recording id, and the recording id has no parents of its own. The
+case where it is also a *leader* of that level was run through the
+legacy as well: a recording performing `work-a` in full and `work-b`
+partly and then in full, both under `parent-b`, gives
+`('work-a', 'rec-1')`, `('work-b',)`, `('parent-b',)` and `('top',)` -
+the legacy's own tags, and the adapter's.
+
 Two things the legacy does that the adapter has to reproduce, and that the
 review found missing at first:
 

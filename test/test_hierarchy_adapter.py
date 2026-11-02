@@ -2766,12 +2766,10 @@ class NoChainTestCase(unittest.TestCase):
         }
         adapter = AlbumAdapter(
             [], [recording], multiplicity={w("rec-2"): 2})
-        adapter.build_all()
         self.assertEqual(adapter.unused_multiplicity, [w("rec-2")])
         # a count for a recording that is there is used
         adapter = AlbumAdapter(
             [], [recording], multiplicity={w("rec-1"): 2})
-        adapter.build_all()
         self.assertEqual(adapter.unused_multiplicity, [])
 
     def test_the_top_names_are_the_same_for_every_track_that_shares_a_top(self):
@@ -2898,8 +2896,28 @@ class NoChainTestCase(unittest.TestCase):
         adapter = AlbumAdapter(
             [], [{"id": "rec-1", "relations": []}],
             multiplicity={w("rec-1"): 2})
-        adapter.build_all()
         self.assertEqual(adapter.unused_multiplicity, [w("rec-1")])
+
+    def test_the_multiplicities_that_had_no_effect_are_worked_out(self):
+        """The counts that had no effect are worked out when they are read.
+
+        A caller that reads the list without building the hierarchy first
+        gets the right answer - a misspelled id would not go unreported.
+        """
+        recording = {
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter(
+            [{"id": "work-a", "title": "A work"}], [recording],
+            multiplicity={w("rec-2"): 2})
+        self.assertEqual(adapter.unused_multiplicity, [w("rec-2")])
 
     def test_a_multiplicity_for_a_recording_that_names_a_work_is_used(self):
         """A count for a recording that names a work is used.
@@ -2920,7 +2938,6 @@ class NoChainTestCase(unittest.TestCase):
         }
         adapter = AlbumAdapter(
             [], [recording], multiplicity={w("rec-1"): 2})
-        adapter.build_all()
         self.assertEqual(adapter.unused_multiplicity, [])
 
     def test_a_track_with_no_top_gets_no_tags(self):
