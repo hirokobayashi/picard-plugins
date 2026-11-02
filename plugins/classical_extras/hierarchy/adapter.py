@@ -852,7 +852,9 @@ class AlbumAdapter:
             top=top,
             top_names=self._top_names(top, votes),
             group=group,
-            part_levels=sum(1 for works in levels if works) - 1,
+            # the number of levels below the track's own - the same
+            # count as the tags are numbered by, so the two agree
+            part_levels=len(filled) - 1,
             work_part_levels=work_part_levels)
 
     def _levels(
