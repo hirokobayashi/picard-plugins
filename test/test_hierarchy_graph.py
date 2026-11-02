@@ -1221,13 +1221,11 @@ class ProjectionTestCase(unittest.TestCase):
 class ParentResolutionTestCase(unittest.TestCase):
     """How a work's parent is found among MusicBrainz's relation types."""
 
-    def test_the_ordered_parents_are_the_same_set(self):
-        """The ordered parents are the same parents, as a set.
+    def test_the_parents_are_the_same_whatever_the_options(self):
+        """The parents of each work, for every combination of options.
 
-        The ordered resolution is what the adapter reads, because the
-        order of the parents is what the legacy's tag holds. The set
-        based one is what the rest of the graph uses - so the two have to
-        agree on which parents a work has.
+        The expected parents are written out by hand, so the test does
+        not work the expectation out of the code it is checking.
 
         The graph has a collection relation and a backward medley, so
         that the filters are exercised and not just switched on.
@@ -1247,9 +1245,14 @@ class ParentResolutionTestCase(unittest.TestCase):
         graph.add_relation(
             w("collection"), "parts", "backward", w("box"),
             attributes=("part of collection",))
+        # the parents of each work, for every combination of the three
+        # options. The movement has parts parents, so they are used and
+        # the arrangement and medley fallbacks do not come into it.
         for use_arrangements in (True, False):
             for use_medleys in (True, False):
                 for use_collections in (True, False):
+                    label = "%s %s %s" % (
+                        use_arrangements, use_medleys, use_collections)
                     sets = graph.resolve_parents(
                         use_arrangements=use_arrangements,
                         use_medleys=use_medleys,
@@ -1258,16 +1261,46 @@ class ParentResolutionTestCase(unittest.TestCase):
                         use_arrangements=use_arrangements,
                         use_medleys=use_medleys,
                         use_collections=use_collections)
+                    # the movement has two parts parents
+                    self.assertEqual(
+                        sets[w("movement")],
+                        frozenset({w("opera"), w("act")}),
+                        label)
+                    # the arrangement has no parts parent, so the
+                    # arrangement relation is used - unless arrangements
+                    # are off
+                    self.assertEqual(
+                        sets[w("arrangement")],
+                        frozenset({w("opera")}) if use_arrangements
+                        else frozenset(),
+                        label)
+                    # the medley has no parts or arrangement parent, so
+                    # the medley relation is used - unless medleys are
+                    # off. The backward one is not a parent.
+                    self.assertEqual(
+                        sets[w("medley")],
+                        frozenset({w("opera")}) if use_medleys
+                        else frozenset(),
+                        label)
+                    # the collection's parent is dropped when
+                    # collections are off
+                    self.assertEqual(
+                        sets[w("collection")],
+                        frozenset({w("box")}) if use_collections
+                        else frozenset(),
+                        label)
+                    # and the ordered resolution holds the same parents
                     self.assertEqual(
                         {work: frozenset(parents)
                          for work, parents in ordered.items()},
-                        sets)
+                        sets,
+                        label)
 
     def test_the_collection_filter_is_exercised(self):
         """A collection parent is dropped when collections are off.
 
-        Without this, the equivalence test above would pass even if the
-        filter were gone - there would be no collection edge to filter.
+        Without this, the test above would pass even if the filter were
+        gone - there would be no collection edge to filter.
         """
         graph = WorkGraph()
         graph.add_relation(
