@@ -192,10 +192,12 @@ def read_work_graph(
     """
     graph = WorkGraph()
     for response in works:
-        if not response or not response.get('id'):
-            # a response with no id names no work - a failed lookup, or
-            # an empty body. It cannot be placed in the graph, but it
-            # must not stop the rest of the release from being tagged.
+        if (not isinstance(response, Mapping)
+                or not response.get('id')):
+            # a response that is not an object, or has no id, names no
+            # work - a failed lookup, or an empty body. It cannot be
+            # placed in the graph, but it must not stop the rest of the
+            # release from being tagged.
             continue
         source = WorkId(response['id'])
         graph.add_work(source)
@@ -546,11 +548,12 @@ class AlbumAdapter:
             Hierarchy, Dict[WorkId, List[NodeId]], Dict[WorkId, str]]] = None
         seen: Dict[WorkId, Recording] = {}
         for recording in recordings:
-            if not recording or not recording.get('id'):
-                # a response with no id names no recording - a track
-                # with no recording attached, or a failed lookup. It
-                # cannot be tagged, but it must not stop the rest of
-                # the release from being tagged.
+            if (not isinstance(recording, Mapping)
+                    or not recording.get('id')):
+                # a response that is not an object, or has no id, names
+                # no recording - a track with no recording attached, or a
+                # failed lookup. It cannot be tagged, but it must not
+                # stop the rest of the release from being tagged.
                 continue
             entry = self._read_recording(recording)
             # a release can list the same recording twice - the same track

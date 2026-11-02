@@ -2379,6 +2379,37 @@ class NoChainTestCase(unittest.TestCase):
         self.assertEqual(
             adapter._votes(candidates), {"The first work": 2})
 
+    def test_a_response_that_is_not_an_object_is_skipped(self):
+        """A response that is not an object is skipped.
+
+        A response is JSON, and it is expected to be an object - but a
+        malformed one would raise out of the tagging and take the whole
+        release with it.
+        """
+        good = {
+            "id": "work-a",
+            "title": "A work",
+            "relations": [
+                {
+                    "type": "parts",
+                    "direction": "backward",
+                    "work": {"id": "work-b"},
+                },
+            ],
+        }
+        adapter = AlbumAdapter(
+            ["a string", [], 42, good],
+            ["a string", [], {"id": "rec-1", "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                },
+            ]}],
+            use_partial=True)
+        tags = adapter.tags()
+        self.assertIn(WorkId("rec-1"), tags)
+
     def test_a_work_without_an_id_is_skipped(self):
         """A work response with no id is skipped, and the rest is used.
 
