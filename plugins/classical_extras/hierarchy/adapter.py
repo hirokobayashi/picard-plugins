@@ -227,9 +227,11 @@ def read_performance(
     contributes: it is the parent of the recording id one level up. So
     such a work is in both sets.
 
-    The order of the relations does not matter: any partly performed
-    relation puts the work in the partial set, and any relation in full
-    puts it in the complete set.
+    The *first* relation for a work decides: the legacy reads the
+    attributes of the first relation it finds for the work. So a work
+    related partly first and in full second is in the partial set and
+    the complete set, and a work related in full first and partly
+    second is only in the complete set.
 
     A work related twice, both times partially, is only in the partial
     set: the recording never performs it in full.
@@ -255,14 +257,13 @@ def read_performance(
             continue
         work = WorkId(target['id'])
         if work in works:
-            # the work is related again: a second relation to the same
-            # work that is not partial makes it performed in full as
-            # well
-            if use_partial and 'partial' in (
-                    relation.get('attributes') or ()):
-                if work not in partial:
-                    partial.append(work)
-            elif work not in complete:
+            # the work is related again, but the first relation decides:
+            # the legacy reads the attributes of the first relation it
+            # finds for the work. A work related partly first is in
+            # both sets - the legacy adds a second entry for it, so the
+            # work itself still contributes.
+            if (work in partial and use_partial
+                    and work not in complete):
                 complete.append(work)
             continue
         works.append(work)
@@ -546,6 +547,13 @@ class AlbumAdapter:
         this one pass, so they cannot drift apart. The model's own
         performance is read separately by ``read_performance``; the two
         agree, and a test checks that they do.
+
+        A work that is related twice is decided by the *first* of the
+        relations: the legacy reads the attributes of the first
+        relation it finds for the work, so a work related in full first
+        and partly second is a work performed in full - the recording id
+        does not stand in for it. A work related partly first is a work
+        performed in part, whatever the second relation says.
         """
         result: List[Tuple[WorkId, bool]] = []
         seen: Set[WorkId] = set()
@@ -556,17 +564,21 @@ class AlbumAdapter:
             if not target or not target.get('id'):
                 continue
             work = WorkId(target['id'])
+            if work in seen:
+                # The first relation for the work decides - the legacy
+                # reads the attributes of the first relation it finds
+                # for the work. So the recording id stands in for the
+                # work when the *first* relation is a partial one, and
+                # does not when the first is a full one.
+                #
+                # A work related partly first is still performed in full
+                # as well - the legacy adds a second entry for it - but
+                # that is the model's own business, and the model's
+                # performance says so.
+                continue
             is_partial = (
                 self.use_partial
                 and 'partial' in (relation.get('attributes') or ()))
-            if work in seen:
-                if is_partial:
-                    # the work is performed in part as well, so the
-                    # recording id stands in for it
-                    result = [
-                        (held, True) if held == work else (held, part)
-                        for held, part in result]
-                continue
             seen.add(work)
             result.append((work, is_partial))
         return result

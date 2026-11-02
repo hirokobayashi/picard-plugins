@@ -1,0 +1,79 @@
+{
+ "id": "rec-1",
+ "relations": [
+  {
+   "type": "performance",
+   "direction": "forward",
+   "target-type": "work",
+   "target-credit": "",
+   "source-credit": "",
+   "attributes": [],
+   "attribute-ids": {},
+   "attribute-values": {},
+   "ordering-key": 1,
+   "work": {
+    "id": "work-b",
+    "title": "B work",
+    "type": null,
+    "type-id": null,
+    "attributes": [],
+    "disambiguation": "",
+    "language": "zxx",
+    "iswcs": [],
+    "languages": [
+     "zxx"
+    ]
+   }
+  },
+  {
+   "type": "performance",
+   "direction": "forward",
+   "target-type": "work",
+   "target-credit": "",
+   "source-credit": "",
+   "attributes": [],
+   "attribute-ids": {},
+   "attribute-values": {},
+   "ordering-key": 2,
+   "work": {
+    "id": "work-a",
+    "title": "A work",
+    "type": null,
+    "type-id": null,
+    "attributes": [],
+    "disambiguation": "",
+    "language": "zxx",
+    "iswcs": [],
+    "languages": [
+     "zxx"
+    ]
+   }
+  },
+  {
+   "type": "performance",
+   "direction": "forward",
+   "target-type": "work",
+   "target-credit": "",
+   "source-credit": "",
+   "attributes": [
+    "partial"
+   ],
+   "attribute-ids": {},
+   "attribute-values": {},
+   "ordering-key": 1,
+   "work": {
+    "id": "work-b",
+    "title": "B work",
+    "type": null,
+    "type-id": null,
+    "attributes": [],
+    "disambiguation": "",
+    "language": "zxx",
+    "iswcs": [],
+    "languages": [
+     "zxx"
+    ]
+   }
+  }
+ ]
+}

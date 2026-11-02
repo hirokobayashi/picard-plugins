@@ -225,6 +225,25 @@ a work performed *only* in part contributes nothing to the level above
 there. That is a difference the model makes on purpose, and it is
 tested; the fixtures show the same tags either way.
 
+**The first relation for a work decides.** The legacy reads the
+attributes of the first relation it finds for the work (`parse_data`
+with `'work.id:' + workId`), so:
+
+- a work related **partly first** is partly performed - the recording id
+  stands in for it in the first level - and it is in both the partial
+  and the complete set, because the legacy adds a second entry for it
+  and the work itself still contributes;
+- a work related **in full first** is performed in full - the recording
+  id does *not* stand in for it, and it is only in the complete set.
+
+The `test/fixtures/partial_full_first/` fixture was run through the
+legacy: with work-b related in full first and partly second, and
+work-a named in between, the legacy writes
+`~cwp_workid_0 = ('work-b', 'work-a')` - the work itself, not the
+recording id. The `test/fixtures/partial_order/` fixture has the
+partial relation first, and the legacy writes
+`~cwp_workid_0 = ('rec-1', 'work-a')` there.
+
 The `test/fixtures/partial_order/` fixture was run through the legacy,
 and the tags it wrote are the expectations of the tests that use it: with
 the recording naming work-b first it wrote
