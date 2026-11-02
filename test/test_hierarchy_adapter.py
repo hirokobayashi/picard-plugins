@@ -2737,6 +2737,130 @@ class LegacyParityTestCase(unittest.TestCase):
         ],
     }
 
+    #: The tags that differ from the legacy's, for the tracks that
+    #: differ. The exemption is per *track*, so without this a track
+    #: that is exempt because of one tag could hide a difference in
+    #: another - and the check would still pass.
+    #:
+    #: The differences are the model's own decisions: a level that ends
+    #: at the other edition of Swan Lake, a scene level the model keeps
+    #: and the legacy did not, and the counts that follow from them.
+    DIFFERING_TAGS = {
+        "gayne": {
+            "d1t10": [
+                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_workid_3",
+            ],
+            "d1t11": [
+                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_workid_3",
+            ],
+            "d1t6": [
+                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_workid_3",
+            ],
+            "d1t7": [
+                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_workid_3",
+            ],
+            "d1t8": [
+                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_workid_3",
+            ],
+            "d1t9": [
+                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_workid_3",
+            ],
+        },
+        "nutcracker": {
+            "d1t1": [
+                "~cwp_work_part_levels", "~cwp_workid_1",
+                "~cwp_workid_top",
+            ],
+        },
+        "planets": {
+            "t7": ["~cwp_workid_1", "~cwp_workid_top"],
+        },
+        "requiem": {
+            "t1": [
+                "~cwp_work_part_levels", "~cwp_workid_1",
+                "~cwp_workid_top",
+            ],
+        },
+        "swanlake_full": {
+            "d1t1": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t10": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t11": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t12": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t13": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t14": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t15": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t16": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t17": [
+                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_workid_3", "~cwp_workid_top",
+            ],
+            "d1t19": [
+                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_workid_3", "~cwp_workid_top",
+            ],
+            "d1t2": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t20": [
+                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_workid_3", "~cwp_workid_top",
+            ],
+            "d1t21": [
+                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_workid_3", "~cwp_workid_top",
+            ],
+            "d1t22": [
+                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_workid_3", "~cwp_workid_top",
+            ],
+            "d1t23": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t3": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t4": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t5": [
+                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+            ],
+            "d1t6": [
+                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+            ],
+            "d1t7": [
+                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+            ],
+            "d1t8": [
+                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+            ],
+            "d1t9": [
+                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+            ],
+            "d2t1": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t13": [
+                "~cwp_workid_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_workid_top",
+            ],
+            "d2t14": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t15": [
+                "~cwp_workid_1", "~cwp_workid_2", "~cwp_workid_top",
+            ],
+            "d2t17": [
+                "~cwp_workid_1", "~cwp_workid_2", "~cwp_workid_top",
+            ],
+            "d2t2": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t3": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t4": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t5": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t6": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t7": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t8": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t9": [
+                "~cwp_workid_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_workid_top",
+            ],
+        },
+    }
+
     @staticmethod
     def _ids(value):
         """The ids a tag holds, in order.
@@ -2804,15 +2928,22 @@ class LegacyParityTestCase(unittest.TestCase):
         The tags compared are the ones the legacy wrote for that track,
         plus the ones the adapter wrote - so a level the adapter has and
         the legacy did not would be caught.
+
+        Every tag of a track is compared, not just the first one that
+        differs - so a track that is exempt because of one tag cannot
+        hide a difference in another. The tags that differ are recorded
+        as well as the tracks, so that a difference in a tag the
+        exemption does not name would show.
         """
         differing = {}
+        by_tag = {}
         for album, expected in sorted(self.legacy.items()):
             tags = _adapter(album).tags()
             holding_more = self.HOLDING_MORE.get(album) or []
             for label, want in sorted(expected['tracks'].items()):
                 track = tags.get(WorkId(_recording_id(album, label)))
                 if track is None:
-                    differing.setdefault(album, []).append(label)
+                    differing.setdefault(album, set()).add(label)
                     continue
                 metadata = track.as_metadata()
                 for tag in self._tags_of(metadata, want):
@@ -2832,11 +2963,21 @@ class LegacyParityTestCase(unittest.TestCase):
                             and label in holding_more
                             and self._holds_more(got, wanted)):
                         continue
-                    differing.setdefault(album, []).append(label)
-                    break
+                    differing.setdefault(album, set()).add(label)
+                    by_tag.setdefault(album, {}).setdefault(
+                        label, set()).add(tag)
         self.assertEqual(
-            differing, self.DIFFERING,
+            {album: sorted(labels)
+             for album, labels in differing.items()},
+            self.DIFFERING,
             "the tracks that differ from the legacy are not the "
+            "documented ones")
+        self.assertEqual(
+            {album: {label: sorted(tags)
+                      for label, tags in labels.items()}
+             for album, labels in by_tag.items()},
+            self.DIFFERING_TAGS,
+            "the tags that differ from the legacy are not the "
             "documented ones")
 
     @staticmethod
