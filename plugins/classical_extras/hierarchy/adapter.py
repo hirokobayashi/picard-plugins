@@ -601,6 +601,9 @@ class AlbumAdapter:
         #: and could change the winner.
         self.multiplicity: Dict[WorkId, int] = {}
         for key, count in (multiplicity or {}).items():
+            if not isinstance(key, (WorkId, str)):
+                raise ValueError(
+                    "a recording is named by its id, not %r" % (key,))
             if (not isinstance(count, int) or isinstance(count, bool)
                     or count < 1):
                 raise ValueError(
@@ -929,12 +932,17 @@ class AlbumAdapter:
         ``heights``.
         """
         levels, _through = self._levels(recording, chain)
-        # the top is the last level that has ids - a level with no ids
-        # has no tag, so it is not a level of the track's own. The node
-        # of that level is the one the depth comes from, so that the
-        # two cannot come from different nodes.
+        # Every level of a chain has ids - a node holds at least one
+        # work. So the level of the top and the number of levels below
+        # it are both the position in the chain, and they cannot
+        # disagree.
         filled = [(index, works)
                   for index, works in enumerate(levels) if works]
+        if len(filled) != len(levels):
+            # a level with no ids has no tag, so it is not a level of
+            # the track's own - and the count of the levels and the
+            # node of the top would not agree
+            return TrackTags(key=recording.performance.key, group=group)
         if not filled:
             # the recording names no work, or names a work with no place
             # in the tree
@@ -1067,6 +1075,11 @@ class AlbumAdapter:
         # level below. A work that leads to the level keeps its own
         # place there - and a work the level below does not name goes
         # last, as it has no place of its own.
+        #
+        # A leader is always named by the level below - it comes from
+        # the node's own works - so the fallback is only reached if the
+        # model changes. It goes last, after the partly performed works
+        # as well, because it has no place of its own to keep.
         contributors.sort(key=lambda work: (
             place.get(
                 work,

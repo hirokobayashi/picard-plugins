@@ -1137,18 +1137,6 @@ class NodeHeightTestCase(unittest.TestCase):
         })
         self.assertFalse(heights_are_reliable(broken, _node("a")))
 
-    def test_the_work_ids_are_ordered_by_their_id(self):
-        """The work ids are ordered by their id.
-
-        The sorts of the work ids say which key they use, so that they
-        do not depend on the work id class being ordered. The class
-        itself is ordered by its id - it has one field - so the two
-        agree.
-        """
-        self.assertEqual(
-            sorted([w("bbb"), w("aaa"), w("ccc")]),
-            [w("aaa"), w("bbb"), w("ccc")])
-
     def test_a_self_loop_does_not_hang(self):
         hierarchy = self._hierarchy({
             _node("a"): [_node("a")],
@@ -1210,6 +1198,18 @@ class OrderOfTestCase(unittest.TestCase):
             relations.order_of(
                 [w("work-a"), w("work-b")], through=w("child")),
             [w("work-b"), w("work-a")])
+
+    def test_the_work_ids_are_ordered_by_their_id(self):
+        """The work ids are ordered by their id.
+
+        The sorts of the work ids say which key they use, so that they
+        do not depend on the work id class being ordered. The class
+        itself is ordered by its id - it has one field - so the two
+        agree.
+        """
+        self.assertEqual(
+            sorted([w("bbb"), w("aaa"), w("ccc")]),
+            [w("aaa"), w("bbb"), w("ccc")])
 
     def test_a_bare_work_id_is_taken_as_a_work(self):
         """A plain string is a work id, not a list of them.
