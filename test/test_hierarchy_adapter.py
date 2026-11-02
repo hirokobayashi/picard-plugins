@@ -2881,6 +2881,8 @@ class NoChainTestCase(unittest.TestCase):
             self.assertRaises(ValueError, read_performance, recording)
         # a response with no id raises as well
         self.assertRaises(ValueError, read_performance, {})
+        # and so does one whose id is not a string
+        self.assertRaises(ValueError, read_performance, {"id": 42})
 
     def test_a_multiplicity_for_a_recording_that_names_no_work_is_reported(self):
         """A count for a recording that names no work is reported.

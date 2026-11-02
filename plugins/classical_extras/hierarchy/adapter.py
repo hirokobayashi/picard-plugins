@@ -199,11 +199,14 @@ def read_work_graph(
     graph = WorkGraph()
     for response in works:
         if (not isinstance(response, Mapping)
+                or not isinstance(response.get('id'), str)
                 or not response.get('id')):
-            # a response that is not an object, or has no id, names no
-            # work - a failed lookup, or an empty body. It cannot be
-            # placed in the graph, but it must not stop the rest of the
-            # release from being tagged.
+            # a response that is not an object, or that has no id, names
+            # no work - a failed lookup, or an empty body. An id that is
+            # not a string names no work either: the ids are strings,
+            # and one that is not would never match the recording side.
+            # It cannot be placed in the graph, but it must not stop
+            # the rest of the release from being tagged.
             continue
         source = WorkId(response['id'])
         graph.add_work(source)
@@ -270,9 +273,12 @@ def read_performance(
     work they name. A performance relation is forward in MusicBrainz's
     data, so there is nothing to tell apart in practice.
     """
-    if not isinstance(recording, Mapping) or not recording.get('id'):
-        # a response that is not an object, or has no id, names no
-        # recording
+    if (not isinstance(recording, Mapping)
+            or not isinstance(recording.get('id'), str)
+            or not recording.get('id')):
+        # a response that is not an object, or that has no id, names no
+        # recording. An id that is not a string names no recording
+        # either: the ids are strings.
         raise ValueError("the recording has no id")
     key = WorkId(recording['id'])
     works: List[WorkId] = []
@@ -357,7 +363,9 @@ class TrackTags:
     #: The top work's name or names.
     top_names: List[str] = field(default_factory=list)
     #: The group name - the shuffle key, always one value. A track with
-    #: no hierarchy has a group too, but no tags are written for it.
+    #: no hierarchy has a group too, but no tags are written for it:
+    #: the group is here for the caller to look at, and it only reaches
+    #: a file through ``as_metadata``.
     group: str = ''
     #: The number of levels below this track's own level.
     part_levels: int = 0
@@ -681,11 +689,14 @@ class AlbumAdapter:
         self.tracks_per_recording: Dict[WorkId, int] = {}
         for recording in recordings:
             if (not isinstance(recording, Mapping)
+                    or not isinstance(recording.get('id'), str)
                     or not recording.get('id')):
-                # a response that is not an object, or has no id, names
-                # no recording - a track with no recording attached, or a
-                # failed lookup. It cannot be tagged, but it must not
-                # stop the rest of the release from being tagged.
+                # a response that is not an object, or that has no id,
+                # names no recording - a track with no recording
+                # attached, or a failed lookup. An id that is not a
+                # string names no recording either. It cannot be
+                # tagged, but it must not stop the rest of the release
+                # from being tagged.
                 continue
             entry = self._read_recording(recording)
             # a release can list the same recording twice - the same track
