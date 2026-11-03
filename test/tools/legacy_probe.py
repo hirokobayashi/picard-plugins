@@ -75,7 +75,11 @@ def run(fixdir, rel, tracks, partial=True, drain="fifo"):
     picard_const.USER_DIR = log_dir
     try:
         case.setUp()
-    except Exception:
+    except BaseException:
+        # The patch is undone whatever went wrong - including a
+        # KeyboardInterrupt, which would otherwise leave the process
+        # writing its logs into a directory that is about to be
+        # removed.
         picard_const.USER_DIR = original_user_dir
         shutil.rmtree(log_dir, ignore_errors=True)
         raise
