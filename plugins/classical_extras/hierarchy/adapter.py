@@ -907,7 +907,7 @@ class AlbumAdapter:
                 groups[recording.performance.key] = ''
                 continue
             groups[recording.performance.key] = self._group_name(
-                filled[-1][1], votes)
+                self._top_names(filled[-1][1], votes))
         return hierarchy, groups
 
     def build_all(self) -> Tuple[Hierarchy, Dict[WorkId, List[NodeId]],
@@ -1041,23 +1041,22 @@ class AlbumAdapter:
         # share a top
         return sorted(winners)
 
-    def _group_name(
-            self,
-            top: Sequence[WorkId],
-            votes: Mapping[str, int]) -> str:
+    def _group_name(self, top_names: Sequence[str]) -> str:
         """The shuffle key of a track's top work.
 
-        The legacy's group is the same vote as the top work's name, and
-        the same names - the group is the top's name reduced to one
-        value, so that a tie does not split the group. So a tie keeps
-        the name that comes first in a fixed order.
+        The legacy's group is the top work's name reduced to one value,
+        so that a tie does not split the group. It is reduced from the
+        names the top work's tag holds - not from the candidate names -
+        so the two tags cannot disagree about which name won.
+
+        The name kept is the first of the tied names in the order they
+        came in, which is the legacy's order.
         """
-        names = self.names.names_of(top)
-        if not names:
+        if not top_names:
             return ''
-        best = max(votes.get(name, 0) for name in names)
-        winners = [name for name in names if votes.get(name, 0) == best]
-        return min(winners, key=normalise_name)
+        if len(top_names) == 1:
+            return top_names[0]
+        return min(top_names, key=normalise_name)
 
     def _tags_for(
             self,
@@ -1112,12 +1111,13 @@ class AlbumAdapter:
         # track is left with no tags rather than a wrong depth.
         if cycles[tip]:
             return TrackTags(key=recording.performance.key)
+        top_names = self._top_names(top, votes)
         return TrackTags(
             key=recording.performance.key,
             levels=levels,
             top=top,
-            top_names=self._top_names(top, votes),
-            group=self._group_name(top, votes),
+            top_names=top_names,
+            group=self._group_name(top_names),
             # the number of levels below the track's own - the same
             # count as the tags are numbered by, so the two agree
             part_levels=len(filled) - 1,

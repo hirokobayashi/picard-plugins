@@ -3110,6 +3110,60 @@ class NoChainTestCase(unittest.TestCase):
             tags[WorkId("rec-3")].top_names, ["Ann", "Zed"])
         self.assertEqual(tags[WorkId("rec-3")].group, "Ann")
 
+    def test_the_group_is_one_of_the_top_names(self):
+        """The group is one of the names the top work's tag holds.
+
+        Two names that differ only in punctuation normalise to the same
+        thing, so both can win the vote - and the group has to be one of
+        the names that won, not some other spelling of it.
+
+        The legacy's own two functions were run on this case: the top
+        keeps both names and the group is the first of them.
+        """
+        works = [
+            {"id": "work-a", "title": "alpha"},
+            {"id": "work-b", "title": "Alpha."},
+            {
+                "id": "child",
+                "title": "The child",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "work-a"},
+                    },
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "work-b"},
+                    },
+                ],
+            },
+        ]
+        recordings = [{
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "child"},
+                },
+            ],
+        }]
+        names = WorkNames(titles={
+            w("work-a"): "alpha",
+            w("work-b"): "Alpha.",
+            w("child"): "The child",
+        })
+        tags = AlbumAdapter(
+            works, recordings, names=names, use_partial=True).tags()
+        track = tags[WorkId("rec-1")]
+        # the two names are tied, so both are kept for the top
+        self.assertEqual(track.top_names, ["Alpha.", "alpha"])
+        # and the group is one of them
+        self.assertIn(track.group, track.top_names)
+        self.assertEqual(track.group, "Alpha.")
+
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
 
