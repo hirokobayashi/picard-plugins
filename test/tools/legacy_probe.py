@@ -64,6 +64,11 @@ def run(fixdir, rel, tracks, partial=True, drain="fifo"):
         # which is the order the legacy's tags can depend on.
         return runner(case, drain=drain)
     finally:
+        # The runner registers cleanups that restore the aliases and the
+        # log function it stubbed out. They only run when the cleanups
+        # are done, so they are done here - or the stubs stay for the
+        # rest of the process.
+        case.doCleanups()
         # The plugin registers script functions and leaves picard.config as
         # a Mock, and both leak into the tests that run after this one.
         # The legacy's own test class cleans up the same way.
@@ -110,7 +115,7 @@ def tracks_of(directory, label="t1"):
     return [(label, 1, 1, recording['id'], '; '.join(works))]
 
 
-def readings_of(directory, label="t1"):
+def readings_of(directory):
     """The works and the recordings of a fixture directory."""
     works = []
     for name in sorted(os.listdir(directory)):
