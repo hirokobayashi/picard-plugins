@@ -156,6 +156,12 @@ the same names - the group is the top's name reduced to one value, so
 that a tie does not split the group. So the two tags of a track cannot
 disagree, and the adapter works them out together.
 
+The group is reduced from the names the top's tag *holds*, not from the
+candidate names: two names that differ only in punctuation normalise to
+the same thing, so both can win the vote, and the group has to be one
+of the names that won. The name kept is the first of them in the order
+they came in, which is the legacy's order.
+
 The legacy also sorts a node's *display names* by the works'
 `ordering-key`. That is the `~cwp_work_N` tag, not the hierarchy ids
 the adapter writes, so it is outside what the adapter does.
