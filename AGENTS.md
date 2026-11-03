@@ -84,8 +84,8 @@ after:
 - **a skipped intermediate level.** A part of B, B part of C, C top,
   and the recording references A and C. The circular-reference guard in
   `work_process` - the block that drops a parent which is a descendant
-  of the work, and which writes the `~cwp_error` "Found parent which is
-  descendant of child" - refuses the B -> C edge before the
+  of the work, and which writes the `~cwp_error` "5. Found parent which
+  which is descendant of child" - refuses the B -> C edge before the
   re-indexing, so the whole B level goes with it: `part_levels` is 0 and
   the fused names leak into `~cwp_work_top`. The keep-existing guard
   cannot fire, because there is no `(C,)` tree that reaches the fused
