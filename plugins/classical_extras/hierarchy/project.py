@@ -270,15 +270,38 @@ def _performance_node(
     * a work performed in full contributes its own parents;
     * a work performed both in full and in part contributes itself, because
       the recording id stands in for the work one level below it;
-    * a work performed only in part contributes nothing, because the
-      recording is not that work and does not stand in its place.
+    * a work performed only in part contributes itself too. The recording
+      id stands in for the work one level below it, so the work is the
+      parent of the recording id - and its own parents are one level
+      above that.
 
-    The parent's members are reduced like any other node's parent set.
+    The parent's members are reduced like any other node's parent set, and
+    that is what makes the rule work. A work performed only in part sits
+    between the recording id and the work's own parents, so it is the
+    *parent* of them rather than their ancestor, and the reduction keeps
+    it. But when the recording also performs a work in full, that work's
+    parents are contributed as well, and the partly performed work is
+    then an ancestor of them - so the reduction drops it in their favour,
+    which is what the legacy does.
+
+    The legacy was run on both cases: a recording that performs only a
+    partly performed work gets the work one level above the recording
+    id, and one that also performs a work in full gets that work's
+    parents instead.
     """
     members = performance.members
     node_id = NodeId(members)
     if node_id not in hierarchy.nodes:
         hierarchy.nodes[node_id] = Node(id=node_id, works=members)
+
+    # A work performed only in part is the parent of the recording id:
+    # the recording id stands in for the work one level below it, so the
+    # work sits one level above. The legacy does the same - it looks the
+    # partly performed work up as a node of its own and the recording's
+    # node points at it.
+    partial_works = [
+        work for work in performance.works
+        if performance.contribution(work) == 'none']
 
     contributions: Set[WorkId] = set()
     for work in performance.works:
@@ -287,13 +310,40 @@ def _performance_node(
             contributions.add(work)
         elif kind == 'parents':
             contributions |= accepted.get(work, frozenset())
-    if not contributions:
+    if contributions:
+        # The works performed in full decide the parent. A work performed
+        # only in part is the parent of the recording id only when there
+        # is no such work - and the legacy works it that way round: it
+        # takes the parents of the works performed in full, and looks a
+        # partly performed work up as a node of its own.
+        reduced = reduce_parents(
+            frozenset(contributions),
+            accepted,
+            _ancestors_for(accepted, frozenset(contributions)))
+        container = NodeId(reduced)
+        if container == node_id:
+            return node_id
+        if container not in hierarchy.nodes:
+            hierarchy.nodes[container] = Node(
+                id=container, works=container.works)
+        node = hierarchy.nodes[node_id]
+        node.parents = frozenset({container})
+        hierarchy.nodes[container].children = (
+            hierarchy.nodes[container].children | {node_id})
         return node_id
 
+    if not partial_works:
+        return node_id
+
+    # Only partly performed works: the recording id stands in for each of
+    # them, so they are the parent of the recording id. They are reduced
+    # like any other node's parent set, so that a chain does not visit a
+    # work twice - a partly performed work that is the parent of another
+    # one would otherwise put that other one in the chain twice.
     reduced = reduce_parents(
-        frozenset(contributions),
+        frozenset(partial_works),
         accepted,
-        _ancestors_for(accepted, frozenset(contributions)))
+        _ancestors_for(accepted, frozenset(partial_works)))
     container = NodeId(reduced)
     if container == node_id:
         return node_id

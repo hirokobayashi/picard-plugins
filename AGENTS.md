@@ -100,6 +100,333 @@ Picard-independent replacement for the legacy hierarchy model, in preparation
 for a Picard 3 port. No `import picard` anywhere in the package - enforced by a
 test that both scans the sources and blocks the import.
 
+### The adapter (`hierarchy/adapter.py`)
+The seam between MusicBrainz's JSON and the model. It reads the work and
+recording responses and writes the hierarchy tags. Two things the model
+deliberately does not care about have to be restored here, because the
+legacy's tags carry them:
+
+- **the order of the ids inside a level.** The legacy keyed a node by a
+  *tuple*, and the order in the tuple was the order the relations came back
+  in. The model holds a node's works as a *set*, so the order has to be put
+  back. The rule, measured over every fixture: the first level is the
+  recording's **performance** relations in order, with a partially performed
+  work represented by the **recording id** in the relation's place. A work
+  related twice is decided by its **first** relation - see the section on
+  the first relation below. The levels above the first take their order from
+  the relation of the work the level was reached through.
+- **the format of a level's ids.** The legacy hands Picard a **tuple** of work
+  ids, and Picard stores a tuple of one id as a bare string and a tuple of
+  more as a list. So a level of one id reads as `abc...` and a level of two
+  reads as a list of two. The adapter hands Picard the same tuple, so the
+  stored text is the legacy's.
+
+**One bad track must not take the release with it.** The adapter skips
+what it cannot use, rather than raising out of the tagging:
+
+- a response that is not an object, or that has no id, is skipped - on
+  both the recording side and the work side;
+- a relation that is not an object, or whose work is not an object, is
+  skipped;
+- attributes that are not a list are no attributes - a string would be
+  searched as a list of characters, and `'partial' in 'partially'` is
+  true;
+- a chain whose tip the hierarchy does not hold leaves that one track
+  with no tags;
+- a hierarchy with a cycle, or with a child it does not hold, leaves the
+  track with no tags too - the depth would be wrong, and a wrong depth
+  is worse than none. The whole track is left, group and all, rather
+  than half a track: the group is named from the same hierarchy, so it
+  would be wrong too.
+
+A count of tracks below one is refused, and a count for a recording
+that is not in the release is reported in `unused_multiplicity`.
+
+**The vote for a top's name is per track.** The legacy's vote is built
+from the tracks, so a recording that is on two tracks votes twice. The
+adapter counts the tracks each recording is on - a release that lists
+the same recording twice is that recording on two tracks - and a
+multiplicity given for the recording says so instead. The vote picks
+among a track's *own* candidate names: a track whose only candidate is
+one work keeps that name however the album votes.
+
+**One vote serves both the top's name and the group.** The legacy
+works `~cwp_work_top` and `~cwp_work_group` out of the *same* vote and
+the same names - the group is the top's name reduced to one value, so
+that a tie does not split the group. So the two tags of a track cannot
+disagree, and the adapter works them out together.
+
+The group is reduced from the names the top's tag *holds*, not from the
+candidate names: two names that differ only in punctuation normalise to
+the same thing, so both can win the vote, and the group has to be one
+of the names that won. The name kept is the first of them in the order
+they came in, which is the legacy's order.
+
+The legacy also sorts a node's *display names* by the works'
+`ordering-key`. That is the `~cwp_work_N` tag, not the hierarchy ids
+the adapter writes, so it is outside what the adapter does.
+
+The `partial` substitution only applies when the plugin's `cwp_partial`
+option is on. With it off, a partially performed work is an ordinary one.
+
+**Only a 'performance' relation names a work the recording performs.**
+The legacy matches a relation by its target - any relation whose target
+is a work with that id - so it would read a 'parts' relation as a
+performance. The adapter asks for the type, because a 'parts' relation
+is not a performance and reading it as one would put the recording
+under a work it does not perform. No release has such a relation:
+MusicBrainz's only work relation is 'performance'.
+
+**A work performed only in part is the parent of the recording id** -
+but only when there is no work performed in full. The legacy takes the
+parents of the works performed in full, and looks a partly performed
+work up as a node of its own; so a recording that also performs a work
+in full gets that work's parents, and one that performs only partly
+performed works gets the partly performed works.
+
+**Where the legacy is not deterministic, the adapter is.** A recording
+that performs two works whose parent trees do not meet makes the legacy
+fuse nodes as it walks, so its tags depend on the order the lookups come
+back in - the same album gives different tags from run to run. The
+adapter keeps every work and the relations' order, so it is the same
+every time. No recorded album has that shape, so the fixture parity
+does not prove anything about it.
+
+It was measured, not assumed: the `divergent` fixture is a recording
+that performs two works under two parents that do not meet, and the
+legacy gives `('parent-a', 'parent-b')` for one lookup order and
+`('parent-b', 'parent-a')` for another.
+`LegacyNonDeterminismTestCase` runs both orders and checks they differ,
+so the note stays a fact.
+
+`test/tools/legacy_probe.py` runs the real legacy over a fixture
+directory, which is how these cases were checked. It reuses the legacy's
+own integration test flow, and `LegacyProbeTestCase` checks that it
+reproduces the recorded daphnis album - so its output can be believed.
+**A probe that does not reproduce a recorded album proves nothing**, and
+an earlier version of one did not: the track's work id has to name a
+work that has a `work_<id>.json` in the directory, or the legacy's first
+work lookup fails and the whole album is dropped.
+
+A work related twice is in the performance's `partial` **and** its
+`complete` set: the recording stands in for the work, and the work itself
+still contributes - it is the parent of the recording id one level up.
+
+**Measured against the legacy** (the ids, the level counts, the top work
+and the group):
+
+- `~cwp_workid_0`, `~cwp_work_top` and `~cwp_work_group` are identical on
+  **all 218** tracks of the nine releases.
+- `~cwp_part_levels` and `~cwp_work_part_levels` differ on 11 and 2 tracks.
+- 161 of the 218 tracks are identical in every tag.
+- The 57 that differ are the model's own decisions, and they are the ones
+  the model already documents. Counted by cause, so that a track differing
+  in more than one way is counted once:
+  - **45** where the top holds more works than the legacy's - 29 of Swan
+    Lake's 43 tracks, 13 of the Jarvi release's 19, and one each of
+    Nutcracker, Planets and Requiem;
+  - **12** that differ elsewhere in the chain - the 6 Gayne scene-level
+    tracks, which end at the same work but one level deeper, and the 6
+    Swan Lake tracks that end at the original edition rather than the
+    Drigo one.
+
+  The test's own lists are `DIFFERING` (44 tracks whose ids differ) and
+  `HOLDING_MORE` (13 tracks whose level holds the legacy's ids and more).
+  The 44 and the 13 add up to the 57, but they are not the same split as
+  the 45 and the 12 above: a track can differ in the ids *and* hold more
+  of them, so the two lists and the two causes do not line up.
+
+  The exemption is per **tag**, not per track: `DIFFERING_TAGS` records
+  which tags of each of those 44 tracks differ. Without it a track that
+  was exempt because of one tag could differ in another and the check
+  would still pass.
+
+The legacy's own tags are recorded in `test/fixtures/legacy_tags.json`,
+and `test/test_hierarchy_adapter.py` checks the adapter against them. The
+tracks that may differ are named there, and the tracks that may hold
+*more* ids than the legacy - the extra ones come after the legacy's, and
+are the model's own decision - are named separately.
+
+**What the parity does not establish.** The tests that check the
+adapter's *internals* against themselves - the oracle that works out the
+expected first level from the relations, and the check that the
+model's performance and the adapter's own reading agree - cannot catch
+a *misreading of the rule*, because both sides work it out the same
+way. They catch the two readings drifting apart, and they catch a
+crash. The rule itself is anchored to the legacy's recorded output by
+two small fixtures: `partial_order` and `partial_full_first`. A change
+to the rule would have to be checked against those.
+
+**The id tags hold a tuple, not a string.** The legacy hands Picard a
+tuple of work ids (`parentId = tuple(trackback['id'])`), and Picard
+stores a tuple of one id as a bare string and a tuple of more as a list.
+So a level of one id reads as a bare id and a level of two reads as a
+list of two - which is exactly what the legacy's own tags read as. The
+adapter hands Picard the same tuple, so the two agree in the stored
+text, not only in the ids. The parity test compares them as Picard
+stores them - which normalises a tuple and a list to the same thing, so
+it catches a change of the *ids* but not of the container. The
+container is checked separately: the adapter hands Picard a tuple, and
+a test says so.
+
+Picard joins several values with `'; '` when it writes them out, so a
+level of two ids reads as `a; b` in the file. That is why the legacy's
+own tags sometimes read that way - it is Picard's list, not a string
+the legacy wrote.
+
+Picard's `_set` takes any iterable, so a tuple and a list are stored
+the same way: a tuple of two ids is stored as a list of two, and a
+tuple of one as a bare id. So the adapter writing a tuple where the
+legacy wrote a list (`~cwp_work_top` for a tied top, for instance)
+stores exactly the same.
+
+There is no tuple-repr string anywhere: the adapter writes the tuple and
+lets Picard store it, so the two cannot drift apart.
+
+The deepest chain in the fixtures is five levels (the Tristan album's
+`t2` and `t11`), so the comparison covers `~cwp_workid_0` to
+`~cwp_workid_4` and the top. The tags compared are the ones the legacy
+wrote for that track *and* the ones the adapter wrote - so a level the
+adapter has and the legacy did not would be caught too, and the list of
+levels does not have to be kept up to date.
+
+The 13 tracks whose level counts differ are named in the test, and a
+test checks that each of them really does differ - so an entry that no
+longer needs the exemption fails rather than quietly allowing a
+regression. The 44 tracks whose ids differ have the model's own ids
+recorded in the fixture and checked - so a wrong id on one of them
+would be caught too.
+
+The partly performed works keep their place in the order through the
+`Recording.partial` list - the order the relations gave them, not the
+work id order.
+That order matters in the level *above* the first one. The recording id
+stands in for a partly performed work in the first level, so the first
+level cannot say where the work stood - and the level above holds the
+partly performed works themselves, in the order the relations gave them.
+The legacy does the same: a fixture with two partly performed works,
+work-zzz first, gives `~cwp_workid_0 = ('rec-1',)` and
+`~cwp_workid_1 = ('work-zzz', 'work-aaa')` - not the work id order.
+
+The partly performed works take the *recording id's* place in the level
+below, not the front of the level above. A recording that performs
+work-a in full and work-b in part, naming work-a first, has a first
+level of `('work-a', 'rec-1')` - so work-b goes second.
+
+The level above the first is built by walking the works that lead to
+it, in the order the level below gave them, and taking each one's
+contribution: a partly performed work contributes itself, and any other
+work contributes its parents. The place cannot be counted in the works
+that lead to the level - two of them can share a parent and so
+contribute one id between them.
+
+Note the model's rule about what a partly performed work contributes:
+a work performed *only* in part contributes nothing to the level above
+(the recording is not that work), while the legacy puts the work itself
+there. That is a difference the model makes on purpose, and it is
+tested; the fixtures show the same tags either way.
+
+A work performed partly *and* in full contributes itself, and the model
+goes on above it - the work's own parents are reached. The legacy
+reaches them too when the recording has another work as well (the
+Daphnis tracks), but stops at the work when it is the recording's only
+work: the legacy's node for the work holds no parent. That shape is
+pinned by `PartialOnlyShapeTestCase`.
+
+**The first relation for a work decides whether the recording stands in
+for it.** The legacy reads the attributes of the first relation it finds
+for the work (`parse_data` with `'work.id:' + workId`), so:
+
+- a work related **partly first** is partly performed - the recording id
+  stands in for it in the first level - and it is in both the partial
+  and the complete set, because the legacy adds a second entry for it
+  and the work itself still contributes;
+- a work related **in full first** is performed in full - the recording
+  id does *not* stand in for it, and it is only in the complete set.
+
+A work related partly first and in full afterwards is in both sets, and
+so is a work related partly, partly and then in full - the legacy was
+run on that case and it writes the work one level up. A work related
+**partly twice** is only in the partial set: the recording never
+performs it in full.
+
+The `test/fixtures/partial_full_first/` fixture was run through the
+legacy: with work-b related in full first and partly second, and
+work-a named in between, the legacy writes
+`~cwp_workid_0 = ('work-b', 'work-a')` - the work itself, not the
+recording id. The `test/fixtures/partial_order/` fixture has the
+partial relation first, and the legacy writes
+`~cwp_workid_0 = ('rec-1', 'work-a')` there.
+
+**A response with no id is skipped, not raised.** A track with no
+recording attached, or a failed lookup, gives a response with no id. It
+cannot be tagged, and it must not stop the rest of the release from
+being tagged - so the adapter skips it, on both the recording side and
+the work side. (A `KeyError` out of the constructor would take the
+whole release's tags with it.)
+
+`read_performance` itself raises for a response with no id - its caller
+has to filter those out. `AlbumAdapter` does.
+
+The same holds for the rest of the adapter: a chain whose tip the
+hierarchy does not hold leaves that one track with no tags, rather
+than raising. One bad track must not take the release with it.
+
+The `test/fixtures/partial_order/` fixture was run through the legacy,
+and the tags it wrote are the expectations of the tests that use it: with
+the recording naming work-b first it wrote
+`~cwp_workid_0 = ('rec-1', 'work-a')` and `~cwp_workid_1 = ('work-b',)`,
+and with work-a first it wrote `('work-a', 'rec-1')` and `('work-b',)`.
+
+The fixture has two branches - `work-a` goes up to `parent-a` and
+`work-b` to `parent-b` - and the legacy's chain has only `work-b`'s.
+`parent-a` is in no level of the legacy's tags, and it was run through
+the legacy to confirm it: the legacy writes `~cwp_workid_0 =
+('work-a', 'rec-1')` and `~cwp_workid_1 = ('work-b',)` and stops there.
+So the model reproduces that, and the adapter's own chain is the same
+one level further on - the model's own decision, which the fixture
+pins.
+
+A work that is performed partly **and** in full contributes *itself* at
+the level above the first, and not its parents - it stands in for the
+recording id, and the recording id has no parents of its own. The
+case where it is also a *leader* of that level was run through the
+legacy as well: a recording performing `work-a` in full and `work-b`
+partly and then in full, both under `parent-b`, gives
+`('work-a', 'rec-1')`, `('work-b',)`, `('parent-b',)` and `('top',)` -
+the legacy's own tags, and the adapter's.
+
+Two things the legacy does that the adapter has to reproduce, and that the
+review found missing at first:
+
+- **the order of a level reached through an `arrangement` relation.** The
+  Tristan album's "Prelude and Liebestod" has no `parts` parent at all -
+  it reaches the opera through an `arrangement` relation, and the legacy
+  wrote that level's ids in the order the arrangement relation gave them.
+  The parents the adapter records are therefore the *resolved* ones - the
+  graph's own ordered fallback of `parts`, `arrangement` and `medley` -
+  not just the `parts` relations.
+- **the name of a top that holds two works with the same title.** The two
+  editions of Swan Lake are both called "Swan Lake, op. 20", and the tag
+  holds the name once. The tag also holds the *vote winner*, so that
+  every track sharing a top names it the same way.
+
+  The vote is per *track*, not per recording: the legacy collects the
+  tracks under each top and votes once for every track, so a recording
+  that is on two tracks votes twice. The adapter's `multiplicity`
+  argument says how many tracks each recording is on. No fixture has a
+  recording on two tracks, so the parity is the same either way - but a
+  release that has one could give a different winner.
+
+The name tags (`~cwp_work_<n>`) are **not** produced by the adapter. The
+legacy strips the parent's text out of the child's name
+(`strip_parent_from_work`), which is a separate feature with its own
+options and its own tests, and it has nothing to do with the hierarchy.
+
+The comparison above is by the ids the tags hold, not by their literal
+text, and the parity test also compares the text as Picard stores it.
+The ids and their order are the same either way.
+
 ### Legacy semantics that had to be reproduced (do not "simplify" these away)
 - **Parent resolution is an ordered fallback**, not just `parts` relations:
   `parts` (backward) -> `arrangement` (backward) -> `medley`. The first type

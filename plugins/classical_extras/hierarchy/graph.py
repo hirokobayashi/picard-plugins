@@ -262,26 +262,49 @@ class WorkGraph:
         A ``part of collection`` relation names a grouping work rather than a
         genuine parent, so it is ignored when collections are disabled.
         """
-        resolved: Dict[WorkId, FrozenSet[WorkId]] = {}
+        return {
+            work: frozenset(parents)
+            for work, parents in self.resolve_parents_ordered(
+                use_arrangements=use_arrangements,
+                use_medleys=use_medleys,
+                use_collections=use_collections).items()}
+
+    def resolve_parents_ordered(
+            self,
+            use_arrangements: bool = True,
+            use_medleys: bool = True,
+            use_collections: bool = True) -> Dict[WorkId, List[WorkId]]:
+        """The parents of every work, in the order the relations gave them.
+
+        The same resolution as :meth:`resolve_parents`, but the order is
+        kept. The legacy keyed a node by a tuple of ids and the order in
+        the tuple was the order the relations came back in, so a caller
+        that has to write the same tag needs the order.
+        """
+        resolved: Dict[WorkId, List[WorkId]] = {}
         for work in self.works():
-            parents: Set[WorkId] = set()
+            parents: List[WorkId] = []
 
             for relation in self.relations_of(work, PARTS_RELATION, BACKWARD):
                 if relation.is_collection and not use_collections:
                     continue
-                parents.add(relation.target)
+                if relation.target not in parents:
+                    parents.append(relation.target)
 
             if not parents and use_arrangements:
-                parents = self.relation_targets(
-                    work, ARRANGEMENT_RELATION, BACKWARD)
+                for relation in self.relations_of(
+                        work, ARRANGEMENT_RELATION, BACKWARD):
+                    if relation.target not in parents:
+                        parents.append(relation.target)
 
             if not parents and use_medleys:
                 for relation in self.relations_of(work, MEDLEY_RELATION):
                     if relation.direction == BACKWARD:
                         continue
-                    parents.add(relation.target)
+                    if relation.target not in parents:
+                        parents.append(relation.target)
 
-            resolved[work] = frozenset(parents)
+            resolved[work] = parents
         return resolved
 
     # -- queries ---------------------------------------------------------
@@ -416,14 +439,16 @@ class WorkGraph:
         colour: Dict[WorkId, int] = {work: _WHITE for work in self.works()}
         dropped: Set[Tuple[WorkId, WorkId]] = set()
 
-        for root in sorted(self.works()):
+        for root in sorted(self.works(), key=lambda work: work.mbid):
             if colour[root] != _WHITE:
                 continue
             # Explicit stack of (work, iterator over its parents). Each frame
             # resumes where the previous one stopped, which is what gives the
             # traversal its depth-first character.
             stack: List[Tuple[WorkId, Iterator[WorkId]]] = [
-                (root, iter(sorted(resolved.get(root, frozenset()))))
+                (root, iter(sorted(
+                    resolved.get(root, frozenset()),
+                    key=lambda work: work.mbid)))
             ]
             colour[root] = _GREY
             while stack:
@@ -441,13 +466,16 @@ class WorkGraph:
                 if colour[parent] == _WHITE:
                     colour[parent] = _GREY
                     stack.append(
-                        (parent, iter(sorted(resolved.get(parent, frozenset())))))
+                        (parent, iter(sorted(
+                            resolved.get(parent, frozenset()),
+                            key=lambda work: work.mbid))))
 
         self.dropped_edges = [
             DroppedEdge(
                 child=child,
                 parent=parent,
                 reason='parent is a descendant of the child')
-            for child, parent in sorted(dropped)
+            for child, parent in sorted(
+                dropped, key=lambda pair: (pair[0].mbid, pair[1].mbid))
         ]
         return {work: frozenset(parents) for work, parents in accepted.items()}

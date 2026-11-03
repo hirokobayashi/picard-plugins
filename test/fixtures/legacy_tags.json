@@ -1,0 +1,5072 @@
+{
+ "daphnis": {
+  "groups": [
+   "Daphnis et Chloé"
+  ],
+  "recordings": [
+   "03e53458-39f8-482a-b470-80a5a70d15bf",
+   "bd9fcffb-0eb5-4f75-9fc8-826868525e24",
+   "65a4ff28-8cdd-4403-9bf2-e0e8bae67494",
+   "10bb3689-09a8-4e2d-a475-cd457105af7b",
+   "24c23dba-232b-4e40-8443-3992edc5e697",
+   "7494b3ac-59b4-4beb-a275-f5dae57931df",
+   "e5b6e25f-b327-45b2-b855-a973cac9dc18",
+   "59997839-dbae-4350-8739-f83a11c0eb12",
+   "2a025187-c9b8-4bf8-9609-f0c96307ffdf",
+   "8d5613ab-b5f8-451c-98c3-b771ebca1280",
+   "1a6bfc9f-0160-4c49-a684-588d8bb71841",
+   "8a7fa542-9262-4a4b-b999-bf29444e7aa1",
+   "ac277cd8-f804-409c-8962-f1bc1474eebf",
+   "1b5d9fd9-dfaf-4e3b-9442-4fabb00022a0",
+   "3d38f2bc-9b5d-46a6-a7d8-fa5c803284ef",
+   "54d756d9-1391-4710-a134-29c535fa4305",
+   "13ae0661-1a3c-47ac-9b2c-85cca4c1def7",
+   "950e84f8-5ce2-4ec0-9460-723896364f96",
+   "763e80a6-d603-4c77-abc6-a07c20c70553"
+  ],
+  "tracks": {
+   "d1t1": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "03e53458-39f8-482a-b470-80a5a70d15bf"
+    ],
+    "~cwp_workid_1": [
+     "210c1890-db08-324d-a0b4-fc09c388152f"
+    ],
+    "~cwp_workid_2": [
+     "73dd63b8-543f-4725-b643-ed384fe5dcac"
+    ],
+    "~cwp_workid_3": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t10": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "bd9fcffb-0eb5-4f75-9fc8-826868525e24"
+    ],
+    "~cwp_workid_1": [
+     "1cebc96d-b4ed-3615-90d5-dbc26c381fb2"
+    ],
+    "~cwp_workid_2": [
+     "73dd63b8-543f-4725-b643-ed384fe5dcac"
+    ],
+    "~cwp_workid_3": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t11": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "65a4ff28-8cdd-4403-9bf2-e0e8bae67494",
+     "aaaff290-f883-368f-bb5d-91e76001c734"
+    ],
+    "~cwp_workid_1": [
+     "5c211b77-23f0-34a3-9961-347750040187"
+    ],
+    "~cwp_workid_2": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t12": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "aaaff290-f883-368f-bb5d-91e76001c734",
+     "bcf2209c-108d-3e53-a347-89df0a88f9e4"
+    ],
+    "~cwp_workid_1": [
+     "5c211b77-23f0-34a3-9961-347750040187"
+    ],
+    "~cwp_workid_2": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t13": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "24c23dba-232b-4e40-8443-3992edc5e697"
+    ],
+    "~cwp_workid_1": [
+     "e405c071-b184-32b8-aaae-7f5816418977"
+    ],
+    "~cwp_workid_2": [
+     "5c211b77-23f0-34a3-9961-347750040187"
+    ],
+    "~cwp_workid_3": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t14": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "7494b3ac-59b4-4beb-a275-f5dae57931df"
+    ],
+    "~cwp_workid_1": [
+     "e405c071-b184-32b8-aaae-7f5816418977"
+    ],
+    "~cwp_workid_2": [
+     "5c211b77-23f0-34a3-9961-347750040187"
+    ],
+    "~cwp_workid_3": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t15": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "9554228e-79e2-33df-a9af-5fa96f69a28c"
+    ],
+    "~cwp_workid_1": [
+     "0472df2f-8ebd-39ac-ab90-92aef4edaff1"
+    ],
+    "~cwp_workid_2": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t16": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "59997839-dbae-4350-8739-f83a11c0eb12"
+    ],
+    "~cwp_workid_1": [
+     "7ee7f3db-c438-3fa5-a30b-ca40499c97d6"
+    ],
+    "~cwp_workid_2": [
+     "0472df2f-8ebd-39ac-ab90-92aef4edaff1"
+    ],
+    "~cwp_workid_3": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t17": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "2a025187-c9b8-4bf8-9609-f0c96307ffdf"
+    ],
+    "~cwp_workid_1": [
+     "7ee7f3db-c438-3fa5-a30b-ca40499c97d6"
+    ],
+    "~cwp_workid_2": [
+     "0472df2f-8ebd-39ac-ab90-92aef4edaff1"
+    ],
+    "~cwp_workid_3": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t18": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "8d5613ab-b5f8-451c-98c3-b771ebca1280"
+    ],
+    "~cwp_workid_1": [
+     "7ee7f3db-c438-3fa5-a30b-ca40499c97d6"
+    ],
+    "~cwp_workid_2": [
+     "0472df2f-8ebd-39ac-ab90-92aef4edaff1"
+    ],
+    "~cwp_workid_3": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t19": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "6f8e29d3-d405-3396-a667-7c15274b5a67"
+    ],
+    "~cwp_workid_1": [
+     "0472df2f-8ebd-39ac-ab90-92aef4edaff1"
+    ],
+    "~cwp_workid_2": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t2": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "8a7fa542-9262-4a4b-b999-bf29444e7aa1"
+    ],
+    "~cwp_workid_1": [
+     "210c1890-db08-324d-a0b4-fc09c388152f"
+    ],
+    "~cwp_workid_2": [
+     "73dd63b8-543f-4725-b643-ed384fe5dcac"
+    ],
+    "~cwp_workid_3": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t3": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "12b7d2c7-2c8d-375f-9e3c-151cf875c781"
+    ],
+    "~cwp_workid_1": [
+     "73dd63b8-543f-4725-b643-ed384fe5dcac"
+    ],
+    "~cwp_workid_2": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t4": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "5d951041-56ed-3731-9994-709e8218f471"
+    ],
+    "~cwp_workid_1": [
+     "73dd63b8-543f-4725-b643-ed384fe5dcac"
+    ],
+    "~cwp_workid_2": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t5": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "70e3948f-db7c-3b31-95e4-70baa564a393"
+    ],
+    "~cwp_workid_1": [
+     "73dd63b8-543f-4725-b643-ed384fe5dcac"
+    ],
+    "~cwp_workid_2": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t6": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "54d756d9-1391-4710-a134-29c535fa4305",
+     "70e3948f-db7c-3b31-95e4-70baa564a393"
+    ],
+    "~cwp_workid_1": [
+     "73dd63b8-543f-4725-b643-ed384fe5dcac"
+    ],
+    "~cwp_workid_2": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t7": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "13ae0661-1a3c-47ac-9b2c-85cca4c1def7"
+    ],
+    "~cwp_workid_1": [
+     "c757f3a9-6f6c-3e06-af1a-04f26ff7b36e"
+    ],
+    "~cwp_workid_2": [
+     "73dd63b8-543f-4725-b643-ed384fe5dcac"
+    ],
+    "~cwp_workid_3": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t8": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "950e84f8-5ce2-4ec0-9460-723896364f96",
+     "c757f3a9-6f6c-3e06-af1a-04f26ff7b36e"
+    ],
+    "~cwp_workid_1": [
+     "73dd63b8-543f-4725-b643-ed384fe5dcac"
+    ],
+    "~cwp_workid_2": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   },
+   "d1t9": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Daphnis et Chloé",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Daphnis et Chloé",
+    "~cwp_workid_0": [
+     "763e80a6-d603-4c77-abc6-a07c20c70553"
+    ],
+    "~cwp_workid_1": [
+     "1cebc96d-b4ed-3615-90d5-dbc26c381fb2"
+    ],
+    "~cwp_workid_2": [
+     "73dd63b8-543f-4725-b643-ed384fe5dcac"
+    ],
+    "~cwp_workid_3": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+    ]
+   }
+  }
+ },
+ "firebird": {
+  "groups": [
+   "Le Chant du rossignol",
+   "Le Sacre du printemps",
+   "L’Oiseau de feu, suite de 1919"
+  ],
+  "recordings": [
+   "637eb54f-dac8-4f41-a5a5-b1df7a8fa0e6",
+   "36b60507-8ffa-4e0b-ad97-a59350c4ba7f",
+   "7473cf59-445a-4b60-853a-7c4c33a968d2",
+   "38c81495-2a16-4308-a8c2-ee25607887b8",
+   "fbbc1256-aaa7-40b5-b256-b105d3c4d63e",
+   "744a9ae4-d591-4581-8254-e52258245cc6",
+   "5e3dbd6e-eb57-4ea5-b553-2527ac13c03a",
+   "c8d02b19-ff2f-451c-99f7-42c975a31a21",
+   "52cf34f5-63d9-4c25-ba3a-c8de256eae86",
+   "15f5b52c-044c-445e-9f45-73ba19e7385e",
+   "eb0c7db9-c5d4-4480-bc1f-583105cdc1f3",
+   "f9c2a258-bed5-405b-948d-6bc312d1ea66",
+   "52e6f664-6d8e-4490-9a6c-f486535cc00a",
+   "afb82133-253a-4d97-adef-74432b23958f",
+   "883e4315-47cd-4cea-917f-09f7639a2d4f",
+   "26953305-17f2-462e-9893-5c3bf3121835",
+   "c6ced445-a58f-44ae-b4ef-8376d15e5727",
+   "41f66d4e-8fda-44d9-a93f-cf51d36aaec9",
+   "cc8cb52e-6e8b-4543-8b71-06a97ae656c2",
+   "5c863af9-7be0-48d7-9cc5-94f6d878c0a5",
+   "036a332c-4e01-4e74-8528-456060d37182",
+   "f3e9c4b3-5d23-4e34-b34d-ee796bf08d47",
+   "63fb30a8-2a3f-475f-8882-d31b1292e914",
+   "56214ec7-52d6-4384-bee1-a315377417e6",
+   "ba1c4b4b-65c1-47be-819a-d5fdbdf6e1b9"
+  ],
+  "tracks": {
+   "t1": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "L’Oiseau de feu, suite de 1919",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "L’Oiseau de feu, suite de 1919",
+    "~cwp_workid_0": [
+     "a5e780df-3693-40a5-9dc0-0623033a8ae0"
+    ],
+    "~cwp_workid_1": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ]
+   },
+   "t10": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Le Chant du rossignol",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "Le Chant du rossignol",
+    "~cwp_workid_0": [
+     "b7e718be-e840-4cfe-9aed-698c666e6eec"
+    ],
+    "~cwp_workid_1": [
+     "a79fb213-970d-428b-8982-cbde96ba060e"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a79fb213-970d-428b-8982-cbde96ba060e"
+    ]
+   },
+   "t11": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Le Chant du rossignol",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "Le Chant du rossignol",
+    "~cwp_workid_0": [
+     "8a38160f-0c08-4c69-8fd1-261750a23cf1"
+    ],
+    "~cwp_workid_1": [
+     "a79fb213-970d-428b-8982-cbde96ba060e"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a79fb213-970d-428b-8982-cbde96ba060e"
+    ]
+   },
+   "t12": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "40fd0ab1-ccc7-347a-91ff-6b5d9fa40cd4"
+    ],
+    "~cwp_workid_1": [
+     "56d71673-5103-46b1-8c0f-d81d19eaced8"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t13": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "29e4d499-4ec2-3879-9839-b57fd977298d"
+    ],
+    "~cwp_workid_1": [
+     "56d71673-5103-46b1-8c0f-d81d19eaced8"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t14": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "1ff0d8a2-5a40-3f09-87f8-66331f1b044b"
+    ],
+    "~cwp_workid_1": [
+     "56d71673-5103-46b1-8c0f-d81d19eaced8"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t15": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "4090b576-d60f-3e9b-a587-dd79648e0ec7"
+    ],
+    "~cwp_workid_1": [
+     "56d71673-5103-46b1-8c0f-d81d19eaced8"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t16": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "a37aedd7-08df-35c6-9a97-29cb61192d45"
+    ],
+    "~cwp_workid_1": [
+     "56d71673-5103-46b1-8c0f-d81d19eaced8"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t17": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "c8700d76-b8b8-37eb-80f2-e3e9ee24dc30"
+    ],
+    "~cwp_workid_1": [
+     "56d71673-5103-46b1-8c0f-d81d19eaced8"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t18": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "87aea44d-eb59-3656-ad88-9e060d28dab9"
+    ],
+    "~cwp_workid_1": [
+     "56d71673-5103-46b1-8c0f-d81d19eaced8"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t19": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "48e140f4-d75f-3990-8c5b-f9c07ad11670"
+    ],
+    "~cwp_workid_1": [
+     "56d71673-5103-46b1-8c0f-d81d19eaced8"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t2": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "L’Oiseau de feu, suite de 1919",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "L’Oiseau de feu, suite de 1919",
+    "~cwp_workid_0": [
+     "123a4c09-3bde-4624-ae15-ef55ee7f95e1"
+    ],
+    "~cwp_workid_1": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ]
+   },
+   "t20": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "4608f8ba-7df2-3f36-b0d6-5999fefb7aca"
+    ],
+    "~cwp_workid_1": [
+     "6cfef07d-7152-4c86-8db7-614f73767549"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t21": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "dc312a3c-c83f-348e-95b1-7617fcc62541"
+    ],
+    "~cwp_workid_1": [
+     "6cfef07d-7152-4c86-8db7-614f73767549"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t22": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "eedc0a88-6b55-3ed2-aacf-f93f7cb26272"
+    ],
+    "~cwp_workid_1": [
+     "6cfef07d-7152-4c86-8db7-614f73767549"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t23": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "e6e27966-53bf-39c1-b1a2-ddde5ac1e4aa"
+    ],
+    "~cwp_workid_1": [
+     "6cfef07d-7152-4c86-8db7-614f73767549"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t24": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "a2d06e4c-9988-3aca-a244-23bafb74a99c"
+    ],
+    "~cwp_workid_1": [
+     "6cfef07d-7152-4c86-8db7-614f73767549"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t25": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Le Sacre du printemps",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Le Sacre du printemps",
+    "~cwp_workid_0": [
+     "75ab293f-86d2-324e-85ed-afbc873b74b3"
+    ],
+    "~cwp_workid_1": [
+     "6cfef07d-7152-4c86-8db7-614f73767549"
+    ],
+    "~cwp_workid_2": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "54dacada-b00c-34b6-bbbb-e89855c7219f"
+    ]
+   },
+   "t3": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "L’Oiseau de feu, suite de 1919",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "L’Oiseau de feu, suite de 1919",
+    "~cwp_workid_0": [
+     "a594bc7b-2436-4b00-815e-13ab2e02c92e"
+    ],
+    "~cwp_workid_1": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ]
+   },
+   "t4": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "L’Oiseau de feu, suite de 1919",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "L’Oiseau de feu, suite de 1919",
+    "~cwp_workid_0": [
+     "fe91c939-f74f-42b8-908c-e212d26b705a"
+    ],
+    "~cwp_workid_1": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ]
+   },
+   "t5": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "L’Oiseau de feu, suite de 1919",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "L’Oiseau de feu, suite de 1919",
+    "~cwp_workid_0": [
+     "a06c71e7-e293-4206-a40b-a4cf89b34cb0",
+     "036a332c-4e01-4e74-8528-456060d37182"
+    ],
+    "~cwp_workid_1": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ]
+   },
+   "t6": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "L’Oiseau de feu, suite de 1919",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "L’Oiseau de feu, suite de 1919",
+    "~cwp_workid_0": [
+     "223dae8d-badc-42a8-a94e-86cf9adf9338"
+    ],
+    "~cwp_workid_1": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ]
+   },
+   "t7": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "L’Oiseau de feu, suite de 1919",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "L’Oiseau de feu, suite de 1919",
+    "~cwp_workid_0": [
+     "0eb658ac-cab3-4008-a4fa-ab0565f99dc8"
+    ],
+    "~cwp_workid_1": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "1a00a184-8e67-4b01-a496-81b1b6df9a88"
+    ]
+   },
+   "t8": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Le Chant du rossignol",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "Le Chant du rossignol",
+    "~cwp_workid_0": [
+     "3e68f8ca-88bd-4c08-b50f-5bc24469076d"
+    ],
+    "~cwp_workid_1": [
+     "a79fb213-970d-428b-8982-cbde96ba060e"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a79fb213-970d-428b-8982-cbde96ba060e"
+    ]
+   },
+   "t9": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Le Chant du rossignol",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "Le Chant du rossignol",
+    "~cwp_workid_0": [
+     "548717ae-4e49-48d8-98d5-a06d2a2fc125"
+    ],
+    "~cwp_workid_1": [
+     "a79fb213-970d-428b-8982-cbde96ba060e"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "a79fb213-970d-428b-8982-cbde96ba060e"
+    ]
+   }
+  }
+ },
+ "gayne": {
+  "groups": [
+   "Gayaneh, op. 50"
+  ],
+  "recordings": [
+   "9eecb165-6c44-4093-a116-1924b25dda9e",
+   "795afa97-4c76-4543-ab38-ae43876be4b4",
+   "18abc847-4fc9-4395-afb7-9146d2200e8c",
+   "2f741d26-cfdd-44c4-b582-8463ec0a36ab",
+   "1825a0fc-d666-4729-802c-b71fd6f7fac8",
+   "3b2d9191-6571-438e-9b27-1fecabea072a",
+   "d3d1b6bf-8214-4421-bc41-59ddae91482d",
+   "dc3d407c-684a-4074-8169-33a53082d517",
+   "0ddafb49-6191-4c7a-8039-de9b007ac9f2",
+   "7daf5829-4e38-4344-9d59-d214cb4b29a1",
+   "a4d7b324-6d66-418f-b688-e7dfb34d02e2",
+   "c77edf31-bd7d-4cd0-94cb-914718d626cb",
+   "aa8a6144-78be-4fc6-bfac-1e7886c27a7f",
+   "32b68003-21f8-400c-b3d4-174d10b42270",
+   "630d053a-0893-4080-8a02-0bfff4fcdc03",
+   "1c852c21-bfb0-49d3-b14d-99bfa67ed182",
+   "fb2d1a59-a08f-49f3-9598-83929c61913c",
+   "c6dadf43-8250-4609-9a70-4903f55cf99b",
+   "4a050941-29ba-4fd6-ac5e-bb5171ba72ec",
+   "867c15f1-ee10-4730-ab36-24f2340dfec6",
+   "74142639-a3cb-4014-aef9-52b4c3beb303",
+   "85fe59ba-86ed-4d37-b074-e0433a89ce57",
+   "ed682416-8e56-44f6-aa84-c0292f57b793",
+   "87fe8719-162a-43ec-b5bc-638dc65a1d0a",
+   "1d6f95fc-fa07-4666-8a9f-5f7417606406",
+   "09fedfc4-b336-46de-90aa-315c153aea14",
+   "8b08f65c-61e0-4f59-9faa-1dce7bdd6956",
+   "e651039a-1995-406b-be02-35205f44dac4",
+   "8dfe6c45-a06d-4906-bf6d-4c1ab7c38836",
+   "c1439bed-4460-4521-b4f1-9b796b3ff2c0",
+   "53e1d322-799c-4bcf-9ab0-c2b1c8ef7e7a",
+   "2df8689b-c065-4124-9fec-873a6b1c5629",
+   "9cbd0f45-bebd-4edd-82ba-b5c6795d9ca1",
+   "58106303-f34f-4686-a496-6b8b7216cbbe",
+   "a4238b68-2885-4b20-9b8e-8971992b2189",
+   "d3220710-5d37-482d-af89-f74c86f2f399",
+   "df16eda9-42b3-422a-8b73-f6860e232ac9",
+   "cb3fd077-35e6-48de-add1-14825783f02e",
+   "560897c5-695e-4924-9484-0be2a95100f7",
+   "665afb85-40b0-4de5-ab29-6774fbe2d47f",
+   "270d655c-e4eb-474b-a340-4449811738e0",
+   "0aeec881-06f8-45e5-9e6e-2a3f86f0fbcb",
+   "cea3bb69-e95c-43d0-90fd-7ae96e8ffe28",
+   "c05f98e1-c1ad-4127-8c72-dc0012c1ff98",
+   "8707181c-15f5-497e-b4c1-ac849b082b33",
+   "25f2f3f8-2d59-4930-9d08-bc12d1240381",
+   "958764ae-7c0d-4ccf-bf09-bf009b86df46",
+   "d069f937-8477-4aea-80a8-5daf52f3a92e",
+   "17f88bf3-996a-432e-bcb5-f177083fc792",
+   "878dc738-a64a-40a2-bb2c-8d695488fd4b",
+   "3b84970c-559a-4680-991e-6560e1b2114b"
+  ],
+  "tracks": {
+   "d1t1": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "dbb66a91-1290-4e01-a8c4-2928487a6494"
+    ],
+    "~cwp_workid_1": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t10": {
+    "model": {
+     "~cwp_workid_0": [
+      "fb479c25-21be-4fba-aaa5-78693fcaafdd"
+     ],
+     "~cwp_workid_1": [
+      "697f1f18-1a3c-4981-85ee-eb2c43e9c971"
+     ],
+     "~cwp_workid_2": [
+      "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+     ],
+     "~cwp_workid_3": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ],
+     "~cwp_workid_top": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "fb479c25-21be-4fba-aaa5-78693fcaafdd"
+    ],
+    "~cwp_workid_1": [
+     "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t11": {
+    "model": {
+     "~cwp_workid_0": [
+      "8b1941d9-0bdd-408e-8d6a-e96b6a52dfc9"
+     ],
+     "~cwp_workid_1": [
+      "697f1f18-1a3c-4981-85ee-eb2c43e9c971"
+     ],
+     "~cwp_workid_2": [
+      "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+     ],
+     "~cwp_workid_3": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ],
+     "~cwp_workid_top": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "8b1941d9-0bdd-408e-8d6a-e96b6a52dfc9"
+    ],
+    "~cwp_workid_1": [
+     "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t12": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "54f203c0-b992-40da-a318-a35310f887bb"
+    ],
+    "~cwp_workid_1": [
+     "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t13": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "85878830-b5a9-483b-abdd-f1f2819cd754"
+    ],
+    "~cwp_workid_1": [
+     "54f203c0-b992-40da-a318-a35310f887bb"
+    ],
+    "~cwp_workid_2": [
+     "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t14": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "85878830-b5a9-483b-abdd-f1f2819cd754"
+    ],
+    "~cwp_workid_1": [
+     "54f203c0-b992-40da-a318-a35310f887bb"
+    ],
+    "~cwp_workid_2": [
+     "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t15": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "ffc2f12f-a6f4-45cc-a8b1-dd44a2df5c7f"
+    ],
+    "~cwp_workid_1": [
+     "54f203c0-b992-40da-a318-a35310f887bb"
+    ],
+    "~cwp_workid_2": [
+     "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t16": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "6f771810-5e09-4f8a-ab3f-f28bc6328da1"
+    ],
+    "~cwp_workid_1": [
+     "54f203c0-b992-40da-a318-a35310f887bb"
+    ],
+    "~cwp_workid_2": [
+     "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t17": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "32393107-f780-4242-a747-03856de55aaf"
+    ],
+    "~cwp_workid_1": [
+     "3b261f86-09a8-4d6a-9ba9-58a7eb19a387"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t18": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "4f06bae9-ed7b-474f-9fd1-aedb613a5131"
+    ],
+    "~cwp_workid_1": [
+     "3b261f86-09a8-4d6a-9ba9-58a7eb19a387"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t19": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "b89c6302-e6a4-4627-b6d7-838050ad3e8d"
+    ],
+    "~cwp_workid_1": [
+     "3b261f86-09a8-4d6a-9ba9-58a7eb19a387"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t2": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "94859fab-d983-4cde-802f-8cb11a5c9d07"
+    ],
+    "~cwp_workid_1": [
+     "eeda4469-2eba-41fc-95dc-90b89a9f5159"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t20": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "a4222150-2bb1-4a7d-b402-80064b93b1ca"
+    ],
+    "~cwp_workid_1": [
+     "3b261f86-09a8-4d6a-9ba9-58a7eb19a387"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t21": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "e3bead1c-c1ff-4d48-ba46-38fb4f60d549"
+    ],
+    "~cwp_workid_1": [
+     "3b261f86-09a8-4d6a-9ba9-58a7eb19a387"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t22": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "64ae2dc6-b2e6-4ee5-add7-108328f553b9"
+    ],
+    "~cwp_workid_1": [
+     "3b261f86-09a8-4d6a-9ba9-58a7eb19a387"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t23": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "4b4d382b-6994-4a44-87ed-7a9cd7bfeac8"
+    ],
+    "~cwp_workid_1": [
+     "3b261f86-09a8-4d6a-9ba9-58a7eb19a387"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t24": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "30205ad2-bcff-4757-8a1b-c2c4220d63f0"
+    ],
+    "~cwp_workid_1": [
+     "3b261f86-09a8-4d6a-9ba9-58a7eb19a387"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t3": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "0c04b182-09ec-4c3c-b499-0680a5063bd3"
+    ],
+    "~cwp_workid_1": [
+     "eeda4469-2eba-41fc-95dc-90b89a9f5159"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t4": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "a0bb5503-3f9a-4359-8f11-c27d4d518b82"
+    ],
+    "~cwp_workid_1": [
+     "eeda4469-2eba-41fc-95dc-90b89a9f5159"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t5": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "a0bb5503-3f9a-4359-8f11-c27d4d518b82"
+    ],
+    "~cwp_workid_1": [
+     "eeda4469-2eba-41fc-95dc-90b89a9f5159"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t6": {
+    "model": {
+     "~cwp_workid_0": [
+      "af1f7eea-35bd-4d04-9d8a-3b1497afec88"
+     ],
+     "~cwp_workid_1": [
+      "697f1f18-1a3c-4981-85ee-eb2c43e9c971"
+     ],
+     "~cwp_workid_2": [
+      "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+     ],
+     "~cwp_workid_3": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ],
+     "~cwp_workid_top": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "af1f7eea-35bd-4d04-9d8a-3b1497afec88"
+    ],
+    "~cwp_workid_1": [
+     "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t7": {
+    "model": {
+     "~cwp_workid_0": [
+      "aebdbf15-ef7c-4729-bc35-002d7233864c"
+     ],
+     "~cwp_workid_1": [
+      "697f1f18-1a3c-4981-85ee-eb2c43e9c971"
+     ],
+     "~cwp_workid_2": [
+      "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+     ],
+     "~cwp_workid_3": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ],
+     "~cwp_workid_top": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "aebdbf15-ef7c-4729-bc35-002d7233864c"
+    ],
+    "~cwp_workid_1": [
+     "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t8": {
+    "model": {
+     "~cwp_workid_0": [
+      "6035f51e-0559-4444-9310-cbc3b79a960e"
+     ],
+     "~cwp_workid_1": [
+      "697f1f18-1a3c-4981-85ee-eb2c43e9c971"
+     ],
+     "~cwp_workid_2": [
+      "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+     ],
+     "~cwp_workid_3": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ],
+     "~cwp_workid_top": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "6035f51e-0559-4444-9310-cbc3b79a960e"
+    ],
+    "~cwp_workid_1": [
+     "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d1t9": {
+    "model": {
+     "~cwp_workid_0": [
+      "f5c29d63-43f8-420b-bd8d-97a2dc9defb0"
+     ],
+     "~cwp_workid_1": [
+      "697f1f18-1a3c-4981-85ee-eb2c43e9c971"
+     ],
+     "~cwp_workid_2": [
+      "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+     ],
+     "~cwp_workid_3": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ],
+     "~cwp_workid_top": [
+      "693e681e-98a1-4d21-9bc8-e084a248461d"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "f5c29d63-43f8-420b-bd8d-97a2dc9defb0"
+    ],
+    "~cwp_workid_1": [
+     "9ffd930d-eb52-4c0a-8ee4-551a5d7c32ad"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t1": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "25dbb630-2019-4daf-a26c-2d75a5e11b45"
+    ],
+    "~cwp_workid_1": [
+     "326f7a00-314d-4fd2-b931-29f8d5f37001"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t10": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "bd64cb18-353a-4ca9-959a-6423f1a02fc5"
+    ],
+    "~cwp_workid_1": [
+     "cf1ed388-904b-4992-a056-76f9ecea6612"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t11": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "e520e450-6c09-46f1-be8c-5bff9d728a32"
+    ],
+    "~cwp_workid_1": [
+     "e7157173-14ff-4eab-a305-adfa84be9498"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t12": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "1b33d9d1-3ec8-4155-b20f-be225d59b64b"
+    ],
+    "~cwp_workid_1": [
+     "e7157173-14ff-4eab-a305-adfa84be9498"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t13": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "f9d6ed83-55f9-480a-8e58-ec72463441e1"
+    ],
+    "~cwp_workid_1": [
+     "e7157173-14ff-4eab-a305-adfa84be9498"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t14": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "f9d6ed83-55f9-480a-8e58-ec72463441e1"
+    ],
+    "~cwp_workid_1": [
+     "e7157173-14ff-4eab-a305-adfa84be9498"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t15": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "b6171611-c838-4384-9b45-eb0055e41d2b"
+    ],
+    "~cwp_workid_1": [
+     "e7157173-14ff-4eab-a305-adfa84be9498"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t16": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "0d9a1d30-3554-44e5-9206-d8f202ca3f58"
+    ],
+    "~cwp_workid_1": [
+     "e7157173-14ff-4eab-a305-adfa84be9498"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t17": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "d534c014-83e5-4187-b871-4e4c6e714516"
+    ],
+    "~cwp_workid_1": [
+     "e7157173-14ff-4eab-a305-adfa84be9498"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t18": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "a69996f6-1597-328c-bb27-ffbf0efdba6b"
+    ],
+    "~cwp_workid_1": [
+     "94cc5799-81d1-4447-b22b-979c86025c50"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t19": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "327d8b52-9c79-4dba-8870-8063e95cc4ed"
+    ],
+    "~cwp_workid_1": [
+     "94cc5799-81d1-4447-b22b-979c86025c50"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t2": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "0e776558-af02-4bdd-8d5f-8a0313eddf41"
+    ],
+    "~cwp_workid_1": [
+     "326f7a00-314d-4fd2-b931-29f8d5f37001"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t20": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "f11929a3-1a7c-45b4-9352-2a0624160dee"
+    ],
+    "~cwp_workid_1": [
+     "94cc5799-81d1-4447-b22b-979c86025c50"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t21": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "e3a17187-8df1-449b-a154-6a9d4f2a51aa"
+    ],
+    "~cwp_workid_1": [
+     "94cc5799-81d1-4447-b22b-979c86025c50"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t22": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "0c9f5f62-c4d0-43bb-822a-e7f0c5b296cf"
+    ],
+    "~cwp_workid_1": [
+     "94cc5799-81d1-4447-b22b-979c86025c50"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t23": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "b04bc4fa-24da-4ebf-91f7-3e4f0851224b"
+    ],
+    "~cwp_workid_1": [
+     "94cc5799-81d1-4447-b22b-979c86025c50"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t24": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "908914da-eae3-4ec3-9a45-8f66ed730381"
+    ],
+    "~cwp_workid_1": [
+     "94cc5799-81d1-4447-b22b-979c86025c50"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t25": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "c912e891-de3e-4864-934c-efcace339e90"
+    ],
+    "~cwp_workid_1": [
+     "94cc5799-81d1-4447-b22b-979c86025c50"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t26": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "ae240c62-610c-4404-b12b-1cec623d0b48"
+    ],
+    "~cwp_workid_1": [
+     "94cc5799-81d1-4447-b22b-979c86025c50"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t27": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "9b6a0ecc-685c-4adf-a1ca-4070d0974cb0"
+    ],
+    "~cwp_workid_1": [
+     "94cc5799-81d1-4447-b22b-979c86025c50"
+    ],
+    "~cwp_workid_2": [
+     "412eb9ef-bb89-4c97-9201-d5856393a07b"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t3": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "77995ffa-460f-48b3-8a25-f364e6d6ca6f"
+    ],
+    "~cwp_workid_1": [
+     "326f7a00-314d-4fd2-b931-29f8d5f37001"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t4": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "55fcadd4-cec1-4c5c-8e64-ccf4bc631570"
+    ],
+    "~cwp_workid_1": [
+     "cf1ed388-904b-4992-a056-76f9ecea6612"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t5": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "a898bf24-8552-46f1-a835-d3a3e51ca40b"
+    ],
+    "~cwp_workid_1": [
+     "cf1ed388-904b-4992-a056-76f9ecea6612"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t6": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "64ef66f8-8623-4365-bc2f-fd27ae1bd426"
+    ],
+    "~cwp_workid_1": [
+     "cf1ed388-904b-4992-a056-76f9ecea6612"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t7": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "cf1ed388-904b-4992-a056-76f9ecea6612"
+    ],
+    "~cwp_workid_1": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_2": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t8": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "28b92f66-9d35-46ed-9aca-ce12ee3625e0"
+    ],
+    "~cwp_workid_1": [
+     "cf1ed388-904b-4992-a056-76f9ecea6612"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   },
+   "d2t9": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Gayaneh, op. 50",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Gayaneh, op. 50",
+    "~cwp_workid_0": [
+     "51c7cd70-1ae8-4ee2-a981-6e9ecad4db64"
+    ],
+    "~cwp_workid_1": [
+     "cf1ed388-904b-4992-a056-76f9ecea6612"
+    ],
+    "~cwp_workid_2": [
+     "f1096e9a-f402-4a02-ac67-2134d8760a6a"
+    ],
+    "~cwp_workid_3": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "693e681e-98a1-4d21-9bc8-e084a248461d"
+    ]
+   }
+  }
+ },
+ "nutcracker": {
+  "groups": [
+   "Щелкунчик, op. 71"
+  ],
+  "recordings": [
+   "3e557fd6-e178-4736-9250-9976ce58e180",
+   "1f0a558e-2cd1-4ba6-8e37-97277c3a0f58",
+   "9c32ad42-fdf0-4482-904a-3e32e9309428",
+   "2a1e90eb-7153-4e1a-9a8a-2849d6f29706",
+   "8ca2bb09-5ff3-4f22-992c-46307e45bdbc",
+   "44ac0eae-0f46-41dc-a245-cf6af2e7b58a",
+   "a8a29a4f-4132-4070-aec9-8e5233de4bbe",
+   "b76fbd03-95bd-474c-80e0-edb21a57f327",
+   "43df2df4-7b33-48f8-a29a-8474629d0d85",
+   "135866ed-8b21-4f8f-af23-c8b49fc320b2",
+   "564423e7-08e9-4848-a69f-9ef698e52fbb",
+   "a2ba4773-4a6e-464b-b0ee-2f503a39828a",
+   "9dd0bd6f-8857-4005-b3c1-a4cdce55e7dc",
+   "592aba8c-2a44-4ab2-a8a4-9e31fb704e20",
+   "8fec78c3-99ce-42cc-b707-6c6f9dc307e8",
+   "a1de0149-8f01-4f7e-b3f4-f21d8df3d34f",
+   "cc1a3129-7559-4280-bbe9-d203b0d64e2a",
+   "511ca038-d40d-4044-8fce-967bf6db502e",
+   "01470b15-13ed-43a8-898a-02fb146758cf",
+   "9799f4d0-c828-4415-80cc-e67163be34b8",
+   "71d00138-9b77-48af-8586-8a5ea97e6e7c",
+   "e5197389-f0ef-4378-88fd-c5d5651d0973",
+   "9c90db12-1bc7-4c2f-abdc-6af4c0be48c5",
+   "a29510b3-16f7-4589-848c-6073b5729efb"
+  ],
+  "tracks": {
+   "d1t1": {
+    "model": {
+     "~cwp_workid_0": [
+      "91421046-15ce-30c9-9d70-8c5669ddbeee",
+      "fce0c96b-42a9-4c41-a455-d5dc017bcb44"
+     ],
+     "~cwp_workid_1": [
+      "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+      "fd337fdc-a511-4830-8ee7-09d4ada32a54"
+     ],
+     "~cwp_workid_top": [
+      "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+      "fd337fdc-a511-4830-8ee7-09d4ada32a54"
+     ]
+    },
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "91421046-15ce-30c9-9d70-8c5669ddbeee; fce0c96b-42a9-4c41-a455-d5dc017bcb44",
+    "~cwp_workid_1": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d1t10": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "8d44d4c1-5a55-3273-bff0-86cbde10f6c4",
+    "~cwp_workid_1": "e9ec4cec-f64b-45b0-b1b3-ed26cff73aa5",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d1t2": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "f1cd9dc7-625a-36f5-a0fe-ac645d5e8c1c",
+    "~cwp_workid_1": "e9ec4cec-f64b-45b0-b1b3-ed26cff73aa5",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d1t3": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "a93104a5-fd64-3f1d-9331-d5405781a5e7",
+    "~cwp_workid_1": "e9ec4cec-f64b-45b0-b1b3-ed26cff73aa5",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d1t4": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "dd9d1429-526d-31e0-a933-b72f4d39216a",
+    "~cwp_workid_1": "e9ec4cec-f64b-45b0-b1b3-ed26cff73aa5",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d1t5": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "ff037004-5dc9-3984-b4db-f6fac19d431d",
+    "~cwp_workid_1": "e9ec4cec-f64b-45b0-b1b3-ed26cff73aa5",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d1t6": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "7a231a49-debd-389d-a6c3-e921622598cb",
+    "~cwp_workid_1": "e9ec4cec-f64b-45b0-b1b3-ed26cff73aa5",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d1t7": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "d56cb3fc-77a2-385b-962b-6e91d915dfd7",
+    "~cwp_workid_1": "e9ec4cec-f64b-45b0-b1b3-ed26cff73aa5",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d1t8": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "9f640e6d-5211-3ad6-8a7f-36136fc928ff",
+    "~cwp_workid_1": "e9ec4cec-f64b-45b0-b1b3-ed26cff73aa5",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d1t9": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "2f4888c4-6e13-392d-8ad8-2294f1d517a9",
+    "~cwp_workid_1": "e9ec4cec-f64b-45b0-b1b3-ed26cff73aa5",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t1": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "74c29f32-3051-3236-85ac-0b81a158fb7e",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t10": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "fbffe214-835e-3930-8349-d42ff93f2648",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t11": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "0dc80be8-dac8-3f33-a22b-464c64f792b1",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t12": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "5fd9c9dd-9e0d-31cf-9861-58b7abd1d12f",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t13": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "6a3d8f7a-c492-3614-ab90-f45a9a5ed2da",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t14": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "9dc735d6-9824-36fa-9881-9b34b853ff2b",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t2": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "44e2d780-78cc-3552-ba7c-d44e9dd6d2b7",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t3": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "a7d61779-a4f3-3e1e-8a4f-a1a4916e326a",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t4": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "9a717451-ef0d-326c-88c7-a7d61f9ebddd",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t5": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "98b402ca-1bd0-3de4-8b77-6dd85ba0191e",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t6": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "2c16255f-a245-3dde-8860-d37424a639db",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t7": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "5f51ef98-34a6-3b7b-bede-32b4cdd33eed",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t8": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "4617c13c-6597-36b0-969e-ced9603e6889",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   },
+   "d2t9": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Щелкунчик, op. 71",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Щелкунчик, op. 71",
+    "~cwp_workid_0": "ba28e7e2-862e-3438-9faa-13ebb6e9030c",
+    "~cwp_workid_1": "bb02dc71-e237-471c-b81e-4d2f0e6204ae",
+    "~cwp_workid_2": "f3281e81-eea2-409f-88b8-9e1e1de5ca10",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "f3281e81-eea2-409f-88b8-9e1e1de5ca10"
+   }
+  }
+ },
+ "planets": {
+  "groups": [
+   "3 Memorials",
+   "Asteroid 4179: Toutatis",
+   "Ceres",
+   "The Planets Suite extension",
+   "The Planets, op. 32",
+   "towards Osiris"
+  ],
+  "recordings": [
+   "fedcd862-559e-479e-a565-5dddc21210ad",
+   "6a6658b2-c3cf-4ca2-9b02-2fe85e79dbe0",
+   "21240859-4f72-4b90-8662-aebf218afce4",
+   "04ee9933-7706-4d11-8b67-a749cc73f8b0",
+   "2f97fba1-b1e7-4339-ace3-90dbcbd8cf7a",
+   "5367bd55-5306-48d0-b71c-bc7a8730262d",
+   "81626a29-4147-4b23-9796-0ea6347c5606",
+   "e5389445-56f2-4cd6-8b3c-e1231b50eed5",
+   "c213dd85-0641-4203-a75d-f1238cd35236",
+   "c9d436aa-283f-4fda-bfe7-6aa187e366e1",
+   "07be824f-0487-4e2e-bfc6-e184d0b60b04",
+   "2cb2962b-67e2-4912-becf-a703e63f2d39"
+  ],
+  "tracks": {
+   "t1": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "The Planets, op. 32",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "The Planets, op. 32",
+    "~cwp_workid_0": [
+     "9e00ce98-e460-4101-b2e3-8096a5c60c59"
+    ],
+    "~cwp_workid_1": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ]
+   },
+   "t10": {
+    "~cwp_part_levels": "0",
+    "~cwp_work_group": "towards Osiris",
+    "~cwp_work_part_levels": "0",
+    "~cwp_work_top": "towards Osiris",
+    "~cwp_workid_0": [
+     "599168cc-8ca2-4685-9ef7-b178369a1ae0"
+    ],
+    "~cwp_workid_1": null,
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "599168cc-8ca2-4685-9ef7-b178369a1ae0"
+    ]
+   },
+   "t11": {
+    "~cwp_part_levels": "0",
+    "~cwp_work_group": "Ceres",
+    "~cwp_work_part_levels": "0",
+    "~cwp_work_top": "Ceres",
+    "~cwp_workid_0": [
+     "5c0deb15-2bc8-4ea6-9825-d42fbc87d86f"
+    ],
+    "~cwp_workid_1": null,
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "5c0deb15-2bc8-4ea6-9825-d42fbc87d86f"
+    ]
+   },
+   "t12": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "3 Memorials",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "3 Memorials",
+    "~cwp_workid_0": [
+     "570250af-fed3-4b19-9b9a-5ad42fbbad0f"
+    ],
+    "~cwp_workid_1": [
+     "276f8a54-5ed6-4db6-970f-80f09b762f51"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "276f8a54-5ed6-4db6-970f-80f09b762f51"
+    ]
+   },
+   "t2": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "The Planets, op. 32",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "The Planets, op. 32",
+    "~cwp_workid_0": [
+     "3f86e70e-e428-46b1-834b-738243d37432"
+    ],
+    "~cwp_workid_1": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ]
+   },
+   "t3": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "The Planets, op. 32",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "The Planets, op. 32",
+    "~cwp_workid_0": [
+     "3efdc3db-5907-44fe-9639-68bcecaa6f0b"
+    ],
+    "~cwp_workid_1": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ]
+   },
+   "t4": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "The Planets, op. 32",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "The Planets, op. 32",
+    "~cwp_workid_0": [
+     "7b209915-be32-3f17-b2c5-b963964ed084"
+    ],
+    "~cwp_workid_1": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ]
+   },
+   "t5": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "The Planets, op. 32",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "The Planets, op. 32",
+    "~cwp_workid_0": [
+     "07d9e46d-0847-43d3-89da-27eb304943b1"
+    ],
+    "~cwp_workid_1": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ]
+   },
+   "t6": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "The Planets, op. 32",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "The Planets, op. 32",
+    "~cwp_workid_0": [
+     "e726a374-a823-436e-9afe-8f58d15eb547"
+    ],
+    "~cwp_workid_1": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ]
+   },
+   "t7": {
+    "model": {
+     "~cwp_workid_0": [
+      "254f397b-0d15-4812-aec4-02d0aa1d5898",
+      "4be2ad86-562d-4ef0-970a-cebf777fb8cb"
+     ],
+     "~cwp_workid_1": [
+      "5a75e61c-a670-37a9-bf73-4e7e22bbb12a",
+      "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+     ],
+     "~cwp_workid_top": [
+      "5a75e61c-a670-37a9-bf73-4e7e22bbb12a",
+      "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+     ]
+    },
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "The Planets, op. 32",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "The Planets, op. 32",
+    "~cwp_workid_0": [
+     "254f397b-0d15-4812-aec4-02d0aa1d5898",
+     "4be2ad86-562d-4ef0-970a-cebf777fb8cb"
+    ],
+    "~cwp_workid_1": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "439c1605-bf74-4e0c-b2d9-6f4f89619ec6"
+    ]
+   },
+   "t8": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "The Planets Suite extension",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "The Planets Suite extension",
+    "~cwp_workid_0": [
+     "4477808e-cc63-3832-a884-d424e6df4363"
+    ],
+    "~cwp_workid_1": [
+     "5a75e61c-a670-37a9-bf73-4e7e22bbb12a"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "5a75e61c-a670-37a9-bf73-4e7e22bbb12a"
+    ]
+   },
+   "t9": {
+    "~cwp_part_levels": "0",
+    "~cwp_work_group": "Asteroid 4179: Toutatis",
+    "~cwp_work_part_levels": "0",
+    "~cwp_work_top": "Asteroid 4179: Toutatis",
+    "~cwp_workid_0": [
+     "e42cce08-f3f1-4e9b-8bfe-11670ad22d52"
+    ],
+    "~cwp_workid_1": null,
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "e42cce08-f3f1-4e9b-8bfe-11670ad22d52"
+    ]
+   }
+  }
+ },
+ "requiem": {
+  "groups": [
+   "Requiem in D minor, K. 626"
+  ],
+  "recordings": [
+   "182530c7-d72d-4504-bfbb-d4a8cdcd4b78",
+   "e811cbc0-48de-43d3-8eb5-ce663fb66c1e",
+   "97b4a245-1865-43c6-94e7-ba21243ae180",
+   "6013dfe3-719c-46af-aee2-98b096a48f00",
+   "86ce292c-681d-414d-945a-c5c20c6da3af",
+   "c9131c55-ad7c-4229-b161-c41242148241",
+   "f879e18d-fba9-41af-861b-761eb8011902",
+   "224f7281-ab5c-4708-8bd6-bd83fe0c8d04",
+   "8f65f257-fdbd-4ac1-96aa-b263b25b523a",
+   "9b030c1b-e068-4697-ae6e-94615c0fc319",
+   "2ce37150-a297-42f3-918c-f4e592e99a68",
+   "f88fbaf3-ab29-4acc-9f4a-6d7f1e848e9a",
+   "b8b5a68c-f60c-4c49-bc0d-e925b5a08d91",
+   "5099bd66-220c-4e22-a9e4-71c3003a9ae0"
+  ],
+  "tracks": {
+   "t1": {
+    "model": {
+     "~cwp_workid_0": [
+      "7b8867e5-b146-482f-bfdd-9ee0e4471b37",
+      "a43e535d-671d-406b-9b3f-b80559242bf5"
+     ],
+     "~cwp_workid_1": [
+      "d0be6882-700f-48c9-af49-1f3d42627de5",
+      "5ba9868e-f053-4520-8957-6a9fedb2455a"
+     ],
+     "~cwp_workid_top": [
+      "d0be6882-700f-48c9-af49-1f3d42627de5",
+      "5ba9868e-f053-4520-8957-6a9fedb2455a"
+     ]
+    },
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "7b8867e5-b146-482f-bfdd-9ee0e4471b37; a43e535d-671d-406b-9b3f-b80559242bf5",
+    "~cwp_workid_1": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t10": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "af70cc9a-d670-4722-8447-1bc85d6d88e6",
+    "~cwp_workid_1": "ce69210d-79eb-4a05-b2a4-60b2aafd7d6b",
+    "~cwp_workid_2": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t11": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "49954224-a4b6-48b7-9f38-c719cf823ec1",
+    "~cwp_workid_1": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t12": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "aaa7e36a-b909-49d9-ad2d-9033a9d3be54",
+    "~cwp_workid_1": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t13": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "68d21c1a-03cb-4f33-bf71-022ad990883b",
+    "~cwp_workid_1": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t14": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "9fa1ab5f-f90c-4727-bcc9-c64aad8cd1a8",
+    "~cwp_workid_1": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t2": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "e9a58e22-5092-49f0-9f3f-9191fb392a81",
+    "~cwp_workid_1": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t3": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "6198f617-8ea4-41d9-ba4f-742512cf0123",
+    "~cwp_workid_1": "c3a4576c-3028-4154-8f92-c075e3997fd0",
+    "~cwp_workid_2": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t4": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "60c4c27c-52c2-4af7-ba57-82e61c091f66",
+    "~cwp_workid_1": "c3a4576c-3028-4154-8f92-c075e3997fd0",
+    "~cwp_workid_2": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t5": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "9c18c926-c6b3-4e06-b50f-fd453bf18e8c",
+    "~cwp_workid_1": "c3a4576c-3028-4154-8f92-c075e3997fd0",
+    "~cwp_workid_2": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t6": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "50827de7-974d-4f0a-89aa-2151b071c0df",
+    "~cwp_workid_1": "c3a4576c-3028-4154-8f92-c075e3997fd0",
+    "~cwp_workid_2": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t7": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "1766cf64-5b60-4a4f-bec6-6195247c83ce",
+    "~cwp_workid_1": "c3a4576c-3028-4154-8f92-c075e3997fd0",
+    "~cwp_workid_2": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t8": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "20b30605-16fe-4775-911d-cb4ba3a86422",
+    "~cwp_workid_1": "c3a4576c-3028-4154-8f92-c075e3997fd0",
+    "~cwp_workid_2": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   },
+   "t9": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Requiem in D minor, K. 626",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Requiem in D minor, K. 626",
+    "~cwp_workid_0": "f20850fa-1208-4cb3-a69d-5b02558198b5",
+    "~cwp_workid_1": "ce69210d-79eb-4a05-b2a4-60b2aafd7d6b",
+    "~cwp_workid_2": "d0be6882-700f-48c9-af49-1f3d42627de5",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "d0be6882-700f-48c9-af49-1f3d42627de5"
+   }
+  }
+ },
+ "swanlake_full": {
+  "groups": [
+   "Swan Lake, op. 20"
+  ],
+  "recordings": [
+   "eb2b8067-0f42-4723-bfd4-2ad8b1f47e3a",
+   "22bd7f25-ea65-4a34-89f6-5e098a9bfa9a",
+   "e27b8774-9ff5-4fd3-93f7-452be2cb706e",
+   "ace57164-e1d3-4e56-9ee4-584a70da05f4",
+   "29f7a2f6-011d-4631-82a5-83a30b4d5d03",
+   "619d9e85-35fc-4415-a78a-3c4d9bd837b6",
+   "3c8cd4ca-9bd1-4de9-812a-de375396b44d",
+   "cccf205f-b9ac-488f-8c16-84cfa1953764",
+   "bec54809-b50d-4d25-a6e1-776497e0751d",
+   "02d31e8c-33d7-412e-8c67-12e0903dc901",
+   "e70c2550-0f43-4199-a244-5d3c3d9d944d",
+   "81795ffe-3f47-4506-a501-ab14c51fccf3",
+   "e6941636-d44c-46d3-a2b4-6aed3687f032",
+   "5f4e5c42-6eaf-4e05-ae06-63a954baa819",
+   "2cec599b-bbf1-4daa-898a-e52f249eb8a9",
+   "5e885ca3-bef0-4f66-a39d-d67fb8320bd4",
+   "d8bddaa8-ec9e-4bae-b830-69016bb29ecc",
+   "e67d38c7-e053-4ed9-afdc-f60e5dfeda61",
+   "807e3d84-76e5-4c6d-895a-bf48286b8ae3",
+   "dd7549c9-e4af-4d1c-b7c3-587203a576f5",
+   "016578bb-ddd8-4ccb-9a28-20b2f32e15b9",
+   "2886683d-2ac4-4a5c-bb30-9d402b2ba138",
+   "f581bd74-7e7f-4ac0-b9e1-4810bd6da827",
+   "c4edfdd3-8d25-4b2d-a415-567945411e09",
+   "274c546d-fdee-4305-b5a4-bb4443991635",
+   "d31c6098-2489-4815-b9c9-608cb93d2daf",
+   "e41a9694-f64f-42fa-9db4-8f838b09ebed",
+   "d35fee9e-8794-4528-8cd7-b4aee947eb3c",
+   "c941a3c9-f9fa-4376-ab2d-7243c424f365",
+   "a8cef37c-b41e-47fe-b04e-cadd82e1a879",
+   "a68ef316-8454-489a-bad6-bc8a7cd2e96e",
+   "3e188351-6197-462d-9a4a-a28da8ca48ee",
+   "706709c6-5d60-4849-b02f-7824e074d4d5",
+   "9aebc44f-30bc-4c10-bc4e-83940f04ac6f",
+   "b650402e-6c50-41ac-a27b-f98e06c454d0",
+   "d8180f9e-f81d-450a-b94a-fa086eecd57f",
+   "1ef60cbb-ff35-494d-a9b9-5f9a86e78dbd",
+   "28e25d79-d8ed-460e-9d48-fed8c49b1e24",
+   "4b3d823e-30ad-4080-8899-9450ce939cd9",
+   "37b471e7-a5fd-4ae0-b0c7-79f9bc465743",
+   "1b406f18-0779-4140-a105-8be90a2c1dba",
+   "6221b79a-2c87-404f-9ee4-eb797dc90fe5",
+   "db15a9e7-eca4-4eb5-be04-44fe2a049ef4"
+  ],
+  "tracks": {
+   "d1t1": {
+    "model": {
+     "~cwp_workid_0": [
+      "58907391-15e4-3095-90a3-743583eb7039"
+     ],
+     "~cwp_workid_1": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "58907391-15e4-3095-90a3-743583eb7039"
+    ],
+    "~cwp_workid_1": [
+     "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t10": {
+    "model": {
+     "~cwp_workid_0": [
+      "6da5000b-656d-3827-a2c5-adbeed72becb"
+     ],
+     "~cwp_workid_1": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "6da5000b-656d-3827-a2c5-adbeed72becb"
+    ],
+    "~cwp_workid_1": [
+     "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t11": {
+    "model": {
+     "~cwp_workid_0": [
+      "0607862a-8ec9-35a1-a9cb-6f013b96bc00"
+     ],
+     "~cwp_workid_1": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "0607862a-8ec9-35a1-a9cb-6f013b96bc00"
+    ],
+    "~cwp_workid_1": [
+     "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t12": {
+    "model": {
+     "~cwp_workid_0": [
+      "96ffa250-7241-315c-9816-1019e2a32416"
+     ],
+     "~cwp_workid_1": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "96ffa250-7241-315c-9816-1019e2a32416"
+    ],
+    "~cwp_workid_1": [
+     "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t13": {
+    "model": {
+     "~cwp_workid_0": [
+      "aea64fe4-1a6e-38d1-97b7-99a220634234"
+     ],
+     "~cwp_workid_1": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "aea64fe4-1a6e-38d1-97b7-99a220634234"
+    ],
+    "~cwp_workid_1": [
+     "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t14": {
+    "model": {
+     "~cwp_workid_0": [
+      "efcc7513-7303-31f9-a1ca-6fec650cb801"
+     ],
+     "~cwp_workid_1": [
+      "f9bdafff-1229-4be6-8947-10a74111665d",
+      "de767453-bc07-4029-b3db-137be23d2293"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "efcc7513-7303-31f9-a1ca-6fec650cb801"
+    ],
+    "~cwp_workid_1": [
+     "f9bdafff-1229-4be6-8947-10a74111665d",
+     "de767453-bc07-4029-b3db-137be23d2293"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t15": {
+    "model": {
+     "~cwp_workid_0": [
+      "cc2e2a57-098a-320a-9644-1457eb040ec7"
+     ],
+     "~cwp_workid_1": [
+      "f9bdafff-1229-4be6-8947-10a74111665d",
+      "de767453-bc07-4029-b3db-137be23d2293"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "cc2e2a57-098a-320a-9644-1457eb040ec7"
+    ],
+    "~cwp_workid_1": [
+     "f9bdafff-1229-4be6-8947-10a74111665d",
+     "de767453-bc07-4029-b3db-137be23d2293"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t16": {
+    "model": {
+     "~cwp_workid_0": [
+      "6d7ee040-e7e9-3500-b63f-3584cc2e5cd1"
+     ],
+     "~cwp_workid_1": [
+      "f9bdafff-1229-4be6-8947-10a74111665d",
+      "de767453-bc07-4029-b3db-137be23d2293"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "6d7ee040-e7e9-3500-b63f-3584cc2e5cd1"
+    ],
+    "~cwp_workid_1": [
+     "f9bdafff-1229-4be6-8947-10a74111665d",
+     "de767453-bc07-4029-b3db-137be23d2293"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t17": {
+    "model": {
+     "~cwp_workid_0": [
+      "89c4f004-98b2-3334-ab32-ca9409e79ad9"
+     ],
+     "~cwp_workid_1": [
+      "de767453-bc07-4029-b3db-137be23d2293",
+      "3481d89d-95f0-4f74-afe6-02b33a9095ac"
+     ],
+     "~cwp_workid_2": [
+      "f9bdafff-1229-4be6-8947-10a74111665d"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "89c4f004-98b2-3334-ab32-ca9409e79ad9"
+    ],
+    "~cwp_workid_1": [
+     "de767453-bc07-4029-b3db-137be23d2293"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t18": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "34103e67-a6a1-4d22-955c-9ac4220f854e"
+    ],
+    "~cwp_workid_1": [
+     "de767453-bc07-4029-b3db-137be23d2293"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t19": {
+    "model": {
+     "~cwp_workid_0": [
+      "09a40707-a00f-3866-9b80-81a16928465f"
+     ],
+     "~cwp_workid_1": [
+      "de767453-bc07-4029-b3db-137be23d2293",
+      "3481d89d-95f0-4f74-afe6-02b33a9095ac"
+     ],
+     "~cwp_workid_2": [
+      "f9bdafff-1229-4be6-8947-10a74111665d"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "09a40707-a00f-3866-9b80-81a16928465f"
+    ],
+    "~cwp_workid_1": [
+     "de767453-bc07-4029-b3db-137be23d2293"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t2": {
+    "model": {
+     "~cwp_workid_0": [
+      "d15ce760-99c4-36bc-b2d7-96a6e24b8e11"
+     ],
+     "~cwp_workid_1": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "d15ce760-99c4-36bc-b2d7-96a6e24b8e11"
+    ],
+    "~cwp_workid_1": [
+     "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t20": {
+    "model": {
+     "~cwp_workid_0": [
+      "7cf29f44-2874-4bd6-bfd6-66564e331d23"
+     ],
+     "~cwp_workid_1": [
+      "de767453-bc07-4029-b3db-137be23d2293",
+      "3481d89d-95f0-4f74-afe6-02b33a9095ac"
+     ],
+     "~cwp_workid_2": [
+      "f9bdafff-1229-4be6-8947-10a74111665d"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "7cf29f44-2874-4bd6-bfd6-66564e331d23"
+    ],
+    "~cwp_workid_1": [
+     "de767453-bc07-4029-b3db-137be23d2293"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t21": {
+    "model": {
+     "~cwp_workid_0": [
+      "c490180d-bae6-3336-84fa-59d89fc46de9"
+     ],
+     "~cwp_workid_1": [
+      "de767453-bc07-4029-b3db-137be23d2293",
+      "3481d89d-95f0-4f74-afe6-02b33a9095ac"
+     ],
+     "~cwp_workid_2": [
+      "f9bdafff-1229-4be6-8947-10a74111665d"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "c490180d-bae6-3336-84fa-59d89fc46de9"
+    ],
+    "~cwp_workid_1": [
+     "de767453-bc07-4029-b3db-137be23d2293"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t22": {
+    "model": {
+     "~cwp_workid_0": [
+      "9e7a1e2e-5f87-43c0-80e4-01567fa86b56"
+     ],
+     "~cwp_workid_1": [
+      "de767453-bc07-4029-b3db-137be23d2293",
+      "3481d89d-95f0-4f74-afe6-02b33a9095ac"
+     ],
+     "~cwp_workid_2": [
+      "f9bdafff-1229-4be6-8947-10a74111665d"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "9e7a1e2e-5f87-43c0-80e4-01567fa86b56"
+    ],
+    "~cwp_workid_1": [
+     "de767453-bc07-4029-b3db-137be23d2293"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t23": {
+    "model": {
+     "~cwp_workid_0": [
+      "bd56f23f-6ddd-4d24-ba8c-3f20eaf066d1"
+     ],
+     "~cwp_workid_1": [
+      "f9bdafff-1229-4be6-8947-10a74111665d",
+      "de767453-bc07-4029-b3db-137be23d2293"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "bd56f23f-6ddd-4d24-ba8c-3f20eaf066d1"
+    ],
+    "~cwp_workid_1": [
+     "f9bdafff-1229-4be6-8947-10a74111665d",
+     "de767453-bc07-4029-b3db-137be23d2293"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t3": {
+    "model": {
+     "~cwp_workid_0": [
+      "f32adc94-5198-347b-b275-08a6db82f686"
+     ],
+     "~cwp_workid_1": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "f32adc94-5198-347b-b275-08a6db82f686"
+    ],
+    "~cwp_workid_1": [
+     "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t4": {
+    "model": {
+     "~cwp_workid_0": [
+      "bafdc758-3521-3e27-952f-f724011b5f73"
+     ],
+     "~cwp_workid_1": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "bafdc758-3521-3e27-952f-f724011b5f73"
+    ],
+    "~cwp_workid_1": [
+     "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t5": {
+    "model": {
+     "~cwp_workid_0": [
+      "92d6dc8c-ce35-3933-bd87-ca224b70315d"
+     ],
+     "~cwp_workid_1": [
+      "44d081b5-3bce-42af-bf1f-c68191251bf6",
+      "e678e7ca-fb95-4805-887a-e02d8639635c"
+     ],
+     "~cwp_workid_2": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "92d6dc8c-ce35-3933-bd87-ca224b70315d"
+    ],
+    "~cwp_workid_1": [
+     "44d081b5-3bce-42af-bf1f-c68191251bf6",
+     "e678e7ca-fb95-4805-887a-e02d8639635c"
+    ],
+    "~cwp_workid_2": [
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_3": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t6": {
+    "model": {
+     "~cwp_workid_0": [
+      "c9b2a368-1b94-3c7d-a116-53b7998e0fd4"
+     ],
+     "~cwp_workid_1": [
+      "44d081b5-3bce-42af-bf1f-c68191251bf6",
+      "e678e7ca-fb95-4805-887a-e02d8639635c"
+     ],
+     "~cwp_workid_2": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "c9b2a368-1b94-3c7d-a116-53b7998e0fd4"
+    ],
+    "~cwp_workid_1": [
+     "44d081b5-3bce-42af-bf1f-c68191251bf6",
+     "e678e7ca-fb95-4805-887a-e02d8639635c"
+    ],
+    "~cwp_workid_2": [
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_3": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t7": {
+    "model": {
+     "~cwp_workid_0": [
+      "19e52375-1eaf-3a11-bbe6-ad8ff4543ed2"
+     ],
+     "~cwp_workid_1": [
+      "44d081b5-3bce-42af-bf1f-c68191251bf6",
+      "e678e7ca-fb95-4805-887a-e02d8639635c"
+     ],
+     "~cwp_workid_2": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "19e52375-1eaf-3a11-bbe6-ad8ff4543ed2"
+    ],
+    "~cwp_workid_1": [
+     "44d081b5-3bce-42af-bf1f-c68191251bf6",
+     "e678e7ca-fb95-4805-887a-e02d8639635c"
+    ],
+    "~cwp_workid_2": [
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_3": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t8": {
+    "model": {
+     "~cwp_workid_0": [
+      "4fad32b7-8d81-3097-8947-5115789cf346"
+     ],
+     "~cwp_workid_1": [
+      "44d081b5-3bce-42af-bf1f-c68191251bf6",
+      "e678e7ca-fb95-4805-887a-e02d8639635c"
+     ],
+     "~cwp_workid_2": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "4fad32b7-8d81-3097-8947-5115789cf346"
+    ],
+    "~cwp_workid_1": [
+     "44d081b5-3bce-42af-bf1f-c68191251bf6",
+     "e678e7ca-fb95-4805-887a-e02d8639635c"
+    ],
+    "~cwp_workid_2": [
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_3": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d1t9": {
+    "model": {
+     "~cwp_workid_0": [
+      "538bc728-d945-334e-863d-85ac78de6e7b"
+     ],
+     "~cwp_workid_1": [
+      "44d081b5-3bce-42af-bf1f-c68191251bf6",
+      "e678e7ca-fb95-4805-887a-e02d8639635c"
+     ],
+     "~cwp_workid_2": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "70ce41a5-a59b-4318-84c3-8218be875493"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "538bc728-d945-334e-863d-85ac78de6e7b"
+    ],
+    "~cwp_workid_1": [
+     "44d081b5-3bce-42af-bf1f-c68191251bf6",
+     "e678e7ca-fb95-4805-887a-e02d8639635c"
+    ],
+    "~cwp_workid_2": [
+     "70ce41a5-a59b-4318-84c3-8218be875493"
+    ],
+    "~cwp_workid_3": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t1": {
+    "model": {
+     "~cwp_workid_0": [
+      "0471148d-3968-40f3-a7b8-3bdb1e4ae176"
+     ],
+     "~cwp_workid_1": [
+      "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+      "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "0471148d-3968-40f3-a7b8-3bdb1e4ae176"
+    ],
+    "~cwp_workid_1": [
+     "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t10": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "5b0ad9f9-22d0-4181-a45e-4108511687bf"
+    ],
+    "~cwp_workid_1": [
+     "0ec7d268-c5c8-496c-8f9d-a30ecafd158f"
+    ],
+    "~cwp_workid_2": [
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_3": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t11": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "1f33d81d-186d-4cbd-8530-d98f3eaab1fd"
+    ],
+    "~cwp_workid_1": [
+     "0ec7d268-c5c8-496c-8f9d-a30ecafd158f"
+    ],
+    "~cwp_workid_2": [
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_3": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t12": {
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "200e0f8f-77f3-4c7a-8da3-f7fcc1397ff7"
+    ],
+    "~cwp_workid_1": [
+     "0ec7d268-c5c8-496c-8f9d-a30ecafd158f"
+    ],
+    "~cwp_workid_2": [
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_3": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t13": {
+    "model": {
+     "~cwp_workid_0": [
+      "6f11edd1-b6be-3895-a2d8-40f501efb5a2"
+     ],
+     "~cwp_workid_1": [
+      "8eac14df-cd9b-41d9-9ca2-976416a87933",
+      "0ec7d268-c5c8-496c-8f9d-a30ecafd158f"
+     ],
+     "~cwp_workid_2": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "6f11edd1-b6be-3895-a2d8-40f501efb5a2"
+    ],
+    "~cwp_workid_1": [
+     "0ec7d268-c5c8-496c-8f9d-a30ecafd158f"
+    ],
+    "~cwp_workid_2": [
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_3": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t14": {
+    "model": {
+     "~cwp_workid_0": [
+      "f12bea2c-7c34-47f9-9f68-66560e66a645"
+     ],
+     "~cwp_workid_1": [
+      "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+      "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "f12bea2c-7c34-47f9-9f68-66560e66a645"
+    ],
+    "~cwp_workid_1": [
+     "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t15": {
+    "model": {
+     "~cwp_workid_0": [
+      "c370363b-3d2b-41e4-8541-b752c49a6f07"
+     ],
+     "~cwp_workid_1": [
+      "eebafafe-5288-45d0-ba67-554ba344f737",
+      "169a3f15-a391-4bc0-a325-3ec166182a00"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "c370363b-3d2b-41e4-8541-b752c49a6f07"
+    ],
+    "~cwp_workid_1": [
+     "169a3f15-a391-4bc0-a325-3ec166182a00"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t16": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "27e185cb-3078-465f-8ce1-cdfeda39aa71"
+    ],
+    "~cwp_workid_1": [
+     "169a3f15-a391-4bc0-a325-3ec166182a00"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t17": {
+    "model": {
+     "~cwp_workid_0": [
+      "8b81b827-2554-4f8f-b62a-0823bf4b57f4"
+     ],
+     "~cwp_workid_1": [
+      "eebafafe-5288-45d0-ba67-554ba344f737",
+      "169a3f15-a391-4bc0-a325-3ec166182a00"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "8b81b827-2554-4f8f-b62a-0823bf4b57f4"
+    ],
+    "~cwp_workid_1": [
+     "169a3f15-a391-4bc0-a325-3ec166182a00"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t18": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "96e46066-78b2-4d5f-a10f-dac2b4dc2b58"
+    ],
+    "~cwp_workid_1": [
+     "169a3f15-a391-4bc0-a325-3ec166182a00"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t19": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "894c67c6-e999-4b8a-8913-58f627b7bcdd"
+    ],
+    "~cwp_workid_1": [
+     "169a3f15-a391-4bc0-a325-3ec166182a00"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t2": {
+    "model": {
+     "~cwp_workid_0": [
+      "5b130c88-2b07-4f3a-ab04-705eb1e9d13e"
+     ],
+     "~cwp_workid_1": [
+      "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "5b130c88-2b07-4f3a-ab04-705eb1e9d13e"
+    ],
+    "~cwp_workid_1": [
+     "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t20": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "3d749164-4223-4526-b0ea-a65bc2235038"
+    ],
+    "~cwp_workid_1": [
+     "169a3f15-a391-4bc0-a325-3ec166182a00"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t3": {
+    "model": {
+     "~cwp_workid_0": [
+      "17a59c78-99f0-47b6-859f-2e854dcd30aa"
+     ],
+     "~cwp_workid_1": [
+      "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+      "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "17a59c78-99f0-47b6-859f-2e854dcd30aa"
+    ],
+    "~cwp_workid_1": [
+     "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t4": {
+    "model": {
+     "~cwp_workid_0": [
+      "c6f93641-f036-4f18-a55d-dcbf183c68af"
+     ],
+     "~cwp_workid_1": [
+      "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+      "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "c6f93641-f036-4f18-a55d-dcbf183c68af"
+    ],
+    "~cwp_workid_1": [
+     "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t5": {
+    "model": {
+     "~cwp_workid_0": [
+      "c148e7d2-269b-4faf-9c93-82b79c5ef54c"
+     ],
+     "~cwp_workid_1": [
+      "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+      "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "c148e7d2-269b-4faf-9c93-82b79c5ef54c"
+    ],
+    "~cwp_workid_1": [
+     "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t6": {
+    "model": {
+     "~cwp_workid_0": [
+      "30f2e247-f345-4f3b-a7cc-09c09fc53e9b"
+     ],
+     "~cwp_workid_1": [
+      "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+      "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "30f2e247-f345-4f3b-a7cc-09c09fc53e9b"
+    ],
+    "~cwp_workid_1": [
+     "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t7": {
+    "model": {
+     "~cwp_workid_0": [
+      "12818a2e-048a-475a-a279-66d8f90f4193"
+     ],
+     "~cwp_workid_1": [
+      "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+      "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "12818a2e-048a-475a-a279-66d8f90f4193"
+    ],
+    "~cwp_workid_1": [
+     "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t8": {
+    "model": {
+     "~cwp_workid_0": [
+      "1a972d5e-ee15-4108-b16c-5585e54c1540"
+     ],
+     "~cwp_workid_1": [
+      "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+      "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+     ],
+     "~cwp_workid_2": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "1a972d5e-ee15-4108-b16c-5585e54c1540"
+    ],
+    "~cwp_workid_1": [
+     "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_2": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   },
+   "d2t9": {
+    "model": {
+     "~cwp_workid_0": [
+      "de8c7fd6-1b3c-3fe5-89de-143cffc8bed2"
+     ],
+     "~cwp_workid_1": [
+      "8eac14df-cd9b-41d9-9ca2-976416a87933",
+      "0ec7d268-c5c8-496c-8f9d-a30ecafd158f"
+     ],
+     "~cwp_workid_2": [
+      "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+      "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+     ],
+     "~cwp_workid_3": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ],
+     "~cwp_workid_top": [
+      "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+      "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+     ]
+    },
+    "~cwp_part_levels": "3",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "3",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": [
+     "de8c7fd6-1b3c-3fe5-89de-143cffc8bed2"
+    ],
+    "~cwp_workid_1": [
+     "0ec7d268-c5c8-496c-8f9d-a30ecafd158f"
+    ],
+    "~cwp_workid_2": [
+     "d1ef611e-ac47-445e-b0e2-377ad47d0261"
+    ],
+    "~cwp_workid_3": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ],
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "13867eb1-42c2-45ed-97d9-e1cc85b006fd"
+    ]
+   }
+  }
+ },
+ "swanlake_jarvi": {
+  "groups": [
+   "Swan Lake, op. 20"
+  ],
+  "recordings": [
+   "7cb0e24e-1feb-4116-9830-f1a4c195ace6",
+   "b3498fd0-52a6-4a6f-b3a4-68e088522664",
+   "69ecf97c-1c09-4958-aaaf-2b8e0aca9078",
+   "7cf85bde-35eb-4bc8-bb9a-71e70c8e49d1",
+   "fd852a5e-bb56-4eb7-b388-8b35ec2b5b08",
+   "3b32df17-7a18-4b3b-b96b-d999709dbaed",
+   "21f888aa-5706-4f2b-9fe2-ee3270d781de",
+   "5c7551fd-28c2-40b9-9cfa-b45e79d59cdd",
+   "663dfa49-8659-4579-a34e-38524452d588",
+   "2180ee69-8cc0-49ac-a8af-2d018afa027a",
+   "28721fbc-e331-4e92-8bfa-dd76ea12bc55",
+   "9342b235-8a5f-45bb-9740-7415f6f94202",
+   "0a37744a-d383-45ed-bb32-793534e0afd0",
+   "372cc888-e785-45f4-bafa-5fed2fbfe782",
+   "c0f4ccdb-3b69-48b5-9b05-447abbb5258b",
+   "82e19b56-1e0b-4105-a897-b4cbda402c66",
+   "3bdc898b-6238-447b-a93b-11f40a13fc37",
+   "8e31cce7-5761-470d-98de-5a54a882df82",
+   "d47f5329-0776-4aca-a988-655cdc9c9d2c"
+  ],
+  "tracks": {
+   "t1": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "58907391-15e4-3095-90a3-743583eb7039",
+    "~cwp_workid_1": "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t10": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "c6f93641-f036-4f18-a55d-dcbf183c68af",
+    "~cwp_workid_1": "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t11": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "8ace07c4-0b91-4964-bac7-63cf103315d2",
+    "~cwp_workid_1": "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t12": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "c057e48f-df20-4b40-ac1c-367474242c81",
+    "~cwp_workid_1": "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t13": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "12818a2e-048a-475a-a279-66d8f90f4193",
+    "~cwp_workid_1": "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t14": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "8d51db60-63d9-4d4c-9b26-16e8e29a99f6",
+    "~cwp_workid_1": "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t15": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "c148e7d2-269b-4faf-9c93-82b79c5ef54c",
+    "~cwp_workid_1": "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t16": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "30f2e247-f345-4f3b-a7cc-09c09fc53e9b",
+    "~cwp_workid_1": "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t17": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "1a972d5e-ee15-4108-b16c-5585e54c1540",
+    "~cwp_workid_1": "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t18": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "f12bea2c-7c34-47f9-9f68-66560e66a645",
+    "~cwp_workid_1": "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t19": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "5e8125e0-20d4-4311-a9ab-1dc29a9f6dc9",
+    "~cwp_workid_1": "eebafafe-5288-45d0-ba67-554ba344f737",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t2": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "d15ce760-99c4-36bc-b2d7-96a6e24b8e11",
+    "~cwp_workid_1": "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t3": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "f32adc94-5198-347b-b275-08a6db82f686",
+    "~cwp_workid_1": "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t4": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "bafdc758-3521-3e27-952f-f724011b5f73",
+    "~cwp_workid_1": "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t5": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "44d081b5-3bce-42af-bf1f-c68191251bf6",
+    "~cwp_workid_1": "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t6": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "96ffa250-7241-315c-9816-1019e2a32416",
+    "~cwp_workid_1": "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t7": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "aea64fe4-1a6e-38d1-97b7-99a220634234",
+    "~cwp_workid_1": "138bcfb4-ee0e-45a7-abd4-748e6fa87b79",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t8": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "3481d89d-95f0-4f74-afe6-02b33a9095ac",
+    "~cwp_workid_1": "f9bdafff-1229-4be6-8947-10a74111665d",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   },
+   "t9": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Swan Lake, op. 20",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Swan Lake, op. 20",
+    "~cwp_workid_0": "0471148d-3968-40f3-a7b8-3bdb1e4ae176",
+    "~cwp_workid_1": "feec5a8f-19a7-4cf7-af93-45aac7bbb5d7",
+    "~cwp_workid_2": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f",
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": "11f48c5e-5ee9-4646-9826-fb7c2fccce7f"
+   }
+  }
+ },
+ "tristan": {
+  "groups": [
+   "Der Ring des Nibelungen, WWV 86",
+   "Die Meistersinger von Nürnberg, WWV 96",
+   "Lohengrin, WWV 75",
+   "Rienzi, der letzte der Tribunen, WWV 49",
+   "Tristan und Isolde, WWV 90",
+   "Wesendonck-Lieder"
+  ],
+  "recordings": [
+   "73f24ed7-2edb-4649-9986-a64f535120f8",
+   "5f5f1f2a-bf05-4168-aa87-0b3a262edb2a",
+   "0446b58a-6e81-4403-a53e-98babe20211c",
+   "05cc6415-4943-4592-b184-6fdfec280330",
+   "18b35e45-7eb8-4017-acfa-46d910308111",
+   "f065fa2e-177a-49ea-891a-c0b753105bb3",
+   "c93127b5-1549-4ded-8089-7ac7ca13e401",
+   "953f7003-181c-430a-9fc8-b240d5b0d6fc",
+   "c56ff364-4be9-4fa0-b899-2ad3ff9caa6d",
+   "9486e32a-35ed-4059-a346-fd2ab188e95f",
+   "e14a9c92-939b-4287-acba-8c6d00fcf21e"
+  ],
+  "tracks": {
+   "t1": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Rienzi, der letzte der Tribunen, WWV 49",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "Rienzi, der letzte der Tribunen, WWV 49",
+    "~cwp_workid_0": [
+     "b3d13ed3-5cb8-338c-815e-a33432d8981a"
+    ],
+    "~cwp_workid_1": [
+     "315a0fe2-4e5a-477f-a4b7-e9c66523b70e"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "315a0fe2-4e5a-477f-a4b7-e9c66523b70e"
+    ]
+   },
+   "t10": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Die Meistersinger von Nürnberg, WWV 96",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "Die Meistersinger von Nürnberg, WWV 96",
+    "~cwp_workid_0": [
+     "6b198406-4fbf-3d61-82db-0b7ef195a7fe"
+    ],
+    "~cwp_workid_1": [
+     "4d644732-9876-4b0d-9c2c-b6a738d6530e"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "4d644732-9876-4b0d-9c2c-b6a738d6530e"
+    ]
+   },
+   "t11": {
+    "~cwp_part_levels": "4",
+    "~cwp_work_group": "Der Ring des Nibelungen, WWV 86",
+    "~cwp_work_part_levels": "4",
+    "~cwp_work_top": "Der Ring des Nibelungen, WWV 86",
+    "~cwp_workid_0": [
+     "6996fc77-b5dc-48ca-a7d5-3434f541f87a"
+    ],
+    "~cwp_workid_1": [
+     "5fdf0bb8-dfd0-40e9-af4f-93277315bca9"
+    ],
+    "~cwp_workid_2": [
+     "30adbedf-be0b-43f5-8ecd-95039d5641c4"
+    ],
+    "~cwp_workid_3": [
+     "a87e8996-da9e-49a8-80f2-c5d8342b67e6"
+    ],
+    "~cwp_workid_4": [
+     "597e017a-2c97-40c0-9eeb-430a0461e4ad"
+    ],
+    "~cwp_workid_top": [
+     "597e017a-2c97-40c0-9eeb-430a0461e4ad"
+    ]
+   },
+   "t2": {
+    "~cwp_part_levels": "4",
+    "~cwp_work_group": "Tristan und Isolde, WWV 90",
+    "~cwp_work_part_levels": "4",
+    "~cwp_work_top": "Tristan und Isolde, WWV 90",
+    "~cwp_workid_0": [
+     "7b4b0ef2-7928-3c37-8107-1355eb043855"
+    ],
+    "~cwp_workid_1": [
+     "eb691aba-ba0f-3db6-97bb-df50e64f2b9c",
+     "52836ec3-2272-37cd-a4af-20ab3bf56b88"
+    ],
+    "~cwp_workid_2": [
+     "9d1ba066-627f-3fbb-b88d-f55da5cba723"
+    ],
+    "~cwp_workid_3": [
+     "ad177d02-7eb2-4923-beab-bec57819064e"
+    ],
+    "~cwp_workid_4": [
+     "ae217ba8-0b07-4b0b-aed6-c80535dcd94b"
+    ],
+    "~cwp_workid_top": [
+     "ae217ba8-0b07-4b0b-aed6-c80535dcd94b"
+    ]
+   },
+   "t3": {
+    "~cwp_part_levels": "2",
+    "~cwp_work_group": "Lohengrin, WWV 75",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Lohengrin, WWV 75",
+    "~cwp_workid_0": [
+     "e9ffb0e1-f26a-3420-ac12-6bc062042989"
+    ],
+    "~cwp_workid_1": [
+     "5690e191-0389-40dc-a103-8f87c5b37754"
+    ],
+    "~cwp_workid_2": [
+     "1d774427-c5f5-4bc9-9fd6-040f8ff4381c"
+    ],
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "1d774427-c5f5-4bc9-9fd6-040f8ff4381c"
+    ]
+   },
+   "t4": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Lohengrin, WWV 75",
+    "~cwp_work_part_levels": "2",
+    "~cwp_work_top": "Lohengrin, WWV 75",
+    "~cwp_workid_0": [
+     "43424ee0-ea55-4a39-b2f4-722c0517efbb"
+    ],
+    "~cwp_workid_1": [
+     "1d774427-c5f5-4bc9-9fd6-040f8ff4381c"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "1d774427-c5f5-4bc9-9fd6-040f8ff4381c"
+    ]
+   },
+   "t5": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Wesendonck-Lieder",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "Wesendonck-Lieder",
+    "~cwp_workid_0": [
+     "82fcb2f7-355f-4585-ada5-d5d4bc629cde"
+    ],
+    "~cwp_workid_1": [
+     "cb3cd3bb-b471-46e9-94dc-6cd04ea94414"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "cb3cd3bb-b471-46e9-94dc-6cd04ea94414"
+    ]
+   },
+   "t6": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Wesendonck-Lieder",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "Wesendonck-Lieder",
+    "~cwp_workid_0": [
+     "74563ddf-4a42-4c83-8ce8-19a84a75ee7b"
+    ],
+    "~cwp_workid_1": [
+     "cb3cd3bb-b471-46e9-94dc-6cd04ea94414"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "cb3cd3bb-b471-46e9-94dc-6cd04ea94414"
+    ]
+   },
+   "t7": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Wesendonck-Lieder",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "Wesendonck-Lieder",
+    "~cwp_workid_0": [
+     "1388e737-1c44-413e-b617-73ba771b2918"
+    ],
+    "~cwp_workid_1": [
+     "cb3cd3bb-b471-46e9-94dc-6cd04ea94414"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "cb3cd3bb-b471-46e9-94dc-6cd04ea94414"
+    ]
+   },
+   "t8": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Wesendonck-Lieder",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "Wesendonck-Lieder",
+    "~cwp_workid_0": [
+     "fef6ff04-822f-49d8-9add-04f6c82e4e95"
+    ],
+    "~cwp_workid_1": [
+     "cb3cd3bb-b471-46e9-94dc-6cd04ea94414"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "cb3cd3bb-b471-46e9-94dc-6cd04ea94414"
+    ]
+   },
+   "t9": {
+    "~cwp_part_levels": "1",
+    "~cwp_work_group": "Wesendonck-Lieder",
+    "~cwp_work_part_levels": "1",
+    "~cwp_work_top": "Wesendonck-Lieder",
+    "~cwp_workid_0": [
+     "f5b6994d-98ed-43c5-a891-ae1a23c8ea6e"
+    ],
+    "~cwp_workid_1": [
+     "cb3cd3bb-b471-46e9-94dc-6cd04ea94414"
+    ],
+    "~cwp_workid_2": null,
+    "~cwp_workid_3": null,
+    "~cwp_workid_4": null,
+    "~cwp_workid_top": [
+     "cb3cd3bb-b471-46e9-94dc-6cd04ea94414"
+    ]
+   }
+  }
+ }
+}
