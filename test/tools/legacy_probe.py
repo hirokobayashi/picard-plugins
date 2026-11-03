@@ -36,6 +36,12 @@ _SRC = textwrap.dedent(inspect.getsource(
 
 
 def run(fixdir, rel, tracks, partial=True, drain="fifo"):
+    """Run the legacy over the fixture directory and return its tracks.
+
+    ``drain`` is the order the work lookups are answered in: "fifo",
+    "lifo", or a seed for a random order. The legacy's tags can depend
+    on it - see the note in AGENTS.md about the shapes where they do.
+    """
     src = _SRC
     if partial:
         assert '"cwp_partial": False,' in src
@@ -54,7 +60,9 @@ def run(fixdir, rel, tracks, partial=True, drain="fifo"):
     case = Synth('test_result_is_independent_of_lookup_order')
     case.setUp()
     try:
-        return runner(case)
+        # The drain order is the order the work lookups are answered in,
+        # which is the order the legacy's tags can depend on.
+        return runner(case, drain=drain)
     finally:
         # The plugin registers script functions and leaves picard.config as
         # a Mock, and both leak into the tests that run after this one.
@@ -87,6 +95,36 @@ def rel(wid, partial=False, key=1):
             "work": {"id": wid, "title": wid, "type": None, "type-id": None,
                      "attributes": [], "disambiguation": "", "language": "zxx",
                      "iswcs": [], "languages": ["zxx"]}}
+
+
+def tracks_of(directory, label="t1"):
+    """The tracks for a fixture directory with one recording.
+
+    The work id seeds the legacy's first work lookup, so it has to name
+    a work that has a ``work_<id>.json`` in the directory.
+    """
+    with open(os.path.join(directory, 'rec_%s.json' % label)) as f:
+        recording = json.load(f)
+    works = [r['work']['id'] for r in recording.get('relations') or ()
+             if r.get('type') == 'performance']
+    return [(label, 1, 1, recording['id'], '; '.join(works))]
+
+
+def readings_of(directory, label="t1"):
+    """The works and the recordings of a fixture directory."""
+    works = []
+    for name in sorted(os.listdir(directory)):
+        if not name.startswith('work_'):
+            continue
+        with open(os.path.join(directory, name)) as f:
+            works.append(json.load(f))
+    recordings = []
+    for name in sorted(os.listdir(directory)):
+        if not name.startswith('rec_'):
+            continue
+        with open(os.path.join(directory, name)) as f:
+            recordings.append(json.load(f))
+    return works, recordings
 
 
 def write_case(d, works, recordings, label="t1", seed=None):
