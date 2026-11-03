@@ -82,15 +82,19 @@ symptom and are **not** fixed by it - they behave the same before and
 after:
 
 - **a skipped intermediate level.** A part of B, B part of C, C top,
-  and the recording references A and C. The cycle guard in
-  `work_process_relations` refuses the graft before the re-indexing, so
-  the whole B level goes with it: `part_levels` is 0 and the fused names
-  leak into `~cwp_work_top`. The keep-existing guard cannot fire, because
-  the `(C,)` tree never reaches the fused node.
+  and the recording references A and C. The circular-reference guard in
+  `work_process` - the block that drops a parent which is a descendant
+  of the work, and which writes the `~cwp_error` "Found parent which is
+  descendant of child" - refuses the B -> C edge before the
+  re-indexing, so the whole B level goes with it: `part_levels` is 0 and
+  the fused names leak into `~cwp_work_top`. The keep-existing guard
+  cannot fire, because there is no `(C,)` tree that reaches the fused
+  node.
 - **multiple parents.** A is part of both B and D, both top-level, and
   the recording references A and B. The fused node lands in a different
-  top's tree, so the reachability check is false and the childless fused
-  tree overwrites.
+  top's tree, so the `(B,)` top owns no tree that reaches it - either
+  there is no tree under `(B,)` at all, or the reachability check is
+  false - and the childless fused tree overwrites.
 
 So PR #11 fixes the shape it describes, not the bug in general.
 
