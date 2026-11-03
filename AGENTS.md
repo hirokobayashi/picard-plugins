@@ -124,6 +124,48 @@ Picard-independent replacement for the legacy hierarchy model, in preparation
 for a Picard 3 port. No `import picard` anywhere in the package - enforced by a
 test that both scans the sources and blocks the import.
 
+### Where this stands
+PR #12 (the model) and PR #13 (the adapter) are merged into `my-mods`. The
+**shipped plugin still does not use either** - `plugins/classical_extras/__init__.py`
+is untouched and imports nothing from `hierarchy/`. The adapter writes six
+tags (`~cwp_workid_*`, `~cwp_workid_top`, `~cwp_work_top`, `~cwp_work_group`,
+`~cwp_part_levels`, `~cwp_work_part_levels`); the plugin writes about thirty
+more (the composer, arranger and key tags, the `~cwp_part` / `~cwp_extended_*`
+names, the groupheading tags and so on), and those are still the legacy's
+code.
+
+So the remaining work, in order:
+
+1. **Swap the plugin's hierarchy over to the adapter.** The legacy's
+   `process_album` / `process_trackback` path is the thing to replace. The
+   parity is measured - 161 of 218 tracks identical in every tag, and the
+   three tags that matter (`~cwp_workid_0`, `~cwp_work_top`, `~cwp_work_group`)
+   identical on all 218 - so the swap is measurable as it is made.
+2. **Move the other tag features off Picard.** They are the bulk of what is
+   left, and each one is Picard-coupled in its own way (`config.setting`, the
+   web service, `TrackMetadata`).
+3. **The Picard 3 plugin API itself.** The plugin declares
+   `PLUGIN_API_VERSIONS = ["2.0" ... "2.7"]`; Picard 3 needs the new API.
+4. **Then the legacy file can go.** `plugins/classical_extras/__init__.py` is
+   10,899 lines, and it carries the pre-existing lint errors - they go with
+   it.
+
+### The probe (`test/tools/legacy_probe.py`)
+Runs the *real* legacy plugin over a directory of MusicBrainz JSON, exactly
+as the legacy's own integration test does. It is how a case no fixture covers
+is checked against the legacy.
+
+**A probe that does not reproduce a recorded album proves nothing**, and the
+probes used while the adapter was written did not - the track's work id has to
+name a work with a `work_<id>.json` in the directory, or the legacy's first
+work lookup fails and the whole album is dropped. `LegacyProbeTestCase`
+checks the probe against the recorded daphnis album before its output is
+believed.
+
+The legacy's *own* test suite still writes to the user's real
+`~/.config/MusicBrainz/Picard/Classical_Extras/session.log`; the probe no
+longer does. That is worth boxing later.
+
 ### The adapter (`hierarchy/adapter.py`)
 The seam between MusicBrainz's JSON and the model. It reads the work and
 recording responses and writes the hierarchy tags. Two things the model
