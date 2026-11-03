@@ -163,6 +163,14 @@ the adapter writes, so it is outside what the adapter does.
 The `partial` substitution only applies when the plugin's `cwp_partial`
 option is on. With it off, a partially performed work is an ordinary one.
 
+**Only a 'performance' relation names a work the recording performs.**
+The legacy matches a relation by its target - any relation whose target
+is a work with that id - so it would read a 'parts' relation as a
+performance. The adapter asks for the type, because a 'parts' relation
+is not a performance and reading it as one would put the recording
+under a work it does not perform. No release has such a relation:
+MusicBrainz's only work relation is 'performance'.
+
 **A work performed only in part is the parent of the recording id** -
 but only when there is no work performed in full. The legacy takes the
 parents of the works performed in full, and looks a partly performed
