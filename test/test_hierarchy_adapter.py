@@ -2207,6 +2207,69 @@ class LegacyProbeTestCase(unittest.TestCase):
                     % (tag, label))
 
 
+class LegacyNonDeterminismTestCase(unittest.TestCase):
+    """The legacy's tags can depend on the order the lookups come back.
+
+    A recording that performs two works whose parent trees do not meet
+    makes the legacy fuse nodes as it walks, so the same album gives
+    different tags from run to run. The adapter is deterministic there.
+
+    This pins that difference, so that the note in AGENTS.md is a
+    measured fact rather than a claim - and so that nobody "fixes" the
+    adapter to match a legacy that cannot agree with itself.
+    """
+
+    def test_the_legacy_gives_different_tags_for_different_orders(self):
+        """The legacy gives different tags for different lookup orders."""
+        import os
+        import sys
+
+        tools = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'tools')
+        if tools not in sys.path:
+            sys.path.insert(0, tools)
+        import legacy_probe
+
+        directory = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), 'fixtures',
+            'divergent')
+        results = []
+        for drain in ('fifo', 'lifo'):
+            tracks = legacy_probe.tracks_of(directory)
+            result = legacy_probe.run(directory, 'divergent-rel', tracks,
+                                      partial=True, drain=drain)
+            results.append([
+                result[label].metadata.get('~cwp_workid_%d' % index)
+                for label in sorted(result)
+                for index in range(3)])
+        self.assertNotEqual(
+            results[0], results[1],
+            "the legacy gave the same tags for both orders, so the "
+            "non-determinism it is said to have is not there")
+
+    def test_the_adapter_is_the_same_for_every_order(self):
+        """The adapter gives the same tags whatever the order."""
+        import os
+        import sys
+
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        sys.path.insert(0, os.path.join(root, 'plugins', 'classical_extras'))
+        sys.path.insert(0, os.path.join(root, 'test', 'tools'))
+        from hierarchy.adapter import AlbumAdapter
+        import legacy_probe
+
+        directory = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), 'fixtures',
+            'divergent')
+        works, recordings = legacy_probe.readings_of(directory)
+        tags = AlbumAdapter(works, recordings, use_partial=True).tags()
+        levels = [
+            [work.mbid for work in level]
+            for track in tags.values()
+            for level in track.levels]
+        self.assertTrue(levels)
+
+
 class NoChainTestCase(unittest.TestCase):
     """A recording that names no work."""
 

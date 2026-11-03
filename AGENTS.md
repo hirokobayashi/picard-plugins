@@ -192,6 +192,13 @@ adapter keeps every work and the relations' order, so it is the same
 every time. No recorded album has that shape, so the fixture parity
 does not prove anything about it.
 
+It was measured, not assumed: the `divergent` fixture is a recording
+that performs two works under two parents that do not meet, and the
+legacy gives `('parent-a', 'parent-b')` for one lookup order and
+`('parent-b', 'parent-a')` for another.
+`LegacyNonDeterminismTestCase` runs both orders and checks they differ,
+so the note stays a fact.
+
 `test/tools/legacy_probe.py` runs the real legacy over a fixture
 directory, which is how these cases were checked. It reuses the legacy's
 own integration test flow, and `LegacyProbeTestCase` checks that it
