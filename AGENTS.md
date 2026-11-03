@@ -150,8 +150,26 @@ multiplicity given for the recording says so instead. The vote picks
 among a track's *own* candidate names: a track whose only candidate is
 one work keeps that name however the album votes.
 
+**One vote serves both the top's name and the group.** The legacy
+works `~cwp_work_top` and `~cwp_work_group` out of the *same* vote and
+the same names - the group is the top's name reduced to one value, so
+that a tie does not split the group. So the two tags of a track cannot
+disagree, and the adapter works them out together.
+
+The legacy also sorts a node's *display names* by the works'
+`ordering-key`. That is the `~cwp_work_N` tag, not the hierarchy ids
+the adapter writes, so it is outside what the adapter does.
+
 The `partial` substitution only applies when the plugin's `cwp_partial`
 option is on. With it off, a partially performed work is an ordinary one.
+
+**A work performed only in part is the parent of the recording id** -
+but only when there is no work performed in full. The legacy takes the
+parents of the works performed in full, and looks a partly performed
+work up as a node of its own; so a recording that also performs a work
+in full gets that work's parents, and one that performs only partly
+performed works gets the partly performed works. Both cases were run
+through the legacy, and it writes the same levels.
 
 A work related twice is in the performance's `partial` **and** its
 `complete` set: the recording stands in for the work, and the work itself

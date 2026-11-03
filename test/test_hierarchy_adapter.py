@@ -1456,8 +1456,11 @@ class PartialOrderTestCase(unittest.TestCase):
     def test_a_partial_only_work_contributes_nothing(self):
         """A work performed only in part contributes no parent.
 
-        The recording is not that work, and does not stand in its place,
-        so the work's parent is not in the level above.
+        The recording also performs a work in full, and that work's
+        parents are the parent of the recording's node - so the partly
+        performed work is not there.
+
+        The legacy was run on this case: it writes the same levels.
         """
         tags = self._adapter().tags()
         track = tags[w("rec-1")]
@@ -1476,9 +1479,11 @@ class PartialOrderTestCase(unittest.TestCase):
         """A work performed only in part is in the recording's chain
         nowhere.
 
-        The recording is not that work, so it stands in for it nowhere
-        and contributes nothing - so the work's own parent is not in the
-        recording's chain either.
+        The recording also performs a work in full, and that work's
+        parents are the parent of the recording's node - so the partly
+        performed work is not there.
+
+        The legacy was run on this case: it writes the same levels.
         """
         adapter = self._adapter()
         hierarchy, _groups = adapter.build()
@@ -1490,6 +1495,48 @@ class PartialOrderTestCase(unittest.TestCase):
                     self.assertNotEqual(
                         work, w("work-aaa"),
                         "the partial-only work is in the chain")
+
+    def test_a_partial_only_work_alone_is_the_parent(self):
+        """A recording that performs only a partly performed work has
+        that work above it.
+
+        There is no work performed in full, so nothing else decides the
+        parent - and the partly performed work is it. The recording id
+        stands in for the work one level below it.
+
+        The legacy was run on this case: it writes the recording id, the
+        work and the work's parent.
+        """
+        works = [
+            {
+                "id": "work-a",
+                "title": "A work",
+                "relations": [
+                    {
+                        "type": "parts",
+                        "direction": "backward",
+                        "work": {"id": "parent-1"},
+                    },
+                ],
+            },
+            {"id": "parent-1", "title": "The first parent"},
+        ]
+        recordings = [{
+            "id": "rec-1",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-a"},
+                    "attributes": ["partial"],
+                },
+            ],
+        }]
+        tags = AlbumAdapter(works, recordings, use_partial=True).tags()
+        track = tags[w("rec-1")]
+        self.assertEqual(track.levels[0], [w("rec-1")])
+        self.assertEqual(track.levels[1], [w("work-a")])
+        self.assertEqual(track.levels[2], [w("parent-1")])
 
     def test_two_partial_works_keep_the_relation_order(self):
         """The level above two works holds their parents, in order.
