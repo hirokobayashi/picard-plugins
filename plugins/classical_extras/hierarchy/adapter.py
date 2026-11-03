@@ -44,7 +44,7 @@ from dataclasses import dataclass, field
 from typing import (Dict, FrozenSet, Iterable, Iterator, List, Mapping, Optional,
                     Sequence, Set, Tuple)
 
-from .album import Album, Performance, candidate_tops, chains_of
+from .album import (Performance, candidate_tops, chains_of, normalise_name)
 from .graph import NodeId, WorkGraph, WorkId
 from .project import Hierarchy, project
 
@@ -890,8 +890,24 @@ class AlbumAdapter:
         return members
 
     def build(self) -> Tuple[Hierarchy, Dict[WorkId, str]]:
-        """The hierarchy and the group of every recording."""
-        hierarchy, _chains, groups = self.build_all()
+        """The hierarchy and the group of every recording.
+
+        The group is the same vote as the top work's name, so it is
+        worked out here from the same vote the tags use.
+        """
+        hierarchy, chains, _groups = self.build_all()
+        votes = self._votes(self._candidates)
+        groups: Dict[WorkId, str] = {}
+        for recording in self.recordings:
+            chain = chains.get(recording.performance.key) or []
+            levels, _through = self._levels(recording, chain)
+            filled = [(index, works)
+                      for index, works in enumerate(levels) if works]
+            if not filled:
+                groups[recording.performance.key] = ''
+                continue
+            groups[recording.performance.key] = self._group_name(
+                filled[-1][1], votes)
         return hierarchy, groups
 
     def build_all(self) -> Tuple[Hierarchy, Dict[WorkId, List[NodeId]],
@@ -901,6 +917,9 @@ class AlbumAdapter:
         The hierarchy is built once and kept, so that a caller that
         asks for the build and then for the tags does not walk the
         whole graph twice.
+
+        The groups are empty here: they come from the same vote as the
+        top work's name, and that vote is worked out when the tags are.
         """
         if self._built is not None:
             return self._built
@@ -911,9 +930,7 @@ class AlbumAdapter:
             use_collections=self.use_collections,
             performances=self.performances)
         chains = chains_of(hierarchy, self.performances)
-        album = Album(names=self.names.titles)
         candidates = candidate_tops(chains, hierarchy)
-        groups = album.group_names(candidates)
         # the candidates are kept, so that the tags do not have to walk
         # the chains a second time
         self._candidates = candidates
@@ -925,7 +942,10 @@ class AlbumAdapter:
         self._unused_multiplicity = [
             key for key in self.multiplicity
             if not candidates.get(key)]
-        self._built = (hierarchy, chains, groups)
+        # the groups are not worked out here: they come from the same
+        # vote as the top work's name, and that is worked out when the
+        # tags are - so that the two cannot disagree
+        self._built = (hierarchy, chains, {})
         return self._built
 
     def tags(self) -> Dict[WorkId, TrackTags]:
@@ -944,7 +964,7 @@ class AlbumAdapter:
         the first one's tags; the ones that were dropped are in
         ``dropped``.
         """
-        hierarchy, chains, groups = self.build_all()
+        hierarchy, chains, _groups = self.build_all()
         votes = self._votes(self._candidates)
         # the height of a top is the same for every track that shares it,
         # so it is worked out once per top
@@ -955,7 +975,6 @@ class AlbumAdapter:
             chain = chains.get(recording.performance.key) or []
             result[recording.performance.key] = self._tags_for(
                 recording, chain, hierarchy,
-                groups.get(recording.performance.key, ''),
                 votes, heights, cycles)
         return result
 
@@ -1022,12 +1041,29 @@ class AlbumAdapter:
         # share a top
         return sorted(winners)
 
+    def _group_name(
+            self,
+            top: Sequence[WorkId],
+            votes: Mapping[str, int]) -> str:
+        """The shuffle key of a track's top work.
+
+        The legacy's group is the same vote as the top work's name, and
+        the same names - the group is the top's name reduced to one
+        value, so that a tie does not split the group. So a tie keeps
+        the name that comes first in a fixed order.
+        """
+        names = self.names.names_of(top)
+        if not names:
+            return ''
+        best = max(votes.get(name, 0) for name in names)
+        winners = [name for name in names if votes.get(name, 0) == best]
+        return min(winners, key=normalise_name)
+
     def _tags_for(
             self,
             recording: Recording,
             chain: Sequence[NodeId],
             hierarchy: Hierarchy,
-            group: str,
             votes: Mapping[str, int],
             heights: Dict[NodeId, Dict[NodeId, int]],
             cycles: Dict[NodeId, bool]) -> TrackTags:
@@ -1051,11 +1087,11 @@ class AlbumAdapter:
             # a level with no ids has no tag, so it is not a level of
             # the track's own - and the count of the levels and the
             # node of the top would not agree
-            return TrackTags(key=recording.performance.key, group=group)
+            return TrackTags(key=recording.performance.key)
         if not filled:
             # the recording names no work, or names a work with no place
             # in the tree
-            return TrackTags(key=recording.performance.key, group=group)
+            return TrackTags(key=recording.performance.key)
         top_index, top = filled[-1]
         tip = chain[top_index]
         if tip not in heights:
@@ -1071,17 +1107,17 @@ class AlbumAdapter:
         # rest of the release with it.
         work_part_levels = heights[tip].get(tip)
         if work_part_levels is None:
-            return TrackTags(key=recording.performance.key, group=group)
+            return TrackTags(key=recording.performance.key)
         # A cycle in the hierarchy makes the depth unreliable, so the
         # track is left with no tags rather than a wrong depth.
         if cycles[tip]:
-            return TrackTags(key=recording.performance.key, group=group)
+            return TrackTags(key=recording.performance.key)
         return TrackTags(
             key=recording.performance.key,
             levels=levels,
             top=top,
             top_names=self._top_names(top, votes),
-            group=group,
+            group=self._group_name(top, votes),
             # the number of levels below the track's own - the same
             # count as the tags are numbered by, so the two agree
             part_levels=len(filled) - 1,

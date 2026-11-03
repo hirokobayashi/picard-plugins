@@ -2985,6 +2985,84 @@ class NoChainTestCase(unittest.TestCase):
         tags = adapter.tags()
         self.assertIn(WorkId("rec-1"), tags)
 
+    def test_the_group_is_the_same_vote_as_the_top(self):
+        """The group is the same vote as the top work's name.
+
+        The legacy works the group out from the vote it uses for the
+        top work's name - the same vote and the same names - so the
+        two tags of a track cannot disagree. Here the top of rec-3 is
+        one name and the group was another, because the group was
+        worked out from a vote of its own.
+
+        The legacy was run on this case: it writes the top and the
+        group as the same name.
+        """
+        works = [
+            {"id": "work-zed", "title": "Zed"},
+            {"id": "work-ann", "title": "Ann"},
+        ]
+
+        def recording(rid, wid):
+            return {
+                "id": rid,
+                "relations": [
+                    {
+                        "type": "performance",
+                        "direction": "forward",
+                        "work": {"id": wid},
+                    },
+                ],
+            }
+
+        both = {
+            "id": "rec-3",
+            "relations": [
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-zed"},
+                },
+                {
+                    "type": "performance",
+                    "direction": "forward",
+                    "work": {"id": "work-ann"},
+                },
+            ],
+        }
+        names = WorkNames(titles={
+            w("work-zed"): "Zed",
+            w("work-ann"): "Ann",
+        })
+        # rec-1 is on two tracks, so it votes twice and "Zed" wins
+        adapter = AlbumAdapter(
+            works,
+            [recording("rec-1", "work-zed"),
+             recording("rec-2", "work-ann"),
+             both,
+             recording("rec-1", "work-zed")],
+            names=names, use_partial=True)
+        tags = adapter.tags()
+        self.assertEqual(tags[WorkId("rec-3")].top_names, ["Zed"])
+        # the group is the same vote, so it is the same name
+        self.assertEqual(tags[WorkId("rec-3")].group, "Zed")
+        self.assertEqual(tags[WorkId("rec-1")].group, "Zed")
+        self.assertEqual(tags[WorkId("rec-2")].group, "Ann")
+
+        # and a tie keeps every name for the top, but the group is one
+        # of them - the first in a fixed order, so that the group is
+        # never split. The legacy's own two functions do the same: the
+        # top keeps both names and the group is the first of them.
+        adapter = AlbumAdapter(
+            works,
+            [recording("rec-1", "work-zed"),
+             recording("rec-2", "work-ann"),
+             both],
+            names=names, use_partial=True)
+        tags = adapter.tags()
+        self.assertEqual(
+            tags[WorkId("rec-3")].top_names, ["Ann", "Zed"])
+        self.assertEqual(tags[WorkId("rec-3")].group, "Ann")
+
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
 
