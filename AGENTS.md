@@ -166,6 +166,18 @@ The legacy's *own* test suite still writes to the user's real
 `~/.config/MusicBrainz/Picard/Classical_Extras/session.log`; the probe no
 longer does. That is worth boxing later.
 
+Two things to keep in mind when the swap happens:
+
+- **the adapter writes every level, with no depth cap** - the legacy's
+  loop has none either, so a chain deeper than the fixtures reach is
+  written the same way by both. The deepest level in the fixtures is 4,
+  and the probe test compares levels 0 to 3, so a deeper chain would
+  not be compared by that test.
+- **the other tag features are written from inside the traversal.**
+  `self.write_tags(...)` is called from `process_trackback`, so the
+  legacy's path cannot fully go away until both the hierarchy and the
+  other features have moved.
+
 ### The adapter (`hierarchy/adapter.py`)
 The seam between MusicBrainz's JSON and the model. It reads the work and
 recording responses and writes the hierarchy tags. Two things the model
