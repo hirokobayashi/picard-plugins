@@ -1,0 +1,13 @@
+{
+ "id": "parent-b",
+ "title": "The parent of B",
+ "relations": [
+  {
+   "type": "parts",
+   "direction": "backward",
+   "work": {
+    "id": "top"
+   }
+  }
+ ]
+}

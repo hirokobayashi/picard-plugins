@@ -1221,6 +1221,107 @@ class ProjectionTestCase(unittest.TestCase):
 class ParentResolutionTestCase(unittest.TestCase):
     """How a work's parent is found among MusicBrainz's relation types."""
 
+    def test_the_parents_are_the_same_whatever_the_options(self):
+        """The parents of each work, for every combination of options.
+
+        The expected parents are written out by hand, so the test does
+        not work the expectation out of the code it is checking.
+
+        The graph has a collection relation and a backward medley, so
+        that the filters are exercised and not just switched on.
+
+        The collection relation is on a work of its own, so that the
+        filter has something to filter - a work with an ordinary
+        relation as well would keep that relation whatever the option
+        says.
+        """
+        graph = WorkGraph()
+        graph.add_relation(w("movement"), "parts", "backward", w("opera"))
+        graph.add_relation(w("movement"), "parts", "backward", w("act"))
+        graph.add_relation(w("arrangement"), "arrangement", "backward",
+                           w("opera"))
+        graph.add_relation(w("medley"), "medley", "forward", w("opera"))
+        graph.add_relation(w("medley"), "medley", "backward", w("backwards"))
+        graph.add_relation(
+            w("collection"), "parts", "backward", w("box"),
+            attributes=("part of collection",))
+        # the parents of each work, for every combination of the three
+        # options. The movement has parts parents, so they are used and
+        # the arrangement and medley fallbacks do not come into it.
+        for use_arrangements in (True, False):
+            for use_medleys in (True, False):
+                for use_collections in (True, False):
+                    label = "%s %s %s" % (
+                        use_arrangements, use_medleys, use_collections)
+                    sets = graph.resolve_parents(
+                        use_arrangements=use_arrangements,
+                        use_medleys=use_medleys,
+                        use_collections=use_collections)
+                    ordered = graph.resolve_parents_ordered(
+                        use_arrangements=use_arrangements,
+                        use_medleys=use_medleys,
+                        use_collections=use_collections)
+                    # the movement has two parts parents
+                    self.assertEqual(
+                        sets[w("movement")],
+                        frozenset({w("opera"), w("act")}),
+                        label)
+                    # the arrangement has no parts parent, so the
+                    # arrangement relation is used - unless arrangements
+                    # are off
+                    self.assertEqual(
+                        sets[w("arrangement")],
+                        frozenset({w("opera")}) if use_arrangements
+                        else frozenset(),
+                        label)
+                    # the medley has no parts or arrangement parent, so
+                    # the medley relation is used - unless medleys are
+                    # off. The backward one is not a parent.
+                    self.assertEqual(
+                        sets[w("medley")],
+                        frozenset({w("opera")}) if use_medleys
+                        else frozenset(),
+                        label)
+                    # the collection's parent is dropped when
+                    # collections are off
+                    self.assertEqual(
+                        sets[w("collection")],
+                        frozenset({w("box")}) if use_collections
+                        else frozenset(),
+                        label)
+                    # and the ordered resolution holds the same parents
+                    self.assertEqual(
+                        {work: frozenset(parents)
+                         for work, parents in ordered.items()},
+                        sets,
+                        label)
+
+    def test_the_collection_filter_is_exercised(self):
+        """A collection parent is dropped when collections are off.
+
+        Without this, the test above would pass even if the filter were
+        gone - there would be no collection edge to filter.
+        """
+        graph = WorkGraph()
+        graph.add_relation(
+            w("collection"), "parts", "backward", w("box"),
+            attributes=("part of collection",))
+        self.assertEqual(
+            graph.resolve_parents()[w("collection")], frozenset({w("box")}))
+        self.assertEqual(
+            graph.resolve_parents(use_collections=False)[w("collection")],
+            frozenset())
+
+    def test_a_backward_medley_is_not_a_parent(self):
+        """A backward medley relation is not a parent.
+
+        The medley fallback only takes a forward relation.
+        """
+        graph = WorkGraph()
+        graph.add_relation(w("medley"), "medley", "backward", w("opera"))
+        self.assertEqual(
+            graph.resolve_parents()[w("medley")], frozenset())
+
     def test_parts_relation_is_the_parent(self):
         graph = WorkGraph()
         graph.add_relation(w("movement"), "parts", "backward", w("opera"))
