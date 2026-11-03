@@ -170,15 +170,16 @@ Two things to keep in mind when the swap happens:
 
 - **the adapter writes every level, with no depth cap** - the legacy's
   recursion has none either, so a chain of any depth is written the
-  same way by both. But the probe test compares levels 0 to 3 only, and
-  the deepest level in the fixtures is 4 - so daphnis's own level 4 is
-  already outside what that test checks. A wrong *depth* would still be
-  caught, by `~cwp_part_levels`; wrong ids at level 4 would not be, by
-  that test. The full comparison in `LegacyParityTestCase` does cover
-  them.
+  same way by both. But the probe test compares levels 0 to 3 only.
+  That reaches every level daphnis has - its chains end at 3 - but the
+  fixtures' deepest chain is tristan's level 4, and tristan is never
+  probed, so its level 4 rests on `LegacyParityTestCase` alone. A wrong
+  *depth* for daphnis would still be caught, by `~cwp_part_levels`; a
+  spurious level 4 id would not be, by that test.
 - **the other tag features lean on the traversal.** The genre, key, date
   and structure tags are written from inside it - `self.write_tags(...)`
-  is called from `process_trackback` - and the rest depend on tags the
+  is called from `process_trackback_children` and `set_metadata` - and
+  the rest depend on tags the
   traversal wrote, the artist tags being a separate pass keyed off
   `~cwp_workid_0`. So the legacy's path cannot fully go away until both
   the hierarchy and the other features have moved.
