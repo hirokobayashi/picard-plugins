@@ -59,12 +59,29 @@ def run(fixdir, rel, tracks, partial=True, drain="fifo"):
         _run_full_album = runner
 
     case = Synth('test_result_is_independent_of_lookup_order')
-    case.setUp()
     # The legacy writes its log files under the user's Picard directory.
     # A probe should not leave files there, so they go to a temporary
     # directory instead.
+    #
+    # The patch has to be in place before the plugin is imported: the
+    # plugin writes its session log when it is imported, and it opens
+    # the file for writing - so a later patch would still have the
+    # user's session log truncated. The directory is taken from
+    # picard.const, which the plugin reads at import time.
     import tempfile
     log_dir = tempfile.mkdtemp(prefix='legacy-probe-')
+    import picard.const as picard_const
+    original_user_dir = picard_const.USER_DIR
+    picard_const.USER_DIR = log_dir
+    try:
+        case.setUp()
+    except Exception:
+        picard_const.USER_DIR = original_user_dir
+        shutil.rmtree(log_dir, ignore_errors=True)
+        raise
+    # The plugin holds its own copy of the directory, which it took at
+    # import time - so it is the temporary one. The user's is put back
+    # when the run is over.
     case.mod.USER_DIR = log_dir
     try:
         # The drain order is the order the work lookups are answered in,
@@ -86,25 +103,19 @@ def run(fixdir, rel, tracks, partial=True, drain="fifo"):
             case.doCleanups()
         finally:
             T.ClassicalExtrasTestCase._cleanup_global_state()
-            # The session log is opened when the plugin is imported, so
-            # it is under the user's Picard directory rather than the
-            # temporary one. It is closed here so that it does not stay
-            # open for the rest of the process.
+            # The log files are closed so that they do not stay open for
+            # the rest of the process.
             for name, handle in list(case.mod.log_files.items()):
                 try:
                     handle.close()
                     del case.mod.log_files[name]
                 except Exception:
                     pass
-            # The session log was opened under the user's Picard
-            # directory, so it is removed as well - a probe should not
-            # leave files there.
-            session_log = os.path.join(
-                case.mod.USER_DIR, 'Classical_Extras', 'session.log')
-            try:
-                os.remove(session_log)
-            except OSError:
-                pass
+            # The directories the plugin was given are put back, or the
+            # rest of the process would write its logs into a directory
+            # that is about to be removed.
+            case.mod.USER_DIR = original_user_dir
+            picard_const.USER_DIR = original_user_dir
             shutil.rmtree(log_dir, ignore_errors=True)
 
 
