@@ -2248,7 +2248,13 @@ class LegacyNonDeterminismTestCase(unittest.TestCase):
             "non-determinism it is said to have is not there")
 
     def test_the_adapter_is_the_same_for_every_order(self):
-        """The adapter gives the same tags whatever the order."""
+        """The adapter gives the same tags whatever the order.
+
+        The order the works are given in does not change the tags - the
+        relations give the order, not the order they happen to arrive
+        in. So the same album, read in two orders, gives the same
+        levels.
+        """
         import os
         import sys
 
@@ -2262,12 +2268,22 @@ class LegacyNonDeterminismTestCase(unittest.TestCase):
             os.path.dirname(os.path.abspath(__file__)), 'fixtures',
             'divergent')
         works, recordings = legacy_probe.readings_of(directory)
-        tags = AlbumAdapter(works, recordings, use_partial=True).tags()
-        levels = [
-            [work.mbid for work in level]
-            for track in tags.values()
-            for level in track.levels]
-        self.assertTrue(levels)
+
+        def levels_of(works_in):
+            tags = AlbumAdapter(
+                works_in, recordings, use_partial=True).tags()
+            return [
+                [work.mbid for work in level]
+                for track in tags.values()
+                for level in track.levels]
+
+        expected = levels_of(works)
+        # the same works, given in the other order
+        self.assertEqual(levels_of(list(reversed(works))), expected)
+        # and the levels themselves
+        self.assertEqual(
+            expected,
+            [['work-a', 'work-b'], ['parent-a', 'parent-b']])
 
 
 class NoChainTestCase(unittest.TestCase):
