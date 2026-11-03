@@ -2255,8 +2255,9 @@ class LegacyNonDeterminismTestCase(unittest.TestCase):
         in. So the same album, read in any order, gives the same
         levels.
         """
+        import itertools
+        import math
         import os
-        import random
         import sys
 
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -2283,13 +2284,14 @@ class LegacyNonDeterminismTestCase(unittest.TestCase):
         self.assertEqual(
             expected,
             [['work-a', 'work-b'], ['parent-a', 'parent-b']])
-        # the same works, given in every order - the relations give the
-        # order, not the order the works happen to arrive in
-        for seed in range(6):
-            shuffled = list(works)
-            random.Random(seed).shuffle(shuffled)
+        # the same works, given in every order there is - the relations
+        # give the order, not the order the works happen to arrive in.
+        # There are only a few of them, so all of them are tried.
+        orders = list(itertools.permutations(works))
+        self.assertEqual(len(orders), math.factorial(len(works)))
+        for order in orders:
             self.assertEqual(
-                levels_of(shuffled), expected,
+                levels_of(list(order)), expected,
                 "the order the works were given in changed the levels")
 
 
