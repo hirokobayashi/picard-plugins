@@ -182,8 +182,16 @@ but only when there is no work performed in full. The legacy takes the
 parents of the works performed in full, and looks a partly performed
 work up as a node of its own; so a recording that also performs a work
 in full gets that work's parents, and one that performs only partly
-performed works gets the partly performed works. Both cases were run
-through the legacy, and it writes the same levels.
+performed works gets the partly performed works.
+
+`test/tools/legacy_probe.py` runs the real legacy over a fixture
+directory, which is how these cases were checked. It reuses the legacy's
+own integration test flow, and `LegacyProbeTestCase` checks that it
+reproduces the recorded daphnis album - so its output can be believed.
+**A probe that does not reproduce a recorded album proves nothing**, and
+an earlier version of one did not: the track's work id has to name a
+work that has a `work_<id>.json` in the directory, or the legacy's first
+work lookup fails and the whole album is dropped.
 
 A work related twice is in the performance's `partial` **and** its
 `complete` set: the recording stands in for the work, and the work itself
