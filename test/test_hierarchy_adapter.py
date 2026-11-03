@@ -331,7 +331,8 @@ class ReadPerformanceTestCase(unittest.TestCase):
         full afterwards still puts the work in the complete set, so the
         work contributes itself one level up.
 
-        The legacy was run on this case and it writes the work one level
+        The legacy was run on this case with
+        ``test/tools/legacy_probe.py`` and it writes the work one level
         up, so this is what the legacy does.
         """
         recording = {
@@ -1462,7 +1463,8 @@ class PartialOrderTestCase(unittest.TestCase):
         parents are the parent of the recording's node - so the partly
         performed work is not there.
 
-        The legacy was run on this case: it writes the same levels.
+        The legacy was run on this case with
+        ``test/tools/legacy_probe.py``: it writes the same levels.
         """
         tags = self._adapter().tags()
         track = tags[w("rec-1")]
@@ -1485,7 +1487,8 @@ class PartialOrderTestCase(unittest.TestCase):
         parents are the parent of the recording's node - so the partly
         performed work is not there.
 
-        The legacy was run on this case: it writes the same levels.
+        The legacy was run on this case with
+        ``test/tools/legacy_probe.py``: it writes the same levels.
         """
         adapter = self._adapter()
         hierarchy, _groups = adapter.build()
@@ -1506,7 +1509,8 @@ class PartialOrderTestCase(unittest.TestCase):
         parent - and the partly performed work is it. The recording id
         stands in for the work one level below it.
 
-        The legacy was run on this case: it writes the recording id, the
+        The legacy was run on this case with
+        ``test/tools/legacy_probe.py``: it writes the recording id, the
         work and the work's parent.
         """
         works = [
@@ -2136,6 +2140,59 @@ class EmptyNamesTestCase(unittest.TestCase):
         # the legacy writes the name tag only when it has a name
         self.assertNotIn('~cwp_work_top', metadata)
         self.assertEqual(metadata['~cwp_workid_top'], ("work-2",))
+
+
+class LegacyProbeTestCase(unittest.TestCase):
+    """The probe that runs the real legacy must reproduce a recording.
+
+    The probe is how the adapter is checked against the legacy on a case
+    that no fixture covers. But a probe that does not reproduce a recorded
+    album proves nothing, so this checks it against the daphnis album -
+    the one album with a partly performed work that has a parent.
+
+    It runs the real legacy over the real fixture and compares the tags
+    with the recorded ones.
+    """
+
+    def test_the_probe_reproduces_the_daphnis_album(self):
+        """The probe gives the tags the legacy recorded for daphnis."""
+        import json
+        import os
+        import sys
+
+        tools = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'tools')
+        if tools not in sys.path:
+            sys.path.insert(0, tools)
+        import legacy_probe
+
+        fixdir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                              'fixtures', 'daphnis')
+        recorded = json.load(open(os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'fixtures', 'legacy_tags.json')))['daphnis']['tracks']
+
+        tracks = []
+        for label in sorted(recorded):
+            rec = json.load(open(os.path.join(fixdir, 'rec_%s.json' % label)))
+            works = [r['work']['id'] for r in rec.get('relations') or ()
+                     if r.get('type') == 'performance']
+            tracks.append((label, 1, int(label.replace('d1t', '')),
+                           rec['id'], '; '.join(works)))
+
+        result = legacy_probe.run(fixdir, 'daph-rel', tracks, partial=True)
+        for label in sorted(recorded):
+            metadata = result[label].metadata
+            for index in range(4):
+                tag = '~cwp_workid_%d' % index
+                want = recorded[label].get(tag)
+                got = metadata.get(tag)
+                if got is not None and isinstance(got, tuple):
+                    got = list(got)
+                self.assertEqual(
+                    got, want,
+                    "the probe's %s of %s differs from the recorded one"
+                    % (tag, label))
 
 
 class NoChainTestCase(unittest.TestCase):
