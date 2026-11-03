@@ -1031,15 +1031,16 @@ class AlbumAdapter:
             # order of the track's own level, and the tracks that share
             # a top do not agree on it. So every track that shares the
             # top names it the same way.
-            return sorted(names)[:1]
+            return names[:1]
         best = max(votes.get(name, 0) for name in names)
         winners = [name for name in names if votes.get(name, 0) == best]
         if len(winners) == 1:
             return winners
-        # a tie keeps every tied name, in a fixed order - not the order of
-        # this track's top list, which differs between the tracks that
-        # share a top
-        return sorted(winners)
+        # A tie keeps every tied name, in the order the relations gave
+        # them - the legacy's order. The names come from the track's own
+        # top list, which the relations ordered, so the tracks that share
+        # a top agree on the order.
+        return winners
 
     def _group_name(self, top_names: Sequence[str]) -> str:
         """The shuffle key of a track's top work.

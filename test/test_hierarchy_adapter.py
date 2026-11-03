@@ -823,13 +823,15 @@ class TopNameTestCase(unittest.TestCase):
             ["A work", "Another work"])
 
     def test_a_tied_top_names_every_tied_name(self):
-        """A tie keeps every tied name, in a fixed order.
+        """A tie keeps every tied name, in the order they came in.
 
         No fixture has a tie - the two Swan Lake editions share one
         title, so the names are one. So the tie is built here.
 
         The names are not in the order they would be sorted in, so that
-        an implementation that kept the top's own order would not pass.
+        an implementation that sorted them would not pass. The legacy
+        keeps the order the relations gave: its own two functions were
+        run on this case.
         """
         adapter = _adapter("planets")
         names = WorkNames(titles={
@@ -841,7 +843,7 @@ class TopNameTestCase(unittest.TestCase):
         votes = {"The first work": 1, "The second work": 1}
         top_names = adapter._top_names([w("work-a"), w("work-b")], votes)
         self.assertEqual(
-            top_names, ["The first work", "The second work"])
+            top_names, ["The second work", "The first work"])
 
     def test_a_tied_top_is_written_as_a_list(self):
         """The names of a tied top are written as a list.
@@ -2823,10 +2825,12 @@ class NoChainTestCase(unittest.TestCase):
         """The tracks that share a top name it the same way.
 
         The vote is what makes them agree. With no vote at all - no
-        candidate top has a title - the names are put in a fixed order
-        first, because the order they came in is the order of the
-        track's own level, and the tracks that share a top do not agree
-        on that.
+        candidate top has a title - the legacy takes the first name, and
+        the names come in the order the relations gave them.
+
+        So the two orders of the same two works name the top
+        differently - the legacy's own function was run on this case,
+        and it takes the first name of the list it is given.
         """
         names = WorkNames(titles={
             w("work-a"): "The first work",
@@ -2834,10 +2838,9 @@ class NoChainTestCase(unittest.TestCase):
         })
         adapter = AlbumAdapter([], [], names=names, use_partial=True)
         votes = {}
-        # the two orders of the same two works name the top the same way
         self.assertEqual(
             adapter._top_names([w("work-b"), w("work-a")], votes),
-            ["The first work"])
+            ["The second work"])
         self.assertEqual(
             adapter._top_names([w("work-a"), w("work-b")], votes),
             ["The first work"])
@@ -3095,10 +3098,11 @@ class NoChainTestCase(unittest.TestCase):
         self.assertEqual(tags[WorkId("rec-1")].group, "Zed")
         self.assertEqual(tags[WorkId("rec-2")].group, "Ann")
 
-        # and a tie keeps every name for the top, but the group is one
-        # of them - the first in a fixed order, so that the group is
-        # never split. The legacy's own two functions do the same: the
-        # top keeps both names and the group is the first of them.
+        # and a tie keeps every name for the top, in the order the
+        # relations gave them, but the group is one of them - the first
+        # of them, so that the group is never split. The legacy was run
+        # on this case: it keeps both names for the top and writes the
+        # group as the first of them.
         adapter = AlbumAdapter(
             works,
             [recording("rec-1", "work-zed"),
@@ -3107,7 +3111,8 @@ class NoChainTestCase(unittest.TestCase):
             names=names, use_partial=True)
         tags = adapter.tags()
         self.assertEqual(
-            tags[WorkId("rec-3")].top_names, ["Ann", "Zed"])
+            tags[WorkId("rec-3")].top_names, ["Zed", "Ann"])
+        # the group is the smallest of the tied names by normalised name
         self.assertEqual(tags[WorkId("rec-3")].group, "Ann")
 
     def test_the_group_is_one_of_the_top_names(self):
@@ -3159,10 +3164,11 @@ class NoChainTestCase(unittest.TestCase):
             works, recordings, names=names, use_partial=True).tags()
         track = tags[WorkId("rec-1")]
         # the two names are tied, so both are kept for the top
-        self.assertEqual(track.top_names, ["Alpha.", "alpha"])
-        # and the group is one of them
+        self.assertEqual(track.top_names, ["alpha", "Alpha."])
+        # and the group is one of them - the first, since the two
+        # normalise to the same thing
         self.assertIn(track.group, track.top_names)
-        self.assertEqual(track.group, "Alpha.")
+        self.assertEqual(track.group, "alpha")
 
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.

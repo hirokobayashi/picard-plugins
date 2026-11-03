@@ -336,8 +336,15 @@ def _performance_node(
         return node_id
 
     # Only partly performed works: the recording id stands in for each of
-    # them, so they are the parent of the recording id.
-    container = NodeId(frozenset(partial_works))
+    # them, so they are the parent of the recording id. They are reduced
+    # like any other node's parent set, so that a chain does not visit a
+    # work twice - a partly performed work that is the parent of another
+    # one would otherwise put that other one in the chain twice.
+    reduced = reduce_parents(
+        frozenset(partial_works),
+        accepted,
+        _ancestors_for(accepted, frozenset(partial_works)))
+    container = NodeId(reduced)
     if container == node_id:
         return node_id
     if container not in hierarchy.nodes:
