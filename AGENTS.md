@@ -178,8 +178,8 @@ Two things to keep in mind when the swap happens:
   spurious level 4 id would not be, by that test.
 - **the other tag features lean on the traversal.** The genre, key, date
   and structure tags are written from inside it - `self.write_tags(...)`
-  is called from `process_trackback_children` and `set_metadata` - and
-  the rest depend on tags the
+  is called from `process_trackback` and `set_metadata` - and the rest
+  depend on tags the
   traversal wrote, the artist tags being a separate pass keyed off
   `~cwp_workid_0`. So the legacy's path cannot fully go away until both
   the hierarchy and the other features have moved.
