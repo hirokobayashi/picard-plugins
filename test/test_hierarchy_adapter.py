@@ -2321,7 +2321,11 @@ class LegacyProbeFailureTestCase(unittest.TestCase):
         import picard.const as picard_const
         original = picard_const.USER_DIR
 
-        before = set(os.listdir('/tmp')) if os.path.isdir('/tmp') else set()
+        # the temporary directory the probe makes is under the system's
+        # temporary directory, wherever that is
+        import tempfile
+        temp_root = tempfile.gettempdir()
+        before = set(os.listdir(temp_root))
 
         class Boom(BaseException):
             """Not an Exception, so the guard has to catch more."""
@@ -2345,7 +2349,7 @@ class LegacyProbeFailureTestCase(unittest.TestCase):
         # the directory is the user's again
         self.assertEqual(picard_const.USER_DIR, original)
         # and no temporary directory was left behind
-        after = set(os.listdir('/tmp')) if os.path.isdir('/tmp') else set()
+        after = set(os.listdir(temp_root))
         left = [name for name in after - before
                 if name.startswith('legacy-probe-')]
         self.assertEqual(left, [])
