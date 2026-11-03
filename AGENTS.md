@@ -184,6 +184,14 @@ work up as a node of its own; so a recording that also performs a work
 in full gets that work's parents, and one that performs only partly
 performed works gets the partly performed works.
 
+**Where the legacy is not deterministic, the adapter is.** A recording
+that performs two works whose parent trees do not meet makes the legacy
+fuse nodes as it walks, so its tags depend on the order the lookups come
+back in - the same album gives different tags from run to run. The
+adapter keeps every work and the relations' order, so it is the same
+every time. No recorded album has that shape, so the fixture parity
+does not prove anything about it.
+
 `test/tools/legacy_probe.py` runs the real legacy over a fixture
 directory, which is how these cases were checked. It reuses the legacy's
 own integration test flow, and `LegacyProbeTestCase` checks that it

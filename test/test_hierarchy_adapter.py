@@ -2193,6 +2193,18 @@ class LegacyProbeTestCase(unittest.TestCase):
                     got, want,
                     "the probe's %s of %s differs from the recorded one"
                     % (tag, label))
+            # the names and the counts too - they are what the vote and
+            # the name fixes protect
+            for tag in ('~cwp_work_top', '~cwp_work_group',
+                        '~cwp_part_levels', '~cwp_work_part_levels'):
+                want = recorded[label].get(tag)
+                got = metadata.get(tag)
+                if isinstance(got, tuple):
+                    got = list(got)
+                self.assertEqual(
+                    got, want,
+                    "the probe's %s of %s differs from the recorded one"
+                    % (tag, label))
 
 
 class NoChainTestCase(unittest.TestCase):
@@ -3226,6 +3238,23 @@ class NoChainTestCase(unittest.TestCase):
         # normalise to the same thing
         self.assertIn(track.group, track.top_names)
         self.assertEqual(track.group, "alpha")
+
+    def test_the_group_is_always_one_of_the_top_names(self):
+        """The group is always one of the names the top work's tag holds.
+
+        The group is the shuffle key and the top is the name, and the
+        two are worked out from the same vote - so the group must be
+        one of the names that won. If it were not, the two tags of a
+        track would disagree about which name the album chose.
+        """
+        for album in sorted(USE_PARTIAL):
+            adapter = _adapter(album)
+            for track in adapter.tags().values():
+                if not track.top_names:
+                    continue
+                self.assertIn(
+                    track.group, track.top_names,
+                    "%s: the group is not one of the top's names" % album)
 
     def test_a_response_that_is_not_an_object_is_skipped(self):
         """A response that is not an object is skipped.
