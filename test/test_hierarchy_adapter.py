@@ -2297,6 +2297,60 @@ class LegacyNonDeterminismTestCase(unittest.TestCase):
                 "the order the works were given in changed the levels")
 
 
+class LegacyProbeFailureTestCase(unittest.TestCase):
+    """The probe must undo its patch when the setup fails.
+
+    The probe points the plugin's log directory at a temporary one, so
+    that it does not write to the user's Picard directory. If the
+    setup fails - or is interrupted - the patch has to be undone, or
+    the rest of the process writes its logs into a directory that has
+    been removed.
+    """
+
+    def test_the_patch_is_undone_when_the_setup_fails(self):
+        """A failure in the setup leaves nothing behind."""
+        import os
+        import sys
+
+        tools = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'tools')
+        if tools not in sys.path:
+            sys.path.insert(0, tools)
+        import legacy_probe
+
+        import picard.const as picard_const
+        original = picard_const.USER_DIR
+
+        before = set(os.listdir('/tmp')) if os.path.isdir('/tmp') else set()
+
+        class Boom(BaseException):
+            """Not an Exception, so the guard has to catch more."""
+
+        def raising_setUp(self):
+            raise Boom()
+
+        saved = legacy_probe.T.TristanFullAlbumIntegrationTestCase.setUp
+        legacy_probe.T.TristanFullAlbumIntegrationTestCase.setUp = (
+            raising_setUp)
+        try:
+            directory = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), 'fixtures',
+                'divergent')
+            tracks = legacy_probe.tracks_of(directory)
+            self.assertRaises(
+                Boom, legacy_probe.run, directory, 'probe-rel', tracks)
+        finally:
+            legacy_probe.T.TristanFullAlbumIntegrationTestCase.setUp = saved
+
+        # the directory is the user's again
+        self.assertEqual(picard_const.USER_DIR, original)
+        # and no temporary directory was left behind
+        after = set(os.listdir('/tmp')) if os.path.isdir('/tmp') else set()
+        left = [name for name in after - before
+                if name.startswith('legacy-probe-')]
+        self.assertEqual(left, [])
+
+
 class NoChainTestCase(unittest.TestCase):
     """A recording that names no work."""
 
