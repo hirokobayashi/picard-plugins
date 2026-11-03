@@ -2270,6 +2270,8 @@ class LegacyNonDeterminismTestCase(unittest.TestCase):
             os.path.dirname(os.path.abspath(__file__)), 'fixtures',
             'divergent')
         works, recordings = legacy_probe.readings_of(directory)
+        # the fixture has to be the one the test was written for
+        self.assertEqual(len(works), 4)
 
         def levels_of(works_in):
             tags = AlbumAdapter(
