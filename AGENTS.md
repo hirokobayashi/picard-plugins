@@ -74,6 +74,26 @@
   dedup). Each was proved RED first (function absent -> AttributeError; edge
   tests proved via targeted mutation showing failure, then reverted).
 
+### The fused-top collapse (PR #11) and the two shapes it does not fix
+PR #11 fixes the case where a recording is linked to both a child work
+and its top-level parent: `_reindex_top` collapsed the hierarchy to the
+top work and dropped the child. Two *neighbouring* shapes have the same
+symptom and are **not** fixed by it - they behave the same before and
+after:
+
+- **a skipped intermediate level.** A part of B, B part of C, C top,
+  and the recording references A and C. The cycle guard in
+  `work_process_relations` refuses the graft before the re-indexing, so
+  the whole B level goes with it: `part_levels` is 0 and the fused names
+  leak into `~cwp_work_top`. The keep-existing guard cannot fire, because
+  the `(C,)` tree never reaches the fused node.
+- **multiple parents.** A is part of both B and D, both top-level, and
+  the recording references A and B. The fused node lands in a different
+  top's tree, so the reachability check is false and the childless fused
+  tree overwrites.
+
+So PR #11 fixes the shape it describes, not the bug in general.
+
 ### `process_trackback` crashes / regressions (Alina album investigation)
 - The `depth != 0` branch of `process_trackback` previously did
   `tracks = child_response[1]` unconditionally. When a top work has children
