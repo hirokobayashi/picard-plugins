@@ -68,11 +68,17 @@ def run(fixdir, rel, tracks, partial=True, drain="fifo"):
         # log function it stubbed out. They only run when the cleanups
         # are done, so they are done here - or the stubs stay for the
         # rest of the process.
-        case.doCleanups()
-        # The plugin registers script functions and leaves picard.config as
-        # a Mock, and both leak into the tests that run after this one.
-        # The legacy's own test class cleans up the same way.
-        T.ClassicalExtrasTestCase._cleanup_global_state()
+        #
+        # The plugin registers script functions and leaves picard.config
+        # as a Mock, and both leak into the tests that run after this
+        # one. The legacy's own test class cleans up the same way.
+        #
+        # A cleanup that raised would skip the second step, so the two
+        # are nested.
+        try:
+            case.doCleanups()
+        finally:
+            T.ClassicalExtrasTestCase._cleanup_global_state()
 
 
 def work(wid, title, parent=None):
