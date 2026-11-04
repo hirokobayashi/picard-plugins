@@ -124,6 +124,8 @@ def _as_picard_stores(value):
         return None
     if isinstance(value, str):
         return value
+    if isinstance(value, int) or isinstance(value, float):
+        return value
     values = [str(item) for item in value]
     if not values:
         return None
@@ -3620,6 +3622,9 @@ class LegacyParityTestCase(unittest.TestCase):
         path = os.path.join(FIXTURES, 'legacy_tags.json')
         with open(path, encoding='utf-8') as handle:
             cls.legacy = json.load(handle)
+        path = os.path.join(FIXTURES, 'legacy_tags_full.json')
+        with open(path, encoding='utf-8') as handle:
+            cls.full = json.load(handle)
 
     #: The tracks whose tags differ from the legacy's in more than extra
     #: ids, and why. The Gayne tracks sit one level deeper, because the
@@ -3629,6 +3634,9 @@ class LegacyParityTestCase(unittest.TestCase):
     #: Planets and Requiem tracks have a top that holds more works than
     #: the legacy's.
     DIFFERING = {
+        "daphnis": [
+            "d1t11", "d1t6", "d1t8",
+        ],
         "gayne": [
             "d1t10",
             "d1t11",
@@ -3653,6 +3661,9 @@ class LegacyParityTestCase(unittest.TestCase):
             "d1t6", "d1t7", "d1t8", "d1t9", "d2t1", "d2t13",
             "d2t14", "d2t15", "d2t17", "d2t2", "d2t3", "d2t4",
             "d2t5", "d2t6", "d2t7", "d2t8", "d2t9",
+        ],
+        "tristan": [
+            "t2",
         ],
     }
 
@@ -3697,43 +3708,57 @@ class LegacyParityTestCase(unittest.TestCase):
     #: at the other edition of Swan Lake, a scene level the model keeps
     #: and the legacy did not, and the counts that follow from them.
     DIFFERING_TAGS = {
+        "daphnis": {
+            "d1t11": ["~cwp_work_0"],
+            "d1t6": ["~cwp_work_0"],
+            "d1t8": ["~cwp_work_0"],
+        },
         "gayne": {
             "d1t10": [
-                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
+                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
             "d1t11": [
-                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
+                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
             "d1t6": [
-                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
+                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
             "d1t7": [
-                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
+                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
             "d1t8": [
-                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
+                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
             "d1t9": [
-                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
+                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
         },
         "nutcracker": {
             "d1t1": [
+                "~cwp_work_0", "~cwp_work_1",
                 "~cwp_work_part_levels", "~cwp_workid_1",
                 "~cwp_workid_top",
             ],
         },
         "planets": {
-            "t7": ["~cwp_workid_1", "~cwp_workid_top"],
+            "t7": ["~cwp_work_0", "~cwp_work_1", "~cwp_workid_1",
+                    "~cwp_workid_top"],
         },
         "requiem": {
             "t1": [
+                "~cwp_work_0",
                 "~cwp_work_part_levels", "~cwp_workid_1",
                 "~cwp_workid_top",
             ],
@@ -3748,48 +3773,58 @@ class LegacyParityTestCase(unittest.TestCase):
             "d1t15": ["~cwp_workid_2", "~cwp_workid_top"],
             "d1t16": ["~cwp_workid_2", "~cwp_workid_top"],
             "d1t17": [
-                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
+                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
                 "~cwp_workid_3", "~cwp_workid_top",
             ],
             "d1t19": [
-                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
+                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
                 "~cwp_workid_3", "~cwp_workid_top",
             ],
             "d1t2": ["~cwp_workid_2", "~cwp_workid_top"],
             "d1t20": [
-                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
+                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
                 "~cwp_workid_3", "~cwp_workid_top",
             ],
             "d1t21": [
-                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
+                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
                 "~cwp_workid_3", "~cwp_workid_top",
             ],
             "d1t22": [
-                "~cwp_part_levels", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
+                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
                 "~cwp_workid_3", "~cwp_workid_top",
             ],
             "d1t23": ["~cwp_workid_2", "~cwp_workid_top"],
             "d1t3": ["~cwp_workid_2", "~cwp_workid_top"],
             "d1t4": ["~cwp_workid_2", "~cwp_workid_top"],
             "d1t5": [
-                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_work_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
             "d1t6": [
-                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_work_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
             "d1t7": [
-                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_work_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
             "d1t8": [
-                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_work_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
             "d1t9": [
-                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_work_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
             "d2t1": ["~cwp_workid_2", "~cwp_workid_top"],
             "d2t13": [
-                "~cwp_workid_1", "~cwp_workid_2", "~cwp_workid_3",
-                "~cwp_workid_top",
+                "~cwp_work_1", "~cwp_work_2", "~cwp_workid_1",
+                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
             ],
             "d2t14": ["~cwp_workid_2", "~cwp_workid_top"],
             "d2t15": [
@@ -3806,9 +3841,12 @@ class LegacyParityTestCase(unittest.TestCase):
             "d2t7": ["~cwp_workid_2", "~cwp_workid_top"],
             "d2t8": ["~cwp_workid_2", "~cwp_workid_top"],
             "d2t9": [
-                "~cwp_workid_1", "~cwp_workid_2", "~cwp_workid_3",
-                "~cwp_workid_top",
+                "~cwp_work_1", "~cwp_work_2", "~cwp_workid_1",
+                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
             ],
+        },
+        "tristan": {
+            "t2": ["~cwp_work_1"],
         },
     }
 
@@ -3888,7 +3926,7 @@ class LegacyParityTestCase(unittest.TestCase):
         """
         differing = {}
         by_tag = {}
-        for album, expected in sorted(self.legacy.items()):
+        for album, expected in sorted(self.full.items()):
             tags = _adapter(album).tags()
             holding_more = self.HOLDING_MORE.get(album) or []
             for label, want in sorted(expected['tracks'].items()):
@@ -3931,18 +3969,36 @@ class LegacyParityTestCase(unittest.TestCase):
             "the tags that differ from the legacy are not the "
             "documented ones")
 
-    @staticmethod
-    def _tags_of(metadata, want):
+    #: The tag families the adapter writes, and so the ones the
+    #: comparison covers. The full oracle holds every tag the legacy
+    #: writes - the part names, the genre and date tags - and the
+    #: adapter does not write those yet: they are the remaining
+    #: migration, not differences to document. The set grows as the
+    #: adapter does.
+    COMPARABLE = (
+        "~cwp_workid_",
+        "~cwp_work_",
+        "~cwp_part_levels",
+        "~cwp_work_part_levels",
+    )
+
+    @classmethod
+    def _tags_of(cls, metadata, want):
         """The tags to compare for one track.
 
-        The legacy's own tags for the track, and the adapter's - so a
-        level the adapter has and the legacy did not is compared too.
-        Only the tags are compared: the fixture holds the model's own
-        ids under another key, and that is not a tag.
+        The tags of the track that the legacy wrote, and the ones the
+        adapter wrote - so a level the adapter has and the legacy did
+        not is compared too. Only the tags are compared: the fixture
+        holds the ids the model gives under another key, and that is
+        not a tag. The families the adapter does not write yet are
+        left out - see COMPARABLE.
         """
         tags = {tag for tag in want if tag.startswith('~cwp_')}
         tags |= set(metadata)
-        return sorted(tags)
+        return sorted(
+            tag for tag in tags
+            if tag.startswith(('~cwp_workid_', '~cwp_work_'))
+            or tag in cls.COMPARABLE[2:])
 
     @staticmethod
     def _holds_more(got, wanted):
@@ -4210,6 +4266,175 @@ class LegacyParityTestCase(unittest.TestCase):
                 self.assertIn(
                     WorkId(_recording_id(album, label)), tags,
                     "%s %s is missing" % (album, label))
+
+
+class StandInNamesTestCase(unittest.TestCase):
+    """The name of a partly performed work's stand-in.
+
+    A partly performed work is represented by the recording id in the
+    first level, so a name looked up for that id would find nothing -
+    WorkNames maps work ids to titles. The legacy resolves the name
+    through the relation: the stand-in carries the title of the work the
+    recording partly performs. The adapter merges those titles into its
+    names at build time, so every level names itself the way the
+    legacy's does.
+    """
+
+    def test_the_stand_in_takes_the_partly_performed_works_title(self):
+        """daphnis d1t11 performs No. 7 in full and No. 6 in part;
+        the stand-in at its first level names No. 6, as the legacy's
+        recorded tags do."""
+        adapter = _adapter("daphnis")
+        rec = WorkId(_recording_id("daphnis", "d1t11"))
+        track = adapter.tags()[rec]
+        stand_in = track.levels[0][0]
+        self.assertEqual(stand_in, rec)
+        self.assertEqual(
+            adapter.names.title_of(stand_in),
+            "Daphnis et Chloé: Tableau I. No. 6. Nocturne. Danse lente "
+            "et mystérieuse des Nymphes")
+
+    def test_two_partly_performed_works_take_the_firsts_title(self):
+        """One recording, two partly performed works: the stand-in is
+        held once - the legacy de-duplicates its id list - and it names
+        the first of them, in relation order."""
+        recording = {
+            "id": "rec-1",
+            "title": "",
+            "relations": [
+                {"type": "performance", "work": {"id": "work-a",
+                                                   "title": ""},
+                 "attributes": ["partial"]},
+                {"type": "performance", "work": {"id": "work-b",
+                                                   "title": ""},
+                 "attributes": ["partial"]},
+            ],
+        }
+        names = WorkNames(titles={w("work-a"): "Title A",
+                                  w("work-b"): "Title B"})
+        adapter = AlbumAdapter([], [recording], names=names)
+        self.assertEqual(
+            adapter.recordings[0].members, [w("rec-1")],
+            "the stand-in is held once")
+        self.assertEqual(adapter.names.title_of(w("rec-1")), "Title A")
+
+    def test_a_partly_performed_work_without_a_title_gives_no_name(self):
+        """A partly performed work the build has no title for leaves the
+        stand-in nameless - an empty title is no title, the same rule as
+        any unknown work."""
+        recording = {
+            "id": "rec-1",
+            "title": "",
+            "relations": [
+                {"type": "performance", "work": {"id": "work-a",
+                                                   "title": ""},
+                 "attributes": ["partial"]},
+            ],
+        }
+        adapter = AlbumAdapter([], [recording], names=WorkNames())
+        self.assertEqual(adapter.names.title_of(w("rec-1")), "")
+
+    def test_a_complete_performance_takes_no_stand_in_title(self):
+        """A work performed in full keeps its own id in the first level,
+        and the recording id gains no title at all."""
+        recording = {
+            "id": "rec-1",
+            "title": "",
+            "relations": [
+                {"type": "performance", "work": {"id": "work-a",
+                                                   "title": ""}},
+            ],
+        }
+        names = WorkNames(titles={w("work-a"): "Title A"})
+        adapter = AlbumAdapter([], [recording], names=names)
+        self.assertEqual(
+            adapter.recordings[0].members, [w("work-a")])
+        self.assertEqual(adapter.names.title_of(w("rec-1")), "")
+
+
+class WorkNameTagsTestCase(unittest.TestCase):
+    """The name tags: ~cwp_work_N, one per level of ids.
+
+    The legacy writes the name of each level next to its ids - the
+    tag whose number is the level's. A name the build does not
+    know leaves the tag out: a tag is written only when it has a
+    value, the same rule the id tags follow.
+    """
+
+    def _adapter_with_titles(self, works, recordings, titles):
+        return AlbumAdapter(works, recordings,
+                            names=WorkNames(titles=titles))
+
+    def test_each_level_carries_its_name(self):
+        """A three-level hierarchy: every level names itself."""
+        works = [
+            {"id": "work-top", "title": "",
+             "relations": []},
+            {"id": "work-mid", "title": "",
+             "relations": [{"type": "parts", "direction": "backward", "work": {"id": "work-top"}}]},
+            {"id": "work-leaf", "title": "",
+             "relations": [{"type": "parts", "direction": "backward", "work": {"id": "work-mid"}}]},
+        ]
+        recording = {
+            "id": "rec-1", "title": "",
+            "relations": [
+                {"type": "performance", "work": {"id": "work-leaf"}},
+            ],
+        }
+        titles = {w("work-top"): "The Top",
+                  w("work-mid"): "The Middle",
+                  w("work-leaf"): "The Leaf"}
+        adapter = self._adapter_with_titles(works, [recording], titles)
+        metadata = adapter.tags()[w("rec-1")].as_metadata()
+        self.assertEqual(metadata["~cwp_work_0"], "The Leaf")
+        self.assertEqual(metadata["~cwp_work_1"], "The Middle")
+        self.assertEqual(metadata["~cwp_work_2"], "The Top")
+
+    def test_a_stand_in_carries_the_resolved_title(self):
+        """daphnis d1t1: the first level is the recording standing in
+        for the partly performed work - its name is that work's, as
+        the recorded legacy tags say."""
+        adapter = _adapter("daphnis")
+        rec = WorkId(_recording_id("daphnis", "d1t1"))
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertEqual(
+            metadata["~cwp_work_0"],
+            "Daphnis et Chloé: Tableau I. No. 1. Introduction et danse "
+            "religieuse")
+
+    def test_several_works_at_a_level_several_names(self):
+        """A level with two works holds both names - Picard stores a
+        list, as the recorded legacy tags do for the same case."""
+        adapter = _adapter("daphnis")
+        rec = WorkId(_recording_id("daphnis", "d1t12"))
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertEqual(
+            _as_picard_stores(metadata["~cwp_work_0"]),
+            _as_picard_stores((
+                "Daphnis et Chloé: Tableau II. No. 7. Introduction",
+                "Daphnis et Chloé: Tableau II. No. 8. Danse guerrière")))
+
+    def test_a_level_without_titles_gets_no_tag(self):
+        """Works the build has no titles for name no level - and the
+        other levels keep their own numbers, which are the id tags'
+        numbers."""
+        works = [
+            {"id": "work-top", "title": "",
+             "relations": []},
+            {"id": "work-leaf", "title": "",
+             "relations": [{"type": "parts", "direction": "backward", "work": {"id": "work-top"}}]},
+        ]
+        recording = {
+            "id": "rec-1", "title": "",
+            "relations": [
+                {"type": "performance", "work": {"id": "work-leaf"}},
+            ],
+        }
+        titles = {w("work-top"): "The Top"}  # the leaf has no title
+        adapter = self._adapter_with_titles(works, [recording], titles)
+        metadata = adapter.tags()[w("rec-1")].as_metadata()
+        self.assertNotIn("~cwp_work_0", metadata)
+        self.assertEqual(metadata["~cwp_work_1"], "The Top")
 
 
 class AdapterWithoutPicardTestCase(unittest.TestCase):

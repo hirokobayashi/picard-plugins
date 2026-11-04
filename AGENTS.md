@@ -150,6 +150,36 @@ So the remaining work, in order:
    10,899 lines, and it carries the pre-existing lint errors - they go with
    it.
 
+### The full-tag oracle (`test/fixtures/legacy_tags_full.json`)
+The original oracle records only the ten hierarchy keys. The full oracle,
+made by `test/tools/capture_full_tags.py`, records **every** `~cwp_` tag
+the legacy writes for the same 218 tracks - 26 tag families including the
+name tags (`~cwp_work_N`, `~cwp_part_N`) and the genre/date tags.
+
+Before writing an album it re-checks the ten keys the old oracle holds;
+all nine albums reproduce them, so the capture is the legacy itself, not
+a paraphrase.
+
+**The name tags already match 623 of 674 levels (92%)** just from the
+model of `WorkNames` - the `~cwp_work_N` of the legacy is the canonical
+MusicBrainz title of the work that the level id names. The 51 differences
+split into two kinds, neither of which is a missing response file:
+
+- **14 levels put the id of the recording itself at level 0.** The
+  partial-performance representation names the recording where the
+  legacy names the work it performs, and `WorkNames` has no name for a
+  recording. The work response is in fact present - the `~cwp_work_0`
+  of daphnis d1t1 is exactly the title of `work_210c1890`, the work
+  the recording performs. Closing this means resolving the recording
+  id to the title of its performed work, not fetching anything.
+- **37 are the documented divergences of the model.** The Gayane scene
+  level the legacy drops, both Swan Lake editions where the legacy
+  picked one, extra works held in a level, and the Tristan ordering.
+  A position-wise comparison turns each structural difference into
+  adjacent mismatches - differences the test suite already documents,
+  `DIFFERING_TAGS` for 36 of the 37, and the Tristan arrangement order for
+  the last (its level ids match the legacy; only the name order differs).
+
 ### The probe (`test/tools/legacy_probe.py`)
 Runs the *real* legacy plugin over a directory of MusicBrainz JSON, exactly
 as the legacy's own integration test does. It is how a case no fixture covers

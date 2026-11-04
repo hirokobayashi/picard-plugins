@@ -371,6 +371,10 @@ class TrackTags:
     top: List[WorkId] = field(default_factory=list)
     #: The top work's name or names.
     top_names: List[str] = field(default_factory=list)
+    #: The name or names of each level, level 0 first - the same
+    #: numbering as the levels themselves. A level whose works have no
+    #: titles holds an empty list here, and gets no name tag.
+    level_names: List[List[str]] = field(default_factory=list)
     #: The group name - the shuffle key, always one value. A track with
     #: no hierarchy has a group too, but no tags are written for it:
     #: the group is here for the caller to look at, and it only reaches
@@ -419,6 +423,15 @@ class TrackTags:
             if not works:
                 continue
             metadata['~cwp_workid_%d' % number] = self.id_tuple(works)
+            # the name tag of the same level, in the same numbering. A
+            # level whose works have no titles writes no name tag - a tag
+            # is written only when it has a value, as the legacy writes.
+            if number < len(self.level_names):
+                names = self.level_names[number]
+                if len(names) == 1:
+                    metadata['~cwp_work_%d' % number] = names[0]
+                elif names:
+                    metadata['~cwp_work_%d' % number] = tuple(names)
             number += 1
         if self.top:
             metadata['~cwp_workid_top'] = tuple(
@@ -734,6 +747,38 @@ class AlbumAdapter:
             self.recordings.append(entry)
             self.tracks_per_recording[entry.performance.key] = (
                 self.tracks_per_recording.get(entry.performance.key, 0) + 1)
+        self._merge_stand_in_titles()
+
+    def _merge_stand_in_titles(self) -> None:
+        """Give the stand-in ids the title of the work each stands in for.
+
+        A partly performed work is represented by the recording id in
+        the first level, so a name looked up for that id would find
+        nothing - the titles map works ids to titles. The legacy
+        resolves the name through the relation: the stand-in carries the
+        title of the work the recording partly performs. So each
+        recording whose performance is in part gives its stand-in id the
+        title of the first work it performs in part, in the order the
+        relations gave them.
+
+        The names are a copy the adapter makes of the titles the caller
+        gave, so the merge is not visible to the caller: the
+        configuration is fixed at build, as the class docstring says.
+
+        A partly performed work with no title leaves the stand-in
+        nameless - an empty title is no title, the same rule as any
+        unknown work. Two works performed in part take the title of the
+        first: the stand-in is held once either way, so one title is all
+        it can carry.
+        """
+        self.names = WorkNames(titles=dict(self.names.titles))
+        for recording in self.recordings:
+            if not recording.partial:
+                continue
+            title = self.names.title_of(recording.partial[0])
+            if title:
+                self.names.titles.setdefault(recording.performance.key,
+                                             title)
 
     @property
     def unused_multiplicity(self) -> List[WorkId]:
@@ -1116,6 +1161,7 @@ class AlbumAdapter:
         return TrackTags(
             key=recording.performance.key,
             levels=levels,
+            level_names=[self.names.names_of(works) for works in levels],
             top=top,
             top_names=top_names,
             group=self._group_name(top_names),

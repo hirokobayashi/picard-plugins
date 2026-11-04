@@ -70,6 +70,21 @@
     ]
    },
    "d1t11": {
+    "model": {
+     "~cwp_workid_0": [
+      "65a4ff28-8cdd-4403-9bf2-e0e8bae67494",
+      "aaaff290-f883-368f-bb5d-91e76001c734"
+     ],
+     "~cwp_workid_1": [
+      "5c211b77-23f0-34a3-9961-347750040187"
+     ],
+     "~cwp_workid_2": [
+      "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+     ],
+     "~cwp_workid_top": [
+      "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+     ]
+    },
     "~cwp_part_levels": "2",
     "~cwp_work_group": "Daphnis et Chloé",
     "~cwp_work_part_levels": "3",
@@ -344,6 +359,21 @@
     ]
    },
    "d1t6": {
+    "model": {
+     "~cwp_workid_0": [
+      "54d756d9-1391-4710-a134-29c535fa4305",
+      "70e3948f-db7c-3b31-95e4-70baa564a393"
+     ],
+     "~cwp_workid_1": [
+      "73dd63b8-543f-4725-b643-ed384fe5dcac"
+     ],
+     "~cwp_workid_2": [
+      "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+     ],
+     "~cwp_workid_top": [
+      "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+     ]
+    },
     "~cwp_part_levels": "2",
     "~cwp_work_group": "Daphnis et Chloé",
     "~cwp_work_part_levels": "3",
@@ -387,6 +417,21 @@
     ]
    },
    "d1t8": {
+    "model": {
+     "~cwp_workid_0": [
+      "950e84f8-5ce2-4ec0-9460-723896364f96",
+      "c757f3a9-6f6c-3e06-af1a-04f26ff7b36e"
+     ],
+     "~cwp_workid_1": [
+      "73dd63b8-543f-4725-b643-ed384fe5dcac"
+     ],
+     "~cwp_workid_2": [
+      "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+     ],
+     "~cwp_workid_top": [
+      "a55d2dfe-fb81-42e8-9e0f-3e6fd9654ca1"
+     ]
+    },
     "~cwp_part_levels": "2",
     "~cwp_work_group": "Daphnis et Chloé",
     "~cwp_work_part_levels": "3",
@@ -4915,6 +4960,27 @@
     ]
    },
    "t2": {
+    "model": {
+     "~cwp_workid_0": [
+      "7b4b0ef2-7928-3c37-8107-1355eb043855"
+     ],
+     "~cwp_workid_1": [
+      "eb691aba-ba0f-3db6-97bb-df50e64f2b9c",
+      "52836ec3-2272-37cd-a4af-20ab3bf56b88"
+     ],
+     "~cwp_workid_2": [
+      "9d1ba066-627f-3fbb-b88d-f55da5cba723"
+     ],
+     "~cwp_workid_3": [
+      "ad177d02-7eb2-4923-beab-bec57819064e"
+     ],
+     "~cwp_workid_4": [
+      "ae217ba8-0b07-4b0b-aed6-c80535dcd94b"
+     ],
+     "~cwp_workid_top": [
+      "ae217ba8-0b07-4b0b-aed6-c80535dcd94b"
+     ]
+    },
     "~cwp_part_levels": "4",
     "~cwp_work_group": "Tristan und Isolde, WWV 90",
     "~cwp_work_part_levels": "4",
