@@ -4212,6 +4212,90 @@ class LegacyParityTestCase(unittest.TestCase):
                     "%s %s is missing" % (album, label))
 
 
+class StandInNamesTestCase(unittest.TestCase):
+    """The name of a partly performed work's stand-in.
+
+    A partly performed work is represented by the recording id in the
+    first level, so a name looked up for that id would find nothing -
+    WorkNames maps work ids to titles. The legacy resolves the name
+    through the relation: the stand-in carries the title of the work the
+    recording partly performs. The adapter merges those titles into its
+    names at build time, so every level names itself the way the
+    legacy's does.
+    """
+
+    def test_the_stand_in_takes_the_partly_performed_works_title(self):
+        """daphnis d1t11 performs No. 7 in full and No. 6 in part;
+        the stand-in at its first level names No. 6, as the legacy's
+        recorded tags do."""
+        adapter = _adapter("daphnis")
+        rec = WorkId(_recording_id("daphnis", "d1t11"))
+        track = adapter.tags()[rec]
+        stand_in = track.levels[0][0]
+        self.assertEqual(stand_in, rec)
+        self.assertEqual(
+            adapter.names.title_of(stand_in),
+            "Daphnis et Chloé: Tableau I. No. 6. Nocturne. Danse lente "
+            "et mystérieuse des Nymphes")
+
+    def test_two_partly_performed_works_take_the_firsts_title(self):
+        """One recording, two partly performed works: the stand-in is
+        held once - the legacy de-duplicates its id list - and it names
+        the first of them, in relation order."""
+        recording = {
+            "id": "rec-1",
+            "title": "",
+            "relations": [
+                {"type": "performance", "work": {"id": "work-a",
+                                                   "title": ""},
+                 "attributes": ["partial"]},
+                {"type": "performance", "work": {"id": "work-b",
+                                                   "title": ""},
+                 "attributes": ["partial"]},
+            ],
+        }
+        names = WorkNames(titles={w("work-a"): "Title A",
+                                  w("work-b"): "Title B"})
+        adapter = AlbumAdapter([], [recording], names=names)
+        self.assertEqual(
+            adapter.recordings[0].members, [w("rec-1")],
+            "the stand-in is held once")
+        self.assertEqual(adapter.names.title_of(w("rec-1")), "Title A")
+
+    def test_a_partly_performed_work_without_a_title_gives_no_name(self):
+        """A partly performed work the build has no title for leaves the
+        stand-in nameless - an empty title is no title, the same rule as
+        any unknown work."""
+        recording = {
+            "id": "rec-1",
+            "title": "",
+            "relations": [
+                {"type": "performance", "work": {"id": "work-a",
+                                                   "title": ""},
+                 "attributes": ["partial"]},
+            ],
+        }
+        adapter = AlbumAdapter([], [recording], names=WorkNames())
+        self.assertEqual(adapter.names.title_of(w("rec-1")), "")
+
+    def test_a_complete_performance_takes_no_stand_in_title(self):
+        """A work performed in full keeps its own id in the first level,
+        and the recording id gains no title at all."""
+        recording = {
+            "id": "rec-1",
+            "title": "",
+            "relations": [
+                {"type": "performance", "work": {"id": "work-a",
+                                                   "title": ""}},
+            ],
+        }
+        names = WorkNames(titles={w("work-a"): "Title A"})
+        adapter = AlbumAdapter([], [recording], names=names)
+        self.assertEqual(
+            adapter.recordings[0].members, [w("work-a")])
+        self.assertEqual(adapter.names.title_of(w("rec-1")), "")
+
+
 class AdapterWithoutPicardTestCase(unittest.TestCase):
     """The adapter needs no Picard."""
 
