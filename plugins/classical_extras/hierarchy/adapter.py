@@ -371,6 +371,10 @@ class TrackTags:
     top: List[WorkId] = field(default_factory=list)
     #: The top work's name or names.
     top_names: List[str] = field(default_factory=list)
+    #: The name or names of each level, level 0 first - the same
+    #: numbering as the levels themselves. A level whose works have no
+    #: titles holds an empty list here, and gets no name tag.
+    level_names: List[List[str]] = field(default_factory=list)
     #: The group name - the shuffle key, always one value. A track with
     #: no hierarchy has a group too, but no tags are written for it:
     #: the group is here for the caller to look at, and it only reaches
@@ -419,6 +423,15 @@ class TrackTags:
             if not works:
                 continue
             metadata['~cwp_workid_%d' % number] = self.id_tuple(works)
+            # the name tag of the same level, in the same numbering. A
+            # level whose works have no titles writes no name tag - a tag
+            # is written only when it has a value, as the legacy writes.
+            if number < len(self.level_names):
+                names = self.level_names[number]
+                if len(names) == 1:
+                    metadata['~cwp_work_%d' % number] = names[0]
+                elif names:
+                    metadata['~cwp_work_%d' % number] = tuple(names)
             number += 1
         if self.top:
             metadata['~cwp_workid_top'] = tuple(
@@ -1148,6 +1161,7 @@ class AlbumAdapter:
         return TrackTags(
             key=recording.performance.key,
             levels=levels,
+            level_names=[self.names.names_of(works) for works in levels],
             top=top,
             top_names=top_names,
             group=self._group_name(top_names),
