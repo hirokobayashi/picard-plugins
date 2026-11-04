@@ -45,6 +45,8 @@ from typing import (Dict, FrozenSet, Iterable, Iterator, List, Mapping, Optional
                     Sequence, Set, Tuple)
 
 from .album import (Performance, candidate_tops, chains_of, normalise_name)
+from .parts import strip_parent_name
+from .workmeta import WorkMeta
 from .graph import NodeId, WorkGraph, WorkId
 from .project import Hierarchy, project
 
@@ -375,11 +377,26 @@ class TrackTags:
     #: numbering as the levels themselves. A level whose works have no
     #: titles holds an empty list here, and gets no name tag.
     level_names: List[List[str]] = field(default_factory=list)
+    #: The part name or names of each level - the names with the level
+    #: above taken out. The top level, which has no parent, holds an
+    #: empty list here and gets no part tag.
+    part_names: List[List[str]] = field(default_factory=list)
     #: The group name - the shuffle key, always one value. A track with
     #: no hierarchy has a group too, but no tags are written for it:
     #: the group is here for the caller to look at, and it only reaches
     #: a file through ``as_metadata``.
     group: str = ''
+    #: The genres and dates accumulated over the chain's works, in
+    #: level order, each name or date given once. The four families
+    #: mirror the legacy's write_tags accumulation over every level.
+    candidate_genres: List[str] = field(default_factory=list)
+    worktype_genres: List[str] = field(default_factory=list)
+    composed_dates: List[str] = field(default_factory=list)
+    premiered_dates: List[str] = field(default_factory=list)
+    published_dates: List[str] = field(default_factory=list)
+    #: One when the release has a single top work, else zero - the
+    #: same value on every track of the release.
+    single_work_album: int = 0
     #: The number of levels below this track's own level.
     part_levels: int = 0
     #: The number of levels in the whole hierarchy of this track's top.
@@ -432,6 +449,16 @@ class TrackTags:
                     metadata['~cwp_work_%d' % number] = names[0]
                 elif names:
                     metadata['~cwp_work_%d' % number] = tuple(names)
+            # the part tag of the same level - every level but the top
+            # has one, even when the strip emptied it, as the legacy
+            # writes. A level the part machinery has nothing for (a
+            # hand-built tag without part_names) writes none.
+            if number < len(self.part_names) and self.part_names[number]:
+                parts = self.part_names[number]
+                if len(parts) == 1:
+                    metadata['~cwp_part_%d' % number] = parts[0]
+                else:
+                    metadata['~cwp_part_%d' % number] = tuple(parts)
             number += 1
         if self.top:
             metadata['~cwp_workid_top'] = tuple(
@@ -447,6 +474,22 @@ class TrackTags:
             metadata['~cwp_work_group'] = self.group
         metadata['~cwp_part_levels'] = str(self.part_levels)
         metadata['~cwp_work_part_levels'] = str(self.work_part_levels)
+        metadata['~cwp_single_work_album'] = self.single_work_album
+        # the genres and dates, in the legacy's accumulation order. A
+        # list of one is stored bare, as Picard does for every other
+        # multi-value tag here; an empty list writes no tag.
+        for tag, values in (
+                ('~cwp_candidate_genres', self.candidate_genres),
+                ('~cwp_worktype_genres', self.worktype_genres),
+                ('~cwp_composed_dates', self.composed_dates),
+                ('~cwp_premiered_dates', self.premiered_dates),
+                ('~cwp_published_dates', self.published_dates)):
+            if not values:
+                continue
+            if len(values) == 1:
+                metadata[tag] = values[0]
+            else:
+                metadata[tag] = tuple(values)
         return metadata
 
 
@@ -639,11 +682,22 @@ class AlbumAdapter:
             use_medleys: bool = True,
             use_collections: bool = True,
             multiplicity: Mapping[WorkId, int] | None = None) -> None:
+        # the responses are read twice - for the graph and for the
+        # genre/date metadata - so an iterable is materialized once
+        works = list(works)
         self.graph, self.relations = read_work_graph(
             works,
             use_arrangements=use_arrangements,
             use_medleys=use_medleys,
             use_collections=use_collections)
+        #: The genre and date material of each work response, keyed by
+        #: the work id - read once, written into the tags per level.
+        self.work_meta: Dict[WorkId, WorkMeta] = {}
+        for response in works:
+            if (isinstance(response, Mapping)
+                    and isinstance(response.get('id'), str)
+                    and response.get('id')):
+                self.work_meta[WorkId(response['id'])] = WorkMeta.of(response)
         self.names = names or WorkNames()
         self.use_partial = use_partial
         self.use_arrangements = use_arrangements
@@ -1016,12 +1070,45 @@ class AlbumAdapter:
         heights: Dict[NodeId, Dict[NodeId, int]] = {}
         cycles: Dict[NodeId, bool] = {}
         result: Dict[WorkId, TrackTags] = {}
+        # the tops of the recordings that have a chain - the ones the
+        # release's tracks are filed under, which is what the single
+        # work album flag counts
+        tagged_chains = {
+            recording.performance.key: chain
+            for recording in self.recordings
+            if (chain := chains.get(recording.performance.key))}
+        single_work_album = self._single_work_album(tagged_chains)
         for recording in self.recordings:
             chain = chains.get(recording.performance.key) or []
             result[recording.performance.key] = self._tags_for(
                 recording, chain, hierarchy,
-                votes, heights, cycles)
+                votes, heights, cycles,
+                single_work_album=single_work_album)
         return result
+
+    def _single_work_album(
+            self,
+            chains: Mapping[WorkId, List[NodeId]]) -> int:
+        """One when the release's tracks resolve to one head work, else zero.
+
+        The legacy counts the distinct top works its tracks were filed
+        under - one when they all share one. The model's tops are the
+        *sets* of works a track's top level holds, and a track whose
+        chain stopped one node short holds a subset of the works
+        another track's top holds - the same head, seen less
+        completely. So the count is over the maximal top sets: a top
+        that a wider top supersedes is not another head. The Swan Lake
+        releases (whose tops hold two editions beside one another, some
+        tracks seeing only one) have one maximal top and are single
+        work albums; an album filed under six different ballets has six
+        and is not.
+        """
+        tops = [frozenset(chain[-1].works)
+                for chain in chains.values() if chain]
+        maximal = [tops[i] for i in range(len(tops))
+                   if not any(tops[j] > tops[i]
+                              for j in range(len(tops)) if j != i)]
+        return 1 if len(set(maximal)) <= 1 else 0
 
     def _votes(
             self,
@@ -1111,7 +1198,8 @@ class AlbumAdapter:
             hierarchy: Hierarchy,
             votes: Mapping[str, int],
             heights: Dict[NodeId, Dict[NodeId, int]],
-            cycles: Dict[NodeId, bool]) -> TrackTags:
+            cycles: Dict[NodeId, bool],
+            single_work_album: int = 0) -> TrackTags:
         """The tags of one recording, from its chain.
 
         ``~cwp_part_levels`` is the number of levels between the track and
@@ -1158,10 +1246,19 @@ class AlbumAdapter:
         if cycles[tip]:
             return TrackTags(key=recording.performance.key)
         top_names = self._top_names(top, votes)
+        candidate, worktype, composed, premiered, published = \
+            self._genre_and_date_tags(levels)
         return TrackTags(
             key=recording.performance.key,
             levels=levels,
             level_names=[self.names.names_of(works) for works in levels],
+            part_names=self._part_names(levels, recording),
+            candidate_genres=candidate,
+            worktype_genres=worktype,
+            composed_dates=composed,
+            premiered_dates=premiered,
+            published_dates=published,
+            single_work_album=single_work_album,
             top=top,
             top_names=top_names,
             group=self._group_name(top_names),
@@ -1169,6 +1266,88 @@ class AlbumAdapter:
             # count as the tags are numbered by, so the two agree
             part_levels=len(filled) - 1,
             work_part_levels=work_part_levels)
+
+    def _genre_and_date_tags(
+            self,
+            levels: Sequence[List[WorkId]],
+    ) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
+        """The genre and date tags: every level's works, accumulated.
+
+        The legacy writes each level's parent work's material, which
+        over the whole chain accumulates every level's works - the
+        track's own level included. Each name or date is given once,
+        the first time it is seen.
+        """
+        candidate: List[str] = []
+        worktype: List[str] = []
+        composed: List[str] = []
+        premiered: List[str] = []
+        published: List[str] = []
+        for works in levels:
+            for work in works:
+                meta = self.work_meta.get(work)
+                if meta is None:
+                    continue
+                for name in meta.folks_genres:
+                    if name not in candidate:
+                        candidate.append(name)
+                for name in meta.worktype_genres:
+                    if name not in worktype:
+                        worktype.append(name)
+                    if name not in candidate:
+                        candidate.append(name)
+                for date in meta.composed_dates:
+                    if date not in composed:
+                        composed.append(date)
+                for date in meta.premiered_dates:
+                    if date not in premiered:
+                        premiered.append(date)
+                for date in meta.published_dates:
+                    if date not in published:
+                        published.append(date)
+        return candidate, worktype, composed, premiered, published
+
+    def _part_names(
+            self,
+            levels: Sequence[List[WorkId]],
+            recording: Recording) -> List[List[str]]:
+        'The part names of each level: the names with the level above out.'
+
+        part_names: List[List[str]] = []
+        for index, works in enumerate(levels):
+            if index + 1 >= len(levels):
+                part_names.append([])
+                continue
+            above = set(levels[index + 1])
+            names = []
+            for work in works:
+                title = self.names.title_of(work)
+                parent_title = ''
+                if work == recording.performance.key and recording.partial:
+                    # the stand-in for a partly performed work: the level
+                    # above holds the work itself, whose title is the one
+                    # the stand-in merged in - so the strip empties it,
+                    # the way the legacy writes it
+                    parent_title = self.names.title_of(recording.partial[0])
+                else:
+                    # the work's own parent - the first of its resolved
+                    # parents that the level above holds
+                    for parent in self.relations.parents.get(work, ()):
+                        if parent in above:
+                            parent_title = self.names.title_of(parent)
+                            break
+                if parent_title:
+                    names.append(strip_parent_name(title, parent_title))
+                else:
+                    names.append(title)
+            # a name is only given once, even when two works share it -
+            # the same rule the level's own names follow
+            deduped: List[str] = []
+            for name in names:
+                if name not in deduped:
+                    deduped.append(name)
+            part_names.append(deduped)
+        return part_names
 
     def _levels(
             self,

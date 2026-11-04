@@ -3662,6 +3662,10 @@ class LegacyParityTestCase(unittest.TestCase):
             "d2t14", "d2t15", "d2t17", "d2t2", "d2t3", "d2t4",
             "d2t5", "d2t6", "d2t7", "d2t8", "d2t9",
         ],
+        "swanlake_jarvi": [
+            "t1", "t10", "t13", "t15", "t16", "t17", "t18", "t2",
+            "t3", "t4", "t6", "t7", "t9",
+        ],
         "tristan": [
             "t2",
         ],
@@ -3709,144 +3713,306 @@ class LegacyParityTestCase(unittest.TestCase):
     #: and the legacy did not, and the counts that follow from them.
     DIFFERING_TAGS = {
         "daphnis": {
-            "d1t11": ["~cwp_work_0"],
-            "d1t6": ["~cwp_work_0"],
-            "d1t8": ["~cwp_work_0"],
+            "d1t11": ["~cwp_part_0", "~cwp_work_0"],
+            "d1t6": ["~cwp_part_0", "~cwp_work_0"],
+            "d1t8": ["~cwp_part_0", "~cwp_work_0"],
         },
         "gayne": {
             "d1t10": [
-                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
-                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_0",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_part_levels",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_work_3",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
             "d1t11": [
-                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
-                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_0",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_part_levels",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_work_3",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
             "d1t6": [
-                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
-                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_0",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_part_levels",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_work_3",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
             "d1t7": [
-                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
-                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_0",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_part_levels",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_work_3",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
             "d1t8": [
-                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
-                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_0",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_part_levels",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_work_3",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
             "d1t9": [
-                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
-                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
+                "~cwp_part_0",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_part_levels",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_work_3",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
                 "~cwp_workid_3",
             ],
         },
         "nutcracker": {
             "d1t1": [
-                "~cwp_work_0", "~cwp_work_1",
-                "~cwp_work_part_levels", "~cwp_workid_1",
+                "~cwp_candidate_genres",
+                "~cwp_composed_dates",
+                "~cwp_part_0",
+                "~cwp_work_0",
+                "~cwp_work_1",
+                "~cwp_work_part_levels",
+                "~cwp_workid_1",
                 "~cwp_workid_top",
+                "~cwp_worktype_genres",
             ],
         },
         "planets": {
-            "t7": ["~cwp_work_0", "~cwp_work_1", "~cwp_workid_1",
-                    "~cwp_workid_top"],
+            "t7": [
+                "~cwp_part_0",
+                "~cwp_work_0",
+                "~cwp_work_1",
+                "~cwp_workid_1",
+                "~cwp_workid_top",
+            ],
         },
         "requiem": {
             "t1": [
+                "~cwp_part_0",
                 "~cwp_work_0",
-                "~cwp_work_part_levels", "~cwp_workid_1",
+                "~cwp_work_part_levels",
+                "~cwp_workid_1",
                 "~cwp_workid_top",
             ],
         },
         "swanlake_full": {
-            "d1t1": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d1t10": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d1t11": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d1t12": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d1t13": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d1t14": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d1t15": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d1t16": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t1": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d1t10": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d1t11": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d1t12": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d1t13": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d1t14": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d1t15": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d1t16": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
             "d1t17": [
-                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
-                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
-                "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_composed_dates",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_part_levels",
+                "~cwp_premiered_dates",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_work_3",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
             "d1t19": [
-                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
-                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
-                "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_composed_dates",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_part_levels",
+                "~cwp_premiered_dates",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_work_3",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
-            "d1t2": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t2": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
             "d1t20": [
-                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
-                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
-                "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_composed_dates",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_part_levels",
+                "~cwp_premiered_dates",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_work_3",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
             "d1t21": [
-                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
-                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
-                "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_composed_dates",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_part_levels",
+                "~cwp_premiered_dates",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_work_3",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
             "d1t22": [
-                "~cwp_part_levels", "~cwp_work_1", "~cwp_work_2",
-                "~cwp_work_3", "~cwp_workid_1", "~cwp_workid_2",
-                "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_composed_dates",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_part_levels",
+                "~cwp_premiered_dates",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_work_3",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
-            "d1t23": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d1t3": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d1t4": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d1t23": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d1t3": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d1t4": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
             "d1t5": [
-                "~cwp_work_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_composed_dates",
+                "~cwp_part_1",
+                "~cwp_work_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
                 "~cwp_workid_top",
             ],
             "d1t6": [
-                "~cwp_work_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_composed_dates",
+                "~cwp_part_1",
+                "~cwp_work_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
                 "~cwp_workid_top",
             ],
             "d1t7": [
-                "~cwp_work_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_composed_dates",
+                "~cwp_part_1",
+                "~cwp_work_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
                 "~cwp_workid_top",
             ],
             "d1t8": [
-                "~cwp_work_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_composed_dates",
+                "~cwp_part_1",
+                "~cwp_work_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
                 "~cwp_workid_top",
             ],
             "d1t9": [
-                "~cwp_work_1", "~cwp_workid_2", "~cwp_workid_3",
+                "~cwp_composed_dates",
+                "~cwp_part_1",
+                "~cwp_work_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
                 "~cwp_workid_top",
             ],
-            "d2t1": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t1": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
             "d2t13": [
-                "~cwp_work_1", "~cwp_work_2", "~cwp_workid_1",
-                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_composed_dates",
+                "~cwp_part_0",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
-            "d2t14": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t14": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
             "d2t15": [
-                "~cwp_workid_1", "~cwp_workid_2", "~cwp_workid_top",
+                "~cwp_composed_dates",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
+                "~cwp_workid_top",
             ],
             "d2t17": [
-                "~cwp_workid_1", "~cwp_workid_2", "~cwp_workid_top",
+                "~cwp_composed_dates",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
+                "~cwp_workid_top",
             ],
-            "d2t2": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d2t3": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d2t4": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d2t5": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d2t6": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d2t7": ["~cwp_workid_2", "~cwp_workid_top"],
-            "d2t8": ["~cwp_workid_2", "~cwp_workid_top"],
+            "d2t2": [
+                "~cwp_composed_dates",
+                "~cwp_premiered_dates",
+                "~cwp_workid_2",
+                "~cwp_workid_top",
+            ],
+            "d2t3": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d2t4": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d2t5": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d2t6": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d2t7": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
+            "d2t8": ["~cwp_composed_dates", "~cwp_workid_2", "~cwp_workid_top"],
             "d2t9": [
-                "~cwp_work_1", "~cwp_work_2", "~cwp_workid_1",
-                "~cwp_workid_2", "~cwp_workid_3", "~cwp_workid_top",
+                "~cwp_composed_dates",
+                "~cwp_part_0",
+                "~cwp_part_1",
+                "~cwp_part_2",
+                "~cwp_work_1",
+                "~cwp_work_2",
+                "~cwp_workid_1",
+                "~cwp_workid_2",
+                "~cwp_workid_3",
+                "~cwp_workid_top",
             ],
         },
+        "swanlake_jarvi": {
+            "t1": ["~cwp_composed_dates"],
+            "t10": ["~cwp_composed_dates"],
+            "t13": ["~cwp_composed_dates"],
+            "t15": ["~cwp_composed_dates"],
+            "t16": ["~cwp_composed_dates"],
+            "t17": ["~cwp_composed_dates"],
+            "t18": ["~cwp_composed_dates"],
+            "t2": ["~cwp_composed_dates"],
+            "t3": ["~cwp_composed_dates"],
+            "t4": ["~cwp_composed_dates"],
+            "t6": ["~cwp_composed_dates"],
+            "t7": ["~cwp_composed_dates"],
+            "t9": ["~cwp_composed_dates"],
+        },
         "tristan": {
-            "t2": ["~cwp_work_1"],
+            "t2": ["~cwp_part_1", "~cwp_work_1"],
         },
     }
 
@@ -3978,8 +4144,15 @@ class LegacyParityTestCase(unittest.TestCase):
     COMPARABLE = (
         "~cwp_workid_",
         "~cwp_work_",
+        "~cwp_part_",
         "~cwp_part_levels",
         "~cwp_work_part_levels",
+        "~cwp_candidate_genres",
+        "~cwp_worktype_genres",
+        "~cwp_composed_dates",
+        "~cwp_premiered_dates",
+        "~cwp_published_dates",
+        "~cwp_single_work_album",
     )
 
     @classmethod
@@ -3990,15 +4163,15 @@ class LegacyParityTestCase(unittest.TestCase):
         adapter wrote - so a level the adapter has and the legacy did
         not is compared too. Only the tags are compared: the fixture
         holds the ids the model gives under another key, and that is
-        not a tag. The families the adapter does not write yet are
-        left out - see COMPARABLE.
+        not a tag. The families still to be ported - the keys and the
+        aliases - are left out; see COMPARABLE.
         """
         tags = {tag for tag in want if tag.startswith('~cwp_')}
         tags |= set(metadata)
         return sorted(
             tag for tag in tags
-            if tag.startswith(('~cwp_workid_', '~cwp_work_'))
-            or tag in cls.COMPARABLE[2:])
+            if tag.startswith(('~cwp_workid_', '~cwp_work_', '~cwp_part_'))
+            or tag in cls.COMPARABLE[3:])
 
     @staticmethod
     def _holds_more(got, wanted):
@@ -4435,6 +4608,116 @@ class WorkNameTagsTestCase(unittest.TestCase):
         metadata = adapter.tags()[w("rec-1")].as_metadata()
         self.assertNotIn("~cwp_work_0", metadata)
         self.assertEqual(metadata["~cwp_work_1"], "The Top")
+
+
+class PartNameTagsTestCase(unittest.TestCase):
+    """The part tags: ~cwp_part_N, the level names with the level above out.
+
+    The legacy writes each level's part next to its work name - the
+    name of the work with the parent's name taken away. The top
+    level, which has no parent, gets no part tag; a part whose name the
+    strip empties is written empty, as the legacy writes it."""
+
+    def test_each_level_but_the_top_carries_its_part(self):
+        """daphnis d1t1: the recorded parts of the recorded works."""
+        adapter = _adapter("daphnis")
+        rec = WorkId(_recording_id("daphnis", "d1t1"))
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertEqual(metadata["~cwp_part_0"], "")
+        self.assertEqual(metadata["~cwp_part_1"],
+                         "No. 1. Introduction et danse religieuse")
+        self.assertEqual(metadata["~cwp_part_2"], "Tableau I")
+        self.assertNotIn("~cwp_part_3", metadata)
+
+    def test_a_cyrillic_part_strips_the_same_way(self):
+        """nutcracker d1t1: the part after the op. number - and the
+        second part follows the documented extra id the model keeps."""
+        adapter = _adapter("nutcracker")
+        rec = WorkId(_recording_id("nutcracker", "d1t1"))
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertEqual(
+            metadata["~cwp_part_0"],
+            ("Увертюра", "I. Ouverture miniature. Allegro giusto"))
+
+    def test_several_works_at_a_level_several_parts(self):
+        """daphnis d1t12: each of the two works is stripped by itself."""
+        adapter = _adapter("daphnis")
+        rec = WorkId(_recording_id("daphnis", "d1t12"))
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertEqual(
+            _as_picard_stores(metadata["~cwp_part_0"]),
+            _as_picard_stores(("No. 7. Introduction",
+                               "No. 8. Danse guerrière")))
+
+
+class IterableWorksTestCase(unittest.TestCase):
+    """The adapter reads the work responses twice - graph, then
+    metadata - so an iterable that is not a list must still give both."""
+
+    def test_a_generator_of_work_responses_still_writes_the_metadata(self):
+        def the_works():
+            yield {
+                "id": "work-b", "type": "Ballet",
+                "relations": [
+                    {"target-type": "artist", "type": "composer",
+                     "begin": "1909", "end": "1912"},
+                ],
+            }
+        adapter = AlbumAdapter(
+            the_works(),
+            [{"id": "rec-1", "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "work-b"}},
+            ]}])
+        rec = WorkId("rec-1")
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertEqual(metadata.get("~cwp_worktype_genres"), "Ballet")
+        self.assertEqual(metadata.get("~cwp_composed_dates"), "1909-1912")
+
+
+class GenreAndDateTagsTestCase(unittest.TestCase):
+    """The genre and date tags: the chain's works, accumulated.
+
+    The legacy writes each level's parent work's material, which
+    over the whole chain accumulates every level's works - the track's
+    own level included. Each name or date is given once."""
+
+    def test_the_genres_and_dates_of_the_chain_accumulate(self):
+        """daphnis d1t1: the ballet's type and composition dates."""
+        adapter = _adapter("daphnis")
+        rec = WorkId(_recording_id("daphnis", "d1t1"))
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertEqual(metadata["~cwp_worktype_genres"], "Ballet")
+        self.assertEqual(metadata["~cwp_candidate_genres"], "Ballet")
+        self.assertEqual(metadata["~cwp_composed_dates"], "1909-1912")
+
+    def test_a_single_date_and_a_publishing_date(self):
+        """firebird t12: the premiere and the two publishing years."""
+        adapter = _adapter("firebird")
+        rec = WorkId(_recording_id("firebird", "t12"))
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertEqual(metadata["~cwp_premiered_dates"], "1913")
+        self.assertEqual(_as_picard_stores(metadata["~cwp_published_dates"]),
+                         _as_picard_stores(("1913", "1921")))
+
+    def test_a_track_with_no_dated_work_writes_no_date(self):
+        """A track whose works carry no relations writes no date tag."""
+        adapter = _adapter("nutcracker")
+        rec = WorkId(_recording_id("nutcracker", "d1t5"))
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertNotIn("~cwp_premiered_dates", metadata)
+        self.assertNotIn("~cwp_published_dates", metadata)
+
+    def test_a_single_work_album_and_a_many_work_album(self):
+        """The flag is one on the Daphnis album and zero on the Planets."""
+        daphnis = _adapter("daphnis")
+        rec = WorkId(_recording_id("daphnis", "d1t1"))
+        self.assertEqual(
+            daphnis.tags()[rec].as_metadata()["~cwp_single_work_album"], 1)
+        planets = _adapter("planets")
+        rec = WorkId(_recording_id("planets", "t1"))
+        self.assertEqual(
+            planets.tags()[rec].as_metadata()["~cwp_single_work_album"], 0)
 
 
 class AdapterWithoutPicardTestCase(unittest.TestCase):
