@@ -95,6 +95,7 @@ from picard.plugins.classical_extras.hierarchy.adapter import (
     AlbumAdapter, WorkNames)
 from picard.plugins.classical_extras.hierarchy.destinations import (
     destination_tags)
+from picard.plugins.classical_extras.hierarchy.diffpair import diff_pair
 from picard.plugins.classical_extras.hierarchy.graph import WorkId
 from picard import config, log
 from picard.config import ConfigSection, BoolOption, IntOption, TextOption
@@ -7228,7 +7229,9 @@ class PartLevels():
                 'contingent'))
         tags = adapter.tags()
         # the publish path reads the per-track tags for the destination
-        # derivation - the level counts and the single-work flag
+        # derivation - the level counts and the single-work flag. The
+        # synonyms/replacements/options it needs for the diff match are
+        # the existing per-track dicts that add_work_info populated
         self.new_engine_tags = tags
         write_log(
             release_id, 'info', "NEW ENGINE: %d tracks tagged", len(tags))
@@ -9287,6 +9290,15 @@ class PartLevels():
     # SECTION 6- Write metadata to tags according to options #
     ##########################################################
 
+    def new_engine_diff_options(self, options):
+        """The options the ported diff pair reads, from the track's
+        option dict."""
+        return {name: options[name]
+                for name in ('cwp_removewords_p', 'cwp_proximity',
+                             'cwp_end_proximity', 'cwp_prepositions',
+                             'cwp_substring_match',
+                             'cwp_split_hyphenated')}
+
     def _publish_new_engine(self, release_id, album, track, options, tm):
         """Fill the user's destination tags from the adapter's tags.
 
@@ -9324,6 +9336,53 @@ class PartLevels():
             title=tm['~cwp_title'] or tm['title'],
             multi_sep=options["cwp_multi_work_sep"],
             single_sep=options["cwp_single_work_sep"])
+        # the diff: what the track title carries beyond the work name.
+        # The legacy compares against the fullest possible work name
+        # (the groupheading plus the part) to maximise duplication
+        # elimination; the reverse comparison uses the part name
+        # without any work details; a partial track keeps the title
+        # text; and fill_part writes the movement when the part would
+        # otherwise be annotations only
+        part_main = destinations['~cwp_part']
+        vanilla_part = str_to_list(tm.get('~cwp_part_0', ''))
+        vanilla_part = vanilla_part[0] if vanilla_part else ''
+        movement = (tm.get('~cwp_title_part_0')
+                    or tm['~cwp_title'] or tm['title'])
+        work_compare = destinations['~cwp_extended_groupheading']
+        if work_compare:
+            work_compare = work_compare + ': ' + part_main \
+                if part_main else work_compare
+        elif part_levels > 0:
+            work_compare = levels[1] + ': ' + part_main \
+                if len(levels) > 1 and part_main else \
+                (levels[1] if len(levels) > 1 else part_main)
+        else:
+            work_compare = levels[0]
+        diff = diff_pair(
+            work_compare, movement, self.synonyms[track],
+            self.replacements[track], self.new_engine_diff_options(options))
+        reverse_diff = diff_pair(
+            movement, vanilla_part, self.synonyms[track],
+            self.replacements[track], self.new_engine_diff_options(options))
+        workid_0 = str_to_list(tm.get('~cwp_workid_0', ''))
+        partial = bool(workid_0) and self.parts.get(
+            tuple(workid_0), {}).get('partial', False)
+        if diff and reverse_diff and partial:
+            diff = movement
+        if not diff and not vanilla_part and part_levels > 0 \
+                and options['cwp_fill_part']:
+            diff = movement
+        destinations = destination_tags(
+            level_names=levels,
+            part_names=parts,
+            part_levels=part_levels,
+            ref_level=ref_level,
+            single_work_album=single,
+            title_parts=title_parts,
+            title=tm['~cwp_title'] or tm['title'],
+            multi_sep=options["cwp_multi_work_sep"],
+            single_sep=options["cwp_single_work_sep"],
+            diff=diff)
         for tag, value in destinations.items():
             if tag == '~cwp_title_part_0' and not value:
                 continue

@@ -42,6 +42,7 @@ from hierarchy.adapter import (  # noqa: E402
 )
 from hierarchy.album import candidate_tops, chains_of  # noqa: E402
 from hierarchy.destinations import destination_tags  # noqa: E402
+from hierarchy.diffpair import diff_pair  # noqa: E402
 from hierarchy.graph import NodeId, WorkId  # noqa: E402
 from hierarchy.project import Hierarchy  # noqa: E402
 
@@ -4816,6 +4817,94 @@ class OptionGatesTestCase(unittest.TestCase):
             WorkId("rec-1")]
         self.assertEqual(no_type.worktype_genres, [])
         self.assertEqual(no_type.candidate_genres, ["romantic"])
+
+
+class DiffPairGoldenTestCase(unittest.TestCase):
+    """The ported diff pair must agree with the legacy's diff_pair -
+    the same inputs, the same outputs, on a battery of cases spanning
+    the canons (opus, key), the synonym machinery (off here), the
+    proximity suppression, the number strip and the substring give-up.
+    The legacy runs for real in this harness; both engines answer the
+    same questions and the answers must be identical."""
+
+    # (mb work name, track title)
+    CASES = [
+        ('Requiem in D minor, K. 626: I. Introitus',
+         'I. Introitus: Requiem aeternam'),
+        ('Symphony No. 5',
+         'Symphony No. 5 in C minor: I. Allegro'),
+        ('Gayaneh: Act I, Scene II', 'Adagio from Gayaneh'),
+        ('Tristan und Isolde, WWV 90: Akt III',
+         'Prelude and Liebestod'),
+        ('The Work', 'The Work: A Whole New Bit'),
+        ('Die Winterreise', 'Die Winterreise, D 911: Gute Nacht'),
+        ('Symphony no. 40 in G minor, K. 550',
+         'Symphony No. 40: IV. Allegro assai'),
+        ('op. 144', 'op144: Theme and Variations'),
+        ('Rienzi, der letzte der Tribunen, WWV 49: Ouvertüre',
+         'Ouvertüre (Konzertfassung)'),
+        ('Rienzi, der letzte der Tribunen, WWV 49: Ouvertüre',
+         'Ouverture: Rienzi eröffnet die Oper'),
+        ('Ouvertüre', 'Ouvertüre (Konzertfassung)'),
+        ('The Work: Part', 'The Work: Part (Live)'),
+        ('Some Work: A Bit', 'A Bit and Then Some'),
+        ('Rienzi, der letzte der Tribunen, WWV 49: Ouvertüre',
+         'Ouvertüre'),
+    ]
+
+    def setUp(self):
+        # the plugin tests live in test/test_classical_extras.py, whose
+        # harness installs the plugin - run one of its tests to get the
+        # real PartLevels with the real diff_pair
+        import test.test_classical_extras as ce_tests
+        self.test_module = ce_tests
+        case = ce_tests.ClassicalExtrasTestCase(
+            'test_cyrillic_to_latin_uses_sortname_when_latin')
+        case.setUp()
+        self.case = case
+        self.addCleanup(case.doCleanups)
+        self.mod = case.mod
+        from unittest.mock import Mock
+        pl = self.mod.PartLevels()
+        track = Mock()
+        track.metadata = {}
+        self.pl = pl
+        self.track = track
+        opts = dict(ce_tests._ALL_OPTION_DEFAULTS)
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+        self.opts = opts
+        pl.options[track] = opts
+        pl.synonyms[track] = pl.get_text_tuples('x', track, 'synonyms')
+        pl.replacements[track] = pl.get_text_tuples(
+            'x', track, 'replacements')
+        self.port_opts = {
+            k: opts[k]
+            for k in ('cwp_removewords_p', 'cwp_proximity',
+                      'cwp_end_proximity', 'cwp_prepositions',
+                      'cwp_substring_match', 'cwp_split_hyphenated')}
+
+    def test_the_port_agrees_with_the_legacy(self):
+        for mb, title in self.CASES:
+            legacy = self.pl.diff_pair('x', self.track, {}, mb, title)
+            port = diff_pair(mb, title, self.pl.synonyms[self.track],
+                             self.pl.replacements[self.track],
+                             self.port_opts)
+            self.assertEqual(
+                port, legacy,
+                "the port disagrees on %r vs %r" % (mb, title))
+
+    def test_the_port_agrees_with_synonyms_on(self):
+        """A synonym set exercises the canonization path: both engines
+        must reduce the same words."""
+        self.pl.synonyms[self.track] = [('Duo', 'Duet'),
+                                        ('and', '&')]
+        legacy = self.pl.diff_pair(
+            'x', self.track, {}, 'Duet for Two', 'Duo for Two & More')
+        port = diff_pair('Duet for Two', 'Duo for Two & More',
+                         self.pl.synonyms[self.track],
+                         self.pl.replacements[self.track],
+                         self.port_opts)
+        self.assertEqual(port, legacy)
 
 
 class DestinationTagsTestCase(unittest.TestCase):
