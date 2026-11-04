@@ -7574,6 +7574,135 @@ class CrossAlbumPartLevelRegressionTestCase(PluginTestCase):
                 "%s: ~cwp_part_levels should be 2 (B alone run)" % label)
 
 
+class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
+    """The wiring: with ``cwp_new_engine`` on, ``process_album`` builds the
+    Picard-free adapter over the responses the plugin collected and writes
+    the tags it returns - the legacy trackback loop is skipped."""
+
+    _FIXDIR = os.path.join(os.path.dirname(__file__), "fixtures", "tristan")
+    _REL = "tristan-rel"
+    _TRACKS = TristanFullAlbumIntegrationTestCase._TRACKS
+
+    def _load(self, name):
+        with open(os.path.join(self._FIXDIR, name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def setUp(self):
+        super().setUp()
+        self.set_config_values(setting={
+            "server_host": "musicbrainz.org", "server_port": 443,
+            "use_cache": True, "classical_work_parts": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "cwp_partial": False, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_new_engine": True,
+            "cwp_genres_use_folks": True, "cwp_genres_use_worktype": True,
+            "cwp_workdate_include": True,
+            "cwp_key_include": False, "cwp_key_contingent_include": True,
+            "cwp_key_never_include": False,
+            "crr_recording_lookup": False,
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "artist_locales": ["en"], "translate_artist_names": False,
+            "translate_artist_names_script_exception": False,
+        })
+
+    def _make_track(self, label, disc, track, rec_id, work_id, opts):
+        class _M(dict):
+            def __getitem__(self, k):
+                return self.get(k, '')
+
+            def getall(self, k):
+                v = self.get(k)
+                return [] if v is None else (v if isinstance(v, list) else [v])
+        tm = _M(musicbrainz_albumid=self._REL, musicbrainz_recordingid=rec_id,
+                musicbrainz_workid=work_id, album="Wesendonck-Lieder",
+                title="track %s" % label, tracknumber=str(track),
+                discnumber=str(disc))
+        tm['~ce_options'] = repr(opts)
+        from unittest.mock import Mock
+        t = Mock(name=label)
+        t.metadata = tm
+        t._id = label
+        t.__hash__ = lambda self: hash(self._id)
+        t.__eq__ = lambda self, other: getattr(other, "_id", None) == self._id
+        return t
+
+    def test_the_new_engine_writes_the_adapter_tags(self):
+        """The whole album runs through the new engine: the ids, the top
+        name, the version stamp and the tag-mapping completion marker
+        all land in the track metadata - the same values the parity
+        oracle holds for this release (t1's top is the Rienzi overture;
+        t2's is Tristan itself)."""
+        tracks = self._run_full_album()
+        t1 = tracks["t1"].metadata
+        # the ids the adapter produced - the same shape the parity
+        # oracle holds for this release
+        ids = self.mod.str_to_list(t1['~cwp_workid_0'])
+        self.assertTrue(ids, "the new engine wrote no work ids")
+        self.assertEqual(t1['~cwp_work_top'],
+                         "Rienzi, der letzte der Tribunen, WWV 49")
+        t2 = tracks["t2"].metadata
+        self.assertEqual(t2['~cwp_work_top'], "Tristan und Isolde, WWV 90")
+        # the publish path ran
+        self.assertEqual(t1['~cwp_version'], self.mod.PLUGIN_VERSION)
+        self.assertEqual(t1['~cea_works_complete'], "Y")
+
+    def _run_full_album(self, drain="fifo"):
+        """The Tristan flow with extend_metadata left stubbed (the
+        presentation is the new engine's own now) and publish_metadata
+        left intact - the new engine writes the tags and hands them to
+        the publish path."""
+        from unittest.mock import Mock
+        mod = self.mod
+        pl = mod.PartLevels()
+        pl.extend_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (mod.get_aliases, mod.close_log)
+        mod.get_aliases = lambda *a, **k: None
+        mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(mod, "close_log", saved[1]))
+
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_new_engine": True,
+            "cwp_partial": False, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+
+        tracks = {}
+        for label, disc, track, rec_id, work_id in self._TRACKS:
+            t = self._make_track(label, disc, track, rec_id, work_id, opts)
+            tracks[label] = t
+            album._new_tracks.append(t)
+            node = {'recording': self._load("rec_%s.json" % label)}
+            pl.add_work_info(album, t.metadata, node, {})
+
+        while pending:
+            cb, resp = pending.pop(0)
+            cb(resp, None, None)
+        return tracks
+
+
 class ParentChildDirectWorksRegressionTestCase(PluginTestCase):
     """Regression test for the intermediate-level loss when ONE recording is
     directly linked to BOTH a work and that work's parent.

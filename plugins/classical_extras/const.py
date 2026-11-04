@@ -835,6 +835,11 @@ PICARD_OPTIONS = [
 
 # other options (not saved in file tags)
 OTHER_OPTIONS = [
+    {'option': 'cwp_new_engine',
+     'name': 'build the tags with the hierarchy package',
+     'type': 'Boolean',
+     'default': False
+     },
     {'option': 'use_cache',
      'type': 'Boolean',
      'default': True
