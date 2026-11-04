@@ -1070,3 +1070,15 @@ depths. Regression tests:
 `test_a_work_appears_at_most_once_in_a_chain` (against the real fixture) and
 `test_the_flatter_branch_is_dropped` (against a synthetic shape, since the
 fixture alone does not isolate rule 3).
+
+
+## Process: merging stacked PRs
+
+When PRs are stacked (#14 <- #15 <- #16), merging them top-down sends each
+merge into its **base branch**, not the trunk: #15 merged into
+pr/session-tags, #16 into pr/full-tag-oracle, and only the join commit
+brought the content to my-mods. The #15 merge commit (491223f) was bypassed
+by #16 and so is not in the trunk history (its tree is identical to
+286dcc9, so nothing was lost). Next time: after a lower PR merges, retarget
+the next PR to the trunk before merging it, so every merge commit lands on
+the trunk in order.
