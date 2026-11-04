@@ -1097,28 +1097,42 @@ clear-and-refill assumes intermediates only `extend_metadata` writes.
 
 Every `~cwp_` tag family the legacy writes is in the model, and the
 option gates (the genre use flags, `include_workdates`, the key
-always/contingent/never fold) are constructor arguments. What the new
-engine still does not do - the remaining legacy surface:
+always/contingent/never fold) are constructor arguments. The
+destination tags are derived too: `hierarchy/destinations.py`'s
+`destination_tags` computes the intermediates (`~cwp_part`, `~cwp_work`,
+`~cwp_groupheading`, the extended variants, the level-0 title text) by
+the legacy's structural rules - the groupheading from the level above
+the reference with the inter-work parts joined `':: '`, the work from
+the reference level, the part from level 0 - and `_publish_new_engine`
+fills the user's tag names from them (the gh/work/movement/top/
+work-group lists, cleared outright before the append so no stale value
+or phantom empty rides along, the showmovement flags, then
+`map_tags`). What is still not there:
 
-- the destination tags (`work`, `part`, `movement`, `groupheading`)
-  are left as they are; deriving them from the adapter's tags is the
-  `set_metadata`/`extend_metadata` machinery (the diff/medley/title
-  variants included). `publish_metadata`'s early branch exists
-  precisely so the user's tags are not blanked meanwhile.
+- the `{...}` brace trim when the track title carries text beyond the
+  part name - `diff_pair`'s fuzzy match (boil/listify/synonyms/
+  proximity/LCS, ~470 lines) is its own phase; the helper writes the
+  bare part name. So are the movement-tag refinements folded into
+  that block: the leading roman-numeral/number strip for the
+  `cwp_movt_tag_exc` fills, and the `inter_work + ': '` prefix the
+  legacy adds to the `cwp_movt_tag_inc1`/`exc1` fills;
 - the arrangement/partial/medley name prefixes on `~cwp_work_N` /
   `~cwp_part_N` (the new engine writes the bare names plus the
-  annotation parens).
+  annotation parens);
 - the orphan tracks' title-derived fallbacks
-  (`cwp_derive_works_from_title`).
+  (`cwp_derive_works_from_title`);
 - the movement numbering (`~cwp_movt_num`/`~cwp_movt_tot`,
-  `movement_totals`).
-- the early publish branch also skips the fills whose sources the
-  adapter already writes - `cwp_top_tag` (`~cwp_work_top`, style,
-  grouping), `cwp_work_group_tag` (`~cwp_work_group`), the SongKong
-  tags, the iTunes showmovement flags, `ce_version_tag`/
-  `cwp_options_tag`, the error/warning rollups, and the
-  `~cea_album_composer_lastnames` feed - and tracks the adapter did
-  not tag get no `~cea_works_complete`, so the artists section
+  `movement_totals`) and the level-0-derived `~cwp_X0_*` variants;
+- the titles style's `~cwp_title_work` is left empty (the legacy
+  reads `~cwp_title_work_<ref_level>`, which the adapter does not
+  write) - only the non-default `cwp_titles` style reads it;
+- the showmovement flags append whenever part levels exist, where the
+  legacy appends them inside its work-tags loop (a deliberate
+  improvement, flagged here as a parity change).
+- the early publish branch still skips the SongKong tags,
+  `ce_version_tag`/`cwp_options_tag`, the error/warning rollups, and
+  the `~cea_album_composer_lastnames` feed - and tracks the adapter
+  did not tag get no `~cea_works_complete`, so the artists section
   readiness gate never opens for them.
 
 The multi-work accumulation diverges from the legacy's last-wins

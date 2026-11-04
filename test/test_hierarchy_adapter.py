@@ -41,6 +41,7 @@ from hierarchy.adapter import (  # noqa: E402
     read_work_graph,
 )
 from hierarchy.album import candidate_tops, chains_of  # noqa: E402
+from hierarchy.destinations import destination_tags  # noqa: E402
 from hierarchy.graph import NodeId, WorkId  # noqa: E402
 from hierarchy.project import Hierarchy  # noqa: E402
 
@@ -4815,6 +4816,121 @@ class OptionGatesTestCase(unittest.TestCase):
             WorkId("rec-1")]
         self.assertEqual(no_type.worktype_genres, [])
         self.assertEqual(no_type.candidate_genres, ["romantic"])
+
+
+class DestinationTagsTestCase(unittest.TestCase):
+    """The destination tags: what the user's work/part tags carry, derived
+    from the level names the way the legacy's extend_metadata derives
+    them - the groupheading from the second level, the work from the
+    reference level, the part from level 0, the title variants where
+    the track titles hold the work's text."""
+
+    def test_the_extended_destinations_of_a_two_level_work(self):
+        """A two-level hierarchy: the groupheading joins the top name
+        with the inter-work part above the movement; the work is the
+        reference level's name; the part is level 0's."""
+        destinations = destination_tags(
+            level_names=[["Requiem in D minor, K. 626: I. Introitus"],
+                         ["Requiem in D minor, K. 626"]],
+            part_names=[["I. Introitus"]],
+            part_levels=1,
+            ref_level=1,
+            single_work_album=0,
+            title_parts=[None],
+            title="I. Introitus: “Requiem aeternam”",
+            multi_sep=":",
+            single_sep=":")
+        self.assertEqual(destinations['~cwp_part'],
+                         "I. Introitus")
+        self.assertEqual(destinations['~cwp_work'],
+                         "Requiem in D minor, K. 626")
+        self.assertEqual(destinations['~cwp_groupheading'],
+                         "Requiem in D minor, K. 626")
+        self.assertEqual(destinations['~cwp_extended_part'],
+                         "I. Introitus")
+        self.assertEqual(destinations['~cwp_extended_work'],
+                         "Requiem in D minor, K. 626")
+        self.assertEqual(destinations['~cwp_extended_groupheading'],
+                         "Requiem in D minor, K. 626")
+
+    def test_the_destinations_when_the_album_is_the_work(self):
+        """A single-work album: the reference level sits one below the
+        levels the hierarchy shows, so the work carries the joined
+        level-0 name and the groupheading is the top - the requiem
+        shape in the oracle."""
+        destinations = destination_tags(
+            level_names=[["Album Work: IV. Finale"], ["Album Work"]],
+            part_names=[["IV. Finale"]],
+            part_levels=1,
+            ref_level=0,
+            single_work_album=1,
+            title_parts=[None],
+            title="IV. Finale",
+            multi_sep=":",
+            single_sep=":")
+        self.assertEqual(destinations['~cwp_work'],
+                         "Album Work: IV. Finale")
+        self.assertEqual(destinations['~cwp_groupheading'], "Album Work")
+        self.assertEqual(destinations['~cwp_part'], "IV. Finale")
+
+    def test_the_titles_intermediate_falls_back_to_the_track_title(self):
+        """The level-0 title text falls back to the track title when the
+        level's title is absent - the legacy's '~cwp_title_part_0 or
+        ~cwp_title or title' chain. The titles style's own destination
+        read is publish's job; the helper only fills the
+        intermediates."""
+        destinations = destination_tags(
+            level_names=[["The Work: I. The Movement"]],
+            part_names=[[""]],
+            part_levels=0,
+            ref_level=0,
+            single_work_album=0,
+            title_parts=[None],
+            title="The Work: I. The Movement",
+            multi_sep=":",
+            single_sep=":")
+        self.assertEqual(destinations['~cwp_title_part_0'],
+                         "The Work: I. The Movement")
+
+    def test_the_titles_intermediate_prefers_the_level_title(self):
+        """When the level's title text exists, it stands. With no part
+        levels the works-style part falls back to the level-0 work
+        name - the legacy's `if part:` on an empty list."""
+        destinations = destination_tags(
+            level_names=[["The Work: I. The Movement"]],
+            part_names=[[""]],
+            part_levels=0,
+            ref_level=0,
+            single_work_album=0,
+            title_parts=["I. The Movement"],
+            title="The Work: I. The Movement",
+            multi_sep=":",
+            single_sep=":")
+        self.assertEqual(destinations['~cwp_title_part_0'],
+                         "I. The Movement")
+        self.assertEqual(destinations['~cwp_part'],
+                         "The Work: I. The Movement")
+
+    def test_the_inter_work_join_orders_the_higher_part_first(self):
+        """The legacy's loop ascends and prepends, so the higher part
+        ends up first in the groupheading's join - and the join covers
+        the parts between the movement and the reference level, not the
+        movement itself (part[0] stays out)."""
+        destinations = destination_tags(
+            level_names=[["W3: P2: P1", "W2: P1", "W1", "W3"],
+                         ["W2: P1", "W1", "W2"],
+                         ["W1", "W1b"],
+                         ["W3"]],
+            part_names=[["P1"], ["P2"], ["P3"]],
+            part_levels=3,
+            ref_level=3,
+            single_work_album=0,
+            title_parts=[None, None, None],
+            title="W3: P2: P1",
+            multi_sep=":",
+            single_sep=":")
+        self.assertEqual(destinations['~cwp_extended_groupheading'],
+                         "W3:: P3: P2")
 
 
 class IterableWorksTestCase(unittest.TestCase):
