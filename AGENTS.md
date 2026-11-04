@@ -1112,6 +1112,14 @@ engine still does not do - the remaining legacy surface:
   (`cwp_derive_works_from_title`).
 - the movement numbering (`~cwp_movt_num`/`~cwp_movt_tot`,
   `movement_totals`).
+- the early publish branch also skips the fills whose sources the
+  adapter already writes - `cwp_top_tag` (`~cwp_work_top`, style,
+  grouping), `cwp_work_group_tag` (`~cwp_work_group`), the SongKong
+  tags, the iTunes showmovement flags, `ce_version_tag`/
+  `cwp_options_tag`, the error/warning rollups, and the
+  `~cea_album_composer_lastnames` feed - and tracks the adapter did
+  not tag get no `~cea_works_complete`, so the artists section
+  readiness gate never opens for them.
 
 The multi-work accumulation diverges from the legacy's last-wins
 overwrites for folks/dates - it unions instead - which the parity test
