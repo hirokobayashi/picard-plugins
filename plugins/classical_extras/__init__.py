@@ -91,6 +91,9 @@ from picard.plugins.classical_extras.ui_options_classical_extras import Ui_Class
 import picard.plugins.classical_extras.suffixtree
 from picard.plugins.classical_extras.hierarchy.session import (
     blank_if_none, recording_session_tags)
+from picard.plugins.classical_extras.hierarchy.adapter import (
+    AlbumAdapter, WorkNames)
+from picard.plugins.classical_extras.hierarchy.graph import WorkId
 from picard import config, log
 from picard.config import ConfigSection, BoolOption, IntOption, TextOption
 from picard.util import LockableObject, uniqify
@@ -4236,6 +4239,11 @@ class PartLevels():
 
     def __init__(self):
         self.works_cache = {}
+        # the raw work and recording responses, kept so the new engine
+        # (cwp_new_engine) can build its adapter over exactly what the
+        # plugin collected - the legacy parses its own copy in place
+        self.raw_work_responses = {}
+        self.raw_recordings = {}
         # maintains the list of parents recorded for each workid, so that
         # the XML lookup need only be executed if no existing record
         # (a work whose lookup finds no parent gets no entry here;
@@ -4377,6 +4385,12 @@ class PartLevels():
             release_status[release_id]['lookups'] = 0
         release_status[release_id]['name'] = track_metadata['album']
         release_status[release_id]['works'] = True
+        # the new engine reads the raw recording responses too
+        if isinstance(trackXmlNode, dict) and trackXmlNode.get('recording'):
+            rec_id = track_metadata.get('musicbrainz_recordingid')
+            if rec_id:
+                self.raw_recordings.setdefault(
+                    release_id, {})[rec_id] = trackXmlNode['recording']
         if config.setting['log_debug'] or config.setting['log_info']:
             write_log(
                 release_id,
@@ -5107,6 +5121,9 @@ class PartLevels():
         :return:
         """
 
+        # the new engine reads the raw responses, so keep them as they
+        # arrive - before any parsing touches them
+        self.raw_work_responses[workId] = response
         if error:
             tuples = self.works_queue.remove(workId)
             for track, album in tuples:
@@ -7157,6 +7174,90 @@ class PartLevels():
                     else:
                         self.top[album] = [topId]
 
+    def _process_album_new_engine(self, release_id, album):
+        """Build the tags with the Picard-free hierarchy package.
+
+        The adapter reads exactly what the plugin collected - the raw
+        work responses and the raw recording nodes - and returns the
+        tags of every track. The legacy trackback loop is skipped
+        altogether: the graph, the tops, the part names, the genres
+        and dates, the keys and the option gates are all the
+        package's.
+
+        The presentation: when the user's include options say so, the
+        annotation text is appended to the name tags in parentheses,
+        the way the legacy's extend_metadata does it.
+
+        What the legacy still does that the new engine does not: the
+        destination tags (work, part, movement, groupheading) keep
+        whatever they held - deriving them from the adapter's tags is
+        the set_metadata/extend_metadata surface, still to be ported -
+        and so do the arrangement/partial/medley name prefixes and the
+        orphan tracks' title-derived fallbacks.
+        """
+        write_log(release_id, 'info', "NEW ENGINE for album %s", album)
+
+        responses = list(self.raw_work_responses.values())
+        recordings = list(self.raw_recordings.get(release_id, {}).values())
+        names = WorkNames(titles={
+            WorkId(response['id']): response.get('title', '')
+            for response in responses
+            if isinstance(response, dict) and response.get('id')})
+        adapter = AlbumAdapter(
+            responses,
+            recordings,
+            names=names,
+            use_partial=config.setting.get('cwp_partial', False),
+            use_arrangements=config.setting.get('cwp_arrangements', True),
+            use_medleys=config.setting.get('cwp_medley', False),
+            use_collections=config.setting.get('cwp_collections', True),
+            locale=get_preferred_artist_language(config),
+            use_folks_genres=config.setting.get('cwp_genres_use_folks', True),
+            use_worktype_genres=config.setting.get(
+                'cwp_genres_use_worktype', True),
+            include_workdates=config.setting.get('cwp_workdate_include', True),
+            key_include=(
+                'always' if config.setting.get('cwp_key_include') else
+                'never' if config.setting.get('cwp_key_never_include') else
+                'contingent'))
+        tags = adapter.tags()
+        write_log(
+            release_id, 'info', "NEW ENGINE: %d tracks tagged", len(tags))
+
+        annotate = (config.setting.get('cwp_workdate_include', True)
+                    or config.setting.get('cwp_key_include', False)
+                    or config.setting.get('cwp_key_contingent_include', True))
+        for track in album._new_tracks:
+            tm = track.metadata
+            rec_id = tm['musicbrainz_recordingid']
+            track_tags = tags.get(WorkId(rec_id))
+            if track_tags is None:
+                continue
+            metadata = track_tags.as_metadata()
+            for tag, value in metadata.items():
+                if isinstance(value, tuple):
+                    tm[tag] = list(value)
+                else:
+                    tm[tag] = value
+            if annotate:
+                for lev, (work_ann, part_ann) in enumerate(
+                        zip(track_tags.annotations,
+                            track_tags.part_annotations)):
+                    work_tag = '~cwp_work_%d' % lev
+                    if work_ann and work_tag in tm:
+                        tm[work_tag] = '%s (%s)' % (
+                            tm[work_tag], ', '.join(work_ann))
+                    part_tag = '~cwp_part_%d' % lev
+                    if (lev < track_tags.part_levels and part_ann
+                            and part_tag in tm):
+                        tm[part_tag] = '%s (%s)' % (
+                            tm[part_tag], ', '.join(part_ann))
+            self.publish_metadata(release_id, album, track)
+        release_status[release_id]['works-done'] = datetime.now()
+        # the log closes whatever the album held - a zero-track album
+        # closes it too
+        close_log(release_id, 'works')
+
     def process_album(self, release_id, album):
         """
         Top routine to run end-of-album processes
@@ -7167,6 +7268,8 @@ class PartLevels():
         """
         write_log(release_id, 'debug', "PROCESS ALBUM %s", album)
         release_status[release_id]['done-lookups'] = datetime.now()
+        if config.setting.get('cwp_new_engine'):
+            return self._process_album_new_engine(release_id, album)
         # De-duplicate names in self.parts, maintaining order (in case part names have been arrived at via multiple paths)
         for part_item in self.parts:
             if 'name' in self.parts[part_item]:
@@ -9189,6 +9292,17 @@ class PartLevels():
         options = self.options[track]
         tm = track.metadata
         tm['~cwp_version'] = PLUGIN_VERSION
+
+        if config.setting.get('cwp_new_engine'):
+            # the new engine's tags carry everything the adapter made;
+            # the clear-and-refill below assumes the intermediates the
+            # legacy's extend_metadata wrote, which the adapter does
+            # not - so the destination tags (work, part, movement,
+            # groupheading) are left exactly as they are, and only the
+            # common tag mapping runs
+            tm['~cea_works_complete'] = "Y"
+            map_tags(options, release_id, album, tm)
+            return
 
         # set movement grouping tags (hidden vars)
         if movement_info:
