@@ -4893,9 +4893,9 @@ class DestinationTagsTestCase(unittest.TestCase):
                          "The Work: I. The Movement")
 
     def test_the_titles_intermediate_prefers_the_level_title(self):
-        """When the level's title text exists, it stands; an empty part
-        name leaves the works-style part empty - the destination read
-        picks by style."""
+        """When the level's title text exists, it stands. With no part
+        levels the works-style part falls back to the level-0 work
+        name - the legacy's `if part:` on an empty list."""
         destinations = destination_tags(
             level_names=[["The Work: I. The Movement"]],
             part_names=[[""]],
@@ -4908,7 +4908,29 @@ class DestinationTagsTestCase(unittest.TestCase):
             single_sep=":")
         self.assertEqual(destinations['~cwp_title_part_0'],
                          "I. The Movement")
-        self.assertEqual(destinations['~cwp_part'], "")
+        self.assertEqual(destinations['~cwp_part'],
+                         "The Work: I. The Movement")
+
+    def test_the_inter_work_join_orders_the_higher_part_first(self):
+        """The legacy's loop ascends and prepends, so the higher part
+        ends up first in the groupheading's join - and the join covers
+        the parts between the movement and the reference level, not the
+        movement itself (part[0] stays out)."""
+        destinations = destination_tags(
+            level_names=[["W3: P2: P1", "W2: P1", "W1", "W3"],
+                         ["W2: P1", "W1", "W2"],
+                         ["W1", "W1b"],
+                         ["W3"]],
+            part_names=[["P1"], ["P2"], ["P3"]],
+            part_levels=3,
+            ref_level=3,
+            single_work_album=0,
+            title_parts=[None, None, None],
+            title="W3: P2: P1",
+            multi_sep=":",
+            single_sep=":")
+        self.assertEqual(destinations['~cwp_extended_groupheading'],
+                         "W3:: P3: P2")
 
 
 class IterableWorksTestCase(unittest.TestCase):

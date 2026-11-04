@@ -9350,32 +9350,29 @@ class PartLevels():
         work_sep = options["cwp_single_work_sep"]
         gh_tags = _tags_of("cwp_work_tag_multi")
         work_tags = _tags_of("cwp_work_tag_single")
-        movt_tags = (
-            _tags_of("cwp_movt_tag_inc")
-            + _tags_of("cwp_movt_tag_exc")
-            + _tags_of("cwp_movt_tag_inc1")
-            + _tags_of("cwp_movt_tag_exc1"))
+        movt_inc = _tags_of("cwp_movt_tag_inc")
+        movt_exc = _tags_of("cwp_movt_tag_exc")
+        movt_inc1 = _tags_of("cwp_movt_tag_inc1")
+        movt_exc1 = _tags_of("cwp_movt_tag_exc1")
+        movt_no = _tags_of("cwp_movt_no_tag")
+        movt_tags = movt_inc + movt_exc + movt_inc1 + movt_exc1
         # the legacy clears the destination tags before filling them -
         # append_tag appends, so a stale value would survive alongside.
         # The clear removes the tag outright rather than leaving an
         # empty string: append_tag splits an empty string into [''],
         # which would ride along as a phantom first value
-        movt_no = _tags_of("cwp_movt_no_tag")
         for tag in gh_tags + work_tags + movt_tags:
             if tag in tm:
                 del tm[tag]
         for tag in gh_tags:
-            if tag in movt_tags:
-                # the overlap fill splits on the separator, as the
+            if tag in movt_inc + movt_exc + movt_no:
+                # the overlap fill splits the multi-values, as the
                 # legacy's does
                 append_tag(release_id, tm, tag, groupheading, gh_sep)
             else:
                 append_tag(release_id, tm, tag, groupheading)
         for tag in work_tags:
-            if tag in (
-                    _tags_of("cwp_movt_tag_inc1")
-                    + _tags_of("cwp_movt_tag_exc1")
-                    + movt_no):
+            if tag in movt_inc1 + movt_exc1 + movt_no:
                 append_tag(release_id, tm, tag, work, work_sep)
             else:
                 append_tag(release_id, tm, tag, work)

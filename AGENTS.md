@@ -1112,20 +1112,28 @@ or phantom empty rides along, the showmovement flags, then
 - the `{...}` brace trim when the track title carries text beyond the
   part name - `diff_pair`'s fuzzy match (boil/listify/synonyms/
   proximity/LCS, ~470 lines) is its own phase; the helper writes the
-  bare part name;
+  bare part name. So are the movement-tag refinements folded into
+  that block: the leading roman-numeral/number strip for the
+  `cwp_movt_tag_exc` fills, and the `inter_work + ': '` prefix the
+  legacy adds to the `cwp_movt_tag_inc1`/`exc1` fills;
 - the arrangement/partial/medley name prefixes on `~cwp_work_N` /
   `~cwp_part_N` (the new engine writes the bare names plus the
-  annotation parens).
+  annotation parens);
 - the orphan tracks' title-derived fallbacks
-  (`cwp_derive_works_from_title`).
+  (`cwp_derive_works_from_title`);
 - the movement numbering (`~cwp_movt_num`/`~cwp_movt_tot`,
-  `movement_totals`) and the level-0-derived `~cwp_X0_*` variants.
-- the early publish branch runs the top and work-group fills and the
-  showmovement flags (their sources are the adapter's); it still skips
-  the SongKong tags, `ce_version_tag`/`cwp_options_tag`, the
-  error/warning rollups, and the `~cea_album_composer_lastnames` feed -
-  and tracks the adapter did not tag get no `~cea_works_complete`, so
-  the artists section readiness gate never opens for them.
+  `movement_totals`) and the level-0-derived `~cwp_X0_*` variants;
+- the titles style's `~cwp_title_work` is left empty (the legacy
+  reads `~cwp_title_work_<ref_level>`, which the adapter does not
+  write) - only the non-default `cwp_titles` style reads it;
+- the showmovement flags append whenever part levels exist, where the
+  legacy appends them inside its work-tags loop (a deliberate
+  improvement, flagged here as a parity change).
+- the early publish branch still skips the SongKong tags,
+  `ce_version_tag`/`cwp_options_tag`, the error/warning rollups, and
+  the `~cea_album_composer_lastnames` feed - and tracks the adapter
+  did not tag get no `~cea_works_complete`, so the artists section
+  readiness gate never opens for them.
 
 The multi-work accumulation diverges from the legacy's last-wins
 overwrites for folks/dates - it unions instead - which the parity test

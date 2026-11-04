@@ -92,8 +92,10 @@ def destination_tags(
         work_titles = None
         inter_work = None
         if ref_level > 1:
+            # the legacy's loop ascends and prepends: the HIGHER part
+            # ends up first, so part[ref_level-1]: ... : part[1]
             inter_work = ''
-            for r in range(ref_level - 1, 0, -1):
+            for r in range(1, ref_level):
                 inter_work = parts[r] + (': ' + inter_work if inter_work
                                          else '')
             groupheading = (works[ref_level] + ':: ' + inter_work)
@@ -103,13 +105,13 @@ def destination_tags(
         work_titles = None
         inter_work = None
 
-    if part_levels > 0 or any(parts):
-        part_main = parts[0] if parts else works[0]
+    # the legacy's part selection tests the list's truthiness: with no
+    # part levels the list is empty and the part falls back to the
+    # level-0 work name
+    if part_levels > 0 and parts:
+        part_main = parts[0]
     else:
-        # no part levels and an empty level-0 part: the works-style
-        # part carries nothing - the titles style reads its own
-        # intermediate instead
-        part_main = ''
+        part_main = works[0]
 
     # the title text at level 0: the level's own title part, else the
     # track title - the legacy's '~cwp_title_part_0 or ~cwp_title or
