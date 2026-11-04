@@ -415,6 +415,13 @@ class TrackTags:
     #: The musical keys of the chain's works, accumulated like the
     #: dates.
     keys: List[str] = field(default_factory=list)
+    #: The annotation text of each level - the keys and the workdates
+    #: the legacy gathers for a work's name. The work tags take
+    #: these; the part tags take ``part_annotations``.
+    annotations: List[List[str]] = field(default_factory=list)
+    #: The part share of the annotation text - each level's own
+    #: with the level above's taken out.
+    part_annotations: List[List[str]] = field(default_factory=list)
     #: The number of levels below this track's own level.
     part_levels: int = 0
     #: The number of levels in the whole hierarchy of this track's top.
@@ -701,7 +708,11 @@ class AlbumAdapter:
             use_medleys: bool = True,
             use_collections: bool = True,
             multiplicity: Mapping[WorkId, int] | None = None,
-            locale: str = '') -> None:
+            locale: str = '',
+            use_folks_genres: bool = True,
+            use_worktype_genres: bool = True,
+            include_workdates: bool = True,
+            key_include: str = 'contingent') -> None:
         # the responses are read twice - for the graph and for the
         # genre/date metadata - so an iterable is materialized once
         works = list(works)
@@ -732,6 +743,17 @@ class AlbumAdapter:
         self.use_arrangements = use_arrangements
         self.use_medleys = use_medleys
         self.use_collections = use_collections
+        # the genre and annotation gates - the legacy's
+        # cwp_genres_use_folks / cwp_genres_use_worktype /
+        # cwp_workdate_include / cwp_key_include /
+        # cwp_key_contingent_include / cwp_key_never_include, folded
+        # into the four arguments the tags actually read from
+        self.use_folks_genres = use_folks_genres
+        self.use_worktype_genres = use_worktype_genres
+        self.include_workdates = include_workdates
+        if key_include not in ("always", "contingent", "never"):
+            raise ValueError("key_include is always, contingent or never, not %r" % (key_include,))
+        self.key_include = key_include
         #: How many tracks each recording is on. The legacy votes once
         #: per *track*, so a recording on two tracks votes twice.
         #:
@@ -1283,6 +1305,8 @@ class AlbumAdapter:
         top_names = self._top_names(top, votes)
         (candidate, worktype, composed, premiered, published,
          keys) = self._genre_and_date_tags(levels)
+        annotations, part_annotations = self._annotations(
+            levels, [self.names.names_of(works) for works in levels])
         return TrackTags(
             key=recording.performance.key,
             levels=levels,
@@ -1294,6 +1318,8 @@ class AlbumAdapter:
             premiered_dates=premiered,
             published_dates=published,
             keys=keys,
+            annotations=annotations,
+            part_annotations=part_annotations,
             single_work_album=single_work_album,
             top=top,
             top_names=top_names,
@@ -1326,14 +1352,16 @@ class AlbumAdapter:
                 meta = self.work_meta.get(work)
                 if meta is None:
                     continue
-                for name in meta.folks_genres:
-                    if name not in candidate:
-                        candidate.append(name)
-                for name in meta.worktype_genres:
-                    if name not in worktype:
-                        worktype.append(name)
-                    if name not in candidate:
-                        candidate.append(name)
+                if self.use_folks_genres:
+                    for name in meta.folks_genres:
+                        if name not in candidate:
+                            candidate.append(name)
+                if self.use_worktype_genres:
+                    for name in meta.worktype_genres:
+                        if name not in worktype:
+                            worktype.append(name)
+                        if name not in candidate:
+                            candidate.append(name)
                 for date in meta.composed_dates:
                     if date not in composed:
                         composed.append(date)
@@ -1347,6 +1375,82 @@ class AlbumAdapter:
                     if key not in keys:
                         keys.append(key)
         return candidate, worktype, composed, premiered, published, keys
+
+    def _annotations(
+            self,
+            levels: Sequence[List[WorkId]],
+            level_names: Sequence[List[str]],
+    ) -> Tuple[List[List[str]], List[List[str]]]:
+        """The annotation material of each level, and the parts' share.
+
+        The legacy's ``make_annotations`` gathers a work's keys and its
+        workdates into the text that decorates its name. The dates are
+        the first family that has any, taken in the legacy's source
+        order - composed, published, premiered - when the workdate
+        include is on. The keys come by the include mode: always, or
+        contingently - a key that the work's or its parents' names
+        already mention is left out - or never.
+
+        The work tag takes the level's own material; the part tag takes
+        it with the level above's taken out, so a movement does not
+        repeat the whole work's dates. A level above the top has none.
+
+        The legacy's source flags (``cwp_workdate_source_composed`` and
+        friends) are folded into a fixed priority: composed, published,
+        premiered. The legacy skips a family whose flag is off and
+        falls through to the next; a caller that wants a family
+        suppressed will pass the choice once the wiring reads the
+        options.
+
+        The contingent check walks the work's own chain - the legacy
+        climbs from the work to its parents - so a level's keys are
+        gated by that level's names and the levels above it, never
+        by the levels below.
+        """
+        annotations: List[List[str]] = []
+        for index, works in enumerate(levels):
+            # the names this level's contingent check may consult: the
+            # work's own level and its ancestors', as the legacy's walk
+            # climbs
+            chain_names = ': '.join(
+                name
+                for names in level_names[index:] for name in names).lower()
+            level_keys: List[str] = []
+            dates: Dict[str, List[str]] = {}
+            for work in works:
+                meta = self.work_meta.get(work)
+                if meta is None:
+                    continue
+                for key in meta.keys:
+                    if key not in level_keys:
+                        level_keys.append(key)
+                for family in ('composed', 'published', 'premiered'):
+                    got = getattr(meta, family + '_dates')
+                    if got:
+                        dates.setdefault(family, []).extend(
+                            d for d in got if d not in dates.get(family, []))
+            if self.key_include == 'always':
+                keys = level_keys
+            elif self.key_include == 'contingent':
+                keys = [key for key in level_keys
+                        if key.lower() not in chain_names]
+            else:
+                keys = []
+            workdates: List[str] = []
+            if self.include_workdates:
+                for family in ('composed', 'published', 'premiered'):
+                    if dates.get(family):
+                        workdates = dates[family]
+                        break
+            annotations.append(keys + workdates)
+        # the part material: the level's own, with the level above's
+        # taken out - the top level keeps everything it has
+        part_annotations: List[List[str]] = []
+        for index, own in enumerate(annotations):
+            above = annotations[index + 1] if index + 1 < len(annotations) else []
+            part_annotations.append(
+                [text for text in own if text not in above])
+        return annotations, part_annotations
 
     def _part_names(
             self,

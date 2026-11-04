@@ -4649,6 +4649,174 @@ class PartNameTagsTestCase(unittest.TestCase):
                                "No. 8. Danse guerrière")))
 
 
+class OptionGatesTestCase(unittest.TestCase):
+    """The option gates: the genre sources and the annotation material."""
+
+    # a two-work album: the top carries a key and composition dates;
+    # the movement carries its own key. The top's name mentions its
+    # key, as the Requiem's does.
+    _WORKS = [
+        {"id": "top", "title": "The Work in D minor",
+         "attributes": [
+             {"type": "Key", "value": "D minor"},
+         ],
+         "relations": [
+             {"target-type": "artist", "type": "composer",
+              "begin": "1791", "end": "1791"},
+             {"target-type": "label", "type": "publishing",
+              "begin": "1801", "end": "1801"},
+         ]},
+        {"id": "part", "title": "The Work in D minor: I. The Movement",
+         "attributes": [
+             {"type": "Key", "value": "F major"},
+         ],
+         "relations": [
+             {"type": "parts", "direction": "backward",
+              "target-type": "work", "work": {"id": "top"}},
+         ]},
+    ]
+    _RECORDINGS = [
+        {"id": "rec-1", "relations": [
+            {"type": "performance", "direction": "forward",
+             "work": {"id": "part"}},
+        ]},
+    ]
+
+    def _adapter(self, **kwargs):
+        return AlbumAdapter(list(self._WORKS), list(self._RECORDINGS),
+                            names=_names(self._WORKS), **kwargs)
+
+    def test_the_annotation_material_at_defaults(self):
+        """The workdates and the contingent keys, as the legacy makes
+        them: the movement's own key is not in its chain's names, the
+        top's is; the composed dates win over the published ones."""
+        tags = self._adapter().tags()
+        track = tags[WorkId("rec-1")]
+        # level 0 = the movement: its own key (F major, not in any
+        # name) and no dates of its own
+        self.assertEqual(track.annotations[0], ["F major"])
+        # level 1 = the top: its key IS in the chain names, so only the
+        # dates; composed wins over published
+        self.assertEqual(track.annotations[1], ["1791"])
+
+    def test_the_contingent_walk_climbs_only(self):
+        """The legacy climbs from the work to its parents: a key is
+        measured against the work's name and its ancestors' - a
+        descendant's name does not gate the work's key. Here
+        the recording performs the movement, whose own name mentions
+        the work's key; the work keeps it, because the climb looks
+        at the work's name and what is above it, never below."""
+        works = [
+            {"id": "top", "title": "The Work",
+             "attributes": [
+                 {"type": "Key", "value": "G major"},
+             ], "relations": []},
+            {"id": "part", "title": "The Work: I. G major interlude",
+             "relations": [
+                 {"type": "parts", "direction": "backward",
+                  "target-type": "work", "work": {"id": "top"}},
+             ]},
+        ]
+        recordings = [{
+            "id": "rec-1", "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "part"}},
+            ]}]
+        track = AlbumAdapter(
+            works, recordings, names=_names(works)).tags()[
+            WorkId("rec-1")]
+        # level 0 = the movement (its own name mentions G major, but
+        # the movement carries no key of its own to exclude); level 1
+        # = the work, whose key survives its descendant's mention
+        self.assertEqual(track.annotations, [[], ["G major"]])
+
+    def test_the_key_always_include(self):
+        """The always mode keeps a key the names already mention."""
+        track = self._adapter(key_include="always").tags()[WorkId("rec-1")]
+        self.assertEqual(track.annotations[1], ["D minor", "1791"])
+
+    def test_the_key_never_include(self):
+        track = self._adapter(key_include="never").tags()[WorkId("rec-1")]
+        self.assertEqual(track.annotations[0], [])
+        self.assertEqual(track.annotations[1], ["1791"])
+
+    def test_the_workdate_gate(self):
+        """With the workdates off, only the keys annotate."""
+        track = self._adapter(include_workdates=False).tags()[
+            WorkId("rec-1")]
+        self.assertEqual(track.annotations[1], [])
+        self.assertEqual(track.annotations[0], ["F major"])
+
+    def test_the_published_source_when_no_composed(self):
+        """The legacy takes the first source that has dates, in the
+        order composed, published, premiered."""
+        works = [
+            {"id": "top", "title": "The Work",
+             "relations": [
+                 {"target-type": "label", "type": "publishing",
+                  "begin": "1801", "end": "1801"},
+             ]},
+        ]
+        adapter = AlbumAdapter(works, [
+            {"id": "rec-1", "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "top"}},
+            ]}])
+        track = adapter.tags()[WorkId("rec-1")]
+        self.assertEqual(track.annotations[0], ["1801"])
+
+    def test_the_part_annotation_strips_the_parents(self):
+        """The part tag takes the level's annotations minus the level
+        above's - the movement does not repeat the work's dates."""
+        track = self._adapter(key_include="always").tags()[WorkId("rec-1")]
+        self.assertEqual(track.part_annotations[0], ["F major"])
+        self.assertEqual(track.part_annotations[1], ["D minor", "1791"])
+
+    def test_the_names_get_the_annotations_only_when_asked(self):
+        """The captured tags carry no parentheses - the append is the
+        caller's presentation, fed by the data the model holds."""
+        metadata = self._adapter(key_include="always").tags()[
+            WorkId("rec-1")].as_metadata()
+        self.assertNotIn("(", str(metadata.get("~cwp_work_0")))
+
+    _TAGGED_WORKS = [
+        {"id": "top", "title": "The Work", "type": "Ballet",
+         "tags": [{"name": "romantic"}],
+         "relations": []},
+    ]
+
+    def test_the_folks_genre_gate(self):
+        """With the folksonomy off, the candidate genres lose the
+        folksonomy names and keep the work type."""
+        recordings = [{
+            "id": "rec-1", "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "top"}},
+            ]}]
+        both = AlbumAdapter(self._TAGGED_WORKS, recordings).tags()[
+            WorkId("rec-1")]
+        self.assertEqual(both.worktype_genres, ["Ballet"])
+        self.assertEqual(both.candidate_genres, ["romantic", "Ballet"])
+        no_folks = AlbumAdapter(self._TAGGED_WORKS, recordings,
+                                use_folks_genres=False).tags()[
+            WorkId("rec-1")]
+        self.assertEqual(no_folks.worktype_genres, ["Ballet"])
+        self.assertEqual(no_folks.candidate_genres, ["Ballet"])
+
+    def test_the_worktype_genre_gate(self):
+        """With the work type off, neither family gets it."""
+        recordings = [{
+            "id": "rec-1", "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "top"}},
+            ]}]
+        no_type = AlbumAdapter(self._TAGGED_WORKS, recordings,
+                               use_worktype_genres=False).tags()[
+            WorkId("rec-1")]
+        self.assertEqual(no_type.worktype_genres, [])
+        self.assertEqual(no_type.candidate_genres, ["romantic"])
+
+
 class IterableWorksTestCase(unittest.TestCase):
     """The adapter reads the work responses twice - graph, then
     metadata - so an iterable that is not a list must still give both."""
