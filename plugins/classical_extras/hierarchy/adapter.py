@@ -45,6 +45,7 @@ from typing import (Dict, FrozenSet, Iterable, Iterator, List, Mapping, Optional
                     Sequence, Set, Tuple)
 
 from .album import (Performance, candidate_tops, chains_of, normalise_name)
+from .parts import strip_parent_name
 from .graph import NodeId, WorkGraph, WorkId
 from .project import Hierarchy, project
 
@@ -375,6 +376,10 @@ class TrackTags:
     #: numbering as the levels themselves. A level whose works have no
     #: titles holds an empty list here, and gets no name tag.
     level_names: List[List[str]] = field(default_factory=list)
+    #: The part name or names of each level - the names with the level
+    #: above taken out. The top level, which has no parent, holds an
+    #: empty list here and gets no part tag.
+    part_names: List[List[str]] = field(default_factory=list)
     #: The group name - the shuffle key, always one value. A track with
     #: no hierarchy has a group too, but no tags are written for it:
     #: the group is here for the caller to look at, and it only reaches
@@ -432,6 +437,16 @@ class TrackTags:
                     metadata['~cwp_work_%d' % number] = names[0]
                 elif names:
                     metadata['~cwp_work_%d' % number] = tuple(names)
+            # the part tag of the same level - every level but the top
+            # has one, even when the strip emptied it, as the legacy
+            # writes. A level the part machinery has nothing for (a
+            # hand-built tag without part_names) writes none.
+            if number < len(self.part_names) and self.part_names[number]:
+                parts = self.part_names[number]
+                if len(parts) == 1:
+                    metadata['~cwp_part_%d' % number] = parts[0]
+                else:
+                    metadata['~cwp_part_%d' % number] = tuple(parts)
             number += 1
         if self.top:
             metadata['~cwp_workid_top'] = tuple(
@@ -1162,6 +1177,7 @@ class AlbumAdapter:
             key=recording.performance.key,
             levels=levels,
             level_names=[self.names.names_of(works) for works in levels],
+            part_names=self._part_names(levels, recording),
             top=top,
             top_names=top_names,
             group=self._group_name(top_names),
@@ -1169,6 +1185,48 @@ class AlbumAdapter:
             # count as the tags are numbered by, so the two agree
             part_levels=len(filled) - 1,
             work_part_levels=work_part_levels)
+
+    def _part_names(
+            self,
+            levels: Sequence[List[WorkId]],
+            recording: Recording) -> List[List[str]]:
+        'The part names of each level: the names with the level above out.'
+
+        part_names: List[List[str]] = []
+        for index, works in enumerate(levels):
+            if index + 1 >= len(levels):
+                part_names.append([])
+                continue
+            above = set(levels[index + 1])
+            names = []
+            for work in works:
+                title = self.names.title_of(work)
+                parent_title = ''
+                if work == recording.performance.key and recording.partial:
+                    # the stand-in for a partly performed work: the level
+                    # above holds the work itself, whose title is the one
+                    # the stand-in merged in - so the strip empties it,
+                    # the way the legacy writes it
+                    parent_title = self.names.title_of(recording.partial[0])
+                else:
+                    # the work's own parent - the first of its resolved
+                    # parents that the level above holds
+                    for parent in self.relations.parents.get(work, ()):
+                        if parent in above:
+                            parent_title = self.names.title_of(parent)
+                            break
+                if parent_title:
+                    names.append(strip_parent_name(title, parent_title))
+                else:
+                    names.append(title)
+            # a name is only given once, even when two works share it -
+            # the same rule the level's own names follow
+            deduped: List[str] = []
+            for name in names:
+                if name not in deduped:
+                    deduped.append(name)
+            part_names.append(deduped)
+        return part_names
 
     def _levels(
             self,
