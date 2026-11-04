@@ -4650,6 +4650,31 @@ class PartNameTagsTestCase(unittest.TestCase):
                                "No. 8. Danse guerrière")))
 
 
+class IterableWorksTestCase(unittest.TestCase):
+    """The adapter reads the work responses twice - graph, then
+    metadata - so an iterable that is not a list must still give both."""
+
+    def test_a_generator_of_work_responses_still_writes_the_metadata(self):
+        def the_works():
+            yield {
+                "id": "work-b", "type": "Ballet",
+                "relations": [
+                    {"target-type": "artist", "type": "composer",
+                     "begin": "1909", "end": "1912"},
+                ],
+            }
+        adapter = AlbumAdapter(
+            the_works(),
+            [{"id": "rec-1", "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "work-b"}},
+            ]}])
+        rec = WorkId("rec-1")
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertEqual(metadata.get("~cwp_worktype_genres"), "Ballet")
+        self.assertEqual(metadata.get("~cwp_composed_dates"), "1909-1912")
+
+
 class GenreAndDateTagsTestCase(unittest.TestCase):
     """The genre and date tags: the chain's works, accumulated.
 

@@ -71,6 +71,24 @@ class WorkMetaTestCase(unittest.TestCase):
         self.assertEqual(meta.premiered_dates, [])
         self.assertEqual(meta.published_dates, [])
 
+    def test_a_differing_list_keeps_the_legacy_spellings(self):
+        """The composer dates collapse an agreeing pair; the published
+        dates of a differing list write every pair as a range - the
+        legacy's two branches never agreed with each other."""
+        response = {"relations": [
+            {"target-type": "artist", "type": "composer",
+             "begin": "1913", "end": "1913"},
+            {"target-type": "artist", "type": "composer",
+             "begin": "1920", "end": "1924"},
+            {"target-type": "label", "type": "publishing",
+             "begin": "1913", "end": "1913"},
+            {"target-type": "label", "type": "publishing",
+             "begin": "1920", "end": "1924"},
+        ]}
+        meta = work_metadata(response)
+        self.assertEqual(meta.composed_dates, ["1913", "1920-1924"])
+        self.assertEqual(meta.published_dates, ["1913-1913", "1920-1924"])
+
     def test_the_functional_spelling_agrees(self):
         self.assertEqual(
             work_metadata({"type": "Ballet"}).worktype_genres,
