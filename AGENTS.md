@@ -1083,18 +1083,39 @@ by #16 and so is not in the trunk history (its tree is identical to
 the next PR to the trunk before merging it, so every merge commit lands on
 the trunk in order.
 
-## Remaining migration (after the keys and the locale names)
+## Remaining migration (after the wiring)
 
-Every `~cwp_` tag family the legacy writes is in the model now: the
-ids, the names, the parts, the genres and dates, `~cwp_keys`, and the
-locale names (WorkNames carries the primary aliases by exact locale
-string; the adapter's `locale` argument takes the language code of a
-regional locale, as `get_preferred_artist_language` does). Still open,
-all option-gate material for the wiring phase: the genre use flags
-(`cwp_genres_use_folks` / `cwp_genres_use_worktype`, both default True
-and hardcoded ON), the key and date annotation includes
-(`cwp_key_include` / `cwp_key_contingent_include`, the `workdates`
-source options), and the empty-part annotation text. The multi-work
-accumulation diverges from the legacy's last-wins overwrites for
-folks/dates - it unions instead - which the parity test covers on the
-pinned tracks.
+The plugin runs on the package behind `cwp_new_engine` (default
+False): `process_album` branches to `_process_album_new_engine`,
+which builds the adapter over the raw responses the plugin collected
+(`raw_work_responses` in `work_process`, `raw_recordings` in
+`add_work_info`), applies the option gates from the user's config,
+writes the tags and the annotation presentation, and publishes. The
+publish path branches early on the option (version stamp +
+`map_tags` + `~cea_works_complete` only) because the legacy's
+clear-and-refill assumes intermediates only `extend_metadata` writes.
+
+Every `~cwp_` tag family the legacy writes is in the model, and the
+option gates (the genre use flags, `include_workdates`, the key
+always/contingent/never fold) are constructor arguments. What the new
+engine still does not do - the remaining legacy surface:
+
+- the destination tags (`work`, `part`, `movement`, `groupheading`)
+  are left as they are; deriving them from the adapter's tags is the
+  `set_metadata`/`extend_metadata` machinery (the diff/medley/title
+  variants included). `publish_metadata`'s early branch exists
+  precisely so the user's tags are not blanked meanwhile.
+- the arrangement/partial/medley name prefixes on `~cwp_work_N` /
+  `~cwp_part_N` (the new engine writes the bare names plus the
+  annotation parens).
+- the orphan tracks' title-derived fallbacks
+  (`cwp_derive_works_from_title`).
+- the movement numbering (`~cwp_movt_num`/`~cwp_movt_tot`,
+  `movement_totals`).
+
+The multi-work accumulation diverges from the legacy's last-wins
+overwrites for folks/dates - it unions instead - which the parity test
+covers on the pinned tracks. The lazy import of the hierarchy package
+is forbidden in the plugin module: `sys.modules` holds the first
+install's deleted path, so a never-imported submodule cannot be found
+through it - import at the module top, next to the session import.

@@ -7184,11 +7184,16 @@ class PartLevels():
         and dates, the keys and the option gates are all the
         package's.
 
-        The presentation, too: when the user's include options say so,
-        the annotation text is appended to the name tags in
-        parentheses, the way the legacy's extend_metadata does it. The
-        append needs the options and the user's tag-name choices, both
-        read here as the legacy reads them.
+        The presentation: when the user's include options say so, the
+        annotation text is appended to the name tags in parentheses,
+        the way the legacy's extend_metadata does it.
+
+        What the legacy still does that the new engine does not: the
+        destination tags (work, part, movement, groupheading) keep
+        whatever they held - deriving them from the adapter's tags is
+        the set_metadata/extend_metadata surface, still to be ported -
+        and so do the arrangement/partial/medley name prefixes and the
+        orphan tracks' title-derived fallbacks.
         """
         write_log(release_id, 'info', "NEW ENGINE for album %s", album)
 
@@ -7249,6 +7254,8 @@ class PartLevels():
                             tm[part_tag], ', '.join(part_ann))
             self.publish_metadata(release_id, album, track)
         release_status[release_id]['works-done'] = datetime.now()
+        # the log closes whatever the album held - a zero-track album
+        # closes it too
         close_log(release_id, 'works')
 
     def process_album(self, release_id, album):
@@ -9285,6 +9292,17 @@ class PartLevels():
         options = self.options[track]
         tm = track.metadata
         tm['~cwp_version'] = PLUGIN_VERSION
+
+        if config.setting.get('cwp_new_engine'):
+            # the new engine's tags carry everything the adapter made;
+            # the clear-and-refill below assumes the intermediates the
+            # legacy's extend_metadata wrote, which the adapter does
+            # not - so the destination tags (work, part, movement,
+            # groupheading) are left exactly as they are, and only the
+            # common tag mapping runs
+            tm['~cea_works_complete'] = "Y"
+            map_tags(options, release_id, album, tm)
+            return
 
         # set movement grouping tags (hidden vars)
         if movement_info:

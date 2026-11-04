@@ -7607,7 +7607,8 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
             "translate_artist_names_script_exception": False,
         })
 
-    def _make_track(self, label, disc, track, rec_id, work_id, opts):
+    def _make_track(self, label, disc, track, rec_id, work_id, opts,
+                    preset_work=False):
         class _M(dict):
             def __getitem__(self, k):
                 return self.get(k, '')
@@ -7619,6 +7620,10 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
                 musicbrainz_workid=work_id, album="Wesendonck-Lieder",
                 title="track %s" % label, tracknumber=str(track),
                 discnumber=str(disc))
+        if preset_work:
+            # the destination tag a previous run (or the user) left -
+            # the new engine's publish must leave it alone
+            tm['work'] = "Preset work for %s" % label
         tm['~ce_options'] = repr(opts)
         from unittest.mock import Mock
         t = Mock(name=label)
@@ -7648,11 +7653,25 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
         self.assertEqual(t1['~cwp_version'], self.mod.PLUGIN_VERSION)
         self.assertEqual(t1['~cea_works_complete'], "Y")
 
+    def test_the_publish_path_does_not_blank_the_destinations(self):
+        """The legacy publish clears and refills the destination tags
+        (work, part, movement...) from intermediates only extend_metadata
+        writes - the new engine writes none of those, so the clear would
+        blank the user's tags and refill them with nothing. The new
+        engine's publish leaves the destinations as they are."""
+        tracks = self._run_full_album()
+        for label, track in tracks.items():
+            tm = track.metadata
+            self.assertEqual(
+                tm['work'], "Preset work for %s" % label,
+                "the destination tag was blanked on %s" % label)
+
     def _run_full_album(self, drain="fifo"):
         """The Tristan flow with extend_metadata left stubbed (the
-        presentation is the new engine's own now) and publish_metadata
-        left intact - the new engine writes the tags and hands them to
-        the publish path."""
+        presentation is the new engine's own now) and the real
+        publish_metadata left running - its new-engine branch stamps
+        the version, runs the common tag mapping and leaves the
+        destination tags alone."""
         from unittest.mock import Mock
         mod = self.mod
         pl = mod.PartLevels()
@@ -7691,7 +7710,8 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
 
         tracks = {}
         for label, disc, track, rec_id, work_id in self._TRACKS:
-            t = self._make_track(label, disc, track, rec_id, work_id, opts)
+            t = self._make_track(label, disc, track, rec_id, work_id, opts,
+                                 preset_work=True)
             tracks[label] = t
             album._new_tracks.append(t)
             node = {'recording': self._load("rec_%s.json" % label)}
