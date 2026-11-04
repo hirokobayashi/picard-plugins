@@ -43,6 +43,7 @@ from hierarchy.adapter import (  # noqa: E402
 from hierarchy.album import candidate_tops, chains_of  # noqa: E402
 from hierarchy.destinations import destination_tags  # noqa: E402
 from hierarchy.diffpair import diff_pair  # noqa: E402
+from hierarchy.diffpair import strip_excess_punctuation  # noqa: E402
 from hierarchy.graph import NodeId, WorkId  # noqa: E402
 from hierarchy.project import Hierarchy  # noqa: E402
 
@@ -4859,6 +4860,8 @@ class DiffPairGoldenTestCase(unittest.TestCase):
         # unpaired brackets are cleaned up
         ('The Work: Part', 'The Work: Part (Live) [Mono'),
         ('The Work: Part', 'The Work: Part {unclosed'),
+        # a work name that listifies to nothing gives no diff
+        ('!!!', 'Some Title Here'),
     ]
 
     def setUp(self):
@@ -4914,6 +4917,17 @@ class DiffPairGoldenTestCase(unittest.TestCase):
                          self.pl.replacements[self.track],
                          self.port_opts)
         self.assertEqual(port, legacy)
+
+    def test_the_port_cleans_brackets_like_the_legacy(self):
+        """The strip helper's own agreement: a string emptied by the
+        quote and bracket removals returns empty, not a crash - the
+        legacy's two successive if-guards keep the strip-pairs loop
+        off an emptied string."""
+        for s in ['(]', '["', '")', '({', '[)', '(Live) [Mono',
+                  'thing {unclosed']:
+            self.assertEqual(strip_excess_punctuation(s),
+                             self.mod.strip_excess_punctuation(s),
+                             "the port disagrees stripping %r" % s)
 
 
 class DestinationTagsTestCase(unittest.TestCase):
