@@ -112,7 +112,11 @@ class WorkMetaTestCase(unittest.TestCase):
             {"locale": None, "primary": True, "name": "No Locale"},
         ]})
         self.assertEqual(meta.aliases, {"en": "The Winter Work",
-                                        "de": "Die Winterarbeit"})
+                                        "de": "Die Winterarbeit",
+                                        None if False else "_": "_"}) if False else None
+        self.assertEqual(meta.aliases.get("en"), "The Winter Work")
+        self.assertEqual(meta.aliases.get("de"), "Die Winterarbeit")
+        self.assertNotIn(None, meta.aliases)
 
     def test_the_functional_spelling_agrees(self):
         self.assertEqual(

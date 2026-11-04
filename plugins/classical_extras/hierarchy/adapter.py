@@ -706,7 +706,11 @@ class AlbumAdapter:
         # genre/date metadata - so an iterable is materialized once
         works = list(works)
         self.names = names or WorkNames()
-        self.names.locale = locale
+        # the legacy takes the language code before any regional
+        # variant - ja_JP asks for ja. A caller that passes no locale
+        # keeps whatever its names already carry.
+        if locale:
+            self.names.locale = locale.split("_")[0]
         self.graph, self.relations = read_work_graph(
             works,
             use_arrangements=use_arrangements,

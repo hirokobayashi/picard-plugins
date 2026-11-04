@@ -85,11 +85,14 @@ class WorkMeta:
             locale = alias.get("locale")
             if not locale or not alias.get("primary"):
                 continue
-            # the legacy looks the locale up by its language code - the
-            # part before any regional variant
-            code = locale.split("_")[0]
-            if code not in aliases:
-                aliases[code] = alias.get("name", "")
+            # the legacy filters the aliases by the exact locale string
+            # and joins every match - an alias marked en_GB does not
+            # answer a request for en, and two primaries in one locale
+            # are one joined name
+            if locale in aliases:
+                aliases[locale] = aliases[locale] + "; " + alias.get("name", "")
+            else:
+                aliases[locale] = alias.get("name", "")
         key_values = [a.get("value") for a in response.get("attributes") or []
                       if isinstance(a, Mapping) and a.get("type") == "Key"]
         return cls(

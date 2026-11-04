@@ -4748,9 +4748,9 @@ class AliasNamesTestCase(unittest.TestCase):
         names.locale = "de"
         self.assertEqual(names.title_of(WorkId("work-a")), "Der Deutsche Name")
 
-    def test_a_regional_locale_uses_its_language_code(self):
-        """The legacy looks the locale up by the part before any
-        regional variant - ja_JP asks for ja."""
+    def test_a_regional_request_asks_for_its_language(self):
+        """The legacy takes the language code before any regional
+        variant - a user locale of ja_JP asks for ja."""
         works = [
             {"id": "work-a", "title": "The Work",
              "aliases": [
@@ -4763,8 +4763,47 @@ class AliasNamesTestCase(unittest.TestCase):
             meta = WorkMeta.of(response)
             if meta.aliases:
                 names.aliases[WorkId(response["id"])] = meta.aliases
-        names.locale = "ja"
+        names.locale = "ja_JP".split("_")[0]
         self.assertEqual(names.title_of(WorkId("work-a")), "日本語の名前")
+
+    def test_a_regional_alias_does_not_answer_a_language_request(self):
+        """The legacy filters the aliases by the exact locale string:
+        an alias marked en_GB does not answer a request for en - the
+        title stands."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "en_GB", "primary": True, "name": "British Name"},
+             ]},
+        ]
+        names = _names(works)
+        from hierarchy.workmeta import WorkMeta
+        for response in works:
+            meta = WorkMeta.of(response)
+            if meta.aliases:
+                names.aliases[WorkId(response["id"])] = meta.aliases
+        names.locale = "en"
+        self.assertEqual(names.title_of(WorkId("work-a")), "The Work")
+
+    def test_two_primary_aliases_in_a_locale_are_joined(self):
+        """The legacy joins every primary alias it matches with a
+        semicolon - it does not take the first."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "en", "primary": True, "name": "First EN"},
+                 {"locale": "en", "primary": True, "name": "Second EN"},
+             ]},
+        ]
+        names = _names(works)
+        from hierarchy.workmeta import WorkMeta
+        for response in works:
+            meta = WorkMeta.of(response)
+            if meta.aliases:
+                names.aliases[WorkId(response["id"])] = meta.aliases
+        names.locale = "en"
+        self.assertEqual(names.title_of(WorkId("work-a")),
+                         "First EN; Second EN")
 
     def test_the_adapter_takes_a_locale_and_the_names_follow(self):
         """The constructor's locale reaches the names."""
