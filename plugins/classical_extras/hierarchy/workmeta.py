@@ -27,10 +27,18 @@ def _year(date: Any) -> List[str]:
 
 
 def _date_pairs(
-        relations: List[Mapping[str, Any]], target: str, rtype: str) -> List[str]:
+        relations: List[Mapping[str, Any]], target: str, rtype: str,
+        collapse_equal: bool = True) -> List[str]:
     """The begin/end years of every relation of the given target and
     type, each as a year or a ``begin-end`` range. An entry that is not
-    an object carries no dates."""
+    an object carries no dates.
+
+    ``collapse_equal`` is the legacy's own quirk: its composer dates
+    collapse a pair whose begin and end agree even when other pairs
+    differ, while its published and premiered dates write every pair of
+    a differing list as a range - ``1913-1913`` among them. The two
+    spellings are kept apart so the tags read as the legacy's do.
+    """
     pairs = [r for r in relations
              if isinstance(r, Mapping)
              and r.get("target-type") == target
@@ -39,8 +47,10 @@ def _date_pairs(
     ends = _year([r.get("end") for r in pairs])
     if begins == ends:
         return [b for b in begins if b]
-    return [(b + "-" + e if b != e else b)
-            for b, e in zip(begins, ends) if b]
+    if collapse_equal:
+        return [(b + "-" + e if b != e else b)
+                for b, e in zip(begins, ends) if b]
+    return [(b + "-" + e) for b, e in zip(begins, ends) if b]
 
 
 @dataclass
@@ -69,8 +79,10 @@ class WorkMeta:
                           if isinstance(t, Mapping)],
             worktype_genres=worktype,
             composed_dates=_date_pairs(relations, "artist", "composer"),
-            published_dates=_date_pairs(relations, "label", "publishing"),
-            premiered_dates=_date_pairs(relations, "place", "premiere"),
+            published_dates=_date_pairs(relations, "label", "publishing",
+                                        collapse_equal=False),
+            premiered_dates=_date_pairs(relations, "place", "premiere",
+                                        collapse_equal=False),
         )
 
 

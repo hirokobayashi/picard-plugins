@@ -682,6 +682,9 @@ class AlbumAdapter:
             use_medleys: bool = True,
             use_collections: bool = True,
             multiplicity: Mapping[WorkId, int] | None = None) -> None:
+        # the responses are read twice - for the graph and for the
+        # genre/date metadata - so an iterable is materialized once
+        works = list(works)
         self.graph, self.relations = read_work_graph(
             works,
             use_arrangements=use_arrangements,

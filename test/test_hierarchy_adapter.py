@@ -4163,8 +4163,8 @@ class LegacyParityTestCase(unittest.TestCase):
         adapter wrote - so a level the adapter has and the legacy did
         not is compared too. Only the tags are compared: the fixture
         holds the ids the model gives under another key, and that is
-        not a tag. The families the adapter does not write yet are
-        left out - see COMPARABLE.
+        not a tag. The families still to be ported - the keys and the
+        aliases - are left out; see COMPARABLE.
         """
         tags = {tag for tag in want if tag.startswith('~cwp_')}
         tags |= set(metadata)
