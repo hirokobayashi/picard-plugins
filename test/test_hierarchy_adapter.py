@@ -4137,10 +4137,8 @@ class LegacyParityTestCase(unittest.TestCase):
 
     #: The tag families the adapter writes, and so the ones the
     #: comparison covers. The full oracle holds every tag the legacy
-    #: writes - the part names, the genre and date tags - and the
-    #: adapter does not write those yet: they are the remaining
-    #: migration, not differences to document. The set grows as the
-    #: adapter does.
+    #: writes; the families that remain outside are the option-gated
+    #: ones - the annotation choices - not differences to document.
     COMPARABLE = (
         "~cwp_workid_",
         "~cwp_work_",
@@ -4164,8 +4162,8 @@ class LegacyParityTestCase(unittest.TestCase):
         adapter wrote - so a level the adapter has and the legacy did
         not is compared too. Only the tags are compared: the fixture
         holds the ids the model gives under another key, and that is
-        not a tag. The families still to be ported - the keys and the
-        aliases - are left out; see COMPARABLE.
+        not a tag. The families that remain outside the comparison
+        are the option-gated ones - see COMPARABLE.
         """
         tags = {tag for tag in want if tag.startswith('~cwp_')}
         tags |= set(metadata)
