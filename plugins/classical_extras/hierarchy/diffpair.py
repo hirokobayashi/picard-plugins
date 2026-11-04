@@ -176,6 +176,7 @@ def strip_excess_punctuation(s):
                     s = s.replace("{", "")
                 if "}" in s and "{" not in s:
                     s = s.replace("}", "")
+            if s:
                 match_chars = [("(", ")"), ("[", "]"), ("{", "}")]
                 last = len(s) - 1
                 for char_pair in match_chars:
@@ -763,6 +764,8 @@ def diff_pair(mb_item,
         if ti_list_new and mb_list2:
             if boil(ti_list_new[0]) == mb_list2[-1]:
                 ti_list_new.pop(0)
+        else:
+            return None
         if len(ti_list_new) > 0:
             ti = ' '.join(ti_list_new)
         else:
