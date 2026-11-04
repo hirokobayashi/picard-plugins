@@ -111,9 +111,6 @@ class WorkMetaTestCase(unittest.TestCase):
             {"locale": "de", "primary": True, "name": "Die Winterarbeit"},
             {"locale": None, "primary": True, "name": "No Locale"},
         ]})
-        self.assertEqual(meta.aliases, {"en": "The Winter Work",
-                                        "de": "Die Winterarbeit",
-                                        None if False else "_": "_"}) if False else None
         self.assertEqual(meta.aliases.get("en"), "The Winter Work")
         self.assertEqual(meta.aliases.get("de"), "Die Winterarbeit")
         self.assertNotIn(None, meta.aliases)

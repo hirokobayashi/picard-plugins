@@ -4763,8 +4763,33 @@ class AliasNamesTestCase(unittest.TestCase):
             meta = WorkMeta.of(response)
             if meta.aliases:
                 names.aliases[WorkId(response["id"])] = meta.aliases
-        names.locale = "ja_JP".split("_")[0]
+        names.locale = "ja"
         self.assertEqual(names.title_of(WorkId("work-a")), "日本語の名前")
+
+    def test_the_adapter_splits_a_regional_locale(self):
+        """The constructor takes the language code of the locale it is
+        given - ja_JP asks for ja. A locale the aliases cannot answer
+        gets the names it was given - here, titles the caller named."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "ja", "primary": True, "name": "日本語の名前"},
+             ], "relations": []},
+        ]
+        recordings = [{
+            "id": "rec-1",
+            "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "work-a"}},
+            ],
+        }]
+        regional = AlbumAdapter(works, recordings, locale="ja_JP")
+        metadata = regional.tags()[WorkId("rec-1")].as_metadata()
+        self.assertEqual(metadata.get("~cwp_work_0"), "日本語の名前")
+        answered = AlbumAdapter(works, recordings, names=_names(works),
+                                locale="fr")
+        metadata = answered.tags()[WorkId("rec-1")].as_metadata()
+        self.assertEqual(metadata.get("~cwp_work_0"), "The Work")
 
     def test_a_regional_alias_does_not_answer_a_language_request(self):
         """The legacy filters the aliases by the exact locale string:
