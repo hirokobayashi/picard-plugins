@@ -4850,6 +4850,15 @@ class DiffPairGoldenTestCase(unittest.TestCase):
         ('Some Work: A Bit', 'A Bit and Then Some'),
         ('Rienzi, der letzte der Tribunen, WWV 49: Ouvertüre',
          'Ouvertüre'),
+        # the roman numerals boil to digits - a numeral against its
+        # digit equivalent is not new text
+        ('Scene: 4. Allegro', 'IV. Allegro'),
+        ('Scene: 2. Andante', 'ii. Andante'),
+        # the sch->sh replacement in boil
+        ('Schubert: Schöne Gegend', 'Schone Gegend'),
+        # unpaired brackets are cleaned up
+        ('The Work: Part', 'The Work: Part (Live) [Mono'),
+        ('The Work: Part', 'The Work: Part {unclosed'),
     ]
 
     def setUp(self):

@@ -7196,11 +7196,10 @@ class PartLevels():
         the way the legacy's extend_metadata does it.
 
         What the legacy still does that the new engine does not: the
-        destination tags (work, part, movement, groupheading) keep
-        whatever they held - deriving them from the adapter's tags is
-        the set_metadata/extend_metadata surface, still to be ported -
-        and so do the arrangement/partial/medley name prefixes and the
-        orphan tracks' title-derived fallbacks.
+        arrangement/partial/medley name prefixes and the orphan
+        tracks' title-derived fallbacks. (The destination tags and the
+        diff braces are the new engine's own now, through
+        destination_tags and the ported diffpair.)
         """
         write_log(release_id, 'info', "NEW ENGINE for album %s", album)
 
@@ -9306,9 +9305,10 @@ class PartLevels():
         over the level names the adapter wrote; the fills follow the
         legacy's publish list - the groupheading tags, the work tags,
         the movement tags, the top and work-group tags, the
-        showmovement flags - without the movement numbers (the
-        movement_totals machinery is the legacy's extend_metadata's)
-        and without the diff trim (``diff_pair``, its own phase).
+        showmovement flags - then map_tags. The diff trim (the
+        ``{...}`` braces from the ported ``hierarchy.diffpair``) runs
+        first, by the legacy's three rules: the fullest-name
+        comparison, the partial override and the fill_part fallback.
         """
         tm['~cea_works_complete'] = "Y"
         rec_id = tm['musicbrainz_recordingid']

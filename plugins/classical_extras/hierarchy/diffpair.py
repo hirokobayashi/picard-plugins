@@ -63,7 +63,20 @@ def from_roman(s):
                        ('IX', 9),
                        ('V', 5),
                        ('IV', 4),
-                       ('I', 1))
+                       ('I', 1),
+                       ('m', 1000),
+                       ('cm', 900),
+                       ('d', 500),
+                       ('cd', 400),
+                       ('c', 100),
+                       ('xc', 90),
+                       ('l', 50),
+                       ('xl', 40),
+                       ('x', 10),
+                       ('ix', 9),
+                       ('v', 5),
+                       ('iv', 4),
+                       ('i', 1))
     result = 0
     index = 0
     for numeral, value in romanNumeralMap:
@@ -155,6 +168,14 @@ def strip_excess_punctuation(s):
                     s = s.replace("(", "")
                 if ")" in s and "(" not in s:
                     s = s.replace(")", "")
+                if "[" in s and "]" not in s:
+                    s = s.replace("[", "")
+                if "]" in s and "[" not in s:
+                    s = s.replace("]", "")
+                if "{" in s and "}" not in s:
+                    s = s.replace("{", "")
+                if "}" in s and "{" not in s:
+                    s = s.replace("}", "")
                 match_chars = [("(", ")"), ("[", "]"), ("{", "}")]
                 last = len(s) - 1
                 for char_pair in match_chars:
