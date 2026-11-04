@@ -4153,6 +4153,7 @@ class LegacyParityTestCase(unittest.TestCase):
         "~cwp_premiered_dates",
         "~cwp_published_dates",
         "~cwp_single_work_album",
+        "~cwp_keys",
     )
 
     @classmethod
@@ -4718,6 +4719,71 @@ class GenreAndDateTagsTestCase(unittest.TestCase):
         rec = WorkId(_recording_id("planets", "t1"))
         self.assertEqual(
             planets.tags()[rec].as_metadata()["~cwp_single_work_album"], 0)
+
+
+class AliasNamesTestCase(unittest.TestCase):
+    """The names in a locale: the primary alias stands for the title."""
+
+    def test_the_primary_alias_stands_for_the_title(self):
+        """A work with an English primary alias shows it when the locale
+        asks for English, and the title when it does not."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "en", "primary": True, "name": "The English Name"},
+                 {"locale": "en", "primary": False, "name": "A Draft"},
+                 {"locale": "de", "primary": True, "name": "Der Deutsche Name"},
+             ]},
+        ]
+        names = _names(works)
+        from hierarchy.workmeta import WorkMeta
+        for response in works:
+            meta = WorkMeta.of(response)
+            if meta.aliases:
+                names.aliases[WorkId(response["id"])] = meta.aliases
+        names.locale = "en"
+        self.assertEqual(names.title_of(WorkId("work-a")), "The English Name")
+        names.locale = "fr"
+        self.assertEqual(names.title_of(WorkId("work-a")), "The Work")
+        names.locale = "de"
+        self.assertEqual(names.title_of(WorkId("work-a")), "Der Deutsche Name")
+
+    def test_a_regional_locale_uses_its_language_code(self):
+        """The legacy looks the locale up by the part before any
+        regional variant - ja_JP asks for ja."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "ja", "primary": True, "name": "日本語の名前"},
+             ]},
+        ]
+        names = _names(works)
+        from hierarchy.workmeta import WorkMeta
+        for response in works:
+            meta = WorkMeta.of(response)
+            if meta.aliases:
+                names.aliases[WorkId(response["id"])] = meta.aliases
+        names.locale = "ja"
+        self.assertEqual(names.title_of(WorkId("work-a")), "日本語の名前")
+
+    def test_the_adapter_takes_a_locale_and_the_names_follow(self):
+        """The constructor's locale reaches the names."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "de", "primary": True, "name": "Der Deutsche Name"},
+             ], "relations": []},
+        ]
+        adapter = AlbumAdapter(
+            works,
+            [{"id": "rec-1", "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "work-a"}},
+            ]}],
+            locale="de")
+        rec = WorkId("rec-1")
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertEqual(metadata.get("~cwp_work_0"), "Der Deutsche Name")
 
 
 class AdapterWithoutPicardTestCase(unittest.TestCase):

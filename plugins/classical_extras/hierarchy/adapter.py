@@ -60,9 +60,24 @@ class WorkNames:
     """The title of each work, and the aliases it is known by."""
 
     titles: Dict[WorkId, str] = field(default_factory=dict)
+    #: The primary aliases of each work, by language code - from the
+    #: work lookups, which carry them when they were asked for.
+    aliases: Dict[WorkId, Dict[str, str]] = field(default_factory=dict)
+    #: The language code the names are shown in - the legacy takes it
+    #: from the user's artist locale. Empty, the titles stand.
+    locale: str = ''
 
     def title_of(self, work: WorkId) -> str:
-        """The title of a work, or an empty string when it is unknown."""
+        """The title of a work, or an empty string when it is unknown.
+
+        With a locale set, the work's primary alias in that locale
+        stands for the title when it has one - the legacy shows the
+        alias, and keeps the title when the locale gives nothing.
+        """
+        if self.locale:
+            alias = self.aliases.get(work, {}).get(self.locale)
+            if alias:
+                return alias
         return self.titles.get(work, '')
 
     def names_of(self, works: Iterable[WorkId]) -> List[str]:
@@ -397,6 +412,9 @@ class TrackTags:
     #: One when the release has a single top work, else zero - the
     #: same value on every track of the release.
     single_work_album: int = 0
+    #: The musical keys of the chain's works, accumulated like the
+    #: dates.
+    keys: List[str] = field(default_factory=list)
     #: The number of levels below this track's own level.
     part_levels: int = 0
     #: The number of levels in the whole hierarchy of this track's top.
@@ -483,7 +501,8 @@ class TrackTags:
                 ('~cwp_worktype_genres', self.worktype_genres),
                 ('~cwp_composed_dates', self.composed_dates),
                 ('~cwp_premiered_dates', self.premiered_dates),
-                ('~cwp_published_dates', self.published_dates)):
+                ('~cwp_published_dates', self.published_dates),
+                ('~cwp_keys', self.keys)):
             if not values:
                 continue
             if len(values) == 1:
@@ -681,10 +700,13 @@ class AlbumAdapter:
             use_arrangements: bool = True,
             use_medleys: bool = True,
             use_collections: bool = True,
-            multiplicity: Mapping[WorkId, int] | None = None) -> None:
+            multiplicity: Mapping[WorkId, int] | None = None,
+            locale: str = '') -> None:
         # the responses are read twice - for the graph and for the
         # genre/date metadata - so an iterable is materialized once
         works = list(works)
+        self.names = names or WorkNames()
+        self.names.locale = locale
         self.graph, self.relations = read_work_graph(
             works,
             use_arrangements=use_arrangements,
@@ -697,8 +719,11 @@ class AlbumAdapter:
             if (isinstance(response, Mapping)
                     and isinstance(response.get('id'), str)
                     and response.get('id')):
-                self.work_meta[WorkId(response['id'])] = WorkMeta.of(response)
-        self.names = names or WorkNames()
+                work_id = WorkId(response['id'])
+                meta = WorkMeta.of(response)
+                self.work_meta[work_id] = meta
+                if meta.aliases:
+                    self.names.aliases[work_id] = meta.aliases
         self.use_partial = use_partial
         self.use_arrangements = use_arrangements
         self.use_medleys = use_medleys
@@ -825,7 +850,13 @@ class AlbumAdapter:
         first: the stand-in is held once either way, so one title is all
         it can carry.
         """
-        self.names = WorkNames(titles=dict(self.names.titles))
+        # the copy keeps the locale and the aliases - the isolation is
+        # about the *titles* the merge writes, not the language the
+        # caller asked for or the aliases the responses carried
+        self.names = WorkNames(
+            titles=dict(self.names.titles),
+            aliases=dict(self.names.aliases),
+            locale=self.names.locale)
         for recording in self.recordings:
             if not recording.partial:
                 continue
@@ -1246,8 +1277,8 @@ class AlbumAdapter:
         if cycles[tip]:
             return TrackTags(key=recording.performance.key)
         top_names = self._top_names(top, votes)
-        candidate, worktype, composed, premiered, published = \
-            self._genre_and_date_tags(levels)
+        (candidate, worktype, composed, premiered, published,
+         keys) = self._genre_and_date_tags(levels)
         return TrackTags(
             key=recording.performance.key,
             levels=levels,
@@ -1258,6 +1289,7 @@ class AlbumAdapter:
             composed_dates=composed,
             premiered_dates=premiered,
             published_dates=published,
+            keys=keys,
             single_work_album=single_work_album,
             top=top,
             top_names=top_names,
@@ -1270,8 +1302,9 @@ class AlbumAdapter:
     def _genre_and_date_tags(
             self,
             levels: Sequence[List[WorkId]],
-    ) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
-        """The genre and date tags: every level's works, accumulated.
+    ) -> Tuple[List[str], List[str], List[str], List[str], List[str],
+               List[str]]:
+        """The genre, date and key tags: every level's works, accumulated.
 
         The legacy writes each level's parent work's material, which
         over the whole chain accumulates every level's works - the
@@ -1283,6 +1316,7 @@ class AlbumAdapter:
         composed: List[str] = []
         premiered: List[str] = []
         published: List[str] = []
+        keys: List[str] = []
         for works in levels:
             for work in works:
                 meta = self.work_meta.get(work)
@@ -1305,7 +1339,10 @@ class AlbumAdapter:
                 for date in meta.published_dates:
                     if date not in published:
                         published.append(date)
-        return candidate, worktype, composed, premiered, published
+                for key in meta.keys:
+                    if key not in keys:
+                        keys.append(key)
+        return candidate, worktype, composed, premiered, published, keys
 
     def _part_names(
             self,
