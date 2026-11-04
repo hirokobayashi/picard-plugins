@@ -1394,12 +1394,27 @@ class AlbumAdapter:
         The work tag takes the level's own material; the part tag takes
         it with the level above's taken out, so a movement does not
         repeat the whole work's dates. A level above the top has none.
+
+        The legacy's source flags (``cwp_workdate_source_composed`` and
+        friends) are folded into a fixed priority: composed, published,
+        premiered. The legacy skips a family whose flag is off and
+        falls through to the next; a caller that wants a family
+        suppressed will pass the choice once the wiring reads the
+        options.
+
+        The contingent check walks the work's own chain - the legacy
+        climbs from the work to its parents - so a level's names gate
+        that level's keys and the levels above it, never the levels
+        below.
         """
-        chain_names = ': '.join(
-            name
-            for names in level_names for name in names).lower()
         annotations: List[List[str]] = []
         for index, works in enumerate(levels):
+            # the names this level's contingent check may consult: the
+            # work's own level and its ancestors', as the legacy's walk
+            # climbs
+            chain_names = ': '.join(
+                name
+                for names in level_names[index:] for name in names).lower()
             level_keys: List[str] = []
             dates: Dict[str, List[str]] = {}
             for work in works:
