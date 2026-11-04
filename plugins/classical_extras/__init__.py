@@ -93,6 +93,8 @@ from picard.plugins.classical_extras.hierarchy.session import (
     blank_if_none, recording_session_tags)
 from picard.plugins.classical_extras.hierarchy.adapter import (
     AlbumAdapter, WorkNames)
+from picard.plugins.classical_extras.hierarchy.destinations import (
+    destination_tags)
 from picard.plugins.classical_extras.hierarchy.graph import WorkId
 from picard import config, log
 from picard.config import ConfigSection, BoolOption, IntOption, TextOption
@@ -4244,6 +4246,10 @@ class PartLevels():
         # plugin collected - the legacy parses its own copy in place
         self.raw_work_responses = {}
         self.raw_recordings = {}
+        # the adapter's per-track tags of the album the new engine last
+        # processed - the publish path derives the destination tags
+        # from them
+        self.new_engine_tags = {}
         # maintains the list of parents recorded for each workid, so that
         # the XML lookup need only be executed if no existing record
         # (a work whose lookup finds no parent gets no entry here;
@@ -7221,6 +7227,9 @@ class PartLevels():
                 'never' if config.setting.get('cwp_key_never_include') else
                 'contingent'))
         tags = adapter.tags()
+        # the publish path reads the per-track tags for the destination
+        # derivation - the level counts and the single-work flag
+        self.new_engine_tags = tags
         write_log(
             release_id, 'info', "NEW ENGINE: %d tracks tagged", len(tags))
 
@@ -9278,6 +9287,113 @@ class PartLevels():
     # SECTION 6- Write metadata to tags according to options #
     ##########################################################
 
+    def _publish_new_engine(self, release_id, album, track, options, tm):
+        """Fill the user's destination tags from the adapter's tags.
+
+        The derivation is :func:`hierarchy.destinations.destination_tags`
+        over the level names the adapter wrote; the fills follow the
+        legacy's publish list - the groupheading tags, the work tags,
+        the movement tags, the top and work-group tags, the
+        showmovement flags - without the movement numbers (the
+        movement_totals machinery is the legacy's extend_metadata's)
+        and without the diff trim (``diff_pair``, its own phase).
+        """
+        tm['~cea_works_complete'] = "Y"
+        rec_id = tm['musicbrainz_recordingid']
+        track_tags = self.new_engine_tags.get(WorkId(rec_id))
+        if track_tags is None:
+            map_tags(options, release_id, album, tm)
+            return
+        part_levels = track_tags.part_levels
+        single = track_tags.single_work_album
+        ref_level = part_levels - single if part_levels >= 3 else part_levels
+        # the level names as the adapter wrote them, plus the top
+        levels = [str_to_list(tm.get('~cwp_work_%d' % lev, ''))
+                  for lev in range(0, part_levels + 1)]
+        parts = [str_to_list(tm.get('~cwp_part_%d' % lev, ''))
+                 for lev in range(0, part_levels)]
+        title_parts = [tm.get('~cwp_title_part_%d' % lev)
+                       for lev in range(0, part_levels + 1)]
+        destinations = destination_tags(
+            level_names=levels,
+            part_names=parts,
+            part_levels=part_levels,
+            ref_level=ref_level,
+            single_work_album=single,
+            title_parts=title_parts,
+            title=tm['~cwp_title'] or tm['title'],
+            multi_sep=options["cwp_multi_work_sep"],
+            single_sep=options["cwp_single_work_sep"])
+        for tag, value in destinations.items():
+            if tag == '~cwp_title_part_0' and not value:
+                continue
+            tm[tag] = value
+        if options["cwp_titles"]:
+            part = destinations['~cwp_title_part_0'] or tm['~cwp_title'] \
+                or tm['title']
+            groupheading = ""
+            work = destinations['~cwp_title_work'] or ""
+        elif options["cwp_works"]:
+            part = destinations['~cwp_part']
+            groupheading = destinations['~cwp_groupheading'] or ""
+            work = destinations['~cwp_work'] or ""
+        else:
+            part = destinations['~cwp_extended_part']
+            groupheading = destinations['~cwp_extended_groupheading'] or ""
+            work = destinations['~cwp_extended_work'] or ""
+
+        def _tags_of(option):
+            return [x.strip(' ')
+                    for x in options[option].split(",") if x.strip(' ')]
+
+        gh_sep = options["cwp_multi_work_sep"]
+        work_sep = options["cwp_single_work_sep"]
+        gh_tags = _tags_of("cwp_work_tag_multi")
+        work_tags = _tags_of("cwp_work_tag_single")
+        movt_tags = (
+            _tags_of("cwp_movt_tag_inc")
+            + _tags_of("cwp_movt_tag_exc")
+            + _tags_of("cwp_movt_tag_inc1")
+            + _tags_of("cwp_movt_tag_exc1"))
+        # the legacy clears the destination tags before filling them -
+        # append_tag appends, so a stale value would survive alongside.
+        # The clear removes the tag outright rather than leaving an
+        # empty string: append_tag splits an empty string into [''],
+        # which would ride along as a phantom first value
+        movt_no = _tags_of("cwp_movt_no_tag")
+        for tag in gh_tags + work_tags + movt_tags:
+            if tag in tm:
+                del tm[tag]
+        for tag in gh_tags:
+            if tag in movt_tags:
+                # the overlap fill splits on the separator, as the
+                # legacy's does
+                append_tag(release_id, tm, tag, groupheading, gh_sep)
+            else:
+                append_tag(release_id, tm, tag, groupheading)
+        for tag in work_tags:
+            if tag in (
+                    _tags_of("cwp_movt_tag_inc1")
+                    + _tags_of("cwp_movt_tag_exc1")
+                    + movt_no):
+                append_tag(release_id, tm, tag, work, work_sep)
+            else:
+                append_tag(release_id, tm, tag, work)
+        if '~cwp_part_levels' in tm and int(tm['~cwp_part_levels']) > 0:
+            append_tag(release_id, tm, 'show work movement', '1')
+            append_tag(release_id, tm, 'showmovement', '1')
+        for tag in _tags_of("cwp_top_tag"):
+            if '~cwp_work_top' in tm:
+                append_tag(release_id, tm, tag, tm['~cwp_work_top'])
+        for tag in _tags_of("cwp_work_group_tag"):
+            if '~cwp_work_group' in tm:
+                append_tag(release_id, tm, tag, tm['~cwp_work_group'])
+        # the movement tags without the diff trim: the part text as the
+        # adapter wrote it
+        for tag in movt_tags:
+            append_tag(release_id, tm, tag, part)
+        map_tags(options, release_id, album, tm)
+
     def publish_metadata(self, release_id, album, track, movement_info={}):
         """
         Write out the metadata according to user options
@@ -9294,14 +9410,14 @@ class PartLevels():
         tm['~cwp_version'] = PLUGIN_VERSION
 
         if config.setting.get('cwp_new_engine'):
-            # the new engine's tags carry everything the adapter made;
-            # the clear-and-refill below assumes the intermediates the
-            # legacy's extend_metadata wrote, which the adapter does
-            # not - so the destination tags (work, part, movement,
-            # groupheading) are left exactly as they are, and only the
-            # common tag mapping runs
-            tm['~cea_works_complete'] = "Y"
-            map_tags(options, release_id, album, tm)
+            # the new engine derives the destination intermediates the
+            # way extend_metadata does - the groupheading from the level
+            # above the reference, the work from the reference level,
+            # the part from level 0 - and fills the user's tag names
+            # from them. The clear-and-refill below stays legacy-only:
+            # it reads intermediates (the diff braces, the X0/title
+            # variants) that the adapter does not write.
+            self._publish_new_engine(release_id, album, track, options, tm)
             return
 
         # set movement grouping tags (hidden vars)

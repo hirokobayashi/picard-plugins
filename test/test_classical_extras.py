@@ -7653,18 +7653,33 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
         self.assertEqual(t1['~cwp_version'], self.mod.PLUGIN_VERSION)
         self.assertEqual(t1['~cea_works_complete'], "Y")
 
-    def test_the_publish_path_does_not_blank_the_destinations(self):
-        """The legacy publish clears and refills the destination tags
-        (work, part, movement...) from intermediates only extend_metadata
-        writes - the new engine writes none of those, so the clear would
-        blank the user's tags and refill them with nothing. The new
-        engine's publish leaves the destinations as they are."""
+    def test_the_publish_path_fills_the_destinations(self):
+        """The legacy publish derives the destination tags (work, part,
+        groupheading...) from intermediates only extend_metadata writes.
+        The new engine derives them itself: the work tag carries the
+        reference level's name with the annotation the includes add,
+        the preset a previous run left is cleared, and the top and
+        work-group fills run from the adapter's tags."""
         tracks = self._run_full_album()
-        for label, track in tracks.items():
-            tm = track.metadata
-            self.assertEqual(
-                tm['work'], "Preset work for %s" % label,
-                "the destination tag was blanked on %s" % label)
+        t1 = tracks["t1"].metadata
+        # the derived work: the Rienzi overture with its composed dates
+        self.assertEqual(
+            t1['work'],
+            ["Rienzi, der letzte der Tribunen, WWV 49 (1838-1840)"])
+        # the top and work-group fills, from the adapter's tags
+        self.assertEqual(
+            t1['top_work'],
+            ["Rienzi, der letzte der Tribunen, WWV 49"])
+        t2 = tracks["t2"].metadata
+        # t2 spans four levels; its work tag is in both the groupheading
+        # and the work fill lists (the defaults), so it carries the
+        # groupheading first - the reference level's name with the
+        # inter-work parts joined below it - and then the work value
+        self.assertTrue(
+            str(t2['work'][0]).startswith(
+                "Tristan und Isolde, WWV 90 (1857-1859):: "),
+            "the groupheading join is missing: %r" % str(t2['work'][0])[:80])
+        self.assertEqual(t2['groupheading'], [t2['work'][0]])
 
     def _run_full_album(self, drain="fifo"):
         """The Tristan flow with extend_metadata left stubbed (the
