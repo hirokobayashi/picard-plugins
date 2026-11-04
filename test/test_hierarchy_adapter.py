@@ -4137,10 +4137,8 @@ class LegacyParityTestCase(unittest.TestCase):
 
     #: The tag families the adapter writes, and so the ones the
     #: comparison covers. The full oracle holds every tag the legacy
-    #: writes - the part names, the genre and date tags - and the
-    #: adapter does not write those yet: they are the remaining
-    #: migration, not differences to document. The set grows as the
-    #: adapter does.
+    #: writes; the families that remain outside are the option-gated
+    #: ones - the annotation choices - not differences to document.
     COMPARABLE = (
         "~cwp_workid_",
         "~cwp_work_",
@@ -4153,6 +4151,7 @@ class LegacyParityTestCase(unittest.TestCase):
         "~cwp_premiered_dates",
         "~cwp_published_dates",
         "~cwp_single_work_album",
+        "~cwp_keys",
     )
 
     @classmethod
@@ -4163,8 +4162,8 @@ class LegacyParityTestCase(unittest.TestCase):
         adapter wrote - so a level the adapter has and the legacy did
         not is compared too. Only the tags are compared: the fixture
         holds the ids the model gives under another key, and that is
-        not a tag. The families still to be ported - the keys and the
-        aliases - are left out; see COMPARABLE.
+        not a tag. The families that remain outside the comparison
+        are the option-gated ones - see COMPARABLE.
         """
         tags = {tag for tag in want if tag.startswith('~cwp_')}
         tags |= set(metadata)
@@ -4718,6 +4717,135 @@ class GenreAndDateTagsTestCase(unittest.TestCase):
         rec = WorkId(_recording_id("planets", "t1"))
         self.assertEqual(
             planets.tags()[rec].as_metadata()["~cwp_single_work_album"], 0)
+
+
+class AliasNamesTestCase(unittest.TestCase):
+    """The names in a locale: the primary alias stands for the title."""
+
+    def test_the_primary_alias_stands_for_the_title(self):
+        """A work with an English primary alias shows it when the locale
+        asks for English, and the title when it does not."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "en", "primary": True, "name": "The English Name"},
+                 {"locale": "en", "primary": False, "name": "A Draft"},
+                 {"locale": "de", "primary": True, "name": "Der Deutsche Name"},
+             ]},
+        ]
+        names = _names(works)
+        from hierarchy.workmeta import WorkMeta
+        for response in works:
+            meta = WorkMeta.of(response)
+            if meta.aliases:
+                names.aliases[WorkId(response["id"])] = meta.aliases
+        names.locale = "en"
+        self.assertEqual(names.title_of(WorkId("work-a")), "The English Name")
+        names.locale = "fr"
+        self.assertEqual(names.title_of(WorkId("work-a")), "The Work")
+        names.locale = "de"
+        self.assertEqual(names.title_of(WorkId("work-a")), "Der Deutsche Name")
+
+    def test_a_regional_request_asks_for_its_language(self):
+        """The legacy takes the language code before any regional
+        variant - a user locale of ja_JP asks for ja."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "ja", "primary": True, "name": "日本語の名前"},
+             ]},
+        ]
+        names = _names(works)
+        from hierarchy.workmeta import WorkMeta
+        for response in works:
+            meta = WorkMeta.of(response)
+            if meta.aliases:
+                names.aliases[WorkId(response["id"])] = meta.aliases
+        names.locale = "ja"
+        self.assertEqual(names.title_of(WorkId("work-a")), "日本語の名前")
+
+    def test_the_adapter_splits_a_regional_locale(self):
+        """The constructor takes the language code of the locale it is
+        given - ja_JP asks for ja. A locale the aliases cannot answer
+        gets the names it was given - here, titles the caller named."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "ja", "primary": True, "name": "日本語の名前"},
+             ], "relations": []},
+        ]
+        recordings = [{
+            "id": "rec-1",
+            "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "work-a"}},
+            ],
+        }]
+        regional = AlbumAdapter(works, recordings, locale="ja_JP")
+        metadata = regional.tags()[WorkId("rec-1")].as_metadata()
+        self.assertEqual(metadata.get("~cwp_work_0"), "日本語の名前")
+        answered = AlbumAdapter(works, recordings, names=_names(works),
+                                locale="fr")
+        metadata = answered.tags()[WorkId("rec-1")].as_metadata()
+        self.assertEqual(metadata.get("~cwp_work_0"), "The Work")
+
+    def test_a_regional_alias_does_not_answer_a_language_request(self):
+        """The legacy filters the aliases by the exact locale string:
+        an alias marked en_GB does not answer a request for en - the
+        title stands."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "en_GB", "primary": True, "name": "British Name"},
+             ]},
+        ]
+        names = _names(works)
+        from hierarchy.workmeta import WorkMeta
+        for response in works:
+            meta = WorkMeta.of(response)
+            if meta.aliases:
+                names.aliases[WorkId(response["id"])] = meta.aliases
+        names.locale = "en"
+        self.assertEqual(names.title_of(WorkId("work-a")), "The Work")
+
+    def test_two_primary_aliases_in_a_locale_are_joined(self):
+        """The legacy joins every primary alias it matches with a
+        semicolon - it does not take the first."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "en", "primary": True, "name": "First EN"},
+                 {"locale": "en", "primary": True, "name": "Second EN"},
+             ]},
+        ]
+        names = _names(works)
+        from hierarchy.workmeta import WorkMeta
+        for response in works:
+            meta = WorkMeta.of(response)
+            if meta.aliases:
+                names.aliases[WorkId(response["id"])] = meta.aliases
+        names.locale = "en"
+        self.assertEqual(names.title_of(WorkId("work-a")),
+                         "First EN; Second EN")
+
+    def test_the_adapter_takes_a_locale_and_the_names_follow(self):
+        """The constructor's locale reaches the names."""
+        works = [
+            {"id": "work-a", "title": "The Work",
+             "aliases": [
+                 {"locale": "de", "primary": True, "name": "Der Deutsche Name"},
+             ], "relations": []},
+        ]
+        adapter = AlbumAdapter(
+            works,
+            [{"id": "rec-1", "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "work-a"}},
+            ]}],
+            locale="de")
+        rec = WorkId("rec-1")
+        metadata = adapter.tags()[rec].as_metadata()
+        self.assertEqual(metadata.get("~cwp_work_0"), "Der Deutsche Name")
 
 
 class AdapterWithoutPicardTestCase(unittest.TestCase):

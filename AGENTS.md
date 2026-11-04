@@ -1083,14 +1083,18 @@ by #16 and so is not in the trunk history (its tree is identical to
 the next PR to the trunk before merging it, so every merge commit lands on
 the trunk in order.
 
-## Remaining tag migration (after the genre/date tags)
+## Remaining migration (after the keys and the locale names)
 
-The adapter now writes every `~cwp_` family the recorded releases
-exercise except two: `~cwp_keys` (the work lookups' `type:Key`
-attributes, written by the legacy's `write_tags`) and the alias-based
-name language handling. Also still open: the genre option gates
+Every `~cwp_` tag family the legacy writes is in the model now: the
+ids, the names, the parts, the genres and dates, `~cwp_keys`, and the
+locale names (WorkNames carries the primary aliases by exact locale
+string; the adapter's `locale` argument takes the language code of a
+regional locale, as `get_preferred_artist_language` does). Still open,
+all option-gate material for the wiring phase: the genre use flags
 (`cwp_genres_use_folks` / `cwp_genres_use_worktype`, both default True
-and hardcoded ON in the adapter) as constructor arguments, and the
-empty-part annotation text on part names. The multi-work accumulation
-diverges from the legacy's last-wins overwrites for folks/dates - it
-unions instead - which the parity test covers on the pinned tracks.
+and hardcoded ON), the key and date annotation includes
+(`cwp_key_include` / `cwp_key_contingent_include`, the `workdates`
+source options), and the empty-part annotation text. The multi-work
+accumulation diverges from the legacy's last-wins overwrites for
+folks/dates - it unions instead - which the parity test covers on the
+pinned tracks.

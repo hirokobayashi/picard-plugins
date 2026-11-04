@@ -89,6 +89,32 @@ class WorkMetaTestCase(unittest.TestCase):
         self.assertEqual(meta.composed_dates, ["1913", "1920-1924"])
         self.assertEqual(meta.published_dates, ["1913-1913", "1920-1924"])
 
+    def test_the_key_comes_from_the_work_attributes(self):
+        """The Nutcracker suite's overture: the Key attribute's value."""
+        meta = work_metadata(_load(os.path.join(
+            os.path.dirname(__file__), "fixtures", "nutcracker",
+            "work_fce0c96b-42a9-4c41-a455-d5dc017bcb44.json")))
+        self.assertEqual(meta.keys, ["B-flat major"])
+
+    def test_a_work_without_a_key_attribute_has_no_key(self):
+        """The Swan Lake act movement carries no Key attribute."""
+        meta = work_metadata(_load(os.path.join(
+            os.path.dirname(__file__), "fixtures", "swanlake_full",
+            "work_58907391-15e4-3095-90a3-743583eb7039.json")))
+        self.assertEqual(meta.keys, [])
+
+    def test_the_primary_alias_of_a_locale(self):
+        """An alias carries its locale; only the primary ones count."""
+        meta = work_metadata({"aliases": [
+            {"locale": "en", "primary": True, "name": "The Winter Work"},
+            {"locale": "en", "primary": False, "name": "A Draft"},
+            {"locale": "de", "primary": True, "name": "Die Winterarbeit"},
+            {"locale": None, "primary": True, "name": "No Locale"},
+        ]})
+        self.assertEqual(meta.aliases.get("en"), "The Winter Work")
+        self.assertEqual(meta.aliases.get("de"), "Die Winterarbeit")
+        self.assertNotIn(None, meta.aliases)
+
     def test_the_functional_spelling_agrees(self):
         self.assertEqual(
             work_metadata({"type": "Ballet"}).worktype_genres,
