@@ -1403,9 +1403,9 @@ class AlbumAdapter:
         options.
 
         The contingent check walks the work's own chain - the legacy
-        climbs from the work to its parents - so a level's names gate
-        that level's keys and the levels above it, never the levels
-        below.
+        climbs from the work to its parents - so a level's keys are
+        gated by that level's names and the levels above it, never
+        by the levels below.
         """
         annotations: List[List[str]] = []
         for index, works in enumerate(levels):

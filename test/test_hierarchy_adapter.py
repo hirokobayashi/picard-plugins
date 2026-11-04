@@ -4702,10 +4702,10 @@ class OptionGatesTestCase(unittest.TestCase):
     def test_the_contingent_walk_climbs_only(self):
         """The legacy climbs from the work to its parents: a key is
         measured against the work's name and its ancestors' - a
-        descendant's name does not gate the work's key. The
-        movement here names D minor, the top names it too; the top's
-        key stays contingent-excluded (its own chain mentions it), and
-        the movement's F major survives."""
+        descendant's name does not gate the work's key. Here
+        the recording performs the movement, whose own name mentions
+        the work's key; the work keeps it, because the climb looks
+        at the work's name and what is above it, never below."""
         works = [
             {"id": "top", "title": "The Work",
              "attributes": [
@@ -4720,14 +4720,15 @@ class OptionGatesTestCase(unittest.TestCase):
         recordings = [{
             "id": "rec-1", "relations": [
                 {"type": "performance", "direction": "forward",
-                 "work": {"id": "top"}},
+                 "work": {"id": "part"}},
             ]}]
         track = AlbumAdapter(
             works, recordings, names=_names(works)).tags()[
             WorkId("rec-1")]
-        # the top is level 0 here (the recording performs the top);
-        # the part is not in the chain - only the top's own name is
-        self.assertEqual(track.annotations[0], ["G major"])
+        # level 0 = the movement (its own name mentions G major, but
+        # the movement carries no key of its own to exclude); level 1
+        # = the work, whose key survives its descendant's mention
+        self.assertEqual(track.annotations, [[], ["G major"]])
 
     def test_the_key_always_include(self):
         """The always mode keeps a key the names already mention."""
