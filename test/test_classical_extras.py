@@ -7867,6 +7867,54 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
         self.assertEqual(str(t2_bare['~cwp_work_0']),
                          str(t2['~cwp_work_0'])[len("Arr. "):])
 
+    def test_the_medley_append_writes_the_part_prefix(self):
+        """The medley append gives the work tag the constituent list
+        and prefixes the level's part tag with the medley text in
+        parens - the legacy's pair of writes (init.py 8954-8963).
+        Called on the publish directly: no fixture work carries the
+        forward medley relations the list needs."""
+        import importlib
+        adapter_mod = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.adapter")
+        TrackTags = adapter_mod.TrackTags
+        WorkId = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.graph").WorkId
+        pl = self.mod.PartLevels.__new__(self.mod.PartLevels)
+        pl.new_engine_tags = {
+            WorkId("rec-med"): TrackTags(
+                key="rec-med",
+                levels=[[WorkId("work-med")]],
+                level_names=[["The Medley"]],
+                part_names=[["The Movement"]],
+                part_levels=0,
+                level_medley_lists=[["First Bit", "Second Bit"]])}
+        from unittest.mock import Mock
+        track = Mock()
+        pl.synonyms = {track: {}}
+        pl.replacements = {track: {}}
+        pl.new_engine_movts = {}
+        tm = {
+            'musicbrainz_recordingid': 'rec-med',
+            'title': 'track 1', '~cwp_title': '',
+            '~cwp_work_0': 'The Medley', '~cwp_part_0': 'The Movement',
+        }
+        options = dict(_ALL_OPTION_DEFAULTS)
+        options.update({
+            "cwp_medley": True, "cwp_medley_text": "medley",
+            "cwp_arrangements": False, "cwp_arrangements_text": "",
+            "cwp_partial": False, "cwp_partial_text": "",
+            "cwp_titles": False, "cwp_showmovement": False,
+            "cwp_show_top_work": False, "cwp_show_workgroup": False,
+            "cwp_fill_part": False,
+        })
+        options["cwp_removewords_p"] = options.get("cwp_removewords", "")
+        pl._publish_new_engine("rel", Mock(), track, options, tm)
+        self.assertEqual(
+            str(tm['~cwp_work_0']),
+            "The Medley (medley: First Bit, Second Bit)")
+        self.assertEqual(
+            str(tm['~cwp_part_0']), "(medley) The Movement")
+
     def _run_full_album(self, drain="fifo"):
         """The Tristan flow with extend_metadata left stubbed (the
         presentation is the new engine's own now) and the real

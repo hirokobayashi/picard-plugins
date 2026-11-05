@@ -9494,7 +9494,7 @@ class PartLevels():
                     (levels[1][0] if len(levels) > 1 and levels[1]
                      else part_main)
             else:
-                work_compare = levels[0]
+                work_compare = levels[0][0] if levels and levels[0] else ''
             diff = diff_pair(
                 work_compare, movement, self.synonyms[track],
                 self.replacements[track],
