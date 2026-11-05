@@ -4867,14 +4867,20 @@ class DiffPairGoldenTestCase(unittest.TestCase):
     def setUp(self):
         # the plugin tests live in test/test_classical_extras.py, whose
         # harness installs the plugin - run one of its tests to get the
-        # real PartLevels with the real diff_pair
+        # real PartLevels with the real diff_pair. The harness's
+        # setUpClass registers the global-state cleanup; an ad-hoc
+        # instance skips setUpClass, so register the same cleanup here -
+        # without it picard.config.config stays a Mock and the later
+        # test files KeyError on 'enabled_plugins'
         import test.test_classical_extras as ce_tests
         self.test_module = ce_tests
         case = ce_tests.ClassicalExtrasTestCase(
             'test_cyrillic_to_latin_uses_sortname_when_latin')
+        case.setUpClass()
         case.setUp()
         self.case = case
         self.addCleanup(case.doCleanups)
+        self.addClassCleanup(case._cleanup_global_state)
         self.mod = case.mod
         from unittest.mock import Mock
         pl = self.mod.PartLevels()
