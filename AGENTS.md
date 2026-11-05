@@ -1109,18 +1109,22 @@ work-group lists, cleared outright before the append so no stale value
 or phantom empty rides along, the showmovement flags, then
 `map_tags`). What is still not there:
 
-- the movement-tag refinements folded into the legacy's diff block:
-  the leading roman-numeral/number strip for the `cwp_movt_tag_exc`
-  fills, and the `inter_work + ': '` prefix the legacy adds to the
-  `cwp_movt_tag_inc1`/`exc1` fills. (The `{...}` brace trim itself is
-  ported: `hierarchy/diffpair.py` is a de-classed copy of the legacy's
-  `diff_pair` tree - boil, listify, stencil, the canonizers, the
-  proximity gapping, the LCS give-up - verified by a golden test that
+- the `{...}` brace trim and the movement machinery are ported:
+  `hierarchy/diffpair.py` is a de-classed copy of the legacy's
+  `diff_pair` tree (boil, listify, stencil, the canonizers, the
+  proximity gapping, the LCS give-up) - verified by a golden test that
   runs the real `PartLevels.diff_pair` and the port on the same inputs
   and requires identical answers; the publish applies the legacy's
-  three diff rules - the fullest-name comparison, the partial
-  override, the fill_part fallback - and `destination_tags` takes the
-  diff and writes the braces.)
+  three diff rules (the fullest-name comparison, the partial override,
+  the fill_part fallback) and `destination_tags` takes the diff and
+  writes the braces. `hierarchy/movements.py` holds the group walk
+  (the top descending through the collections), the track-order
+  counting with the group-change reset, the leading-numeral strip for
+  the `cwp_movt_tag_exc` fills and the `inter_work + sep + ' '` prefix
+  for the `inc1`/`exc1` fills - the album-level pass in
+  `_process_album_new_engine` and the fills in `_publish_new_engine`
+  are the legacy's; the hidden `~cwp_movt_num`/`~cwp_movt_tot` carry
+  only a multi-movement group, as the legacy's total>1 gate does.
 - the arrangement/partial/medley name prefixes on `~cwp_work_N` /
   `~cwp_part_N` (the new engine writes the bare names plus the
   annotation parens);
