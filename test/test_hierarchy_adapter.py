@@ -4979,6 +4979,19 @@ class DeriveFromTitleGoldenTestCase(DiffPairGoldenTestCase):
             derive_from_title('Plain title', None, None),
             ('', 'Plain title', None))
 
+    def test_the_levels_coerce_like_the_legacy(self):
+        """The hidden tags carry strings in real metadata - the port
+        coerces them as the legacy's int() reads do, instead of
+        raising on the comparison."""
+        self.assertEqual(
+            derive_from_title('Work: Movement', '2', '3'),
+            ('Work', 'Movement', None))
+        # a legacy-engine leftover whose work has no movements: no
+        # split, the title stands as the movement
+        self.assertEqual(
+            derive_from_title('Work: Movement', '0', '0'),
+            ('', 'Work: Movement', None))
+
 
 class MovementNumbersTestCase(unittest.TestCase):
     """The movement numbers: the tracks of each movement group count in

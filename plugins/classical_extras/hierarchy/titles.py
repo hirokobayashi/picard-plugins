@@ -39,7 +39,9 @@ def derive_from_title(
     inter_work = None
     colons = title.count(": ")
     if part_levels is not None:
-        if (work_part_levels or 0) > 0:  # we have a work with movements
+        part_levels = int(part_levels)
+        work_part_levels = int(work_part_levels or 0)
+        if work_part_levels > 0:  # we have a work with movements
             if colons > 0:
                 title_split = title.split(': ', 1)
                 title_rsplit = title.rsplit(': ', 1)
