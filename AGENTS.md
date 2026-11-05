@@ -1129,10 +1129,14 @@ or phantom empty rides along, the showmovement flags, then
   `~cwp_movt_num`/`~cwp_movt_tot` carry only a multi-movement group,
   as the legacy's total>1 gate does, and the numbers key by the track
   (a recording shared by two tracks is two movements).
-- the arrangement/partial/medley name prefixes on `~cwp_work_N` /
-  `~cwp_part_N` (the new engine writes the bare names plus the
-  annotation parens);
-- the orphan tracks' title-derived fallbacks
+- the orphan tracks' title-derived fallbacks (the orphan path is the
+  new engine's own now: `hierarchy/titles.py` holds `derive_from_title`
+  - a de-classed copy of the legacy's title parser, golden-tested
+  against the real `PartLevels.derive_from_title` - and the orphan
+  loop in `_process_album_new_engine` writes the derived intermediates
+  and publishes the orphans; the adapter returns an EMPTY `TrackTags`
+  for a recording the hierarchy cannot reach, so the gates read
+  `track_tags is None or not track_tags.levels`);
   (`cwp_derive_works_from_title`);
 - the movement numbering (`~cwp_movt_num`/`~cwp_movt_tot`,
   `movement_totals`) and the level-0-derived `~cwp_X0_*` variants;

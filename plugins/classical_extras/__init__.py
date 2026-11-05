@@ -99,6 +99,8 @@ from picard.plugins.classical_extras.hierarchy.diffpair import diff_pair
 from picard.plugins.classical_extras.hierarchy.graph import WorkId
 from picard.plugins.classical_extras.hierarchy.movements import (
     movement_group, movement_numbers, stripped_movement)
+from picard.plugins.classical_extras.hierarchy.titles import (
+    derive_from_title)
 from picard import config, log
 from picard.config import ConfigSection, BoolOption, IntOption, TextOption
 from picard.util import LockableObject, uniqify
@@ -7250,7 +7252,8 @@ class PartLevels():
             tm = track.metadata
             rec_id = tm['musicbrainz_recordingid']
             track_tags = tags.get(WorkId(rec_id))
-            if track_tags is None:
+            if track_tags is None or not track_tags.levels:
+                # no hierarchy for this track - the orphan path below
                 continue
             tagged_tracks.append((track, tm, rec_id, track_tags))
         sort_key_of = {}
@@ -7299,6 +7302,28 @@ class PartLevels():
                             and part_tag in tm):
                         tm[part_tag] = '%s (%s)' % (
                             tm[part_tag], ', '.join(part_ann))
+            self.publish_metadata(release_id, album, track)
+        # the orphan tracks - the recordings the hierarchy cannot reach.
+        # The legacy parses their titles into work/movement/inter-work
+        # when the user's derive option says so, writes the derived
+        # intermediates and publishes them like any other track
+        for track in album._new_tracks:
+            if any(track is tagged for tagged, _, _, _ in tagged_tracks):
+                continue
+            tm = track.metadata
+            if config.setting.get('cwp_derive_works_from_title'):
+                work, movt, inter_work = derive_from_title(
+                    tm['title'],
+                    tm.get('~cwp_part_levels'),
+                    tm.get('~cwp_work_part_levels'))
+                tm['~cwp_extended_work'] = tm['~cwp_extended_groupheading'] \
+                    = tm['~cwp_title_work'] \
+                    = tm['~cwp_title_groupheading'] = tm['~cwp_work'] \
+                    = tm['~cwp_groupheading'] = work
+                tm['~cwp_part'] = tm['~cwp_extended_part'] \
+                    = tm['~cwp_title_part_0'] = movt
+                tm['~cwp_inter_work'] = tm['~cwp_extended_inter_work'] \
+                    = tm['~cwp_inter_title_work'] = inter_work
             self.publish_metadata(release_id, album, track)
         release_status[release_id]['works-done'] = datetime.now()
         # the log closes whatever the album held - a zero-track album
@@ -9349,76 +9374,106 @@ class PartLevels():
         tm['~cea_works_complete'] = "Y"
         rec_id = tm['musicbrainz_recordingid']
         track_tags = self.new_engine_tags.get(WorkId(rec_id))
-        if track_tags is None:
-            map_tags(options, release_id, album, tm)
-            return
-        part_levels = track_tags.part_levels
-        single = track_tags.single_work_album
-        ref_level = part_levels - single if part_levels >= 3 else part_levels
-        # the level names as the adapter wrote them, plus the top
-        levels = [str_to_list(tm.get('~cwp_work_%d' % lev, ''))
-                  for lev in range(0, part_levels + 1)]
-        parts = [str_to_list(tm.get('~cwp_part_%d' % lev, ''))
-                 for lev in range(0, part_levels)]
-        title_parts = [tm.get('~cwp_title_part_%d' % lev)
-                       for lev in range(0, part_levels + 1)]
-        destinations = destination_tags(
-            level_names=levels,
-            part_names=parts,
-            part_levels=part_levels,
-            ref_level=ref_level,
-            single_work_album=single,
-            title_parts=title_parts,
-            title=tm['~cwp_title'] or tm['title'],
-            multi_sep=options["cwp_multi_work_sep"],
-            single_sep=options["cwp_single_work_sep"])
+        if track_tags is None or not track_tags.levels:
+            # an orphan - no hierarchy, so no adapter tags. The derived
+            # intermediates (the title parse) stand as written; the
+            # movement numbers and the fills still run
+            part_levels = 0
+            single = 0
+            ref_level = 0
+            levels = []
+            parts = []
+            title_parts = []
+            destinations = {}
+        else:
+            part_levels = track_tags.part_levels
+            single = track_tags.single_work_album
+            ref_level = part_levels - single if part_levels >= 3 \
+                else part_levels
+            # the level names as the adapter wrote them, plus the top
+            levels = [str_to_list(tm.get('~cwp_work_%d' % lev, ''))
+                      for lev in range(0, part_levels + 1)]
+            parts = [str_to_list(tm.get('~cwp_part_%d' % lev, ''))
+                     for lev in range(0, part_levels)]
+            title_parts = [tm.get('~cwp_title_part_%d' % lev)
+                           for lev in range(0, part_levels + 1)]
+            destinations = destination_tags(
+                level_names=levels,
+                part_names=parts,
+                part_levels=part_levels,
+                ref_level=ref_level,
+                single_work_album=single,
+                title_parts=title_parts,
+                title=tm['~cwp_title'] or tm['title'],
+                multi_sep=options["cwp_multi_work_sep"],
+                single_sep=options["cwp_single_work_sep"])
         # the diff: what the track title carries beyond the work name.
         # The legacy compares against the fullest possible work name
         # (the groupheading plus the part) to maximise duplication
         # elimination; the reverse comparison uses the part name
         # without any work details; a partial track keeps the title
         # text; and fill_part writes the movement when the part would
-        # otherwise be annotations only
-        part_main = destinations['~cwp_part']
-        vanilla_part = str_to_list(tm.get('~cwp_part_0', ''))
-        vanilla_part = vanilla_part[0] if vanilla_part else ''
-        movement = (tm.get('~cwp_title_part_0')
-                    or tm['~cwp_title'] or tm['title'])
-        work_compare = destinations['~cwp_extended_groupheading']
-        if work_compare:
-            work_compare = work_compare + ': ' + part_main \
-                if part_main else work_compare
-        elif part_levels > 0:
-            work_compare = levels[1] + ': ' + part_main \
-                if len(levels) > 1 and part_main else \
-                (levels[1] if len(levels) > 1 else part_main)
+        # otherwise be annotations only. An orphan has no work to
+        # compare against - its derived intermediates stand, and the
+        # destinations are those intermediates
+        if track_tags is None or not track_tags.levels:
+            destinations = {
+                '~cwp_part': tm.get('~cwp_part', ''),
+                '~cwp_work': tm.get('~cwp_work', ''),
+                '~cwp_groupheading': tm.get('~cwp_groupheading', ''),
+                '~cwp_inter_work': tm.get('~cwp_inter_work', ''),
+                '~cwp_title_part_0': tm.get('~cwp_title_part_0', ''),
+                '~cwp_title_work': tm.get('~cwp_title_work', ''),
+                '~cwp_extended_part': tm.get('~cwp_extended_part', ''),
+                '~cwp_extended_work': tm.get('~cwp_extended_work', ''),
+                '~cwp_extended_groupheading':
+                    tm.get('~cwp_extended_groupheading', ''),
+                '~cwp_extended_inter_work':
+                    tm.get('~cwp_extended_inter_work', ''),
+            }
         else:
-            work_compare = levels[0]
-        diff = diff_pair(
-            work_compare, movement, self.synonyms[track],
-            self.replacements[track], self.new_engine_diff_options(options))
-        reverse_diff = diff_pair(
-            movement, vanilla_part, self.synonyms[track],
-            self.replacements[track], self.new_engine_diff_options(options))
-        workid_0 = str_to_list(tm.get('~cwp_workid_0', ''))
-        partial = bool(workid_0) and self.parts.get(
-            tuple(workid_0), {}).get('partial', False)
-        if diff and reverse_diff and partial:
-            diff = movement
-        if not diff and not vanilla_part and part_levels > 0 \
-                and options['cwp_fill_part']:
-            diff = movement
-        destinations = destination_tags(
-            level_names=levels,
-            part_names=parts,
-            part_levels=part_levels,
-            ref_level=ref_level,
-            single_work_album=single,
-            title_parts=title_parts,
-            title=tm['~cwp_title'] or tm['title'],
-            multi_sep=options["cwp_multi_work_sep"],
-            single_sep=options["cwp_single_work_sep"],
-            diff=diff)
+            part_main = destinations['~cwp_part']
+            vanilla_part = str_to_list(tm.get('~cwp_part_0', ''))
+            vanilla_part = vanilla_part[0] if vanilla_part else ''
+            movement = (tm.get('~cwp_title_part_0')
+                        or tm['~cwp_title'] or tm['title'])
+            work_compare = destinations['~cwp_extended_groupheading']
+            if work_compare:
+                work_compare = work_compare + ': ' + part_main \
+                    if part_main else work_compare
+            elif part_levels > 0:
+                work_compare = levels[1] + ': ' + part_main \
+                    if len(levels) > 1 and part_main else \
+                    (levels[1] if len(levels) > 1 else part_main)
+            else:
+                work_compare = levels[0]
+            diff = diff_pair(
+                work_compare, movement, self.synonyms[track],
+                self.replacements[track],
+                self.new_engine_diff_options(options))
+            reverse_diff = diff_pair(
+                movement, vanilla_part, self.synonyms[track],
+                self.replacements[track],
+                self.new_engine_diff_options(options))
+            workid_0 = str_to_list(tm.get('~cwp_workid_0', ''))
+            partial = bool(workid_0) and self.parts.get(
+                tuple(workid_0), {}).get('partial', False)
+            if diff and reverse_diff and partial:
+                diff = movement
+            if not diff and not vanilla_part and part_levels > 0 \
+                    and options['cwp_fill_part']:
+                diff = movement
+            destinations = destination_tags(
+                level_names=levels,
+                part_names=parts,
+                part_levels=part_levels,
+                ref_level=ref_level,
+                single_work_album=single,
+                title_parts=title_parts,
+                title=tm['~cwp_title'] or tm['title'],
+                multi_sep=options["cwp_multi_work_sep"],
+                single_sep=options["cwp_single_work_sep"],
+                diff=diff)
         for tag, value in destinations.items():
             if tag == '~cwp_title_part_0' and not value:
                 continue
