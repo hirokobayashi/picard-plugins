@@ -31,6 +31,11 @@ for _group in ("ARTISTS_OPTIONS", "TAG_OPTIONS", "TAG_DETAIL_OPTIONS",
               "OTHER_OPTIONS"):
     for _o in getattr(_ce_const, _group):
         _ALL_OPTION_DEFAULTS[_o["option"]] = copy.deepcopy(_o["default"])
+# the legacy-flow tests pin the legacy engine: they exercise the
+# trackback/extend_metadata path and its expectations, which the
+# new-engine tests cover separately (the const default is True now,
+# so the harness baseline must turn it off explicitly)
+_ALL_OPTION_DEFAULTS["cwp_new_engine"] = False
 
 
 class ClassicalExtrasTestCase(PluginTestCase):
@@ -8165,6 +8170,82 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
             warning=False)
         self.assertNotIn('001_errors:3', tm2)
         self.assertNotIn('002_warnings:4', tm2)
+
+    def test_the_new_engine_is_the_default(self):
+        """The flip: a fresh install - no persisted setting - gets the
+        new engine. The const default is what the options page's
+        BoolOption registration hands Picard, so a user who never
+        touched the setting reads True, and a user who explicitly
+        saved False keeps the legacy."""
+        entry = next(opt for opt in _ce_const.OTHER_OPTIONS
+                     if opt['option'] == 'cwp_new_engine')
+        self.assertTrue(entry['default'])
+        # and the registration passes the const default through: the
+        # options page builds one BoolOption per option from the
+        # default field
+        for opt in self.mod.plugin_options('other'):
+            if opt['option'] == 'cwp_new_engine':
+                self.assertTrue(opt['default'])
+                break
+        else:
+            self.fail('cwp_new_engine is not among the other options')
+
+    def test_an_explicit_opt_out_runs_the_legacy(self):
+        """With the setting persisted False the legacy path runs: the
+        extend_metadata call happens and the new engine's adapter pass
+        does not."""
+        from unittest.mock import Mock
+        self.set_config_values(setting={"cwp_new_engine": False})
+        pl = self.mod.PartLevels()
+        pl.publish_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (self.mod.get_aliases, self.mod.close_log)
+        self.mod.get_aliases = lambda *a, **k: None
+        self.mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(self.mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(self.mod, "close_log", saved[1]))
+        extend_calls = []
+        pl.extend_metadata = (
+            lambda *a, **k: extend_calls.append(a))
+        new_engine_calls = []
+        pl._process_album_new_engine = (
+            lambda *a, **k: new_engine_calls.append(a))
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_new_engine": False,
+            "cwp_partial": False, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+        for label, disc, track, rec_id, work_id in self._TRACKS[:1]:
+            t = self._make_track(label, disc, track, rec_id, work_id, opts)
+            album._new_tracks.append(t)
+            pl.add_work_info(album, t.metadata,
+                             {'recording': self._load("rec_%s.json" % label)},
+                             {})
+        while pending:
+            cb, resp = pending.pop(0)
+            cb(resp, None, None)
+        self.assertTrue(extend_calls,
+                        "the legacy extend_metadata did not run")
+        self.assertFalse(new_engine_calls,
+                         "the new engine ran with the setting off")
 
     def _run_full_album(self, drain="fifo"):
         """The Tristan flow with extend_metadata left stubbed (the

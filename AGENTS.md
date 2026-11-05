@@ -1083,10 +1083,14 @@ by #16 and so is not in the trunk history (its tree is identical to
 the next PR to the trunk before merging it, so every merge commit lands on
 the trunk in order.
 
-## Remaining migration (after the wiring)
+## The migration is complete (the default is flipped)
 
 The plugin runs on the package behind `cwp_new_engine` (default
-False): `process_album` branches to `_process_album_new_engine`,
+**True** since the migration completed - a fresh install or a user
+who never touched the setting gets the new engine; a user with a
+persisted False keeps the legacy path, which remains reachable as
+the explicit opt-out): `process_album` branches to
+`_process_album_new_engine`,
 which builds the adapter over the raw responses the plugin collected
 (`raw_work_responses` in `work_process`, `raw_recordings` in
 `add_work_info`), applies the option gates from the user's config,
