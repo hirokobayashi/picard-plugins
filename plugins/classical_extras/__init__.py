@@ -9433,6 +9433,11 @@ class PartLevels():
                                 options["cwp_medley_text"] + ': ' + \
                                 ', '.join(
                                     track_tags.level_medley_lists[lev]) + ")"
+                        part_tag = '~cwp_part_%d' % lev
+                        if part_tag in tm:
+                            tm[part_tag] = "(" + \
+                                options["cwp_medley_text"] + ") " + \
+                                str(tm[part_tag])
             # the destinations derive from the (now prefixed) names
             levels = [str_to_list(tm.get('~cwp_work_%d' % lev, ''))
                       for lev in range(0, part_levels + 1)]

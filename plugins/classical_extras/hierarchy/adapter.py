@@ -755,28 +755,35 @@ class AlbumAdapter:
         #: legacy's ``parts[id]['arrangement']``, which prefixes the
         #: names when the user's arrangements text says so. The legacy
         #: flags a work only when it has no parts parents: the
-        #: arrangement branch is the else of the parts branch.
+        #: arrangement branch is the else of the parts branch. A
+        #: collection parent is a parts parent when collections are on,
+        #: and no parent at all when they are off - so the check reads
+        #: the gate too.
         self.arrangements = frozenset()
         if self.use_arrangements:
             self.arrangements = frozenset(
                 work for work in self.graph.works()
-                if not self.graph.relations_of(
-                    work, PARTS_RELATION, BACKWARD)
+                if not self._has_parts_parent(work)
                 and self.graph.relations_of(
                     work, ARRANGEMENT_RELATION, BACKWARD))
         #: The constituent names of every medley work - the legacy's
-        #: ``parts[id]['medley_list']``. A work's medley list comes from
-        #: its forward medley relations (the work is the medley of the
-        #: targets); a backward relation makes the work a constituent,
-        #: which carries no list.
+        #: ``parts[id]['medley_list']``. The medley branch is the else
+        #: of the arrangement branch, which is the else of the parts
+        #: branch - so a work with parts parents, or one already an
+        #: arrangement, carries no list - and one backward medley
+        #: relation vetoes the whole scan.
         self.medley_lists: Dict[WorkId, List[str]] = {}
         if self.use_medleys:
             for work in self.graph.works():
+                relations = self.graph.relations_of(work, MEDLEY_RELATION)
+                if any(relation.direction == BACKWARD
+                       for relation in relations):
+                    continue
+                if self._has_parts_parent(work) or work in (
+                        self.arrangements or ()):
+                    continue
                 names: List[str] = []
-                for relation in self.graph.relations_of(
-                        work, MEDLEY_RELATION):
-                    if relation.direction == BACKWARD:
-                        continue
+                for relation in relations:
                     names.extend(self.names.names_of({relation.target}))
                 if names:
                     self.medley_lists[work] = names
@@ -902,6 +909,19 @@ class AlbumAdapter:
             self.tracks_per_recording[entry.performance.key] = (
                 self.tracks_per_recording.get(entry.performance.key, 0) + 1)
         self._merge_stand_in_titles()
+
+    def _has_parts_parent(self, work: WorkId) -> bool:
+        """Whether ``work`` parents through a parts relation - the
+        legacy's ``if partof:`` gate. A collection parent is a parts
+        parent when collections are on, and no parent at all when they
+        are off (the legacy's parent lists drop the collection
+        relations with the gate)."""
+        for relation in self.graph.relations_of(work, PARTS_RELATION,
+                                                BACKWARD):
+            if relation.is_collection and not self.use_collections:
+                continue
+            return True
+        return False
 
     def _merge_stand_in_titles(self) -> None:
         """Give the stand-in ids the title of the work each stands in for.

@@ -5192,6 +5192,92 @@ class PrefixFlagsTestCase(unittest.TestCase):
             use_medleys=True)
         self.assertNotIn(WorkId("work-a"), adapter.medley_lists)
 
+    def test_a_collection_parent_gates_by_the_collections_option(self):
+        """A work whose only parts relation is a collection is a part
+        when collections are on - and an arrangement candidate when
+        they are off (the legacy's parent lists drop the collection
+        relations with the gate)."""
+        works = [
+            {"id": "work-a", "title": "The Excerpt",
+             "relations": [
+                 {"type": "parts", "direction": "backward",
+                  "work": {"id": "work-c", "title": "The Collection"},
+                  "attributes": ["part of collection"]},
+                 {"type": "arrangement", "direction": "backward",
+                  "work": {"id": "work-b", "title": "The Opera"}}]},
+            {"id": "work-b", "title": "The Opera"},
+            {"id": "work-c", "title": "The Collection"}]
+        recs = [{"id": "rec-1", "relations": [
+            {"type": "performance", "direction": "forward",
+             "work": {"id": "work-a"}}]}]
+        with_collections = self._adapter(
+            [dict(w) for w in works], [dict(r) for r in recs],
+            use_arrangements=True, use_collections=True)
+        self.assertNotIn(
+            WorkId("work-a"), with_collections.arrangements)
+        without = self._adapter(
+            [dict(w) for w in works], [dict(r) for r in recs],
+            use_arrangements=True, use_collections=False)
+        self.assertIn(WorkId("work-a"), without.arrangements)
+
+    def test_a_work_with_parts_parents_has_no_medley_list(self):
+        """The medley branch is the else of the parts branch - a work
+        with parts parents carries no medley_list, whatever forward
+        medley relations it holds."""
+        adapter = self._adapter(
+            [{"id": "work-a", "title": "The Movement",
+              "relations": [
+                  {"type": "parts", "direction": "backward",
+                   "work": {"id": "work-d", "title": "The Opera"}},
+                  {"type": "medley", "direction": "forward",
+                   "work": {"id": "work-b", "title": "First Bit"}}]},
+             {"id": "work-b", "title": "First Bit"},
+             {"id": "work-d", "title": "The Opera"}],
+            [{"id": "rec-1", "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "work-a"}}]}],
+            use_medleys=True)
+        self.assertNotIn(WorkId("work-a"), adapter.medley_lists)
+
+    def test_an_arrangement_work_has_no_medley_list(self):
+        """The medley branch is the else of the arrangement branch - a
+        work whose parent came via an arrangement relation carries no
+        medley_list, whatever forward medley relations it holds."""
+        adapter = self._adapter(
+            [{"id": "work-a", "title": "The Excerpt",
+              "relations": [
+                  {"type": "arrangement", "direction": "backward",
+                   "work": {"id": "work-d", "title": "The Opera"}},
+                  {"type": "medley", "direction": "forward",
+                   "work": {"id": "work-b", "title": "First Bit"}}]},
+             {"id": "work-b", "title": "First Bit"},
+             {"id": "work-d", "title": "The Opera"}],
+            [{"id": "rec-1", "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "work-a"}}]}],
+            use_arrangements=True, use_medleys=True)
+        self.assertIn(WorkId("work-a"), adapter.arrangements)
+        self.assertNotIn(WorkId("work-a"), adapter.medley_lists)
+
+    def test_one_backward_medley_relation_vetoes_the_list(self):
+        """The legacy reads every medley relation's direction and runs
+        the scan only when none is backward - one constituent relation
+        vetoes the list even when forward relations stand beside it."""
+        adapter = self._adapter(
+            [{"id": "work-a", "title": "The Medley",
+              "relations": [
+                  {"type": "medley", "direction": "forward",
+                   "work": {"id": "work-b", "title": "First Bit"}},
+                  {"type": "medley", "direction": "backward",
+                   "work": {"id": "work-e", "title": "Bigger Medley"}}]},
+             {"id": "work-b", "title": "First Bit"},
+             {"id": "work-e", "title": "Bigger Medley"}],
+            [{"id": "rec-1", "relations": [
+                {"type": "performance", "direction": "forward",
+                 "work": {"id": "work-a"}}]}],
+            use_medleys=True)
+        self.assertNotIn(WorkId("work-a"), adapter.medley_lists)
+
     def test_the_track_tags_carry_the_level_flags(self):
         """The tags of a recording performing an arrangement in part:
         the level flags name the arrangement level and partial names
