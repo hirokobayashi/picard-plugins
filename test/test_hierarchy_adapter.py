@@ -47,6 +47,7 @@ from hierarchy.diffpair import strip_excess_punctuation  # noqa: E402
 from hierarchy.graph import NodeId, WorkId  # noqa: E402
 from hierarchy.movements import (  # noqa: E402
     movement_group, movement_numbers, stripped_movement)
+from hierarchy.titles import derive_from_title  # noqa: E402
 from hierarchy.project import Hierarchy  # noqa: E402
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
@@ -4936,6 +4937,47 @@ class DiffPairGoldenTestCase(unittest.TestCase):
             self.assertEqual(strip_excess_punctuation(s),
                              self.mod.strip_excess_punctuation(s),
                              "the port disagrees stripping %r" % s)
+
+
+class DeriveFromTitleGoldenTestCase(DiffPairGoldenTestCase):
+    """The orphan tracks' title parser: the legacy's derive_from_title
+    splits a title into work, movement and inter-work on the ': '
+    boundaries - the works case by the part levels, the workless case
+    from the right. Both engines must parse identically."""
+
+    # (part_levels, work_part_levels, title)
+    CASES = [
+        (1, 2, 'Die Winterreise, D 911: Gute Nacht'),
+        (1, 2, 'Tristan und Isolde: Act III: Prelude'),
+        (2, 3, 'Symphony No. 5: I. Allegro'),
+        (0, 0, 'Rienzi Overture'),
+        (0, 0, 'Rienzi Overture: concert version'),
+        (0, 0, 'Work: Inter: Movement'),
+        (1, 2, 'Plain title, no colons'),
+    ]
+
+    def test_the_port_agrees_with_the_legacy(self):
+        for part_levels, work_part_levels, title in self.CASES:
+            self.track.metadata.clear()
+            self.track.metadata['~cwp_part_levels'] = part_levels
+            self.track.metadata['~cwp_work_part_levels'] = work_part_levels
+            legacy = self.mod.PartLevels.derive_from_title(
+                'x', self.track, title)
+            port = derive_from_title(title, part_levels, work_part_levels)
+            self.assertEqual(
+                port, legacy,
+                "the port disagrees on %r (levels %d/%d)"
+                % (title, part_levels, work_part_levels))
+
+    def test_the_workless_case_splits_from_the_right(self):
+        """No works: the last ': ' splits the movement off (the last
+        piece), and an earlier ': ' makes the middle an inter-work."""
+        self.assertEqual(
+            derive_from_title('Work: Inter: Movement', None, None),
+            ('Work', 'Movement', 'Inter'))
+        self.assertEqual(
+            derive_from_title('Plain title', None, None),
+            ('', 'Plain title', None))
 
 
 class MovementNumbersTestCase(unittest.TestCase):

@@ -7718,6 +7718,82 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
                     expected, values,
                     "the movement fill disagrees on %s" % label)
 
+    def test_the_orphan_tracks_derive_from_their_titles(self):
+        """A track whose recording names no work gets no adapter tags -
+        the orphan path. With the user's derive option on, its title is
+        parsed into work/movement/inter-work and the destination tags
+        carry the parse; the fills and the mapping still run. The
+        album also holds one tagged track so the work lookups fire
+        and the album processes at all."""
+        from unittest.mock import Mock
+        import copy
+        pl = self.mod.PartLevels()
+        pl.extend_metadata = lambda *a, **k: None
+        pl.process_work_artists = lambda *a, **k: None
+        saved = (self.mod.get_aliases, self.mod.close_log)
+        self.mod.get_aliases = lambda *a, **k: None
+        self.mod.close_log = lambda *a, **k: None
+        self.addCleanup(lambda: setattr(self.mod, "get_aliases", saved[0]))
+        self.addCleanup(lambda: setattr(self.mod, "close_log", saved[1]))
+        pending = []
+        tagger = Mock()
+        tagger.webservice.get = (
+            lambda host, port, path, cb, **k:
+            pending.append((cb, self._load("work_%s.json"
+                                           % path.rsplit("/", 1)[-1]))))
+        album = Mock()
+        album._requests = 0
+        album._new_tracks = []
+        album.tagger = tagger
+        album._finalize_loading = lambda _a: None
+        opts = dict(_ALL_OPTION_DEFAULTS)
+        opts.update({
+            "classical_work_parts": True, "use_cache": True,
+            "cwp_new_engine": True, "cwp_derive_works_from_title": True,
+            "cwp_partial": False, "cwp_arrangements": True,
+            "cwp_medley": False, "cwp_collections": True,
+            "cwp_aliases": False, "cwp_aliases_tag_text": "",
+            "log_error": False, "log_warning": False,
+            "log_debug": False, "log_info": False,
+            "crr_recording_lookup": False,
+        })
+        opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+        orphan = self._make_track(
+            "orphan", 2, 12, "orphan-rec", "", opts)
+        orphan.metadata['title'] = 'Die Winterreise: Gute Nacht'
+        orphan.metadata.pop('work', None)
+        rec = copy.deepcopy(self._load("rec_t6.json"))
+        rec['relations'] = [
+            r for r in rec['relations']
+            if r.get('target-type') != 'work']
+        rec['id'] = 'orphan-rec'
+        tracks = {'orphan': orphan}
+        # the tagged track first: add_work_info operates on
+        # album._new_tracks[-1], so the orphan must be appended after it
+        for label, disc, track, rec_id, work_id in self._TRACKS[:1]:
+            t = self._make_track(label, disc, track, rec_id, work_id, opts,
+                                 preset_work=True)
+            tracks[label] = t
+            album._new_tracks.append(t)
+            pl.add_work_info(album, t.metadata,
+                             {'recording': self._load("rec_%s.json" % label)},
+                             {})
+        album._new_tracks.append(orphan)
+        pl.add_work_info(album, orphan.metadata,
+                         {'recording': rec}, {})
+        while pending:
+            cb, resp = pending.pop(0)
+            cb(resp, None, None)
+        tm = orphan.metadata
+        # the title parse landed
+        self.assertEqual(tm['~cwp_work'], 'Die Winterreise')
+        self.assertEqual(tm['~cwp_part'], 'Gute Nacht')
+        self.assertEqual(tm['~cwp_extended_part'], 'Gute Nacht')
+        # the publish ran over it: the version stamp and the completion
+        # marker - the tag mapping ran
+        self.assertEqual(tm['~cwp_version'], self.mod.PLUGIN_VERSION)
+        self.assertEqual(tm['~cea_works_complete'], 'Y')
+
     def _run_full_album(self, drain="fifo"):
         """The Tristan flow with extend_metadata left stubbed (the
         presentation is the new engine's own now) and the real
