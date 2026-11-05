@@ -97,6 +97,8 @@ from picard.plugins.classical_extras.hierarchy.destinations import (
     destination_tags)
 from picard.plugins.classical_extras.hierarchy.diffpair import diff_pair
 from picard.plugins.classical_extras.hierarchy.graph import WorkId
+from picard.plugins.classical_extras.hierarchy.movements import (
+    movement_group, movement_numbers, stripped_movement)
 from picard import config, log
 from picard.config import ConfigSection, BoolOption, IntOption, TextOption
 from picard.util import LockableObject, uniqify
@@ -4249,8 +4251,9 @@ class PartLevels():
         self.raw_recordings = {}
         # the adapter's per-track tags of the album the new engine last
         # processed - the publish path derives the destination tags
-        # from them
+        # from them - and the movement numbers of its tracks
         self.new_engine_tags = {}
+        self.new_engine_movts = {}
         # maintains the list of parents recorded for each workid, so that
         # the XML lookup need only be executed if no existing record
         # (a work whose lookup finds no parent gets no entry here;
@@ -7238,12 +7241,45 @@ class PartLevels():
         annotate = (config.setting.get('cwp_workdate_include', True)
                     or config.setting.get('cwp_key_include', False)
                     or config.setting.get('cwp_key_contingent_include', True))
+        # the movement numbers: an album-wide pass in track order, the
+        # way the legacy numbers its movements - the group per track
+        # from the adapter's chains and collections, then the counts
+        # sorted by the disc.track position
+        tagged_tracks = []
         for track in album._new_tracks:
             tm = track.metadata
             rec_id = tm['musicbrainz_recordingid']
             track_tags = tags.get(WorkId(rec_id))
             if track_tags is None:
                 continue
+            tagged_tracks.append((track, tm, rec_id, track_tags))
+        sort_key_of = {}
+        for track, tm, rec_id, track_tags in tagged_tracks:
+            try:
+                disc = int(str(tm.get('discnumber', '1')).split('/')[0])
+            except (ValueError, TypeError):
+                disc = 1
+            try:
+                number = int(str(tm.get('tracknumber', '1')).split('/')[0])
+            except (ValueError, TypeError):
+                number = 1
+            sort_key_of[track] = disc + number / 1000.0
+        groups_of = {}
+        for track, tm, rec_id, track_tags in tagged_tracks:
+            top_ids = [work.mbid for work in track_tags.top]
+            level_ids = [[work.mbid for work in works]
+                         for works in track_tags.levels]
+            groups_of[track] = movement_group(
+                top_ids, level_ids, adapter.collections)
+        numbers = movement_numbers([
+            (sort_key_of[track], groups_of[track])
+            for track, _, _, _ in tagged_tracks])
+        # keyed by the track - movement numbers are per TRACK, and a
+        # release may list one recording on two tracks
+        self.new_engine_movts = {
+            track: numbers[index]
+            for index, (track, _, _, _) in enumerate(tagged_tracks)}
+        for track, tm, rec_id, track_tags in tagged_tracks:
             metadata = track_tags.as_metadata()
             for tag, value in metadata.items():
                 if isinstance(value, tuple):
@@ -9392,14 +9428,18 @@ class PartLevels():
                 or tm['title']
             groupheading = ""
             work = destinations['~cwp_title_work'] or ""
+            inter_work = ""
         elif options["cwp_works"]:
             part = destinations['~cwp_part']
             groupheading = destinations['~cwp_groupheading'] or ""
             work = destinations['~cwp_work'] or ""
+            inter_work = destinations['~cwp_inter_work'] or ""
         else:
             part = destinations['~cwp_extended_part']
             groupheading = destinations['~cwp_extended_groupheading'] or ""
             work = destinations['~cwp_extended_work'] or ""
+            inter_work = destinations['~cwp_extended_inter_work'] or ""
+        work_sep = options["cwp_single_work_sep"]
 
         def _tags_of(option):
             return [x.strip(' ')
@@ -9407,10 +9447,23 @@ class PartLevels():
 
         gh_tags = _tags_of("cwp_work_tag_multi")
         work_tags = _tags_of("cwp_work_tag_single")
-        movt_tags = (_tags_of("cwp_movt_tag_inc")
-                     + _tags_of("cwp_movt_tag_exc")
-                     + _tags_of("cwp_movt_tag_inc1")
-                     + _tags_of("cwp_movt_tag_exc1"))
+        movt_inc = _tags_of("cwp_movt_tag_inc")
+        movt_exc = _tags_of("cwp_movt_tag_exc")
+        movt_inc1 = _tags_of("cwp_movt_tag_inc1")
+        movt_exc1 = _tags_of("cwp_movt_tag_exc1")
+        movt_no = _tags_of("cwp_movt_no_tag")
+        movt_tot_tags = _tags_of("cwp_movt_tot_tag")
+        movt_tags = movt_inc + movt_exc + movt_inc1 + movt_exc1
+        # the movement numbers: the album-level pass stored them per
+        # track; only a multi-movement group carries them
+        movement_number, movement_total = self.new_engine_movts.get(
+            track, (None, None))
+        if movement_total and movement_total > 1:
+            tm['~cwp_movt_num'] = movement_number
+            tm['~cwp_movt_tot'] = movement_total
+        else:
+            tm.pop('~cwp_movt_num', None)
+            tm.pop('~cwp_movt_tot', None)
         # the legacy clears the destination tags before filling them -
         # append_tag appends, so a stale value would survive alongside.
         # The clear removes the tag outright rather than leaving an
@@ -9438,10 +9491,50 @@ class PartLevels():
         for tag in _tags_of("cwp_work_group_tag"):
             if '~cwp_work_group' in tm:
                 append_tag(release_id, tm, tag, tm['~cwp_work_group'])
-        # the movement tags without the diff trim: the part text as the
-        # adapter wrote it
+        # the movement fills, the legacy's semantics: movt is the part
+        # with its leading numerals stripped; the inc tags carry the
+        # part, the exc tags the stripped movt; a tag also in the
+        # movt_no list gets the number prefixed; the inc1/exc1 tags get
+        # the inter-work chain prefixed when there is one; the
+        # movt_no-only tags carry the bare number and the movt_tot tags
+        # the total
+        movt = stripped_movement(part)
+        if '~cwp_movt_num' in tm and len(str(tm['~cwp_movt_num'])) > 0:
+            movt_num_punc = str(tm['~cwp_movt_num']) + \
+                options["cwp_movt_no_sep"] + ' '
+        else:
+            movt_num_punc = ''
+        for tag in movt_no:
+            if tag not in movt_inc + movt_exc + movt_inc1 + movt_exc1:
+                append_tag(release_id, tm, tag,
+                           str(tm.get('~cwp_movt_num', '')))
+        for tag in movt_tot_tags:
+            append_tag(release_id, tm, tag,
+                       str(tm.get('~cwp_movt_tot', '')))
+        for tag in movt_exc:
+            text = movt
+            if tag in movt_no:
+                text = movt_num_punc + movt
+            append_tag(release_id, tm, tag, text)
+        for tag in movt_inc:
+            text = part
+            if tag in movt_no:
+                text = movt_num_punc + part
+            append_tag(release_id, tm, tag, text)
+        for tag in movt_inc1 + movt_exc1:
+            text = part if tag in movt_inc1 else movt
+            if tag in movt_no:
+                text = movt_num_punc + text
+            if inter_work and inter_work != "":
+                append_tag(release_id, tm, tag,
+                           inter_work + work_sep + " " + text)
+            else:
+                append_tag(release_id, tm, tag, text)
         for tag in movt_tags:
-            append_tag(release_id, tm, tag, part)
+            if tag in movt_no:
+                # treat as one item, not multiple - the legacy's join
+                tm[tag] = "".join(
+                    re.split('|'.join(['; ']), tm[tag] or ''))
         map_tags(options, release_id, album, tm)
 
     def publish_metadata(self, release_id, album, track, movement_info={}):

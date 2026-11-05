@@ -45,6 +45,8 @@ from hierarchy.destinations import destination_tags  # noqa: E402
 from hierarchy.diffpair import diff_pair  # noqa: E402
 from hierarchy.diffpair import strip_excess_punctuation  # noqa: E402
 from hierarchy.graph import NodeId, WorkId  # noqa: E402
+from hierarchy.movements import (  # noqa: E402
+    movement_group, movement_numbers, stripped_movement)
 from hierarchy.project import Hierarchy  # noqa: E402
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
@@ -4934,6 +4936,108 @@ class DiffPairGoldenTestCase(unittest.TestCase):
             self.assertEqual(strip_excess_punctuation(s),
                              self.mod.strip_excess_punctuation(s),
                              "the port disagrees stripping %r" % s)
+
+
+class MovementNumbersTestCase(unittest.TestCase):
+    """The movement numbers: the tracks of each movement group count in
+    tracknumber order, the count resets when the group changes, and the
+    total is the group's size - numbers written only when the group
+    holds more than one movement."""
+
+    def test_the_tracks_of_one_group_number_sequentially(self):
+        numbers = movement_numbers([
+            (1.001, ('A',)), (1.002, ('A',)), (1.003, ('A',))])
+        self.assertEqual(numbers, [(1, 3), (2, 3), (3, 3)])
+
+    def test_the_count_resets_when_the_group_changes(self):
+        numbers = movement_numbers([
+            (1.001, ('A',)), (1.002, ('A',)), (2.001, ('B',)), (2.002, ('B',))])
+        self.assertEqual(
+            numbers, [(1, 2), (2, 2), (1, 2), (2, 2)])
+
+    def test_a_single_movement_group_gets_no_number(self):
+        """The legacy writes ~cwp_movt_num/tot only when the group's
+        total exceeds one - a lone movement is not numbered."""
+        numbers = movement_numbers([(1.001, ('A',)), (2.001, ('B',))])
+        self.assertEqual(numbers, [(None, None), (None, None)])
+
+    def test_the_order_is_the_track_order(self):
+        """The legacy sorts by the disc.track float before counting, so
+        a shuffled input still numbers in track order - and the result
+        stays aligned with the caller's order."""
+        numbers = movement_numbers([
+            (1.003, ('A',)), (1.001, ('A',)), (1.002, ('A',))])
+        self.assertEqual(numbers, [(3, 3), (1, 3), (2, 3)])
+
+    def test_the_group_descends_past_the_collections(self):
+        """The movement group starts at the top and descends a level
+        each time the current work is a collection, bottoming out at
+        the lowest level - the legacy's while-is_collection walk."""
+        group = movement_group(
+            top_ids=['L1'],
+            level_ids=[['L0'], ['L1']],
+            collections={'L1'})
+        self.assertEqual(group, ('L0',))
+        # a non-collection top stays put
+        group = movement_group(
+            top_ids=['L1'],
+            level_ids=[['L0'], ['L1']],
+            collections=set())
+        self.assertEqual(group, ('L1',))
+
+    def test_the_descending_walk_bottoms_out(self):
+        """Everything a collection: the walk stops at the lowest level
+        rather than running off the bottom."""
+        group = movement_group(
+            top_ids=['L2'],
+            level_ids=[['L0'], ['L1'], ['L2']],
+            collections={'L2', 'L1', 'L0'})
+        self.assertEqual(group, ('L0',))
+
+    def test_a_fused_level_descends_when_any_work_is_a_collection(self):
+        """A level holding several ids descends when ANY of its works
+        is a collection - the legacy flags the whole level from one
+        member's relation. Here the fused level is the top itself."""
+        group = movement_group(
+            top_ids=['A1', 'B1'],
+            level_ids=[['L0'], ['A1', 'B1']],
+            collections={'B1'})
+        self.assertEqual(group, ('L0',))
+        # no member a collection - the fused level stands
+        group = movement_group(
+            top_ids=['A1', 'B1'],
+            level_ids=[['L0'], ['A1', 'B1']],
+            collections=set())
+        self.assertEqual(group, ('A1', 'B1'))
+
+    def test_workless_tracks_are_never_numbered(self):
+        """An empty group - a track with no top - gets no number, even
+        when several of them share the album: the legacy's
+        ``if movementgroup:`` gate."""
+        numbers = movement_numbers([
+            (1.001, ()), (1.002, ()), (2.001, ('A',)), (2.002, ('A',))])
+        self.assertEqual(
+            numbers, [(None, None), (None, None), (1, 2), (2, 2)])
+
+    def test_interleaved_works_number_within_their_own_top(self):
+        """Two tops interleaved in track order: the legacy numbers per
+        top work, so each keeps its own counts despite the other's
+        tracks in between."""
+        numbers = movement_numbers([
+            (1.001, ('X',)), (1.002, ('Y',)),
+            (1.003, ('X',)), (1.004, ('Y',))])
+        self.assertEqual(numbers, [(1, 2), (1, 2), (2, 2), (2, 2)])
+
+    def test_the_movt_text_strips_leading_numerals(self):
+        """The movement text strips the leading roman numerals and
+        numbers (with their punctuation), five passes deep."""
+        self.assertEqual(stripped_movement('I. Introitus'),
+                         'Introitus')
+        self.assertEqual(stripped_movement('1. Allegro'), 'Allegro')
+        self.assertEqual(stripped_movement('III: Scherzo'), 'Scherzo')
+        # no leading numeral - the text stands
+        self.assertEqual(stripped_movement('Allegro ma non troppo'),
+                         'Allegro ma non troppo')
 
 
 class DestinationTagsTestCase(unittest.TestCase):

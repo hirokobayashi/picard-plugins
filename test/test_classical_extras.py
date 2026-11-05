@@ -7681,6 +7681,43 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
             "the groupheading join is missing: %r" % str(t2['work'][0])[:80])
         self.assertEqual(t2['groupheading'], [t2['work'][0]])
 
+    def test_the_movement_numbers_land(self):
+        """The movement machinery: the hidden number/total tags and the
+        movement tag fill. The Tristan album's tracks fall into several
+        movement groups - the numbered ones carry ~cwp_movt_num and
+        ~cwp_movt_tot, the total being the group's size, and their
+        movement tag carries the part with its leading numeral
+        stripped - the same tags the legacy's process_album pass
+        writes."""
+        tracks = self._run_full_album()
+        numbered = [(label, tm)
+                    for label, t in tracks.items()
+                    for tm in [t.metadata]
+                    if '~cwp_movt_tot' in tm and int(tm['~cwp_movt_tot']) > 1]
+        self.assertTrue(numbered,
+                        "no track carries a movement number")
+        # a group of five exists on this album (the act's scenes)
+        self.assertTrue(
+            any(int(tm['~cwp_movt_tot']) == 5 for _, tm in numbered),
+            "the five-scene group is not numbered")
+        for label, tm in numbered:
+            num = int(tm['~cwp_movt_num'])
+            tot = int(tm['~cwp_movt_tot'])
+            self.assertTrue(1 <= num <= tot,
+                            "the number %d is out of range on %s"
+                            % (num, label))
+            if '~cwp_part_0' in tm:
+                # the movement tag's default is in the movt_inc list -
+                # the extended part as it stands, numerals and diff
+                # braces included - the legacy's inc fill
+                expected = tm.get(
+                    '~cwp_extended_part', tm['~cwp_part_0'])
+                values = tm['movement'] if isinstance(
+                    tm['movement'], list) else [tm['movement']]
+                self.assertIn(
+                    expected, values,
+                    "the movement fill disagrees on %s" % label)
+
     def _run_full_album(self, drain="fifo"):
         """The Tristan flow with extend_metadata left stubbed (the
         presentation is the new engine's own now) and the real

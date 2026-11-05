@@ -47,7 +47,7 @@ from typing import (Dict, FrozenSet, Iterable, Iterator, List, Mapping, Optional
 from .album import (Performance, candidate_tops, chains_of, normalise_name)
 from .parts import strip_parent_name
 from .workmeta import WorkMeta
-from .graph import NodeId, WorkGraph, WorkId
+from .graph import NodeId, WorkGraph, WorkId, PARTS_RELATION
 from .project import Hierarchy, project
 
 #: The sort key of a work that no relation named. It has to be past every
@@ -727,6 +727,13 @@ class AlbumAdapter:
             use_arrangements=use_arrangements,
             use_medleys=use_medleys,
             use_collections=use_collections)
+        #: The work ids whose incoming relation is "part of collection"
+        #: - the legacy's ``parts[id]['is_collection']``, which the
+        #: movement-group walk descends through.
+        self.collections = frozenset(
+            relation.target for relation in self.graph.relations
+            if relation.relation_type == PARTS_RELATION
+            and relation.is_collection)
         #: The genre and date material of each work response, keyed by
         #: the work id - read once, written into the tags per level.
         self.work_meta: Dict[WorkId, WorkMeta] = {}
