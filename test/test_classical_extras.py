@@ -7879,20 +7879,13 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
         TrackTags = adapter_mod.TrackTags
         WorkId = importlib.import_module(
             "picard.plugins.classical_extras.hierarchy.graph").WorkId
-        pl = self.mod.PartLevels.__new__(self.mod.PartLevels)
-        pl.new_engine_tags = {
-            WorkId("rec-med"): TrackTags(
-                key="rec-med",
-                levels=[[WorkId("work-med")]],
-                level_names=[["The Medley"]],
-                part_names=[["The Movement"]],
-                part_levels=0,
-                level_medley_lists=[["First Bit", "Second Bit"]])}
-        from unittest.mock import Mock
-        track = Mock()
-        pl.synonyms = {track: {}}
-        pl.replacements = {track: {}}
-        pl.new_engine_movts = {}
+        track_tags = TrackTags(
+            key="rec-med",
+            levels=[[WorkId("work-med")]],
+            level_names=[["The Medley"]],
+            part_names=[["The Movement"]],
+            part_levels=0,
+            level_medley_lists=[["First Bit", "Second Bit"]])
         tm = {
             'musicbrainz_recordingid': 'rec-med',
             'title': 'track 1', '~cwp_title': '',
@@ -7908,12 +7901,270 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
             "cwp_fill_part": False,
         })
         options["cwp_removewords_p"] = options.get("cwp_removewords", "")
-        pl._publish_new_engine("rel", Mock(), track, options, tm)
+        _pl, tm = self._publish_state({"rec-med": track_tags}, tm, options)
         self.assertEqual(
-            str(tm['~cwp_work_0']),
+            self._joined(tm['~cwp_work_0']),
             "The Medley (medley: First Bit, Second Bit)")
         self.assertEqual(
-            str(tm['~cwp_part_0']), "(medley) The Movement")
+            self._joined(tm['~cwp_part_0']), "(medley) The Movement")
+
+    @staticmethod
+    def _joined(value):
+        """A tag value as Picard reads it: a multi-value tag comes
+        back as the '; '-joined string."""
+        if isinstance(value, list):
+            return '; '.join(str(item) for item in value)
+        return str(value)
+
+    def _publish_state(self, track_tags, tm, options,
+                       error=False, warning=False):
+        """A bare PartLevels wired for a direct _publish_new_engine
+        call: the adapter tags, the per-track diff state and the
+        movement numbers, and nothing else. The log gates are set
+        before the call, as the constructor would."""
+        import importlib
+        importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.adapter")
+        WorkId = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.graph").WorkId
+        pl = self.mod.PartLevels.__new__(self.mod.PartLevels)
+        tags = {WorkId(key): value for key, value in track_tags.items()}
+        pl.new_engine_tags = tags
+        from unittest.mock import Mock
+        track = Mock()
+        pl.synonyms = {track: {}}
+        pl.replacements = {track: {}}
+        pl.new_engine_movts = {}
+        pl.ERROR = error
+        pl.WARNING = warning
+        pl.parts = {}
+        pl.SEPARATORS = ['; ']
+        tm['~cwp_version'] = self.mod.PLUGIN_VERSION
+        pl._publish_new_engine("rel", Mock(), track, options, tm)
+        return pl, tm
+
+    def test_the_songkong_tags_carry_the_work_names(self):
+        """The SongKong writes: the level-0 work becomes
+        musicbrainz_work_composition (its ids the _id tags), the top
+        work replaces musicbrainz_work (and the Picard workid tag is
+        rewritten from the top's ids) - the legacy's level walk
+        (init.py 9836-9862)."""
+        import importlib
+        adapter_mod = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.adapter")
+        TrackTags = adapter_mod.TrackTags
+        WorkId = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.graph").WorkId
+        options = dict(_ALL_OPTION_DEFAULTS)
+        options.update({
+            "cwp_write_sk": True, "cwp_medley": False,
+            "cwp_arrangements": False, "cwp_partial": False,
+            "cwp_titles": False, "cwp_showmovement": False,
+            "cwp_show_top_work": False, "cwp_show_workgroup": False,
+            "cwp_fill_part": False,
+        })
+        options["cwp_removewords_p"] = options.get("cwp_removewords", "")
+        tm = {
+            'musicbrainz_recordingid': 'rec-sk',
+            'title': 'track 1', '~cwp_title': '',
+            'musicbrainz_workid': 'picard-work-id',
+            '~cwp_work_0': 'The Movement', '~cwp_workid_0': 'id-move',
+            '~cwp_work_1': 'The Work', '~cwp_workid_1': 'id-work',
+        }
+        track_tags = TrackTags(
+            key="rec-sk",
+            levels=[[WorkId("id-move")], [WorkId("id-work")]],
+            level_names=[["The Movement"], ["The Work"]],
+            part_names=[["The Movement"]],
+            part_levels=1)
+        _pl, tm = self._publish_state(
+            {"rec-sk": track_tags}, tm, options)
+        # level 0: the composition tags
+        self.assertEqual(
+            self._joined(tm['musicbrainz_work_composition']), 'The Movement')
+        self.assertEqual(
+            self._joined(tm['musicbrainz_work_composition_id']), 'id-move')
+        # the top level: the work tags, and the Picard workid rewritten
+        self.assertEqual(self._joined(tm['musicbrainz_work']), 'The Work')
+        self.assertEqual(self._joined(tm['musicbrainz_workid']), 'id-work')
+        # the middle level: neither of the two - no part-level tags
+        # for a two-level work (0 and 1 are the ends)
+        self.assertNotIn('musicbrainz_work_part_level0', tm)
+
+    def test_the_songkong_middle_levels_carry_part_level_tags(self):
+        """A three-level work: the middle level's name and ids go to
+        the musicbrainz_work_part_levelN tags."""
+        import importlib
+        adapter_mod = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.adapter")
+        TrackTags = adapter_mod.TrackTags
+        WorkId = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.graph").WorkId
+        options = dict(_ALL_OPTION_DEFAULTS)
+        options.update({
+            "cwp_write_sk": True, "cwp_medley": False,
+            "cwp_arrangements": False, "cwp_partial": False,
+            "cwp_titles": False, "cwp_showmovement": False,
+            "cwp_show_top_work": False, "cwp_show_workgroup": False,
+            "cwp_fill_part": False,
+        })
+        options["cwp_removewords_p"] = options.get("cwp_removewords", "")
+        tm = {
+            'musicbrainz_recordingid': 'rec-sk2',
+            'title': 'track 1', '~cwp_title': '',
+            '~cwp_work_0': 'The Movement', '~cwp_workid_0': 'id-move',
+            '~cwp_work_1': 'The Act', '~cwp_workid_1': 'id-act',
+            '~cwp_work_2': 'The Opera', '~cwp_workid_2': 'id-opera',
+        }
+        track_tags = TrackTags(
+            key="rec-sk2",
+            levels=[[WorkId("id-move")], [WorkId("id-act")],
+                    [WorkId("id-opera")]],
+            level_names=[["The Movement"], ["The Act"], ["The Opera"]],
+            part_names=[["The Movement"], ["The Act"]],
+            part_levels=2)
+        _pl, tm = self._publish_state(
+            {"rec-sk2": track_tags}, tm, options)
+        self.assertEqual(
+            self._joined(tm['musicbrainz_work_part_level1']), 'The Act')
+        self.assertEqual(
+            self._joined(tm['musicbrainz_work_part_level1_id']), 'id-act')
+        self.assertEqual(self._joined(tm['musicbrainz_work']), 'The Opera')
+        self.assertEqual(self._joined(tm['musicbrainz_work_composition']),
+                         'The Movement')
+
+    def test_the_songkong_gate_off_writes_nothing(self):
+        """With cwp_write_sk off no SongKong tag appears - the
+        legacy's write_sk gate."""
+        import importlib
+        adapter_mod = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.adapter")
+        TrackTags = adapter_mod.TrackTags
+        WorkId = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.graph").WorkId
+        options = dict(_ALL_OPTION_DEFAULTS)
+        options.update({
+            "cwp_write_sk": False, "cwp_medley": False,
+            "cwp_arrangements": False, "cwp_partial": False,
+            "cwp_titles": False, "cwp_showmovement": False,
+            "cwp_show_top_work": False, "cwp_show_workgroup": False,
+            "cwp_fill_part": False,
+        })
+        options["cwp_removewords_p"] = options.get("cwp_removewords", "")
+        tm = {
+            'musicbrainz_recordingid': 'rec-sk3',
+            'title': 'track 1', '~cwp_title': '',
+            '~cwp_work_0': 'The Work', '~cwp_workid_0': 'id-work',
+        }
+        track_tags = TrackTags(
+            key="rec-sk3",
+            levels=[[WorkId("id-work")]],
+            level_names=[["The Work"]],
+            part_names=[["The Work"]],
+            part_levels=0)
+        _pl, tm = self._publish_state(
+            {"rec-sk3": track_tags}, tm, options)
+        self.assertNotIn('musicbrainz_work_composition', tm)
+        self.assertNotIn('musicbrainz_work', tm)
+
+    def test_the_version_and_options_tags_are_written(self):
+        """The diagnostic stamps: the ce_version_tag carries the
+        version line, the cwp_options_tag carries the workparts option
+        blob - the legacy's post-map_tags writes (init.py 9884-9905)."""
+        import json
+        import importlib
+        adapter_mod = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.adapter")
+        TrackTags = adapter_mod.TrackTags
+        WorkId = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.graph").WorkId
+        options = dict(_ALL_OPTION_DEFAULTS)
+        options.update({
+            "cwp_write_sk": False, "cwp_medley": False,
+            "cwp_arrangements": False, "cwp_partial": False,
+            "cwp_titles": False, "cwp_showmovement": False,
+            "cwp_show_top_work": False, "cwp_show_workgroup": False,
+            "cwp_fill_part": False,
+            "ce_version_tag": "~cea_version_tag",
+            "cwp_options_tag": "~cwp_options",
+        })
+        options["cwp_removewords_p"] = options.get("cwp_removewords", "")
+        tm = {
+            'musicbrainz_recordingid': 'rec-opt',
+            'title': 'track 1', '~cwp_title': '',
+            '~cwp_work_0': 'The Work', '~cwp_workid_0': 'id-work',
+        }
+        track_tags = TrackTags(
+            key="rec-opt",
+            levels=[[WorkId("id-work")]],
+            level_names=[["The Work"]],
+            part_names=[["The Work"]],
+            part_levels=0)
+        pl, tm = self._publish_state(
+            {"rec-opt": track_tags}, tm, options)
+        self.assertEqual(
+            self._joined(tm['~cea_version_tag']),
+            'Version ' + self.mod.PLUGIN_VERSION + ' of Classical Extras')
+        blob = tm['~cwp_options:workparts_options']
+        if isinstance(blob, list):
+            blob = blob[0]
+        if isinstance(blob, str):
+            blob = json.loads(blob)
+        self.assertIn('Classical Extras', blob)
+        self.assertIn('Works options', blob['Classical Extras'])
+
+    def test_the_error_and_warning_rollups_are_written(self):
+        """The error/warning re-keying: each ~cwp_error entry lands
+        under 001_errors:<first char>, each ~cwp_warning under
+        002_warnings:<first char> - the legacy's rollup (init.py
+        9906-9913) - and only when the log gates say so."""
+        import importlib
+        adapter_mod = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.adapter")
+        TrackTags = adapter_mod.TrackTags
+        WorkId = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.graph").WorkId
+        options = dict(_ALL_OPTION_DEFAULTS)
+        options.update({
+            "cwp_write_sk": False, "cwp_medley": False,
+            "cwp_arrangements": False, "cwp_partial": False,
+            "cwp_titles": False, "cwp_showmovement": False,
+            "cwp_show_top_work": False, "cwp_show_workgroup": False,
+            "cwp_fill_part": False,
+        })
+        options["cwp_removewords_p"] = options.get("cwp_removewords", "")
+        track_tags = TrackTags(
+            key="rec-err",
+            levels=[[WorkId("id-work")]],
+            level_names=[["The Work"]],
+            part_names=[["The Work"]],
+            part_levels=0)
+        tm = {
+            'musicbrainz_recordingid': 'rec-err',
+            'title': 'track 1', '~cwp_title': '',
+            '~cwp_work_0': 'The Work', '~cwp_workid_0': 'id-work',
+            '~cwp_error': ['3. A bad thing happened', '6. Another'],
+            '~cwp_warning': ['4. A warning'],
+        }
+        _pl, tm = self._publish_state(
+            {"rec-err": track_tags}, tm, options, error=True, warning=True)
+        self.assertEqual(
+            self._joined(tm['001_errors:3']), '3. A bad thing happened')
+        self.assertEqual(self._joined(tm['001_errors:6']), '6. Another')
+        self.assertEqual(self._joined(tm['002_warnings:4']), '4. A warning')
+        # the gates off leave the rollup tags unwritten
+        tm2 = {
+            'musicbrainz_recordingid': 'rec-err',
+            'title': 'track 1', '~cwp_title': '',
+            '~cwp_work_0': 'The Work', '~cwp_workid_0': 'id-work',
+            '~cwp_error': ['3. A bad thing happened'],
+            '~cwp_warning': ['4. A warning'],
+        }
+        _pl, tm2 = self._publish_state(
+            {"rec-err": track_tags}, tm2, options, error=False,
+            warning=False)
+        self.assertNotIn('001_errors:3', tm2)
+        self.assertNotIn('002_warnings:4', tm2)
 
     def _run_full_album(self, drain="fifo"):
         """The Tristan flow with extend_metadata left stubbed (the

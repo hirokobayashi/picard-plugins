@@ -1158,11 +1158,16 @@ or phantom empty rides along, the showmovement flags, then
 - the showmovement flags append whenever part levels exist, where the
   legacy appends them inside its work-tags loop (a deliberate
   improvement, flagged here as a parity change).
-- the early publish branch still skips the SongKong tags,
-  `ce_version_tag`/`cwp_options_tag`, the error/warning rollups, and
-  the `~cea_album_composer_lastnames` feed - and tracks the adapter
-  did not tag get no `~cea_works_complete`, so the artists section
-  readiness gate never opens for them.
+- the early publish branch writes the SongKong tags, the
+  `ce_version_tag`/`cwp_options_tag` stamps and the error/warning
+  rollups now (the tail of `_publish_new_engine`, in the legacy's
+  order: the SongKong level walk before `map_tags`, the version line
+  and the workparts option blob after it, then the `001_errors:`/
+  `002_warnings:` re-keying gated by the log flags). Still skipped:
+  the `~cea_album_composer_lastnames` feed (the artists section's
+  own path) - and tracks the adapter did not tag get no
+  `~cea_works_complete`, so the artists section readiness gate never
+  opens for them.
 
 The multi-work accumulation diverges from the legacy's last-wins
 overwrites for folks/dates - it unions instead - which the parity test
