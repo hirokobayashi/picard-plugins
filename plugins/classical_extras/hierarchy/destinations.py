@@ -62,7 +62,8 @@ def destination_tags(
         title_parts: Sequence,
         title: str,
         multi_sep: str = ':',
-        single_sep: str = ':') -> Dict[str, str]:
+        single_sep: str = ':',
+        diff: str = None) -> Dict[str, str]:
     """Derive the destination intermediates from the level names.
 
     ``level_names`` is the adapter's per-level work names (level 0
@@ -124,10 +125,14 @@ def destination_tags(
     destinations['~cwp_work'] = work_main
     destinations['~cwp_inter_work'] = inter_work or ''
     destinations['~cwp_title_work'] = work_titles or ''
-    # the extended style: without the title-depth diff the extended
-    # names are the works-style ones - the joins are what the legacy
-    # computes when the titles carry nothing new
-    destinations['~cwp_extended_part'] = part_main
+    # the extended style: the joins are what the legacy computes when
+    # the titles carry nothing new; with a diff the extended part gets
+    # the brace - the legacy's 'part_main + " {" + diff.strip() + "}"'
+    if diff:
+        destinations['~cwp_extended_part'] = (
+            part_main + " {" + diff.strip() + "}") if part_main else diff
+    else:
+        destinations['~cwp_extended_part'] = part_main
     destinations['~cwp_extended_work'] = work_main
     destinations['~cwp_extended_groupheading'] = groupheading
     destinations['~cwp_extended_inter_work'] = inter_work or ''
