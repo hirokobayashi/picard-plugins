@@ -1137,6 +1137,18 @@ or phantom empty rides along, the showmovement flags, then
   and publishes the orphans; the adapter returns an EMPTY `TrackTags`
   for a recording the hierarchy cannot reach, so the gates read
   `track_tags is None or not track_tags.levels`);
+- the arrangement/partial/medley name prefixes are the new engine's
+  own now: the adapter computes `arrangements` (works whose parent
+  came via an arrangement relation - the legacy's
+  `parts[id]['arrangement']`, flagged only when the work has no parts
+  parents), `medley_lists` (the constituent names of a work's forward
+  medley relations - the legacy's `parts[id]['medley_list']`), and
+  the per-performance partial works; `TrackTags` carries
+  `level_arrangements`/`partial`/`level_medley_lists`; the publish
+  applies the user's prefix texts to the level name tags BEFORE the
+  destination derivation, with `vanilla_part` captured first for the
+  diff's reverse comparison (the legacy captures it before
+  embellishing);
   (`cwp_derive_works_from_title`);
 - the movement numbering (`~cwp_movt_num`/`~cwp_movt_tot`,
   `movement_totals`) and the level-0-derived `~cwp_X0_*` variants;

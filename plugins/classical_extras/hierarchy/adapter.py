@@ -47,7 +47,8 @@ from typing import (Dict, FrozenSet, Iterable, Iterator, List, Mapping, Optional
 from .album import (Performance, candidate_tops, chains_of, normalise_name)
 from .parts import strip_parent_name
 from .workmeta import WorkMeta
-from .graph import NodeId, WorkGraph, WorkId, PARTS_RELATION
+from .graph import (NodeId, WorkGraph, WorkId, PARTS_RELATION,
+                    ARRANGEMENT_RELATION, MEDLEY_RELATION, BACKWARD)
 from .project import Hierarchy, project
 
 #: The sort key of a work that no relation named. It has to be past every
@@ -426,6 +427,18 @@ class TrackTags:
     part_levels: int = 0
     #: The number of levels in the whole hierarchy of this track's top.
     work_part_levels: int = 0
+    #: True for each level whose works include an arrangement - the
+    #: legacy's ``parts[id]['arrangement']``, which prefixes the level's
+    #: name tags when the user's arrangements text says so.
+    level_arrangements: List[bool] = field(default_factory=list)
+    #: True when the track's own work (level 0) is performed in part -
+    #: the legacy's ``parts[id]['partial']``, which prefixes the level-0
+    #: name tags when the user's partial text says so.
+    partial: bool = False
+    #: The constituent names of each level's medley works, in level
+    #: order - the legacy's ``parts[id]['medley_list']``, which the
+    #: medley append adds to the level's work tag.
+    level_medley_lists: List[List[str]] = field(default_factory=list)
 
     @staticmethod
     def id_tuple(works: Sequence[WorkId]) -> Tuple[str, ...]:
@@ -727,6 +740,10 @@ class AlbumAdapter:
             use_arrangements=use_arrangements,
             use_medleys=use_medleys,
             use_collections=use_collections)
+        self.use_partial = use_partial
+        self.use_arrangements = use_arrangements
+        self.use_medleys = use_medleys
+        self.use_collections = use_collections
         #: The work ids whose incoming relation is "part of collection"
         #: - the legacy's ``parts[id]['is_collection']``, which the
         #: movement-group walk descends through.
@@ -734,6 +751,42 @@ class AlbumAdapter:
             relation.target for relation in self.graph.relations
             if relation.relation_type == PARTS_RELATION
             and relation.is_collection)
+        #: The works whose parent came via an arrangement relation - the
+        #: legacy's ``parts[id]['arrangement']``, which prefixes the
+        #: names when the user's arrangements text says so. The legacy
+        #: flags a work only when it has no parts parents: the
+        #: arrangement branch is the else of the parts branch. A
+        #: collection parent is a parts parent when collections are on,
+        #: and no parent at all when they are off - so the check reads
+        #: the gate too.
+        self.arrangements = frozenset()
+        if self.use_arrangements:
+            self.arrangements = frozenset(
+                work for work in self.graph.works()
+                if not self._has_parts_parent(work)
+                and self.graph.relations_of(
+                    work, ARRANGEMENT_RELATION, BACKWARD))
+        #: The constituent names of every medley work - the legacy's
+        #: ``parts[id]['medley_list']``. The medley branch is the else
+        #: of the arrangement branch, which is the else of the parts
+        #: branch - so a work with parts parents, or one already an
+        #: arrangement, carries no list - and one backward medley
+        #: relation vetoes the whole scan.
+        self.medley_lists: Dict[WorkId, List[str]] = {}
+        if self.use_medleys:
+            for work in self.graph.works():
+                relations = self.graph.relations_of(work, MEDLEY_RELATION)
+                if any(relation.direction == BACKWARD
+                       for relation in relations):
+                    continue
+                if self._has_parts_parent(work) or work in (
+                        self.arrangements or ()):
+                    continue
+                names: List[str] = []
+                for relation in relations:
+                    names.extend(self.names.names_of({relation.target}))
+                if names:
+                    self.medley_lists[work] = names
         #: The genre and date material of each work response, keyed by
         #: the work id - read once, written into the tags per level.
         self.work_meta: Dict[WorkId, WorkMeta] = {}
@@ -746,10 +799,6 @@ class AlbumAdapter:
                 self.work_meta[work_id] = meta
                 if meta.aliases:
                     self.names.aliases[work_id] = meta.aliases
-        self.use_partial = use_partial
-        self.use_arrangements = use_arrangements
-        self.use_medleys = use_medleys
-        self.use_collections = use_collections
         # the genre and annotation gates - the legacy's
         # cwp_genres_use_folks / cwp_genres_use_worktype /
         # cwp_workdate_include / cwp_key_include /
@@ -860,6 +909,19 @@ class AlbumAdapter:
             self.tracks_per_recording[entry.performance.key] = (
                 self.tracks_per_recording.get(entry.performance.key, 0) + 1)
         self._merge_stand_in_titles()
+
+    def _has_parts_parent(self, work: WorkId) -> bool:
+        """Whether ``work`` parents through a parts relation - the
+        legacy's ``if partof:`` gate. A collection parent is a parts
+        parent when collections are on, and no parent at all when they
+        are off (the legacy's parent lists drop the collection
+        relations with the gate)."""
+        for relation in self.graph.relations_of(work, PARTS_RELATION,
+                                                BACKWARD):
+            if relation.is_collection and not self.use_collections:
+                continue
+            return True
+        return False
 
     def _merge_stand_in_titles(self) -> None:
         """Give the stand-in ids the title of the work each stands in for.
@@ -1334,7 +1396,20 @@ class AlbumAdapter:
             # the number of levels below the track's own - the same
             # count as the tags are numbered by, so the two agree
             part_levels=len(filled) - 1,
-            work_part_levels=work_part_levels)
+            work_part_levels=work_part_levels,
+            # the prefix flags - the legacy's parts[id] flags, per level.
+            # A partly performed work's level-0 slot carries the
+            # recording id as its stand-in, so the partial check looks
+            # at every level the chain holds
+            level_arrangements=[
+                any(work in self.arrangements for work in works)
+                for works in levels],
+            partial=any(work in recording.partial
+                        for works in levels for work in works),
+            level_medley_lists=[
+                [name for work in works
+                 for name in self.medley_lists.get(work, [])]
+                for works in levels])
 
     def _genre_and_date_tags(
             self,

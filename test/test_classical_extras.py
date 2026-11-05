@@ -7794,6 +7794,127 @@ class NewEngineIntegrationTestCase(ClassicalExtrasTestCase):
         self.assertEqual(tm['~cwp_version'], self.mod.PLUGIN_VERSION)
         self.assertEqual(tm['~cea_works_complete'], 'Y')
 
+    def test_the_arrangement_prefix_lands(self):
+        """The user's arrangements text prefixes the name tags of an
+        arrangement work's levels - t2's work is an arrangement
+        reaching the opera - and the destinations derive from the
+        prefixed names. The prefix runs only when the option says so;
+        with it off the names stay bare."""
+        def run(with_option):
+            pl = self.mod.PartLevels()
+            pl.extend_metadata = lambda *a, **k: None
+            pl.process_work_artists = lambda *a, **k: None
+            saved = (self.mod.get_aliases, self.mod.close_log)
+            self.mod.get_aliases = lambda *a, **k: None
+            self.mod.close_log = lambda *a, **k: None
+            self.addCleanup(
+                lambda: setattr(self.mod, "get_aliases", saved[0]))
+            self.addCleanup(
+                lambda: setattr(self.mod, "close_log", saved[1]))
+            from unittest.mock import Mock
+            pending = []
+            tagger = Mock()
+            tagger.webservice.get = (
+                lambda host, port, path, cb, **k:
+                pending.append((cb, self._load("work_%s.json"
+                                               % path.rsplit("/", 1)[-1]))))
+            album = Mock()
+            album._requests = 0
+            album._new_tracks = []
+            album.tagger = tagger
+            album._finalize_loading = lambda _a: None
+            opts = dict(_ALL_OPTION_DEFAULTS)
+            opts.update({
+                "classical_work_parts": True, "use_cache": True,
+                "cwp_new_engine": True,
+                "cwp_arrangements": with_option,
+                "cwp_arrangements_text": "Arr." if with_option else "",
+                "cwp_partial": False, "cwp_medley": False,
+                "cwp_collections": True,
+                "cwp_aliases": False, "cwp_aliases_tag_text": "",
+                "log_error": False, "log_warning": False,
+                "log_debug": False, "log_info": False,
+                "crr_recording_lookup": False,
+            })
+            opts["cwp_removewords_p"] = opts.get("cwp_removewords", "")
+            tracks = {}
+            for label, disc, track, rec_id, work_id in self._TRACKS[:2]:
+                t = self._make_track(label, disc, track, rec_id, work_id,
+                                     opts, preset_work=True)
+                tracks[label] = t
+                album._new_tracks.append(t)
+                pl.add_work_info(
+                    album, t.metadata,
+                    {'recording': self._load("rec_%s.json" % label)}, {})
+            while pending:
+                cb, resp = pending.pop(0)
+                cb(resp, None, None)
+            return tracks
+
+        prefixed = run(True)
+        bare = run(False)
+        t2 = prefixed["t2"].metadata
+        t2_bare = bare["t2"].metadata
+        # the level-0 work tag is prefixed when the option says so
+        self.assertTrue(
+            str(t2['~cwp_work_0']).startswith("Arr. "),
+            "the arrangement prefix is missing: %r"
+            % str(t2['~cwp_work_0'])[:60])
+        self.assertFalse(
+            str(t2_bare['~cwp_work_0']).startswith("Arr. "),
+            "the prefix ran with the option off")
+        # the option off gives the same names the option on had before
+        self.assertEqual(str(t2_bare['~cwp_work_0']),
+                         str(t2['~cwp_work_0'])[len("Arr. "):])
+
+    def test_the_medley_append_writes_the_part_prefix(self):
+        """The medley append gives the work tag the constituent list
+        and prefixes the level's part tag with the medley text in
+        parens - the legacy's pair of writes (init.py 8954-8963).
+        Called on the publish directly: no fixture work carries the
+        forward medley relations the list needs."""
+        import importlib
+        adapter_mod = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.adapter")
+        TrackTags = adapter_mod.TrackTags
+        WorkId = importlib.import_module(
+            "picard.plugins.classical_extras.hierarchy.graph").WorkId
+        pl = self.mod.PartLevels.__new__(self.mod.PartLevels)
+        pl.new_engine_tags = {
+            WorkId("rec-med"): TrackTags(
+                key="rec-med",
+                levels=[[WorkId("work-med")]],
+                level_names=[["The Medley"]],
+                part_names=[["The Movement"]],
+                part_levels=0,
+                level_medley_lists=[["First Bit", "Second Bit"]])}
+        from unittest.mock import Mock
+        track = Mock()
+        pl.synonyms = {track: {}}
+        pl.replacements = {track: {}}
+        pl.new_engine_movts = {}
+        tm = {
+            'musicbrainz_recordingid': 'rec-med',
+            'title': 'track 1', '~cwp_title': '',
+            '~cwp_work_0': 'The Medley', '~cwp_part_0': 'The Movement',
+        }
+        options = dict(_ALL_OPTION_DEFAULTS)
+        options.update({
+            "cwp_medley": True, "cwp_medley_text": "medley",
+            "cwp_arrangements": False, "cwp_arrangements_text": "",
+            "cwp_partial": False, "cwp_partial_text": "",
+            "cwp_titles": False, "cwp_showmovement": False,
+            "cwp_show_top_work": False, "cwp_show_workgroup": False,
+            "cwp_fill_part": False,
+        })
+        options["cwp_removewords_p"] = options.get("cwp_removewords", "")
+        pl._publish_new_engine("rel", Mock(), track, options, tm)
+        self.assertEqual(
+            str(tm['~cwp_work_0']),
+            "The Medley (medley: First Bit, Second Bit)")
+        self.assertEqual(
+            str(tm['~cwp_part_0']), "(medley) The Movement")
+
     def _run_full_album(self, drain="fifo"):
         """The Tristan flow with extend_metadata left stubbed (the
         presentation is the new engine's own now) and the real

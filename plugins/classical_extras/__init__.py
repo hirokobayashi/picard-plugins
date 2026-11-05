@@ -7201,10 +7201,11 @@ class PartLevels():
         the way the legacy's extend_metadata does it.
 
         What the legacy still does that the new engine does not: the
-        arrangement/partial/medley name prefixes and the orphan
-        tracks' title-derived fallbacks. (The destination tags and the
-        diff braces are the new engine's own now, through
-        destination_tags and the ported diffpair.)
+        orphan tracks' title-derived fallbacks are the new engine's own
+        now (hierarchy.titles), and so are the destination tags and the
+        diff braces. The arrangement/partial/medley name prefixes run
+        through the adapter's arrangement/medley/partial flags and the
+        publish's prefix step.
         """
         write_log(release_id, 'info', "NEW ENGINE for album %s", album)
 
@@ -9395,6 +9396,53 @@ class PartLevels():
                       for lev in range(0, part_levels + 1)]
             parts = [str_to_list(tm.get('~cwp_part_%d' % lev, ''))
                      for lev in range(0, part_levels)]
+            # the vanilla part - what the adapter wrote, before the
+            # arrangement/partial/medley prefixes - is what the diff's
+            # reverse comparison reads (the legacy captures it before
+            # embellishing)
+            vanilla_part = parts[0][0] if parts and parts[0] else ''
+            # the name prefixes, the legacy's extend_metadata block:
+            # the arrangements text on every arrangement level below
+            # the reference, the partial text on the track's own work,
+            # and the medley list appended to a medley work's name
+            if options["cwp_arrangements"] and options[
+                    "cwp_arrangements_text"]:
+                for lev in range(0, ref_level):
+                    tag = '~cwp_work_%d' % lev
+                    part_tag = '~cwp_part_%d' % lev
+                    if (lev < len(track_tags.level_arrangements)
+                            and track_tags.level_arrangements[lev]):
+                        for name_tag in (tag, part_tag):
+                            if name_tag in tm:
+                                tm[name_tag] = options[
+                                    "cwp_arrangements_text"] + ' ' + \
+                                    str(tm[name_tag])
+            if options["cwp_partial"] and options["cwp_partial_text"] \
+                    and track_tags.partial:
+                for name_tag in ('~cwp_work_0', '~cwp_part_0'):
+                    if name_tag in tm:
+                        tm[name_tag] = options["cwp_partial_text"] + ' ' + \
+                            str(tm[name_tag])
+            if options["cwp_medley"]:
+                for lev in range(0, ref_level + 1):
+                    if (lev < len(track_tags.level_medley_lists)
+                            and track_tags.level_medley_lists[lev]):
+                        tag = '~cwp_work_%d' % lev
+                        if tag in tm:
+                            tm[tag] = str(tm[tag]) + " (" + \
+                                options["cwp_medley_text"] + ': ' + \
+                                ', '.join(
+                                    track_tags.level_medley_lists[lev]) + ")"
+                        part_tag = '~cwp_part_%d' % lev
+                        if part_tag in tm:
+                            tm[part_tag] = "(" + \
+                                options["cwp_medley_text"] + ") " + \
+                                str(tm[part_tag])
+            # the destinations derive from the (now prefixed) names
+            levels = [str_to_list(tm.get('~cwp_work_%d' % lev, ''))
+                      for lev in range(0, part_levels + 1)]
+            parts = [str_to_list(tm.get('~cwp_part_%d' % lev, ''))
+                     for lev in range(0, part_levels)]
             title_parts = [tm.get('~cwp_title_part_%d' % lev)
                            for lev in range(0, part_levels + 1)]
             destinations = destination_tags(
@@ -9433,8 +9481,7 @@ class PartLevels():
             }
         else:
             part_main = destinations['~cwp_part']
-            vanilla_part = str_to_list(tm.get('~cwp_part_0', ''))
-            vanilla_part = vanilla_part[0] if vanilla_part else ''
+            # vanilla_part was captured before the name prefixes ran
             movement = (tm.get('~cwp_title_part_0')
                         or tm['~cwp_title'] or tm['title'])
             work_compare = destinations['~cwp_extended_groupheading']
@@ -9442,11 +9489,12 @@ class PartLevels():
                 work_compare = work_compare + ': ' + part_main \
                     if part_main else work_compare
             elif part_levels > 0:
-                work_compare = levels[1] + ': ' + part_main \
-                    if len(levels) > 1 and part_main else \
-                    (levels[1] if len(levels) > 1 else part_main)
+                work_compare = levels[1][0] + ': ' + part_main \
+                    if len(levels) > 1 and levels[1] and part_main else \
+                    (levels[1][0] if len(levels) > 1 and levels[1]
+                     else part_main)
             else:
-                work_compare = levels[0]
+                work_compare = levels[0][0] if levels and levels[0] else ''
             diff = diff_pair(
                 work_compare, movement, self.synonyms[track],
                 self.replacements[track],
