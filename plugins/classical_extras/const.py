@@ -838,7 +838,7 @@ OTHER_OPTIONS = [
     {'option': 'cwp_new_engine',
      'name': 'build the tags with the hierarchy package',
      'type': 'Boolean',
-     'default': False
+     'default': True
      },
     {'option': 'use_cache',
      'type': 'Boolean',
