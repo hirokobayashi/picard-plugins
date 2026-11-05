@@ -9638,7 +9638,88 @@ class PartLevels():
                 # treat as one item, not multiple - the legacy's join
                 tm[tag] = "".join(
                     re.split('|'.join(['; ']), tm[tag] or ''))
+        # write "SongKong" tags, the legacy's level walk: the level-0
+        # work is the composition, the top work is THE work (and
+        # replaces the Picard workid), the levels between are part
+        # levels (init.py 9836-9862)
+        if options['cwp_write_sk']:
+            part_levels_sk = track_tags.part_levels if track_tags \
+                else int(tm.get('~cwp_part_levels', 0) or 0)
+            for n in range(0, part_levels_sk + 1):
+                if '~cwp_work_' + \
+                        str(n) in tm and '~cwp_workid_' + str(n) in tm:
+                    source = tm['~cwp_work_' + str(n)]
+                    source_id = list(
+                        tuple(str_to_list(tm['~cwp_workid_' + str(n)])))
+                    if n == 0:
+                        self.append_tag(
+                            release_id, tm, 'musicbrainz_work_composition',
+                            source)
+                        for source_id_item in source_id:
+                            self.append_tag(
+                                release_id, tm,
+                                'musicbrainz_work_composition_id',
+                                source_id_item)
+                    if n == part_levels_sk:
+                        self.append_tag(
+                            release_id, tm, 'musicbrainz_work', source)
+                        if 'musicbrainz_workid' in tm:
+                            del tm['musicbrainz_workid']
+                        # Delete the Picard version of this tag before
+                        # replacing it with the SongKong version
+                        for source_id_item in source_id:
+                            self.append_tag(
+                                release_id, tm, 'musicbrainz_workid',
+                                source_id_item)
+                    if n != 0 and n != part_levels_sk:
+                        self.append_tag(
+                            release_id, tm,
+                            'musicbrainz_work_part_level' + str(n),
+                            source)
+                        for source_id_item in source_id:
+                            self.append_tag(
+                                release_id, tm,
+                                'musicbrainz_work_part_level'
+                                + str(n) + '_id',
+                                source_id_item)
         map_tags(options, release_id, album, tm)
+        # write out options and errors/warnings to tags (init.py
+        # 9884-9913): the version line and the workparts option blob,
+        # then the error/warning rollups keyed by their first character
+        if options['cwp_options_tag'] != "":
+            self.cwp_options = collections.defaultdict(
+                lambda: collections.defaultdict(dict))
+            for opt in plugin_options('workparts') + plugin_options('genres'):
+                if 'name' in opt:
+                    if 'value' in opt:
+                        if options[opt['option']]:
+                            self.cwp_options['Classical Extras'][
+                                'Works options'][opt['name']] = opt['value']
+                    else:
+                        self.cwp_options['Classical Extras'][
+                            'Works options'][opt['name']] = options[
+                                opt['option']]
+            if options['ce_version_tag'] and \
+                    options['ce_version_tag'] != "":
+                self.append_tag(
+                    release_id, tm, options['ce_version_tag'],
+                    str('Version ' + tm['~cwp_version']
+                        + ' of Classical Extras'))
+            if options['cwp_options_tag'] and \
+                    options['cwp_options_tag'] != "":
+                self.append_tag(
+                    release_id, tm,
+                    options['cwp_options_tag'] + ':workparts_options',
+                    json.loads(json.dumps(self.cwp_options)))
+        if self.ERROR and "~cwp_error" in tm:
+            for error in str_to_list(tm['~cwp_error']):
+                code = error[0]
+                self.append_tag(release_id, tm, '001_errors:' + code, error)
+        if self.WARNING and "~cwp_warning" in tm:
+            for warning in str_to_list(tm['~cwp_warning']):
+                wcode = warning[0]
+                self.append_tag(
+                    release_id, tm, '002_warnings:' + wcode, warning)
 
     def publish_metadata(self, release_id, album, track, movement_info={}):
         """
