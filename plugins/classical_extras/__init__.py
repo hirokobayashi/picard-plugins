@@ -7274,9 +7274,11 @@ class PartLevels():
         numbers = movement_numbers([
             (sort_key_of[track], groups_of[track])
             for track, _, _, _ in tagged_tracks])
+        # keyed by the track - movement numbers are per TRACK, and a
+        # release may list one recording on two tracks
         self.new_engine_movts = {
-            rec_id: numbers[index]
-            for index, (_, _, rec_id, _) in enumerate(tagged_tracks)}
+            track: numbers[index]
+            for index, (track, _, _, _) in enumerate(tagged_tracks)}
         for track, tm, rec_id, track_tags in tagged_tracks:
             metadata = track_tags.as_metadata()
             for tag, value in metadata.items():
@@ -9453,9 +9455,9 @@ class PartLevels():
         movt_tot_tags = _tags_of("cwp_movt_tot_tag")
         movt_tags = movt_inc + movt_exc + movt_inc1 + movt_exc1
         # the movement numbers: the album-level pass stored them per
-        # recording; only a multi-movement group carries them
+        # track; only a multi-movement group carries them
         movement_number, movement_total = self.new_engine_movts.get(
-            rec_id, (None, None))
+            track, (None, None))
         if movement_total and movement_total > 1:
             tm['~cwp_movt_num'] = movement_number
             tm['~cwp_movt_tot'] = movement_total

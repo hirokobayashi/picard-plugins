@@ -4994,6 +4994,40 @@ class MovementNumbersTestCase(unittest.TestCase):
             collections={'L2', 'L1', 'L0'})
         self.assertEqual(group, ('L0',))
 
+    def test_a_fused_level_descends_when_any_work_is_a_collection(self):
+        """A level holding several ids descends when ANY of its works
+        is a collection - the legacy flags the whole level from one
+        member's relation. Here the fused level is the top itself."""
+        group = movement_group(
+            top_ids=['A1', 'B1'],
+            level_ids=[['L0'], ['A1', 'B1']],
+            collections={'B1'})
+        self.assertEqual(group, ('L0',))
+        # no member a collection - the fused level stands
+        group = movement_group(
+            top_ids=['A1', 'B1'],
+            level_ids=[['L0'], ['A1', 'B1']],
+            collections=set())
+        self.assertEqual(group, ('A1', 'B1'))
+
+    def test_workless_tracks_are_never_numbered(self):
+        """An empty group - a track with no top - gets no number, even
+        when several of them share the album: the legacy's
+        ``if movementgroup:`` gate."""
+        numbers = movement_numbers([
+            (1.001, ()), (1.002, ()), (2.001, ('A',)), (2.002, ('A',))])
+        self.assertEqual(
+            numbers, [(None, None), (None, None), (1, 2), (2, 2)])
+
+    def test_interleaved_works_number_within_their_own_top(self):
+        """Two tops interleaved in track order: the legacy numbers per
+        top work, so each keeps its own counts despite the other's
+        tracks in between."""
+        numbers = movement_numbers([
+            (1.001, ('X',)), (1.002, ('Y',)),
+            (1.003, ('X',)), (1.004, ('Y',))])
+        self.assertEqual(numbers, [(1, 2), (1, 2), (2, 2), (2, 2)])
+
     def test_the_movt_text_strips_leading_numerals(self):
         """The movement text strips the leading roman numerals and
         numbers (with their punctuation), five passes deep."""
